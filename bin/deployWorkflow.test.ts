@@ -191,7 +191,7 @@ test("checks Worker runtime contracts before production mutation", () => {
   expect(steps.some(step => step.run === "npm run test:worker")).toBe(true);
 });
 
-test("the Checks workflow runs type, lint, Worker candidates and the unit tier on every pull request", () => {
+test("the Checks workflow runs type, lint, Worker candidates, every Worker runtime test and the unit tier on every pull request", () => {
   const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
   const runs = (name: string) => jobs[name].steps.flatMap((step: { run?: string }) => step.run ? [step.run] : []).join("\n");
   expect(runs("typecheck")).toBe("npm run typecheck");
@@ -201,11 +201,13 @@ test("the Checks workflow runs type, lint, Worker candidates and the unit tier o
   expect(runs("workers")).toContain("npx turbo run typecheck build --affected");
   // The root Typecheck job covers packages/; Web Workers type-checks only the apps.
   expect(runs("workers")).toContain("--filter='!./packages/*' --only");
-  expect(runs("workers")).toContain("npx turbo run test --affected");
-  expect(runs("workers")).toContain("npm run test:worker -- bin/workerSetup.runtime.test.ts bin/articleIndexConsumer.runtime.test.ts");
+  // Each test file runs in one job only (bin/ordinaryTestCollection.test.ts).
+  expect(runs("workers")).not.toContain("turbo run test");
+  expect(runs("workers")).not.toContain("test:worker");
   // bin/ tests (deploy scripts included) run in the unit tier, so Web Workers doesn't repeat them.
   expect(runs("workers")).not.toContain("vitest.unit.config.mts");
   expect(runs("unit")).toBe("npm run test:unit -- --shard=${{ matrix.shard }}/2");
+  expect(runs("worker-runtime")).toBe("npm run test:worker");
 });
 
 test("the Checks workflow keeps the lint and typecheck caches between runs", () => {

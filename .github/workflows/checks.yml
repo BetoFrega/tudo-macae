@@ -68,10 +68,23 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - name: Type-check and build the affected Workers
         run: npx turbo run typecheck build --affected --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
-      - name: Test the affected Workers
-        run: npx turbo run test --affected --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
-      - name: Test the Worker runtime contracts
-        run: npm run test:worker -- bin/workerSetup.runtime.test.ts bin/articleIndexConsumer.runtime.test.ts
+      # Worker runtime tests and the unit tier already run every other Worker test.
+      - name: Test the web-workers app pages
+        run: npm test --workspace=web-workers-app
+      - name: Test the public-images deployment configuration
+        run: node --test apps/public-images/deploy.test.mjs
+
+  worker-runtime:
+    name: Worker runtime tests
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/install-dependencies
+      - name: Test every Worker's HTTP, authorization and persistence contracts
+        run: npm run test:worker
 
   unit:
     name: Unit tests (${{ matrix.shard }}/2)

@@ -18,8 +18,8 @@ as a `Falha ambiental`. Create accounts and sessions through
 `tests/_helpers/auth/helpers/workerSession.ts`.
 
 `npm test` runs both tiers; `npm test -- --tier=unit` or `--tier=integration`
-runs one. On pull requests the unit tier runs in quality-flare's Container tests
-(`quality-flare.json`), and the `Vitest Tests` workflow runs only
+runs one. On pull requests the unit tier runs in the `Checks` workflow
+(`.github/workflows/checks.yml`), and the `Vitest Tests` workflow runs only
 `--tier=integration` with `--bail=1`, so it stops after the first failed test.
 Production delivery runs both tiers and `npm run build:check`. For complete local
 diagnosis, keep the unrestricted collection explicit:
@@ -119,8 +119,8 @@ substitutes:
   server and browser stack, then verifies the integrated user journeys.
 
 The local pre-push hook runs only the fast typecheck. Pull requests run that same
-command in quality-flare's Container tests, reported as the `Typecheck` check run next
-to `Lint` and `Web Workers` (commands in `quality-flare.json`); bypassing the hook
+command in the `Checks` workflow, reported as the `Typecheck` check run next to
+`Lint`, `Web Workers` and the unit-tier shards; bypassing the hook
 therefore does not bypass the checks the branch protection requires.
 
 Playwright prepares Git LFS test assets, starts the API Worker fixture, then

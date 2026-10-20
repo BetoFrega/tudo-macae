@@ -1,5 +1,5 @@
 name: Run complete Vitest collection
-description: Run only the integration tier; quality-flare's Container tests run the unit tier.
+description: Run only the integration tier; the Checks workflow runs the unit tier.
 
 runs:
   using: composite

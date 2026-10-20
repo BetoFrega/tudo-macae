@@ -121,7 +121,7 @@ test("requires checks and pins production checkout to their SHA", () => {
 test("publishes Workers only after the same SHA passes checks and the API Worker publish", () => {
   const job = workflow.jobs.workers;
   expect(job.needs).toEqual(["checks", "production"]);
-  expect(job.environment).toBe("cloud-run-production");
+  expect(job.environment).toBe("production");
   expect(job.steps[0].with.ref).toBe("${{ needs.checks.outputs.sha }}");
   expect(job.env.RELEASE_SHA).toBe("${{ needs.checks.outputs.sha }}");
   expect(job.env.CLOUDFLARE_API_TOKEN).toBeUndefined();
@@ -167,7 +167,7 @@ test("reports a rejected candidate from the trusted workflow SHA", () => {
 
 test("production no longer builds or promotes Cloud Run", () => {
   const job = workflow.jobs.production;
-  expect(job.environment).toBe("cloud-run-production");
+  expect(job.environment).toBe("production");
   expect(job.permissions).toEqual({ contents: "read" });
   expect(JSON.stringify(workflow.jobs)).not.toMatch(/google-github-actions|cloud-run-candidate|deploy-cloud-run-production|cloud-run-provider-preflight/);
   expect(workflow.jobs["provider-preflight"]).toBeUndefined();

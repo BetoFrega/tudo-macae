@@ -188,7 +188,7 @@ incident.
 
 ## Setup and manual retry
 
-`cloud-run-production` allows main only and supplies secret `CLOUDFLARE_API_TOKEN`.
+The `production` environment allows main only and supplies secret `CLOUDFLARE_API_TOKEN`.
 `deploy.yml` sets the non-secret account and `tudomacae.com.br` zone IDs. Scope the account-owned
 token to Workers Editor on the four published Workers and `tudo-macae-api-production`,
 account D1 Write and zone

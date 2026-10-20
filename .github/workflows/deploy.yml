@@ -118,7 +118,7 @@ jobs:
 
   production:
     needs: [checks]
-    environment: cloud-run-production
+    environment: production
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -190,7 +190,7 @@ jobs:
 
   workers:
     needs: [checks, production]
-    environment: cloud-run-production
+    environment: production
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

@@ -7,7 +7,7 @@ description: Operate Tudo Macaé production delivery in GitHub Actions. Use when
 
 Read [Production delivery](../../../docs/agents/production-delivery.md).
 Inspect the latest run and current production state. Every push to main already
-starts a run; dispatch the workflow on main only to retry or select another SHA when
+starts a run; dispatch the workflow on main only to retry the current main when
 requested. Wait for checks and verified deployment, and report the tested SHA and
 run link. For failures, inspect the correction issue and run artifacts before
 retrying or using the documented manual recovery command.

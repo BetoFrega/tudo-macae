@@ -12,10 +12,8 @@ const workflow = parse(readFileSync(".github/workflows/deploy.yml", "utf8"));
 test("delivers every main push or a manual dispatch and preserves active delivery", () => {
   expect(workflow.on.push).toEqual({ branches: ["main"] });
   expect(workflow.on.pull_request).toBeUndefined();
-  expect(workflow.on.workflow_dispatch.inputs.sha).toMatchObject({
-    required: false,
-    type: "string",
-  });
+  // A dispatch input would let a caller check out an arbitrary ref in the main context.
+  expect(workflow.on.workflow_dispatch?.inputs).toBeUndefined();
   expect(workflow.concurrency).toEqual({ "group": "production-delivery", "queue": "max", "cancel-in-progress": false });
   expect(workflow.jobs.checks.permissions).toBeUndefined();
   expect(workflow.permissions).toEqual({ contents: "read" });
@@ -28,7 +26,7 @@ test("checks every Worker app, not only the affected ones, before production mut
   // node:test suites sit outside turbo's test tasks.
   expect(runs).toContain("node --test apps/public-images/deploy.test.mjs");
 });
-test.skipIf(inWorkers)("selects the dispatched SHA before checkout without repository credentials", () => {
+test.skipIf(inWorkers)("fixes the event's main SHA before checkout without repository credentials", () => {
   const checkout = workflow.jobs.checks.steps.find(
     (step: { uses?: string }) => step.uses?.startsWith("actions/checkout"),
   );
@@ -41,14 +39,13 @@ test.skipIf(inWorkers)("selects the dispatched SHA before checkout without repos
 
   try {
     expect(candidate.env.DEFAULT_SHA).toBe("${{ github.sha }}");
-    expect(candidate.env.REQUESTED_SHA).toBe("${{ inputs.sha }}");
+    expect(candidate.env.REQUESTED_SHA).toBeUndefined();
     execFileSync("bash", ["-c", candidate.run], {
       cwd: directory,
       env: {
         ...process.env,
         DEFAULT_SHA: defaultSha,
         GITHUB_OUTPUT: output,
-        REQUESTED_SHA: "",
       },
       stdio: "pipe",
     });

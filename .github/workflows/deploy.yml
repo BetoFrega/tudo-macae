@@ -3,12 +3,9 @@ name: Deploy production
 on:
   push:
     branches: [main]
+  # Retries deliver main as it stands. A caller-chosen ref would run untrusted code with
+  # the default branch's cache scope (CodeQL actions/cache-poisoning).
   workflow_dispatch:
-    inputs:
-      sha:
-        description: SHA completo opcional; vazio usa a main no momento do disparo
-        required: false
-        type: string
 
 # Serialize production deliveries without replacing pending requests.
 concurrency:
@@ -31,11 +28,10 @@ jobs:
         id: candidate
         env:
           DEFAULT_SHA: ${{ github.sha }}
-          REQUESTED_SHA: ${{ inputs.sha }}
         run: |
           set -euo pipefail
 
-          candidate="${REQUESTED_SHA:-$DEFAULT_SHA}"
+          candidate="$DEFAULT_SHA"
           if ! [[ "$candidate" =~ ^[0-9a-f]{40}$ ]]; then
             echo "::error::Informe um SHA completo de 40 caracteres."
             exit 1

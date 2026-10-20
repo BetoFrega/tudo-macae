@@ -18,8 +18,8 @@ incidents, recovery and external resource retirement.
 
 Production is the only persistent application environment. Each delivery fixes
 the candidate SHA and deploys that exact tested SHA only after delivery checks pass.
-Every push to main delivers its SHA; a trusted operator can dispatch a retry or
-explicitly select another full main SHA. Ordinary PR checks remain independent.
+Every push to main delivers its SHA; a trusted operator can dispatch a retry of
+the current main. Ordinary PR checks remain independent.
 The complete E2E collection runs on a disposable local stack in the delivery checks
 and gates production mutation.
 

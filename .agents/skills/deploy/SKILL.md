@@ -6,17 +6,18 @@ description: Operate Tudo Macaé production delivery in GitHub Actions. Use when
 # Deploy
 
 Read [Production delivery](../../../docs/agents/production-delivery.md).
-Inspect the latest run and current production state. Dispatch the workflow on main
-when requested, wait for checks and verified deployment, and report the tested SHA
-and run link. For failures, inspect the correction issue and run artifacts before
+Inspect the latest run and current production state. Every push to main already
+starts a run; dispatch the workflow on main only to retry the current main when
+requested. Wait for checks and verified deployment, and report the tested SHA and
+run link. For failures, inspect the correction issue and run artifacts before
 retrying or using the documented manual recovery command.
 For GitHub Actions polling, follow [Compact run monitoring](../../../docs/agents/production-delivery.md#compact-run-monitoring).
 
 Before dispatch, always offer to run the repository's full local verification,
 including complete E2E. When the user accepts, resolve the applicable non-mutation
 checks through `npm run help` and dispatch only after they pass; otherwise report the
-blocking results. Local verification supplements the workflow's checks; E2E runs only
-through explicit local/manual execution, as defined in Production delivery.
+blocking results. Local verification supplements the workflow's checks, which
+include the complete E2E collection, as defined in Production delivery.
 The optional full-suite offer does not replace the affected-journey verification
 required during implementation by [Test Selection](../../../docs/agents/test-selection.md).
 

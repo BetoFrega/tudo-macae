@@ -9,19 +9,24 @@ import { parse } from "yaml";
 const inWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
 
 const workflow = parse(readFileSync(".github/workflows/deploy.yml", "utf8"));
-test("runs expensive checks only after a manual dispatch and preserves active delivery", () => {
-  expect(workflow.on.push).toBeUndefined();
+test("delivers every main push or a manual dispatch and preserves active delivery", () => {
+  expect(workflow.on.push).toEqual({ branches: ["main"] });
   expect(workflow.on.pull_request).toBeUndefined();
-  expect(workflow.on.workflow_dispatch.inputs.sha).toMatchObject({
-    required: false,
-    type: "string",
-  });
+  // A dispatch input would let a caller check out an arbitrary ref in the main context.
+  expect(workflow.on.workflow_dispatch?.inputs).toBeUndefined();
   expect(workflow.concurrency).toEqual({ "group": "production-delivery", "queue": "max", "cancel-in-progress": false });
   expect(workflow.jobs.checks.permissions).toBeUndefined();
   expect(workflow.permissions).toEqual({ contents: "read" });
   expect(JSON.stringify(workflow.jobs.checks)).not.toMatch(/secrets\.|id-token|google-github-actions/);
 });
-test.skipIf(inWorkers)("selects the dispatched SHA before checkout without repository credentials", () => {
+test("checks every Worker app, not only the affected ones, before production mutation", () => {
+  const runs = workflow.jobs.checks.steps.map((step: { run?: string }) => step.run ?? "").join("\n");
+  expect(runs).toContain("npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only");
+  expect(runs).not.toContain("--affected");
+  // node:test suites sit outside turbo's test tasks.
+  expect(runs).toContain("node --test apps/public-images/deploy.test.mjs");
+});
+test.skipIf(inWorkers)("fixes the event's main SHA before checkout without repository credentials", () => {
   const checkout = workflow.jobs.checks.steps.find(
     (step: { uses?: string }) => step.uses?.startsWith("actions/checkout"),
   );
@@ -34,20 +39,19 @@ test.skipIf(inWorkers)("selects the dispatched SHA before checkout without repos
 
   try {
     expect(candidate.env.DEFAULT_SHA).toBe("${{ github.sha }}");
-    expect(candidate.env.REQUESTED_SHA).toBe("${{ inputs.sha }}");
+    expect(candidate.env.REQUESTED_SHA).toBeUndefined();
     execFileSync("bash", ["-c", candidate.run], {
       cwd: directory,
       env: {
         ...process.env,
         DEFAULT_SHA: defaultSha,
         GITHUB_OUTPUT: output,
-        REQUESTED_SHA: "",
       },
       stdio: "pipe",
     });
 
     expect(readFileSync(output, "utf8")).toBe(`sha=${defaultSha}\n`);
-    expect(checkout.with.ref).toBe("${{ steps.candidate.outputs.sha }}");
+    expect(checkout.with.ref).toBe("${{ github.sha }}");
   }
   finally {
     rmSync(directory, { recursive: true, force: true });
@@ -64,8 +68,11 @@ test("checks domain protection against the selected revision's history when main
   expect(eligibility.run).toContain("git merge-base --is-ancestor \"$SHA\" origin/main");
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
 });
-test("keeps browser suites and their setup outside production delivery", () => {
-  expect(JSON.stringify(workflow.jobs)).not.toMatch(/playwright|test:e2e|test:harness|chromium/);
+test("runs the complete E2E collection in checks, never with production access", () => {
+  const steps = workflow.jobs.checks.steps as Array<{ run?: string }>;
+  expect(steps.some(step => step.run === "npm run test:e2e:full -- --max-failures=1")).toBe(true);
+  const mutation = JSON.stringify([workflow.jobs.production, workflow.jobs.workers]);
+  expect(mutation).not.toMatch(/playwright|test:e2e|test:harness|chromium/);
 });
 test("runs fail-fast Vitest and the application build before production mutation", () => {
   const steps = workflow.jobs.checks.steps as Array<{ run?: string; uses?: string }>;
@@ -105,14 +112,14 @@ test("builds the web Worker candidate before any production mutation", () => {
 });
 test("requires checks and pins production checkout to their SHA", () => {
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
-  expect(workflow.jobs.production.steps[0].with.ref).toBe("${{ needs.checks.outputs.sha }}");
+  expect(workflow.jobs.production.steps[0].with.ref).toBe("${{ github.sha }}");
   expect(workflow.jobs.outcome.if).toContain("always()");
 });
 test("publishes Workers only after the same SHA passes checks and the API Worker publish", () => {
   const job = workflow.jobs.workers;
   expect(job.needs).toEqual(["checks", "production"]);
-  expect(job.environment).toBe("cloud-run-production");
-  expect(job.steps[0].with.ref).toBe("${{ needs.checks.outputs.sha }}");
+  expect(job.environment).toBe("production");
+  expect(job.steps[0].with.ref).toBe("${{ github.sha }}");
   expect(job.env.RELEASE_SHA).toBe("${{ needs.checks.outputs.sha }}");
   expect(job.env.CLOUDFLARE_API_TOKEN).toBeUndefined();
   const publish = job.steps.find((step: { run?: string }) => step.run === "node bin/deploy-workers-production.mjs");
@@ -157,7 +164,7 @@ test("reports a rejected candidate from the trusted workflow SHA", () => {
 
 test("production no longer builds or promotes Cloud Run", () => {
   const job = workflow.jobs.production;
-  expect(job.environment).toBe("cloud-run-production");
+  expect(job.environment).toBe("production");
   expect(job.permissions).toEqual({ contents: "read" });
   expect(JSON.stringify(workflow.jobs)).not.toMatch(/google-github-actions|cloud-run-candidate|deploy-cloud-run-production|cloud-run-provider-preflight/);
   expect(workflow.jobs["provider-preflight"]).toBeUndefined();

@@ -9,8 +9,8 @@ import { parse } from "yaml";
 const inWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
 
 const workflow = parse(readFileSync(".github/workflows/deploy.yml", "utf8"));
-test("runs expensive checks only after a manual dispatch and preserves active delivery", () => {
-  expect(workflow.on.push).toBeUndefined();
+test("delivers every main push or a manual dispatch and preserves active delivery", () => {
+  expect(workflow.on.push).toEqual({ branches: ["main"] });
   expect(workflow.on.pull_request).toBeUndefined();
   expect(workflow.on.workflow_dispatch.inputs.sha).toMatchObject({
     required: false,

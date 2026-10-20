@@ -21,6 +21,11 @@ test("delivers every main push or a manual dispatch and preserves active deliver
   expect(workflow.permissions).toEqual({ contents: "read" });
   expect(JSON.stringify(workflow.jobs.checks)).not.toMatch(/secrets\.|id-token|google-github-actions/);
 });
+test("checks every Worker app, not only the affected ones, before production mutation", () => {
+  const runs = workflow.jobs.checks.steps.map((step: { run?: string }) => step.run ?? "").join("\n");
+  expect(runs).toContain("npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only");
+  expect(runs).not.toContain("--affected");
+});
 test.skipIf(inWorkers)("selects the dispatched SHA before checkout without repository credentials", () => {
   const checkout = workflow.jobs.checks.steps.find(
     (step: { uses?: string }) => step.uses?.startsWith("actions/checkout"),

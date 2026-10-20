@@ -9,7 +9,8 @@ pipeline or a deployment gate.
 Each run fixes an immutable SHA: the event's main SHA by default, or an explicitly
 dispatched full SHA already on `origin/main`. Protection lint uses that SHA's first
 parent and still rejects protected reductions. Before production mutation, checks
-run typecheck, the web Worker build when present, lint, Worker contracts and
+run typecheck, the web Worker build when present, typecheck, build and tests of
+every Worker app (PR checks cover only affected apps), lint, Worker contracts and
 both Vitest tiers plus `build:check`. Test jobs receive no production secrets or
 Google identity.
 

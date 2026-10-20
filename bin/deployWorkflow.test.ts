@@ -25,6 +25,8 @@ test("checks every Worker app, not only the affected ones, before production mut
   const runs = workflow.jobs.checks.steps.map((step: { run?: string }) => step.run ?? "").join("\n");
   expect(runs).toContain("npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only");
   expect(runs).not.toContain("--affected");
+  // node:test suites sit outside turbo's test tasks.
+  expect(runs).toContain("node --test apps/public-images/deploy.test.mjs");
 });
 test.skipIf(inWorkers)("selects the dispatched SHA before checkout without repository credentials", () => {
   const checkout = workflow.jobs.checks.steps.find(

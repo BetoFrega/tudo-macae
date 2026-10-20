@@ -83,6 +83,8 @@ jobs:
           RELEASE_SHA: ${{ steps.candidate.outputs.sha }}
           XDG_CONFIG_HOME: /tmp/wrangler-config
         run: npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
+      - name: Check the public images delivery script
+        run: node --test apps/public-images/deploy.test.mjs
       - run: npm run lint
         env:
           DOMAIN_SEAMS_BASE: ${{ steps.candidate.outputs.sha }}^

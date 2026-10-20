@@ -40,7 +40,7 @@ jobs:
           echo "sha=$candidate" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v5
         with:
-          ref: ${{ steps.candidate.outputs.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           lfs: true
           persist-credentials: false
@@ -125,7 +125,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ needs.checks.outputs.sha }}
+          ref: ${{ github.sha }}
           lfs: true
           persist-credentials: false
       - uses: actions/setup-node@v5
@@ -198,7 +198,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ needs.checks.outputs.sha }}
+          ref: ${{ github.sha }}
           # The web Worker bundles the app's `public/` PNGs, which live in Git LFS.
           lfs: true
           persist-credentials: false

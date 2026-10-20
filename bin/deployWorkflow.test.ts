@@ -51,7 +51,7 @@ test.skipIf(inWorkers)("fixes the event's main SHA before checkout without repos
     });
 
     expect(readFileSync(output, "utf8")).toBe(`sha=${defaultSha}\n`);
-    expect(checkout.with.ref).toBe("${{ steps.candidate.outputs.sha }}");
+    expect(checkout.with.ref).toBe("${{ github.sha }}");
   }
   finally {
     rmSync(directory, { recursive: true, force: true });
@@ -112,14 +112,14 @@ test("builds the web Worker candidate before any production mutation", () => {
 });
 test("requires checks and pins production checkout to their SHA", () => {
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
-  expect(workflow.jobs.production.steps[0].with.ref).toBe("${{ needs.checks.outputs.sha }}");
+  expect(workflow.jobs.production.steps[0].with.ref).toBe("${{ github.sha }}");
   expect(workflow.jobs.outcome.if).toContain("always()");
 });
 test("publishes Workers only after the same SHA passes checks and the API Worker publish", () => {
   const job = workflow.jobs.workers;
   expect(job.needs).toEqual(["checks", "production"]);
   expect(job.environment).toBe("production");
-  expect(job.steps[0].with.ref).toBe("${{ needs.checks.outputs.sha }}");
+  expect(job.steps[0].with.ref).toBe("${{ github.sha }}");
   expect(job.env.RELEASE_SHA).toBe("${{ needs.checks.outputs.sha }}");
   expect(job.env.CLOUDFLARE_API_TOKEN).toBeUndefined();
   const publish = job.steps.find((step: { run?: string }) => step.run === "node bin/deploy-workers-production.mjs");

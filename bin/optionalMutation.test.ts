@@ -24,7 +24,7 @@ it("makes the conventional command use the canonical unit and integration collec
   const action = parse(readFileSync(".github/actions/run-vitest/action.yml", "utf8"));
   const runs = [...workflow.jobs.test.steps, ...action.runs.steps]
     .flatMap((step: { run?: string }) => step.run ? [step.run] : []);
-  // quality-flare's Container tests run the unit tier (vitest.unit.config.mts).
+  // The Checks workflow runs the unit tier (vitest.unit.config.mts).
   expect(runs).toEqual(expect.arrayContaining([
     "npm test -- --tier=integration --bail=1",
   ]));

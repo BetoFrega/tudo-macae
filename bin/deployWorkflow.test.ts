@@ -189,27 +189,29 @@ test("checks Worker runtime contracts before production mutation", () => {
   expect(steps.some(step => step.run === "npm run test:worker")).toBe(true);
 });
 
-test("quality-flare's Container tests check type, lint and Worker candidates on every pull request", () => {
-  const { container } = JSON.parse(readFileSync("quality-flare.json", "utf8"));
-  expect(container.typecheck).toBe("npm run typecheck");
-  expect(container.commands.Lint).toBe("npm run lint");
-  const webWorkers: string = container.commands["Web Workers"];
-  // The daily full run sets TURBO_SCM_BASE to a commit with no files, so turbo runs every app; PRs fall back to the base.
-  expect(webWorkers).toContain("TURBO_SCM_BASE=${TURBO_SCM_BASE:-origin/$GITHUB_BASE_REF}");
-  expect(webWorkers).toContain("npx turbo run typecheck build --affected");
-  // The root Typecheck check covers packages/; Web Workers type-checks only the apps.
-  expect(webWorkers).toContain("--filter='!./packages/*' --only");
-  expect(webWorkers).toContain("npx turbo run test --affected");
-  expect(webWorkers).toContain("npm run test:worker -- bin/workerSetup.runtime.test.ts bin/articleIndexConsumer.runtime.test.ts");
-  // bin/ tests (deploy scripts included) run in Container tests on every PR, so Web Workers doesn't repeat them.
-  expect(container.alwaysRun).toContain("bin/");
-  expect(webWorkers).not.toContain("vitest.unit.config.mts");
+test("the Checks workflow runs type, lint, Worker candidates and the unit tier on every pull request", () => {
+  const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
+  const runs = (name: string) => jobs[name].steps.flatMap((step: { run?: string }) => step.run ? [step.run] : []).join("\n");
+  expect(runs("typecheck")).toBe("npm run typecheck");
+  expect(runs("lint")).toBe("npm run lint");
+  // PRs compare against the base branch, so turbo checks only the affected apps.
+  expect(jobs.workers.env.TURBO_SCM_BASE).toBe("origin/${{ github.base_ref }}");
+  expect(runs("workers")).toContain("npx turbo run typecheck build --affected");
+  // The root Typecheck job covers packages/; Web Workers type-checks only the apps.
+  expect(runs("workers")).toContain("--filter='!./packages/*' --only");
+  expect(runs("workers")).toContain("npx turbo run test --affected");
+  expect(runs("workers")).toContain("npm run test:worker -- bin/workerSetup.runtime.test.ts bin/articleIndexConsumer.runtime.test.ts");
+  // bin/ tests (deploy scripts included) run in the unit tier, so Web Workers doesn't repeat them.
+  expect(runs("workers")).not.toContain("vitest.unit.config.mts");
+  expect(runs("unit")).toBe("npm run test:unit -- --shard=${{ matrix.shard }}/2");
 });
 
-test("quality-flare keeps the lint and typecheck caches between Container tests runs", () => {
-  const { container } = JSON.parse(readFileSync("quality-flare.json", "utf8"));
+test("the Checks workflow keeps the lint and typecheck caches between runs", () => {
+  const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
   const { scripts } = JSON.parse(readFileSync("package.json", "utf8"));
+  const cached = (name: string) => jobs[name].steps.find((step: { uses?: string }) => step.uses?.startsWith("actions/cache")).with.path;
   // Content, not mtime: every run is a fresh clone. Type-aware lint rules would need a project-wide key instead.
   expect(scripts.lint).toContain("eslint . --cache --cache-strategy content --cache-location node_modules/.cache/eslint/");
-  expect(container.cache).toEqual(["node_modules/.cache/eslint", "tsconfig.tsbuildinfo"]);
+  expect(cached("lint")).toBe("node_modules/.cache/eslint");
+  expect(cached("typecheck")).toBe("tsconfig.tsbuildinfo");
 });

@@ -34,10 +34,8 @@ Delivery sourcemap uploads, asset retention,
 publication and version readback stay outside cacheable tasks. Build identity includes
 `RELEASE_SHA`, `CLOUDFLARE_ENV` and `VITE_*`; CI uses the candidate SHA. Outputs include
 `dist/` and Wrangler's deployment pointer. Keep `.turbo/cache` local to each worktree.
-The only remote cache is quality-flare's Container tests (`turboCache` in
-`quality-flare.json`): an R2 cache for this repository's runs alone, which the daily
-full run on `main` bypasses (`TURBO_FORCE`) while still refilling it. Its `cache` paths
-(ESLint's cache and `tsconfig.tsbuildinfo`) are kept the same way, per lockfile.
+There is no remote Turbo cache. The `Checks` workflow keeps ESLint's cache and
+`tsconfig.tsbuildinfo` between pull-request runs with `actions/cache`.
 
 For affected workspaces, run declared typecheck/test/build tasks,
 `npm run lint:boundaries` and

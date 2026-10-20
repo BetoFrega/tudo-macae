@@ -5,7 +5,7 @@ on:
     branches: [main]
   # Retries deliver main as it stands. A caller-chosen ref would run untrusted code with
   # the default branch's cache scope (CodeQL actions/cache-poisoning).
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 # Serialize production deliveries without replacing pending requests.
 concurrency:

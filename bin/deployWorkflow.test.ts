@@ -181,7 +181,7 @@ test("checks Worker runtime contracts before production mutation", () => {
   expect(steps.some(step => step.run === "npm run test:worker")).toBe(true);
 });
 
-test("the Checks workflow runs type, lint, Worker candidates and the unit tier on every pull request", () => {
+test("the Checks workflow runs type, lint, Worker candidates, every Worker runtime test and the unit tier on every pull request", () => {
   const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
   const runs = (name: string) => jobs[name].steps.flatMap((step: { run?: string }) => step.run ? [step.run] : []).join("\n");
   expect(runs("typecheck")).toBe("npm run typecheck");
@@ -196,6 +196,7 @@ test("the Checks workflow runs type, lint, Worker candidates and the unit tier o
   // bin/ tests (deploy scripts included) run in the unit tier, so Web Workers doesn't repeat them.
   expect(runs("workers")).not.toContain("vitest.unit.config.mts");
   expect(runs("unit")).toBe("npm run test:unit -- --shard=${{ matrix.shard }}/2");
+  expect(runs("worker-runtime")).toBe("npm run test:worker");
 });
 
 test("the Checks workflow keeps the lint and typecheck caches between runs", () => {

@@ -73,6 +73,18 @@ jobs:
       - name: Test the Worker runtime contracts
         run: npm run test:worker -- bin/workerSetup.runtime.test.ts bin/articleIndexConsumer.runtime.test.ts
 
+  worker-runtime:
+    name: Worker runtime tests
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/install-dependencies
+      - name: Test every Worker's HTTP, authorization and persistence contracts
+        run: npm run test:worker
+
   unit:
     name: Unit tests (${{ matrix.shard }}/2)
     if: >-

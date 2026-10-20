@@ -18,7 +18,7 @@
   "dependencies": {
     "@tudomacae/react-primitives": "*",
     "lucide-react": "^1.48.0",
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@tudomacae/www-origin-routing": "*"
   },
   "peerDependencies": {

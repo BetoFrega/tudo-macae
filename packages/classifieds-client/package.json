@@ -13,7 +13,7 @@
     "@tudomacae/www-origin-routing": "*",
     "@tudomacae/categories": "*",
     "@tudomacae/advertiser-identity": "*",
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@tudomacae/classifieds-persistence": "*",
     "@tudomacae/classifieds-photos": "*",
     "@tudomacae/ads": "*"

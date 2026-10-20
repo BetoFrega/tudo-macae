@@ -5,7 +5,7 @@ status: accepted
 decided: 2026-09-10
 ---
 
-# 22. One persistent production environment with manually dispatched delivery
+# 22. One persistent production environment with delivery on every main push
 
 ## Context and requirements
 
@@ -16,11 +16,10 @@ incidents, recovery and external resource retirement.
 
 ## Decision
 
-Production is the only persistent application environment. Explicit delivery fixes
+Production is the only persistent application environment. Each delivery fixes
 the candidate SHA and deploys that exact tested SHA only after delivery checks pass.
-The default is main at dispatch; a trusted
-operator can explicitly select another full SHA. Merges do not dispatch delivery,
-and ordinary PR checks remain independent. E2E execution is local/manual only; no
+Every push to main delivers its SHA; a trusted operator can dispatch a retry or
+explicitly select another full main SHA. Ordinary PR checks remain independent. E2E execution is local/manual only; no
 pipeline executes or schedules it, and it is not a deployment gate.
 
 ## Alternatives and consequences
@@ -36,8 +35,10 @@ replacement and preservation of shared resources/data; acceptance is not a retir
 
 ## Scope and amendments
 
-Amended 2026-09-26 and 2026-10-04. The latter amendment supersedes the automatic
-E2E deployment gate; the original decision date remains 2026-09-10.
+Amended 2026-09-26, 2026-10-04 and 2026-10-20. The 2026-10-04 amendment supersedes
+the automatic E2E deployment gate; the 2026-10-20 amendment replaces manual-only
+dispatch with delivery on every main push. The original decision date remains
+2026-09-10.
 Supersedes the staging architecture in
 [0016](0016-separate-disposable-staging-data-from-permanent-control.md),
 [0020](0020-restrict-staging-application-access.md) and

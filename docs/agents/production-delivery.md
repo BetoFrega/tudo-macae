@@ -2,11 +2,12 @@
 
 [ADR 0022](../adr/0022-production-only-with-disposable-e2e.md) owns the decision;
 [deploy.yml](../../.github/workflows/deploy.yml) owns the executable pipeline.
-Delivery is manual (`workflow_dispatch`). E2E is explicit local/manual work, never
-scheduled by a pipeline or a deployment gate.
+Every push to `main` starts delivery of the pushed SHA; `workflow_dispatch` retries
+or selects another SHA. E2E is explicit local/manual work, never scheduled by a
+pipeline or a deployment gate.
 
-Dispatch fixes an immutable SHA: the event's main SHA by default, or an explicitly
-selected full SHA already on `origin/main`. Protection lint uses that SHA's first
+Each run fixes an immutable SHA: the event's main SHA by default, or an explicitly
+dispatched full SHA already on `origin/main`. Protection lint uses that SHA's first
 parent and still rejects protected reductions. Before production mutation, checks
 run typecheck, the web Worker build when present, lint, Worker contracts and
 both Vitest tiers plus `build:check`. Test jobs receive no production secrets or
@@ -202,8 +203,8 @@ Before activation, read back provider trust, environment variable/secret names,
 IAM/token permissions and routes without secret values. Trust/IAM changes require
 explicit operator authorization.
 
-After merging a correction, dispatch a fresh main run; an explicit older selection
-must be a full main SHA:
+Merging a correction starts a fresh main run. To retry without a merge, dispatch;
+an explicit older selection must be a full main SHA:
 
 ```sh
 gh workflow run deploy.yml --ref main

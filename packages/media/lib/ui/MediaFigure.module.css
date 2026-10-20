@@ -1,0 +1,91 @@
+.visual {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  isolation: isolate;
+}
+
+.visual > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.credit {
+  opacity: 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  justify-self: end;
+  max-width: calc(100% - 1rem);
+  margin: 0.5rem;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.125rem;
+  background: rgb(255 255 255 / 55%);
+  color: #0f172a;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.caption {
+  margin-top: 0.75rem;
+  padding-inline: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.belowCredit {
+  display: block;
+  margin-top: 0.5rem;
+  padding-inline: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.caption .belowCredit {
+  padding-inline: 0;
+}
+
+@media (hover: hover) {
+  .visual:hover .credit {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgb(255 255 255 / 70%);
+  }
+}
+
+@media (hover: none) {
+  .credit {
+    background: rgb(255 255 255 / 60%);
+  }
+
+  button .credit {
+    opacity: 1;
+  }
+}
+
+.visual:focus-within .credit,
+:is(a, button):focus-visible .credit {
+  opacity: 1;
+  pointer-events: auto;
+  background: rgb(255 255 255 / 70%);
+}
+
+.visual[data-credit-dismissed] .credit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.visual:focus-visible {
+  outline: 2px solid #0f172a;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 70%);
+}

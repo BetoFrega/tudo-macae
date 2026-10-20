@@ -1,0 +1,36 @@
+{
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/features/ads/components/AdForm.login.test.tsx",
+          "src/features/ads/components/AdForm.photos.test.tsx",
+          "src/features/ads/components/AdForm.profiles.test.tsx",
+          "src/features/ads/components/AdForm.test.tsx"
+        ],
+        "createdAt": "2026-09-06T23:56:57.712Z",
+        "reason": "Codex: test fixture spreads component props into an img mock; no product image is rendered."
+      },
+      {
+        "rule": "overused-font",
+        "value": "arial",
+        "createdAt": "2026-09-28T01:23:50.951Z",
+        "reason": "agent decided: Terms page reuses the Cloud Run system font stack, which includes Arial as a fallback; no separate font is introduced"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/integrations/public-images/tests/LocalDevelopmentImage.test.tsx"
+        ],
+        "createdAt": "2026-10-10T01:57:14.129Z",
+        "reason": "Agent review: next/image test double forwards the real fixture src through props; no empty or placeholder production image is rendered."
+      }
+    ]
+  }
+}

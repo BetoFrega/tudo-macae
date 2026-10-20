@@ -1,0 +1,20 @@
+{
+  "name": "@tudomacae/text-normalization",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./normalizedWords": "./normalizedWords.ts",
+    "./slugify": "./slugify.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/text-normalization/tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

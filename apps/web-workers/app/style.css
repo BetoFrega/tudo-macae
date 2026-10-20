@@ -1,0 +1,11 @@
+@import "@tudomacae/design-foundations/styles.css";
+@source "../../../packages/react-primitives/lib";
+@source "../../../packages/site-layout/lib";
+@source "../../../packages/terms-page/lib";
+@source "./";
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

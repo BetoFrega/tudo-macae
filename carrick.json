@@ -1,0 +1,131 @@
+{
+  "services": [
+    {
+      "serviceName": "macae-classificados",
+      "directory": "src",
+      "tsconfig": "../tsconfig.json",
+      "include": [
+        "packages/ads",
+        "packages/advertiser-identity",
+        "packages/authentication",
+        "packages/authentication-client",
+        "packages/categories",
+        "packages/civil-time",
+        "packages/classifieds-client",
+        "packages/classifieds-persistence",
+        "packages/editorial-persistence",
+        "packages/editorial-media",
+        "packages/editorial-blog",
+        "packages/classifieds-photos",
+        "packages/design-foundations",
+        "packages/editorial-access",
+        "packages/editorial-planning",
+        "packages/editorial-sourcing",
+        "packages/media",
+        "packages/media-files",
+        "packages/public-image-delivery",
+        "packages/react-primitives",
+        "packages/release-control",
+        "packages/site-layout",
+        "packages/site-search",
+        "packages/terms-page",
+        "packages/text-normalization",
+        "packages/www-origin-routing"
+      ],
+      "internalEnvVars": [
+        "AUTHENTICATION_API_URL",
+        "PUBLIC_ARTICLE_INDEX_URL",
+        "SITE_SEARCH_URL"
+      ],
+      "externalEnvVars": [
+        "NEXT_PUBLIC_POSTHOG_HOST",
+        "SITE_SEARCH_FLAGS_ORIGIN"
+      ],
+      "internalDomains": [
+        "https://images.tudomacae.com.br"
+      ],
+      "externalDomains": [
+        "https://identitytoolkit.googleapis.com",
+        "https://securetoken.googleapis.com",
+        "https://api.cloudflare.com",
+        "http://metadata.google.internal"
+      ]
+    },
+    {
+      "serviceName": "api-worker",
+      "directory": "apps/api-worker",
+      "tsconfig": "tsconfig.json",
+      "include": [
+        "packages/ads",
+        "packages/advertiser-identity",
+        "packages/authentication",
+        "packages/categories",
+        "packages/civil-time",
+        "packages/classifieds-client",
+        "packages/classifieds-persistence",
+        "packages/editorial-persistence",
+        "packages/editorial-access",
+        "packages/editorial-media",
+        "packages/editorial-blog",
+        "packages/editorial-sourcing",
+        "packages/classifieds-photos",
+        "packages/design-foundations",
+        "packages/media",
+        "packages/public-image-delivery",
+        "packages/react-primitives",
+        "packages/text-normalization",
+        "packages/www-origin-routing"
+      ],
+      "externalDomains": [
+        "https://www.googleapis.com"
+      ]
+    },
+    {
+      "serviceName": "public-article-index-worker",
+      "directory": "apps/public-article-index",
+      "tsconfig": "tsconfig.json",
+      "externalDomains": [
+        "https://www.googleapis.com"
+      ]
+    },
+    {
+      "serviceName": "public-images-worker",
+      "directory": "apps/public-images",
+      "tsconfig": "tsconfig.json",
+      "include": [
+        "packages/public-image-delivery"
+      ],
+      "internalEnvVars": [
+        "EDITORIAL_ORIGIN"
+      ]
+    },
+    {
+      "serviceName": "site-search-worker",
+      "directory": "apps/site-search",
+      "tsconfig": "tsconfig.json",
+      "externalDomains": [
+        "https://www.googleapis.com"
+      ]
+    },
+    {
+      "serviceName": "web-workers-app",
+      "directory": "apps/web-workers",
+      "tsconfig": "tsconfig.json",
+      "include": [
+        "packages/design-foundations",
+        "packages/react-primitives",
+        "packages/site-layout",
+        "packages/terms-page",
+        "packages/www-origin-routing"
+      ]
+    },
+    {
+      "serviceName": "www-origin-worker",
+      "directory": "apps/www-origin",
+      "tsconfig": "tsconfig.json",
+      "include": [
+        "packages/www-origin-routing"
+      ]
+    }
+  ]
+}

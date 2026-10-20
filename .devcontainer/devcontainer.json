@@ -1,0 +1,69 @@
+{
+  "name": "Tudo Macaé",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/git-lfs:1": {
+      "version": "latest"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+  "mounts": [
+    "source=claude-code-config,target=/home/node/.claude,type=volume"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+  },
+  "forwardPorts": [
+    5002,
+    53413
+  ],
+  "portsAttributes": {
+    "5002": {
+      "label": "Web Application",
+      "onAutoForward": "openBrowser"
+    },
+    "53413": {
+      "label": "Playwright UI",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "sudo sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources && npm install && npx playwright install --with-deps chromium",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "ms-playwright.playwright",
+        "vitest.explorer"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "always"
+        },
+        "eslint.validate": [
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact",
+          "json",
+          "jsonc",
+          "yaml",
+          "markdown",
+          "css"
+        ],
+        "css.format.enable": false,
+        "css.lint.unknownAtRules": "ignore",
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        },
+        "eslint.format.enable": true
+      }
+    }
+  },
+  "remoteUser": "node"
+}

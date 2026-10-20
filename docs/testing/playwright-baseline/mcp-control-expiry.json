@@ -1,0 +1,75 @@
+{
+  "revision": "d7886917722a8811b8235abb043ae328e8e46f91",
+  "scope": [
+    "PW008"
+  ],
+  "decision": "Manter as cinco verificações E2E e a espera real; acrescentar prova determinística na interface pública de integração.",
+  "impediment": "O handler resolve Date.now() no processo servidor e lê o controle persistido a cada requisição. A interface pública rejeita expiração passada; o E2E precisa observar a mutação permitida antes do prazo, recusada depois e os modos solicitado/efetivo na tela. Um relógio Vitest ou page.clock não avança o processo Next. Eliminar a espera preservando essa prova exigiria uma composição de relógio no servidor/harness além do lote; não foi criada porta de teste nem estado expirado por escrita direta.",
+  "integration": {
+    "command": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial-mcp/tests/control.integration.test.ts src/packages/editorial-mcp/tests/contract.integration.test.ts'",
+    "passed": 41,
+    "runnerDurationSeconds": 34.53,
+    "newTest": {
+      "file": "src/packages/editorial-mcp/tests/contract.integration.test.ts",
+      "title": "expires runtime mutations at the persisted deadline while preserving reads",
+      "durationSeconds": 0.26481075,
+      "proof": "Controle criado pela interface pública; handler real permite begin_editorial_task em enabledUntil - 1, recusa em enabledUntil, mantém leitura e requestedMode enabled/effectiveMode readOnly."
+    }
+  },
+  "unit": {
+    "command": "npm run test:unit -- src/packages/editorial-mcp/tests/policy.test.ts src/features/news/components/EditorialMcpControlPanel.test.tsx src/features/news/actions/editorialMcpControlActions.test.ts",
+    "passed": 19,
+    "runnerDurationSeconds": 2.06
+  },
+  "e2e": {
+    "command": "npm run test:e2e -- tests/admin/editorial-mcp-control.spec.ts --reporter=line,json",
+    "wall": {
+      "startedAtEpochMs": 1788792688022.066,
+      "wallSeconds": 38.51507520675659,
+      "exitCode": 0
+    },
+    "stats": {
+      "startTime": "2026-09-07T14:51:28.607Z",
+      "duration": 37905.193,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "admin/editorial-mcp-control.spec.ts",
+        "title": "Administrador opera, contém mutações e não sobrescreve conflito",
+        "status": "passed",
+        "durationMs": 3871,
+        "retry": 0
+      },
+      {
+        "file": "admin/editorial-mcp-control.spec.ts",
+        "title": "expiração passa o runtime para somente leitura",
+        "status": "passed",
+        "durationMs": 5797,
+        "retry": 0
+      }
+    ],
+    "workers": 1,
+    "retries": 0,
+    "retainedWaitSeconds": 5.1
+  },
+  "comparison": {
+    "baselineSummedSeconds": 7.028,
+    "baselineExpirySeconds": 5.802,
+    "currentSummedSeconds": 9.668,
+    "currentExpirySeconds": 5.797,
+    "removedE2eCases": 0,
+    "removedE2eAssertions": 0,
+    "conclusion": "Nenhuma economia estrutural; E2E inalterado e novo teste de integração acrescenta custo. Variação de amostras não prova aceleração."
+  },
+  "limitations": [
+    "Uma amostra focal com stack inicialmente parada e caches aquecidos, no mesmo worktree e máquina do baseline.",
+    "Baseline histórico de main anterior, com dependências e alterações concorrentes diferentes; sem controle pareado.",
+    "Duração Vitest informada pelo runner não inclui inicialização dos emuladores; wall E2E medido externamente.",
+    "A primeira execução falhou por credencial sem sources:write no teste novo; preparação corrigida para o escopo usado no E2E e todos os 41 contratos reexecutados com sucesso.",
+    "A auditoria final deve contabilizar todos os tiers e a espera preservada."
+  ]
+}

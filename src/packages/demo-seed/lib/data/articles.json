@@ -1,0 +1,39 @@
+[
+  {
+    "storyKey": "duplicacao-amaral-peixoto",
+    "title": "Obras de duplicação na Rodovia Amaral Peixoto exigem mudanças no acesso aos bairros de Macaé",
+    "body": "A Prefeitura de Macaé iniciou as obras de duplicação da Rodovia Amaral Peixoto no trecho entre Botafogo e Cavaleiros. Máquinas já foram posicionadas no canteiro, e o prazo informado para a conclusão é de doze meses.",
+    "status": "published",
+    "createdDaysAgo": 5,
+    "publishedDaysAgo": 4.5,
+    "corrections": [
+      {
+        "correctedDaysAgo": 4,
+        "summary": "O prazo informado pela Prefeitura é de doze meses, não de dez meses."
+      }
+    ]
+  },
+  {
+    "storyKey": "lei-iluminacao-led",
+    "title": "Câmara aprova iluminação de LED para o Centro",
+    "body": "A Câmara Municipal de Macaé aprovou em segunda votação o projeto que prevê a troca da iluminação pública do Centro por lâmpadas de LED. A mudança seguirá agora para as etapas de implantação.",
+    "status": "published",
+    "createdDaysAgo": 3,
+    "publishedDaysAgo": 2.5
+  },
+  {
+    "storyKey": "alerta-chuva-orla",
+    "title": "Defesa Civil alerta para chuva forte na orla",
+    "body": "A Defesa Civil emitiu alerta laranja para chuva forte na faixa entre Cavaleiros e Imbetiba. A previsão vale para as próximas 24 horas, e moradores devem evitar áreas sujeitas a alagamento.",
+    "status": "published",
+    "createdDaysAgo": 2,
+    "publishedDaysAgo": 1.5
+  },
+  {
+    "storyKey": "alagamento-cavaleiros",
+    "title": "Temporal causa alagamentos em Cavaleiros",
+    "body": "O temporal deixou pontos de alagamento na Praça de Cavaleiros e na Rua Zumbi dos Palmares. A Defesa Civil acompanha as áreas afetadas e orienta motoristas a procurar rotas alternativas.",
+    "status": "draft",
+    "createdDaysAgo": 0.5
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "//"
+  ],
+  "tasks": {
+    "test": {
+      "cache": false
+    },
+    "deploy": {
+      "cache": false,
+      "envMode": "loose"
+    },
+    "migrate": {
+      "cache": false,
+      "envMode": "loose"
+    }
+  }
+}

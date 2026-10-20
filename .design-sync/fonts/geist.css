@@ -1,0 +1,63 @@
+/* Geist / Geist Mono — the families the Next app loads via next/font/google.
+   Shipped locally here so design-sync bundles render in the real brand type
+   instead of a fallback. Source: the `geist` npm package (SIL OFL 1.1). */
+
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./Geist-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./Geist-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./Geist-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./Geist-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./GeistMono-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./GeistMono-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./GeistMono-Bold.woff2") format("woff2");
+}
+
+/* In the Next app these two custom properties are injected by next/font's
+   generated class on <body>. Nothing outside Next sets them, so bind them
+   here — `--font-sans` / `--font-mono` in globals.css read straight from them. */
+:root {
+  --font-geist-sans:
+    "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}

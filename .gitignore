@@ -1,0 +1,104 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+/.stryker-tmp
+/reports
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+!tests/e2e/fixtures/offering-catalog-provider/cert.pem
+!tests/e2e/fixtures/offering-catalog-provider/key.pem
+*~lock~
+*.temp.md
+newsroom-coordination-*.html
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*-debug.log
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/apps/*/.vinext/
+/apps/*/.vite/
+/apps/*/.wrangler/
+/apps/*/dist/
+/apps/*/.next/
+/.nx/
+test_output.txt
+
+
+todo.md
+
+# local env
+.env.local
+
+# design-sync (claude.ai/design)
+/.ds-sync/
+/ds-bundle/
+/.design-sync/.cache/
+/.design-sync/learnings/
+/.design-sync/node_modules
+
+# impeccable-ignore-start
+# Policy and preservation: docs/agents/impeccable-artifacts.md.
+# Keep only the shared inputs; ** also covers nested workspaces.
+**/.impeccable/**
+!**/.impeccable/config.json
+!**/.impeccable/design.json
+!**/.impeccable/live/
+**/.impeccable/live/**
+!**/.impeccable/live/config.json
+# Runtime layouts still read by the installed Impeccable.
+**/.impeccable-live/
+**/.impeccable-live.json
+# impeccable-ignore-end
+
+# Local task cache and disposable Worker bundles
+**/.turbo/
+/apps/www-origin/dist/
+/apps/api-worker/dist/
+
+/tests/e2e/test-results/
+/tests/e2e/playwright-report/
+/tests/e2e/blob-report/
+.dev.vars
+/dist/
+/.vinext/
+/.wrangler/
+
+# Gerado do Notion por `npm run product:sync`; o conteúdo vive só no Notion.
+/PRODUCT.md

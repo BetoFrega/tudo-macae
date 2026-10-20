@@ -1,0 +1,50 @@
+{
+  "baselineRevision": "1398478e6c0ab626cdebeac257115e5371345e31",
+  "baselineFullResult": {
+    "startTime": "2026-09-07T18:31:10.642Z",
+    "duration": 347161.461,
+    "expected": 117,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "baselineWallSeconds": 347.730784083,
+  "mapping": {
+    "PW003": "PW004",
+    "PW009": "PW058",
+    "PW010": "PW001",
+    "PW017": "PW018",
+    "PW020": "PW019",
+    "PW034": "PW035",
+    "PW073": "PW071",
+    "PW085": "PW083",
+    "PW090": "PW089"
+  },
+  "removedCases": 9,
+  "applicationCasesBefore": 101,
+  "applicationCasesAfter": 92,
+  "harnessCases": 16,
+  "fullCasesAfter": 108,
+  "coverage": "Todas as verificações permanecem em E2E; não houve migração de camada neste lote.",
+  "preconditions": "PW034 foi incorporado a PW035 mantendo usuários sem nova confirmação de email, em vez de PW023 que passou a confirmar email. Mídia mantém ausência do heading e mensagens para ambos os papéis; Editor inclui a rota antes ausente. Publicação e redirect continuam aguardados.",
+  "removedPreparation": "Nove preparações de casos independentes, incluindo duas publicações completas de matéria, dois anúncios públicos/privados adicionais e logins/navegações administrativas e editoriais repetidos. Nenhum dado mutável é compartilhado entre casos.",
+  "validation": {
+    "command": "npm run test:e2e -- tests/admin/access-control.spec.ts tests/admin/ads.spec.ts tests/admin/media.spec.ts tests/admin/users.spec.ts tests/ads/ad-advertiser-info.spec.ts tests/ads/my-ads.spec.ts tests/newsroom/access-control.spec.ts tests/newsroom/editorial-activity.spec.ts tests/newsroom/homepage-news.spec.ts tests/newsroom/news-index.spec.ts --reporter=line,json",
+    "result": {
+      "startTime": "2026-09-07T18:39:31.493Z",
+      "duration": 88904.22,
+      "expected": 22,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "workers": 1,
+    "retries": 0,
+    "tree": "alterações locais antes do commit de consolidação"
+  },
+  "reviews": {
+    "standards": 0,
+    "spec": 0
+  },
+  "limitation": "A seleção focal valida comportamento; não estabelece ganho integral. Medição final da revisão limpa ainda pendente."
+}

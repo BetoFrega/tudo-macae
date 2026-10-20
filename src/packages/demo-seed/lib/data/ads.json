@@ -1,0 +1,162 @@
+[
+  {
+    "key": "imperial-kitnet-centro",
+    "businessKey": "imperial-imoveis",
+    "categorySlug": "imoveis",
+    "subcategorySlug": "aluguel",
+    "title": "Aluguel de kitnet mobiliada no Centro",
+    "bodyFile": "imoveis-aluguel.md",
+    "status": "active",
+    "createdDaysAgo": 45
+  },
+  {
+    "key": "imperial-apto-granja",
+    "businessKey": "imperial-imoveis",
+    "categorySlug": "imoveis",
+    "subcategorySlug": "aluguel",
+    "title": "Apartamento 2 quartos na Granja dos Cavaleiros",
+    "bodyFile": "imoveis-aluguel.md",
+    "status": "active",
+    "createdDaysAgo": 38
+  },
+  {
+    "key": "imperial-sobrado-lagomar",
+    "businessKey": "imperial-imoveis",
+    "categorySlug": "imoveis",
+    "subcategorySlug": "venda",
+    "title": "Sobrado com quintal à venda na Lagomar",
+    "bodyFile": "imoveis-venda.md",
+    "status": "active",
+    "createdDaysAgo": 33
+  },
+  {
+    "key": "imperial-vaga-garagem",
+    "businessKey": "imperial-imoveis",
+    "categorySlug": "imoveis",
+    "subcategorySlug": "venda",
+    "title": "Vaga de garagem coberta no Miramar",
+    "bodyFile": "imoveis-venda.md",
+    "status": "paused",
+    "createdDaysAgo": 4
+  },
+  {
+    "key": "ilha-diaria-cavaleiros",
+    "businessKey": "pousada-da-ilha",
+    "categorySlug": "imoveis",
+    "subcategorySlug": "temporada",
+    "title": "Diária de temporada a dez minutos da Praia dos Cavaleiros",
+    "bodyFile": "imoveis-temporada.md",
+    "status": "active",
+    "createdDaysAgo": 22
+  },
+  {
+    "key": "farol-kit-embreagem",
+    "businessKey": "oficina-farol",
+    "categorySlug": "veiculos",
+    "subcategorySlug": "pecas",
+    "title": "Kit de embreagem e motor de arranque revisados",
+    "bodyFile": "veiculos-pecas.md",
+    "status": "active",
+    "createdDaysAgo": 28
+  },
+  {
+    "key": "cabral-reforma-banheiro",
+    "businessKey": "cabral-reformas",
+    "categorySlug": "servicos",
+    "subcategorySlug": "manutencao",
+    "title": "Reforma completa de banheiro e cozinha",
+    "bodyFile": "servicos-manutencao.md",
+    "status": "active",
+    "createdDaysAgo": 60
+  },
+  {
+    "key": "cabral-pintura-residencial",
+    "businessKey": "cabral-reformas",
+    "categorySlug": "servicos",
+    "subcategorySlug": "manutencao",
+    "title": "Pintura residencial e comercial com orçamento no mesmo dia",
+    "bodyFile": "servicos-manutencao.md",
+    "status": "active",
+    "createdDaysAgo": 50
+  },
+  {
+    "key": "riviera-instalacao-split",
+    "businessKey": "riviera-climatizacao",
+    "categorySlug": "servicos",
+    "subcategorySlug": "manutencao",
+    "title": "Instalação de ar-condicionado split até 12000 BTUs",
+    "bodyFile": "servicos-manutencao.md",
+    "status": "active",
+    "createdDaysAgo": 15
+  },
+  {
+    "key": "riviera-manutencao-inverno",
+    "businessKey": "riviera-climatizacao",
+    "categorySlug": "servicos",
+    "subcategorySlug": "manutencao",
+    "title": "Manutenção preventiva de ar-condicionado — pacote de inverno",
+    "bodyFile": "servicos-manutencao.md",
+    "status": "paused",
+    "createdDaysAgo": 3
+  },
+  {
+    "key": "carla-blusa-croche",
+    "businessKey": "carla-artesanato",
+    "categorySlug": "outros",
+    "subcategorySlug": "roupas",
+    "title": "Blusa de crochê feita à mão do P ao GG",
+    "bodyFile": "outros-roupas.md",
+    "status": "active",
+    "createdDaysAgo": 70
+  },
+  {
+    "key": "carla-porta-copos",
+    "businessKey": "carla-artesanato",
+    "categorySlug": "outros",
+    "subcategorySlug": "diversos",
+    "title": "Kit de porta-copos de crochê personalizados",
+    "bodyFile": "outros-diversos.md",
+    "status": "active",
+    "createdDaysAgo": 65
+  },
+  {
+    "key": "marcos-ensaio-gestante",
+    "businessKey": "marcos-fotografia",
+    "categorySlug": "outros",
+    "subcategorySlug": "diversos",
+    "title": "Ensaio fotográfico de gestante e newborn",
+    "bodyFile": "outros-diversos.md",
+    "status": "active",
+    "createdDaysAgo": 55
+  },
+  {
+    "key": "juliana-ingles-iniciante",
+    "businessKey": "juliana-idiomas",
+    "categorySlug": "outros",
+    "subcategorySlug": "diversos",
+    "title": "Aulas particulares de inglês para iniciante e intermediário",
+    "bodyFile": "outros-diversos.md",
+    "status": "active",
+    "createdDaysAgo": 48
+  },
+  {
+    "key": "lagoa-banho-tosa",
+    "businessKey": "pet-shop-lagoa",
+    "categorySlug": "outros",
+    "subcategorySlug": "diversos",
+    "title": "Banho e tosa com busca e entrega na Lagomar",
+    "bodyFile": "outros-diversos.md",
+    "status": "paused",
+    "createdDaysAgo": 18
+  },
+  {
+    "key": "lagoa-racao-premium",
+    "businessKey": "pet-shop-lagoa",
+    "categorySlug": "outros",
+    "subcategorySlug": "diversos",
+    "title": "Ração premium para cães e gatos — condição especial de lançamento",
+    "bodyFile": "outros-diversos.md",
+    "status": "paused",
+    "createdDaysAgo": 6
+  }
+]

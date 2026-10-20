@@ -1,0 +1,36 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "tudo-macae-www-origin",
+  "main": "index.ts",
+  "compatibility_date": "2026-09-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1,
+    "logs": {
+      "enabled": true,
+      // Invocation logs record the raw request URL, including typed searches
+      // (`/busca?q=`, `/negocios?nome=`); `www_origin_routed` carries the diagnostics.
+      "invocation_logs": false
+    }
+  },
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
+  // Unsampled rollback signals: docs/agents/www-origin-runbook.md#observability.
+  "analytics_engine_datasets": [{ "binding": "WWW_ORIGIN_SIGNALS", "dataset": "www_origin_signals" }],
+  "env": {
+    "production": {
+      "name": "tudo-macae-www-origin-production",
+      // No `routes` key: Wrangler would replace the attached
+      // www and mcp routes with this list on every deploy; an empty list
+      // detaches them. Attaching is an operation in the host runbooks.
+      "workers_dev": false,
+      "version_metadata": { "binding": "CF_VERSION_METADATA" },
+      "analytics_engine_datasets": [{ "binding": "WWW_ORIGIN_SIGNALS", "dataset": "www_origin_signals" }],
+      "services": [{ "binding": "WEB_WORKER", "service": "tudo-macae-terms-workers" }],
+      "vars": {
+        "WORKERS_ENVIRONMENT": "production"
+      }
+    }
+  }
+}

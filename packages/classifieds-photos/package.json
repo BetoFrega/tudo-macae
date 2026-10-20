@@ -1,0 +1,25 @@
+{
+  "name": "@tudomacae/classifieds-photos",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./transfer": "./transfer.ts",
+    "./paths": "./paths.ts",
+    "./inventory": "./inventory.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/classifieds-photos/tests"
+  },
+  "dependencies": {
+    "zod": "^4.6.6",
+    "@tudomacae/ads": "*",
+    "@tudomacae/public-image-delivery": "*"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "tudo-macae-public-article-index-prototype",
+  "main": "entry.ts",
+  "compatibility_date": "2026-09-22",
+  "workers_dev": true,
+  "version_metadata": {
+    "binding": "WORKER_VERSION"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": false
+    }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tudo-macae-public-article-index-prototype",
+      "database_id": "local-public-article-index-prototype",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "account_id": "abd87961a304b923acbc329f0b0d1919",
+  "env": {
+    "production": {
+      "name": "tudo-macae-public-article-index",
+      "vars": {
+        "OIDC_AUDIENCE": "https://tudo-macae-public-article-index.frega.workers.dev",
+        "OIDC_SERVICE_ACCOUNT": "cloud-run-www-runtime@macaetem-dev.iam.gserviceaccount.com"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "tudo-macae-public-article-index",
+          "database_id": "3c6c474d-aebb-453b-b5ed-687debf4cac0",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "version_metadata": {
+        "binding": "WORKER_VERSION"
+      }
+    }
+  }
+}

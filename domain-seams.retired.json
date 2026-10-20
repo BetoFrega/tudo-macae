@@ -1,0 +1,82 @@
+[
+  {
+    "id": "authentication-session-workspace",
+    "reason": "Next resolves sessions through the API Worker (Better Auth on D1); createSessionResolver had no consumer after the Firebase Auth branch left the code."
+  },
+  {
+    "id": "authentication-session-cookie-workspace",
+    "reason": "Sessions are issued by the API Worker; createAuthenticationCookieIssuer only wrapped Firebase ID tokens and had no consumer after the Firebase Auth branch left the code."
+  },
+  {
+    "id": "workspace-ad-image-revocation",
+    "reason": "Photo revocation ran only in the Firestore Classifieds runtime removed by #2022; the API Worker owns photo lifecycle."
+  },
+  {
+    "id": "workspace-ad-pending-photo-access",
+    "reason": "Pending photo access ran only in the Firestore Classifieds runtime removed by #2022; the API Worker owns photo lifecycle."
+  },
+  {
+    "id": "workspace-pending-photo-cleanup",
+    "reason": "Pending photo cleanup ran only in the Firestore Classifieds runtime removed by #2022; the API Worker owns photo lifecycle."
+  },
+  {
+    "id": "workspace-pending-publication-image-policy",
+    "reason": "The pending publication image policy ran only in the Firestore Classifieds runtime removed by #2022."
+  },
+  {
+    "id": "workspace-ad-image-cleanup-plan",
+    "reason": "Image cleanup planning ran only in the Firestore Classifieds runtime removed by #2022."
+  },
+  {
+    "id": "workspace-ad-published-photo-access",
+    "reason": "Published photo access ran only in the Firestore Classifieds runtime removed by #2022; the API Worker owns photo lifecycle."
+  },
+  {
+    "id": "workspace-ad-image-generation-removal",
+    "reason": "Image generation removal ran only in the Firestore Classifieds runtime removed by #2022."
+  },
+  {
+    "id": "workspace-ad-image-cleanup-sweep",
+    "reason": "The image cleanup sweep ran only in the Firestore Classifieds runtime removed by #2022."
+  },
+  {
+    "id": "classifieds-qualification",
+    "reason": "The legacy/worker Classifieds composition ended with the #1719 cut; the API Worker is the only Classifieds authority."
+  },
+  {
+    "id": "classifieds-authority-client",
+    "reason": "The Classifieds authority read selected between legacy and worker compositions, which ended with the #1719 cut."
+  },
+  {
+    "id": "editorial-credential-access-workspace",
+    "reason": "Editorial PATs and Client credentials had no consumer after the editorial MCP was retired and their Firestore adapters left in #2071."
+  },
+  {
+    "id": "editorial-client-sessions-workspace",
+    "reason": "Short editorial Client sessions served only the retired editorial MCP/CLI; their Firestore adapter left in #2071."
+  },
+  {
+    "id": "editorial-credential-issuance-workspace",
+    "reason": "PAT issuance served only the retired editorial MCP/CLI; its Firestore adapter left in #2071."
+  },
+  {
+    "id": "editorial-client-management",
+    "reason": "Editorial Client registration and listing had no consumer after the editorial MCP was retired; its Firestore adapter left in #2071."
+  },
+  {
+    "id": "editorial-activity-reader",
+    "reason": "Editorial activity reads had no consumer; the Firestore reader left in #2071 and the API Worker writes activity through its own D1 adapter."
+  },
+  {
+    "id": "editorial-transfer",
+    "reason": "The Firebase-to-D1 editorial transfer ran only before the editorial authority moved to the API Worker; the D1 is the only source after the cut."
+  },
+  {
+    "id": "workspace-public-image-revocation",
+    "reason": "Storage revocation receipts served only the Firebase Storage photo origin; Classifieds photos are Hosted Images behind the API Worker."
+  },
+  {
+    "id": "workspace-public-image-purge-workflow",
+    "reason": "The purge workflow recorded Storage revocation receipts for the Firebase Storage photo origin only; Classifieds photos are Hosted Images behind the API Worker, whose photo lifecycle purges them."
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "name": "@tudomacae/media-files",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./sanitization": "./sanitization.ts",
+    "./fileInspectionProduction": "./fileInspectionProduction.ts"
+  },
+  "dependencies": {
+    "@tudomacae/media": "*",
+    "sharp": "0.35.5"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/media-files/tests"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

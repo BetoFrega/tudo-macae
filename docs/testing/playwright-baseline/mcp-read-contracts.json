@@ -1,0 +1,209 @@
+{
+  "scope": [
+    "PW081"
+  ],
+  "result": "Caso dedicado removido; autenticação HTTP consolidada no cenário de hostname, leituras autenticadas já exercitadas pelo cenário de rate limit.",
+  "migratedVariants": [
+    "PW081-A03",
+    "PW081-A04",
+    "PW081-A05",
+    "PW081-A06"
+  ],
+  "consolidatedE2eAssertions": [
+    "PW081-A01",
+    "PW081-A02"
+  ],
+  "executionBeforeRemoval": {
+    "revision": "7c487243",
+    "integrationPassed": 31,
+    "integrationRunnerSeconds": 9.23,
+    "integrationCommand": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial-mcp/tests/contract.integration.test.ts'",
+    "note": "Integração executada antes do commit; arquivo de contrato inalterado em 7c487243.",
+    "e2eCommand": "npm run test:e2e -- tests/newsroom/editorial-mcp.spec.ts --grep 'Hostname de máquina|Cliente local recebe rateLimited' --reporter=line,json",
+    "e2e": {
+      "stats": {
+        "startTime": "2026-09-07T16:55:23.046Z",
+        "duration": 64836.445999999996,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "tests": [
+        {
+          "title": "Hostname de máquina expõe somente o recurso MCP canônico",
+          "status": "passed",
+          "durationMs": 1507,
+          "retry": 0
+        },
+        {
+          "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+          "status": "passed",
+          "durationMs": 35294,
+          "retry": 0
+        }
+      ]
+    }
+  },
+  "validationAfterRemoval": {
+    "command": "npm run test:e2e -- tests/newsroom/editorial-mcp.spec.ts --reporter=line,json",
+    "e2e": {
+      "stats": {
+        "startTime": "2026-09-07T16:57:19.276Z",
+        "duration": 61506.918,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "tests": [
+        {
+          "title": "Hostname de máquina expõe somente o recurso MCP canônico",
+          "status": "passed",
+          "durationMs": 1453,
+          "retry": 0
+        },
+        {
+          "title": "Editor acompanha evidência e encerra uma pesquisa assistida retomável",
+          "status": "passed",
+          "durationMs": 1974,
+          "retry": 0
+        },
+        {
+          "title": "Cliente local organiza e prioriza uma pauta com as Capturas selecionadas",
+          "status": "passed",
+          "durationMs": 1055,
+          "retry": 0
+        },
+        {
+          "title": "Cliente local revisa o Rascunho, retoma a instrução e reapresenta sem publicar",
+          "status": "passed",
+          "durationMs": 1289,
+          "retry": 0
+        },
+        {
+          "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+          "status": "passed",
+          "durationMs": 31713,
+          "retry": 0
+        }
+      ]
+    }
+  },
+  "removedWork": {
+    "cases": 1,
+    "relativeTo": "PR head 6d915cfa",
+    "setup": [
+      "Uma execução do beforeEach com administrador e ativação do controle MCP",
+      "Usuário editor e sua sessão",
+      "Fonte",
+      "Captura",
+      "Pauta",
+      "Mutação de prioridade",
+      "Cliente editorial e PAT",
+      "Conexão SDK e percurso da fila até a Pauta própria"
+    ],
+    "retainedWork": "A requisição initialize sem PAT e suas duas asserções foram transferidas; nenhuma chamada adicionada ao cenário de rate limit.",
+    "additionalIntegrationCases": 0
+  },
+  "limitations": [
+    "Validação focal pós-remoção cobre todas as cinco jornadas do arquivo, com um worker e zero retries.",
+    "As amostras anteriores e posteriores têm escopos distintos e não provam economia de tempo.",
+    "O rate limit variou de 35.294 s para 31.713 s nas amostras, reforçando a necessidade de comparação controlada.",
+    "A auditoria final ainda deve medir a suíte completa e todos os tiers afetados."
+  ],
+  "initialImplementation": {
+    "revision": "ccc8e9443278a935e6d18a972f82e02dad8752b7",
+    "scope": [
+      "PW081"
+    ],
+    "migratedVariants": [
+      "PW081-A04",
+      "PW081-A05",
+      "PW081-A06"
+    ],
+    "retainedOriginalAssertions": [
+      "PW081-A01",
+      "PW081-A02",
+      "PW081-A03"
+    ],
+    "representativeE2e": {
+      "file": "tests/newsroom/editorial-mcp.spec.ts",
+      "line": 599,
+      "expression": "expect(foundStory).toBe(true)",
+      "reason": "Prova de leitura autenticada da própria Pauta no endpoint real; não substitui a matriz de dois IDs da integração."
+    },
+    "executionBeforeRemoval": {
+      "replacementRevision": "fa69da5664ac67ca218127f0f96dda2270efae54",
+      "removedInRevision": "ccc8e9443278a935e6d18a972f82e02dad8752b7",
+      "passed": 31,
+      "runnerDurationSeconds": 12.09
+    },
+    "integration": {
+      "command": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial-mcp/tests/contract.integration.test.ts'",
+      "passed": 31,
+      "runnerDurationSeconds": 12.09,
+      "replacementTest": "continues a paginated queue read through fresh stateless clients",
+      "replacementDurationSeconds": 0.241465167,
+      "additionalWork": "Asserção de editorialClientId em cada atividade de leitura já consultada; nenhum caso ou preparação adicionado."
+    },
+    "e2e": {
+      "command": "npm run test:e2e -- tests/newsroom/editorial-mcp.spec.ts --grep \"Endpoint MCP exige\" --reporter=line,json",
+      "wall": {
+        "startedAtEpochMs": 1788796620867.396,
+        "wallSeconds": 30.71929383277893,
+        "exitCode": 0
+      },
+      "stats": {
+        "startTime": "2026-09-07T15:57:01.424Z",
+        "duration": 30140.905,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "tests": [
+        {
+          "file": "newsroom/editorial-mcp.spec.ts",
+          "title": "Endpoint MCP exige autenticação e permite leitura da fila",
+          "status": "passed",
+          "durationMs": 1776,
+          "retry": 0
+        }
+      ],
+      "workers": 1,
+      "retries": 0,
+      "removedPreparation": "Uma Captura, uma Pauta e a mutação de prioridade correspondente.",
+      "retainedCursor": "Continua até encontrar a Pauta própria, pois a fila é compartilhada. Não exige duas páginas; quantidade real depende de dados anteriores.",
+      "retainedHttp": "Initialize sem PAT exige 401 e envelope com requestId; cliente SDK autenticado encontra a Pauta preparada pela aplicação."
+    },
+    "synchronization": {
+      "base": "43392945f3cd623a22b8ecf86a21fdc8af2cce5d",
+      "headBeforeDocumentation": "a9be633a73fde662d5fbd5594b8fc7a1b1f1af95",
+      "rangeDiff": "Ambos os patches preservados: fa69da56 -> 780d30ed; ccc8e944 -> a9be633a.",
+      "integrationCommand": "npm run test:integration -- src/packages/editorial-mcp/tests/contract.integration.test.ts src/packages/editorial-mcp/tests/mediaIngestion.integration.test.ts src/packages/media/tests/quarantineCleanup.integration.test.ts",
+      "integrationPassed": 34,
+      "integrationRunnerSeconds": 14.34,
+      "unitCommand": "npm run test:unit -- src/packages/media/tests/quarantineCleanup.test.ts",
+      "unitPassed": 14,
+      "unitRunnerSeconds": 0.25
+    },
+    "comparison": {
+      "baselineTestSeconds": 0.526,
+      "currentTestSeconds": 1.776,
+      "baselineAssertions": 6,
+      "currentAssertions": 4,
+      "baselineSeededStories": 2,
+      "currentSeededStories": 1,
+      "removedCases": 0,
+      "conclusion": "Menos preparação e nenhuma exigência de segunda página no E2E; a amostra focal não demonstra economia integral."
+    },
+    "limitations": [
+      "Uma amostra focal, stack inicialmente parada e caches aquecidos no mesmo worktree/máquina do baseline.",
+      "Baseline histórico e revisão atual têm outras mudanças/dependências; comparação não pareada.",
+      "Tempo Vitest do runner exclui startup dos emuladores; wall E2E medido externamente.",
+      "A medida E2E precede o rebase; as mudanças de limpeza de mídia incorporadas foram revalidadas nos contratos afetados.",
+      "A auditoria final deve incluir todos os tiers e o custo variável de localizar a fixture por cursor."
+    ]
+  }
+}

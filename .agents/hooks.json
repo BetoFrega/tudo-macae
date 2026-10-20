@@ -1,0 +1,84 @@
+{
+  "worktree-bootstrap": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/bootstrap-worktree.sh\"",
+            "timeout": 600
+          }
+        ]
+      }
+    ]
+  },
+  "guard-protected-files": {
+    "PreToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/guard-protected-files.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "lint-touched-file": {
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/lint-touched-file.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "green-gate": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/antigravity-green-gate.sh\"",
+        "timeout": 300
+      }
+    ]
+  },
+  "impeccable-design-detector": {
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+        "timeout": 30
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@tudomacae/api-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.worker.config.mts apps/api-worker",
+    "deploy": "node deploy.mjs"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.8.1",
+    "@tudomacae/ads": "*",
+    "@tudomacae/advertiser-identity": "*",
+    "@tudomacae/authentication": "*",
+    "@tudomacae/categories": "*",
+    "@tudomacae/classifieds-client": "*",
+    "@tudomacae/classifieds-persistence": "*",
+    "@tudomacae/classifieds-photos": "*",
+    "@tudomacae/editorial-access": "*",
+    "@tudomacae/editorial-blog": "*",
+    "@tudomacae/editorial-media": "*",
+    "@tudomacae/editorial-persistence": "*",
+    "@tudomacae/editorial-sourcing": "*",
+    "@tudomacae/media": "*",
+    "@tudomacae/public-image-delivery": "*",
+    "@tudomacae/text-normalization": "*",
+    "@tudomacae/www-origin-routing": "*",
+    "better-auth": "1.7.7",
+    "jose": "^6.2.12",
+    "lucide-react": "^1.48.0",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261016.1",
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.149.0"
+  }
+}

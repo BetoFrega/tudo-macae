@@ -1,0 +1,1 @@
+/* Hourly expiry reads only due Activity; without this index each run scans every retained Activity. */ CREATE INDEX editorial_activity_expiry ON editorial_records (json_extract(body, '$.expiresAt')) WHERE kind = 'activity';

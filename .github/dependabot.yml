@@ -1,0 +1,58 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
+    groups:
+      react-deps:
+        patterns:
+          - "react"
+          - "react-dom"
+      # Next ships `eslint-config-next` as a matched pair with `next` — the
+      # config imports from the framework's own build — so it moves with Next
+      # rather than with the linters below.
+      next:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+      # The lint stack constrains itself through peer dependencies, so a bump
+      # that arrives on its own can land a tree where `eslint .` cannot even
+      # load its config. That is what happened with
+      # eslint-plugin-better-tailwindcss v4: it needs tailwind-csstree ^0.3.3,
+      # which needs @eslint/css >=1.0.0, and the three arrived as two separate
+      # PRs plus one that was never opened. Grouping them means the resolver
+      # sees the whole set at once and CI tests the combination that will
+      # actually be merged.
+      eslint:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "@stylistic/eslint-plugin*"
+          - "@typescript-eslint/*"
+          - "tailwind-csstree"
+        exclude-patterns:
+          - "eslint-config-next"
+    ignore:
+      # TypeScript 7 dropped the stable programmatic compiler API, so
+      # @typescript-eslint/parser cannot run on it at all. npm refuses to
+      # install the two together (`peer typescript@">=4.8.4 <6.1.0"`), and
+      # forcing past that only trades the ERESOLVE for an ESLint crash.
+      # typescript-eslint closed its TS 7 support request as not planned
+      # because the fix has to land in TypeScript 7.1, so there is nothing to
+      # do here but wait — and without this, Dependabot reopens the PR daily.
+      #
+      # The bound mirrors the parser's own peer range rather than naming 7.x:
+      # TypeScript 6.0 is still installable and worth taking as a stepping
+      # stone. Drop this entry once typescript-eslint supports TypeScript 7.
+      #
+      # @expires 2026-11-03 TypeScript 7.1 is due in autumn 2026; re-check
+      # whether typescript-eslint can build on it and lift this hold (#256).
+      - dependency-name: "typescript"
+        versions: [">= 6.1"]

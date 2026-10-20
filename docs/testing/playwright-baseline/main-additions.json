@@ -1,0 +1,213 @@
+{
+  "revisions": [
+    "13de607b3c2c7f40406128253d2ba1829109d191",
+    "c769f71e72f62cb3e0182aee5a4f56ad3452315e"
+  ],
+  "files": [
+    "tests/_helpers/ads/createAdThroughApp.ts",
+    "tests/_helpers/auth/auth-test-utils.ts",
+    "tests/_helpers/auth/db/deleteFixtureDocuments.ts",
+    "tests/_helpers/auth/helpers/authentication.ts",
+    "tests/_helpers/auth/helpers/verificationAccounts.ts",
+    "tests/ads/ad-status.spec.ts",
+    "tests/ads/ad-with-photo.spec.ts",
+    "tests/ads/create-new-ad.spec.ts",
+    "tests/ads/publish-as-visitor.spec.ts",
+    "tests/authentication/email-verification.spec.ts",
+    "tests/fixture-cleanup.spec.ts"
+  ],
+  "addedAssertionSites": [
+    {
+      "sourceRevision": "13de607b3c2c7f40406128253d2ba1829109d191",
+      "file": "tests/ads/publish-as-visitor.spec.ts",
+      "line": 110,
+      "expression": "expect(card.getByText(\"Pausado\", { exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "13de607b3c2c7f40406128253d2ba1829109d191",
+      "file": "tests/ads/publish-as-visitor.spec.ts",
+      "line": 113,
+      "expression": "expect(page.getByRole(\"alert\").filter({ hasText: \"Este anúncio foi pausado\" })).toHaveText(\"Este anúncio foi pausado. Use Meus anúncios para reativá-lo.\")"
+    },
+    {
+      "sourceRevision": "13de607b3c2c7f40406128253d2ba1829109d191",
+      "file": "tests/ads/publish-as-visitor.spec.ts",
+      "line": 115,
+      "expression": "expect(card.getByText(\"Pausado\", { exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/ads/publish-as-visitor.spec.ts",
+      "line": 58,
+      "expression": "expect(page.getByRole(\"button\", { name: \"Minha conta\" })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 19,
+      "expression": "expect(page.getByRole(\"textbox\", { name: \"Nome do anunciante\" })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 23,
+      "expression": "expect(page.getByRole(\"button\", { name: \"Publicar anúncio\", exact: true })).toBeDisabled()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 26,
+      "expression": "expect(page.getByRole(\"heading\", { name: \"Confirme seu e-mail\" })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 27,
+      "expression": "expect(page.getByRole(\"region\", { name: \"Confirme seu e-mail\", exact: true }).getByText(unregisteredCredentials.email, { exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 28,
+      "expression": "expect(page.getByRole(\"status\").filter({ hasText: \"E-mail enviado\" })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 36,
+      "expression": "expect(confirmation.getByRole(\"heading\", { name: \"E-mail confirmado\", exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 38,
+      "expression": "expect(confirmation.getByRole(\"button\", { name: \"Entrar na minha conta\" })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 41,
+      "expression": "expect(confirmation.getByRole(\"heading\", { name: \"E-mail confirmado\", exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 42,
+      "expression": "expect(confirmation.getByRole(\"link\", { name: \"Ir para minha conta\", exact: true })).toHaveAttribute(\"href\", \"/minha-conta/anuncios\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 43,
+      "expression": "expect(confirmation.getByRole(\"link\", { name: \"Continuar publicação\" })).toHaveCount(0)"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 48,
+      "expression": "expect(page.getByRole(\"heading\", { name: \"E-mail confirmado\", exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 49,
+      "expression": "expect(page.getByRole(\"complementary\", { name: \"Pendência da conta\" })).not.toContainText(\"Confirme seu e-mail\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 51,
+      "expression": "expect(page.getByRole(\"button\", { name: \"Publicar anúncio\", exact: true })).toBeEnabled()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 52,
+      "expression": "expect(page.getByRole(\"heading\", { name: \"Seu anúncio está publicado\" })).toHaveCount(0)"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 54,
+      "expression": "expect(page.getByRole(\"heading\", { name: \"Seu anúncio está publicado\" })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 65,
+      "expression": "expect(page.getByText(/O novo endereço só valerá após confirmar/)).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 66,
+      "expression": "expect(page.getByRole(\"region\", { name: \"Confirme seu e-mail\", exact: true }).getByText(userCredentials.email, { exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 69,
+      "expression": "expect(page.getByRole(\"heading\", { name: \"E-mail confirmado\", exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/authentication/email-verification.spec.ts",
+      "line": 72,
+      "expression": "expect(page.getByRole(\"heading\", { name: \"E-mail confirmado\", exact: true })).toBeVisible()"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 19,
+      "expression": "expect(confirmDisposableEmail(\"manual@example.com\")).rejects.toThrow(\"Conta não pertence\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 20,
+      "expression": "expect(disposableVerificationLink(\"manual@example.com\")).rejects.toThrow(\"Conta não pertence\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 23,
+      "expression": "expect((await auth.getUser(user.uid)).emailVerified).toBe(false)"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 25,
+      "expression": "expect(confirmDisposableEmail(user.email)).rejects.toThrow(\"Conta permanente\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 26,
+      "expression": "expect(disposableVerificationLink(user.email)).rejects.toThrow(\"Conta permanente\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 29,
+      "expression": "expect((await auth.getUser(user.uid)).emailVerified).toBe(true)"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 32,
+      "expression": "expect(confirmDisposableEmail(user.email)).rejects.toThrow(\"Conta não pertence\")"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 36,
+      "expression": "expect((await db.collection(\"email_verification_attempts\").doc(user.uid).get()).exists).toBe(false)"
+    },
+    {
+      "sourceRevision": "c769f71e72f62cb3e0182aee5a4f56ad3452315e",
+      "file": "tests/fixture-cleanup.spec.ts",
+      "line": 37,
+      "expression": "expect(confirmDisposableEmail(user.email)).rejects.toThrow(\"Conta não pertence\")"
+    }
+  ]
+}

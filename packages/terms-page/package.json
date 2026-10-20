@@ -1,0 +1,25 @@
+{
+  "name": "@tudomacae/terms-page",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./page-frame": "./PageFrame.tsx",
+    "./renderer": "./MarkdownRenderer.tsx",
+    "./external-web-link": "./externalWebLink.ts",
+    "./terms-and-conditions.md": "./terms-and-conditions.md"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "scripts": {
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/terms-page/tests"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.3",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "jsdom": "^30.1.2"
+  }
+}

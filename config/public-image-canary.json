@@ -1,0 +1,38 @@
+{
+  "status": "adopted",
+  "zone": "tudomacae.com.br",
+  "worker": {
+    "host": "images.tudomacae.com.br",
+    "route": "images.tudomacae.com.br/v1/*",
+    "name": "tudo-macae-public-images-production"
+  },
+  "presets": {
+    "ad/card": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    "ad/gallery": [256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    "ad/thumbnail": [128, 256],
+    "profile/avatar": [48, 64, 96, 128]
+  },
+  "transformation": {
+    "fit": "scale-down",
+    "format": "auto",
+    "metadata": "none",
+    "quality": 75
+  },
+  "quota": {
+    "monthlyUniqueTransformations": 5000,
+    "actionAtLimit": "use-approved-billing-without-consumption-gate"
+  },
+  "activation": {
+    "transformation": {
+      "provider": "cloudflare",
+      "mode": "always-on",
+      "transformedEdgeCacheSeconds": 31536000,
+      "transformedEdgeInvalidation": "automatic-purge-on-origin-deletion"
+    },
+    "requiresExplicitProductionOperation": true
+  },
+  "rollback": {
+    "transformation": "Restore the previous qualified Worker version; verify delivery and revoked URLs",
+    "edge": "Remove the Worker route only when restoring a qualified Worker version cannot recover delivery"
+  }
+}

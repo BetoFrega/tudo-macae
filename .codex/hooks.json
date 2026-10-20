@@ -1,0 +1,86 @@
+{
+  "description": "Repository guardrails shared with Claude Code and Antigravity.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/bootstrap-worktree.sh\"",
+            "timeout": 600,
+            "statusMessage": "Installing worktree dependencies"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+            "timeout": 5,
+            "statusMessage": "Preparing build session"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/guard-protected-files.sh\"",
+            "timeout": 10,
+            "statusMessage": "Conferindo arquivo protegido"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/lint-touched-file.sh\"",
+            "timeout": 60,
+            "statusMessage": "Lint no arquivo tocado"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+            "timeout": 5,
+            "statusMessage": "Checking UI changes"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/codex-green-gate.sh\"",
+            "timeout": 300,
+            "statusMessage": "Portão de verde"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+            "timeout": 30,
+            "statusMessage": "Design deep pass"
+          }
+        ]
+      }
+    ]
+  }
+}

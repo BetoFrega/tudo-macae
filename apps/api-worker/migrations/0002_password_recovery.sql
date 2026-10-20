@@ -1,0 +1,1 @@
+CREATE TABLE password_recovery (tokenHash TEXT PRIMARY KEY, userId TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE, recipient TEXT NOT NULL, expiresAt INTEGER NOT NULL);

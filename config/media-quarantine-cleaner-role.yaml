@@ -1,0 +1,5 @@
+title: Media quarantine cleaner
+description: Deletes objects only under the quarantine IAM condition.
+stage: GA
+includedPermissions:
+  - storage.objects.delete

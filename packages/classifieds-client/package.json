@@ -1,0 +1,25 @@
+{
+  "name": "@tudomacae/classifieds-client",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./client.ts",
+    "./protocol": "./protocol.ts",
+    "./photos": "./photos.ts",
+    "./authority": "./authority.ts",
+    "./canonical": "./canonical.ts"
+  },
+  "dependencies": {
+    "@tudomacae/www-origin-routing": "*",
+    "@tudomacae/categories": "*",
+    "@tudomacae/advertiser-identity": "*",
+    "zod": "^4.6.6",
+    "@tudomacae/classifieds-persistence": "*",
+    "@tudomacae/classifieds-photos": "*",
+    "@tudomacae/ads": "*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/classifieds-client/tests"
+  }
+}

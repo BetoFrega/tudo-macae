@@ -1,0 +1,25 @@
+{
+  "name": "@tudomacae/www-origin-routing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./contract": "./contract.ts",
+    "./router": "./router.ts",
+    "./webAssets": "./webAssets.ts",
+    "./release": "./release.ts",
+    "./correlation": "./correlation.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/www-origin-routing/tests"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.1"
+  }
+}

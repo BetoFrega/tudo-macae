@@ -1,0 +1,1009 @@
+[
+  {
+    "id": "workspace-editorial-article-media-body",
+    "entry": "packages/editorial-blog/articleMediaBody.ts",
+    "factory": "createArticleMediaBody",
+    "operations": [
+      "articleMediaUseIds",
+      "formatArticleMediaReference",
+      "parseArticleBodyMediaReferences",
+      "resolveArticleMediaReferences"
+    ],
+    "probe": "packages/editorial-blog/tests/articleMediaBody.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-article-media-body"
+    ]
+  },
+  {
+    "id": "workspace-ad-publication-drafts",
+    "entry": "packages/ads/publicationDrafts.ts",
+    "factory": "createPublicationDrafts",
+    "operations": [
+      "save",
+      "read",
+      "list",
+      "saveProfile",
+      "publish",
+      "returnToPending",
+      "complete",
+      "startDelete",
+      "delete"
+    ],
+    "probe": "packages/ads/tests/publicationDrafts.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ad-publication-drafts"
+    ]
+  },
+  {
+    "id": "workspace-ad-mutations",
+    "entry": "packages/ads/adMutations.ts",
+    "factory": "createAdMutations",
+    "operations": [
+      "update",
+      "updateStatus"
+    ],
+    "probe": "packages/ads/tests/adMutations.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ad-mutations"
+    ]
+  },
+  {
+    "id": "workspace-ad-image-upload",
+    "entry": "packages/ads/adImageUpload.ts",
+    "factory": "createAdImageUpload",
+    "operations": [
+      "upload"
+    ],
+    "probe": "packages/ads/tests/adImageUpload.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ad-image-upload"
+    ]
+  },
+  {
+    "id": "advertiser-profiles-workspace",
+    "entry": "packages/advertiser-identity/profiles.ts",
+    "factory": "createAdvertiserProfiles",
+    "operations": [
+      "create",
+      "createClaimable",
+      "update",
+      "updateClaimable",
+      "read",
+      "readPublic",
+      "listForUser",
+      "listAll",
+      "findDuplicateCandidates",
+      "listForActivityArea",
+      "verifyOwnership",
+      "delete",
+      "deleteClaimable",
+      "replacePhoto",
+      "removeActivityArea"
+    ],
+    "probe": "packages/advertiser-identity/tests/profiles.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "advertiser-profiles"
+    ]
+  },
+  {
+    "id": "business-catalog-workspace",
+    "entry": "packages/advertiser-identity/business.ts",
+    "factory": "createBusinessCatalog",
+    "operations": [
+      "assess",
+      "assessMany",
+      "listAll",
+      "listRepresentedActivityAreas",
+      "list",
+      "previewCategory",
+      "read"
+    ],
+    "probe": "packages/advertiser-identity/tests/businessCatalog.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "business-catalog"
+    ]
+  },
+  {
+    "id": "advertiser-profile-administration-workspace",
+    "entry": "packages/advertiser-identity/administration.ts",
+    "factory": "createAdvertiserProfileAdministration",
+    "operations": [
+      "list",
+      "get",
+      "findDuplicates",
+      "create",
+      "update",
+      "delete"
+    ],
+    "probe": "packages/advertiser-identity/tests/administration.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "advertiser-profile-administration"
+    ]
+  },
+  {
+    "id": "category-catalog-workspace",
+    "entry": "packages/categories/categoryCatalog.ts",
+    "factory": "createCategoryCatalog",
+    "operations": [
+      "list"
+    ],
+    "probe": "packages/categories/tests/categoryCatalog.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "category-catalog"
+    ]
+  },
+  {
+    "id": "category-management-workspace",
+    "entry": "packages/categories/categoryManagement.ts",
+    "factory": "createCategoryManagement",
+    "operations": [
+      "listCategories",
+      "listSubcategories",
+      "createCategory",
+      "updateCategory",
+      "createSubcategory"
+    ],
+    "probe": "packages/categories/tests/categoryManagement.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "category-management"
+    ]
+  },
+  {
+    "id": "category-lifecycle-workspace",
+    "entry": "packages/categories/categoryLifecycle.ts",
+    "factory": "createCategoryLifecycle",
+    "operations": [
+      "delete"
+    ],
+    "probe": "packages/categories/tests/categoryLifecycle.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "category-lifecycle"
+    ]
+  },
+  {
+    "id": "subcategory-lifecycle-workspace",
+    "entry": "packages/categories/subcategoryLifecycle.ts",
+    "factory": "createSubcategoryLifecycle",
+    "operations": [
+      "delete"
+    ],
+    "probe": "packages/categories/tests/subcategoryLifecycle.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "subcategory-lifecycle"
+    ]
+  },
+  {
+    "id": "advertiser-profile-photo-workspace",
+    "entry": "packages/advertiser-identity/photo.ts",
+    "factory": "createProfilePhotoUpload",
+    "operations": [
+      "upload"
+    ],
+    "probe": "packages/advertiser-identity/tests/photo.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "advertiser-profile-photo"
+    ]
+  },
+  {
+    "id": "article-catalog",
+    "entry": "src/packages/editorial/articleCatalog.ts",
+    "factory": "createArticleCatalog",
+    "operations": [
+      "read",
+      "list"
+    ],
+    "probe": "src/packages/editorial/tests/articleCatalog.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-public-article-index",
+    "entry": "packages/editorial-blog/publicArticleIndex.ts",
+    "factory": "createPublicArticleIndex",
+    "operations": [
+      "list"
+    ],
+    "probe": "packages/editorial-blog/tests/publicArticleIndex.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "public-article-index"
+    ]
+  },
+  {
+    "id": "workspace-editorial-media-ingestion",
+    "entry": "packages/editorial-media/mediaIngestion.ts",
+    "factory": "createEditorialMediaIngestion",
+    "operations": [
+      "prepare",
+      "finalize",
+      "get",
+      "reconcile",
+      "search"
+    ],
+    "probe": "packages/editorial-media/tests/mediaIngestion.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-media-ingestion"
+    ]
+  },
+  {
+    "id": "workspace-public-image-delivery",
+    "entry": "packages/public-image-delivery/worker.ts",
+    "factory": "createPublicImageWorker",
+    "operations": [
+      "fetch"
+    ],
+    "probe": "packages/public-image-delivery/tests/worker.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "public-image-delivery"
+    ]
+  },
+  {
+    "id": "workspace-editorial-article-distribution",
+    "entry": "packages/editorial-blog/articleDistribution.ts",
+    "factory": "createArticleDistribution",
+    "operations": [
+      "synchronize"
+    ],
+    "probe": "packages/editorial-blog/tests/articleDistribution.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-articleDistribution"
+    ]
+  },
+  {
+    "id": "editorial-articleSitemap",
+    "replaces": [
+      "editorial-sitemap-flag"
+    ],
+    "entry": "src/packages/editorial/articleSitemap.ts",
+    "factory": "createArticleSitemap",
+    "operations": [
+      "list"
+    ],
+    "probe": "src/packages/editorial/tests/articleSitemap.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-public-article-index-reconciliation",
+    "entry": "packages/editorial-blog/publicArticleIndexReconciliation.ts",
+    "factory": "createPublicArticleIndexReconciliation",
+    "operations": [
+      "run"
+    ],
+    "probe": "packages/editorial-blog/tests/publicArticleIndexReconciliation.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-publicArticleIndexReconciliation"
+    ]
+  },
+  {
+    "id": "business-offering-catalog-workspace",
+    "entry": "packages/advertiser-identity/offeringCatalog.ts",
+    "factory": "createOfferingCatalog",
+    "operations": [
+      "readManagement",
+      "saveItem",
+      "setVisibility",
+      "setEnablement",
+      "readPublic"
+    ],
+    "probe": "packages/advertiser-identity/tests/offeringCatalog.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "business-offering-catalog"
+    ]
+  },
+  {
+    "id": "workspace-site-search",
+    "entry": "packages/site-search/search.ts",
+    "factory": "createSiteSearch",
+    "operations": [
+      "search"
+    ],
+    "probe": "packages/site-search/tests/siteSearch.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "site-search"
+    ]
+  },
+  {
+    "id": "workspace-site-search-flag",
+    "entry": "packages/site-search/flag.ts",
+    "factory": "createSiteSearchFlag",
+    "operations": [
+      "enabled"
+    ],
+    "probe": "packages/site-search/tests/siteSearchFlag.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "site-search-flag"
+    ]
+  },
+  {
+    "id": "workspace-ad-pending-publication-images",
+    "entry": "packages/ads/syncPendingPublicationImages.ts",
+    "factory": "createPendingPublicationImageSync",
+    "operations": [
+      "sync"
+    ],
+    "probe": "packages/ads/tests/syncPendingPublicationImages.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ad-pending-publication-images"
+    ]
+  },
+  {
+    "id": "workspace-ad-pending-publication-transitions",
+    "entry": "packages/ads/pendingPublicationTransitions.ts",
+    "factory": "createPendingPublicationTransitions",
+    "operations": [
+      "publish",
+      "delete"
+    ],
+    "probe": "packages/ads/tests/pendingPublicationTransitions.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ad-pending-publication-transitions"
+    ]
+  },
+  {
+    "id": "workspace-ad-update",
+    "entry": "packages/ads/adUpdate.ts",
+    "factory": "createAdUpdate",
+    "operations": [
+      "update"
+    ],
+    "probe": "packages/ads/tests/adUpdate.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ad-update"
+    ]
+  },
+  {
+    "id": "workspace-ads-public-discovery",
+    "entry": "packages/ads/publicDiscovery.ts",
+    "factory": "createPublicAdDiscovery",
+    "operations": [
+      "canonical",
+      "filtered",
+      "read"
+    ],
+    "probe": "packages/ads/tests/publicDiscovery.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "ads-public-discovery"
+    ]
+  },
+  {
+    "id": "workspace-ads-public-sitemap",
+    "entry": "packages/ads/publicAdSitemap.ts",
+    "factory": "createAdSitemap",
+    "operations": [
+      "read"
+    ],
+    "probe": "packages/ads/tests/publicAdSitemap.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "workspace-ads-sitemap-read",
+      "workspace-ads-sitemap-snapshot",
+      "workspace-ads-sitemap-publication"
+    ]
+  },
+  {
+    "id": "workspace-www-origin-routing",
+    "entry": "packages/www-origin-routing/router.ts",
+    "factory": "createWwwOriginRouter",
+    "operations": [
+      "fetch"
+    ],
+    "probe": "packages/www-origin-routing/tests/router.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-public-image-purge",
+    "entry": "packages/public-image-delivery/purge.ts",
+    "factory": "createPublicImagePurger",
+    "operations": [
+      "purge",
+      "purgeMany"
+    ],
+    "probe": "packages/public-image-delivery/tests/purge.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-public-image-verified-purge",
+    "entry": "packages/public-image-delivery/verifiedPurge.ts",
+    "factory": "createVerifiedPublicImagePurger",
+    "operations": [
+      "purgeMany"
+    ],
+    "probe": "packages/public-image-delivery/tests/verifiedPurge.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-ad-management",
+    "entry": "packages/ads/management.ts",
+    "factory": "createAdManagement",
+    "operations": [
+      "create",
+      "read",
+      "readOwned",
+      "listAll",
+      "listForUser",
+      "listForProfile",
+      "delete"
+    ],
+    "probe": "packages/ads/tests/management.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "authentication-session-synchronizer-workspace",
+    "entry": "packages/authentication/sessionSynchronization.ts",
+    "factory": "createSessionSynchronizer",
+    "operations": [
+      "synchronize"
+    ],
+    "probe": "packages/authentication/tests/sessionSynchronization.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "authentication-session-synchronizer"
+    ]
+  },
+  {
+    "id": "authentication-password-login-workspace",
+    "entry": "packages/authentication/passwordLogin.ts",
+    "factory": "createPasswordLogin",
+    "operations": [
+      "login"
+    ],
+    "probe": "packages/authentication/tests/passwordLogin.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "authentication-password-login"
+    ]
+  },
+  {
+    "id": "email-verification-workspace",
+    "entry": "packages/authentication/emailVerification.ts",
+    "factory": "createEmailVerification",
+    "operations": [
+      "read",
+      "send",
+      "correct",
+      "confirm"
+    ],
+    "probe": "packages/authentication/tests/emailVerification.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "email-verification"
+    ]
+  },
+  {
+    "id": "authentication-claims-workspace",
+    "entry": "packages/authentication/claims.ts",
+    "factory": "createRoleAdministration",
+    "operations": [
+      "update",
+      "updateFor"
+    ],
+    "probe": "packages/authentication/tests/claims.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "authentication-accountAccess-workspace",
+    "entry": "packages/authentication/accountAccess.ts",
+    "factory": "createAccountAccess",
+    "operations": [
+      "register",
+      "requestPasswordResetEmail",
+      "resetPassword"
+    ],
+    "probe": "packages/authentication/tests/accountAccess.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "media-upload-preparation-workspace",
+    "entry": "packages/media/uploadPreparation.ts",
+    "factory": "createMediaUploadPreparation",
+    "operations": [
+      "prepare"
+    ],
+    "probe": "packages/media/tests/uploadPreparation.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-upload-preparation"
+    ]
+  },
+  {
+    "id": "media-upload-finalization-workspace",
+    "entry": "packages/media/uploadFinalization.ts",
+    "factory": "createMediaUploadFinalization",
+    "operations": [
+      "finalize"
+    ],
+    "probe": "packages/media/tests/uploadFinalization.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-upload-finalization"
+    ]
+  },
+  {
+    "id": "media-quarantine-cleanup-workspace",
+    "entry": "packages/media/quarantineCleanup.ts",
+    "factory": "createQuarantineCleanup",
+    "operations": [
+      "plan",
+      "sweep"
+    ],
+    "probe": "packages/media/tests/quarantineCleanup.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-quarantine-cleanup"
+    ]
+  },
+  {
+    "id": "media-upload-queries-workspace",
+    "entry": "packages/media/uploadQueries.ts",
+    "factory": "createMediaUploadQueries",
+    "operations": [
+      "metadata",
+      "readFinalized"
+    ],
+    "probe": "packages/media/tests/uploadQueries.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-upload-queries"
+    ]
+  },
+  {
+    "id": "media-catalog-search-workspace",
+    "entry": "packages/media/search.ts",
+    "factory": "createMediaSearch",
+    "operations": [
+      "search",
+      "reportUnreferenced"
+    ],
+    "probe": "packages/media/tests/search.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-catalog-search"
+    ]
+  },
+  {
+    "id": "media-metadata-revision-workspace",
+    "entry": "packages/media/metadataRevision.ts",
+    "factory": "createMediaMetadataRevision",
+    "operations": [
+      "update",
+      "coordinate"
+    ],
+    "probe": "packages/media/tests/metadataRevision.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-metadata-revision"
+    ]
+  },
+  {
+    "id": "sanitized-media-content-workspace",
+    "entry": "packages/media/sanitizedContent.ts",
+    "factory": "createSanitizedMediaContent",
+    "operations": [
+      "read"
+    ],
+    "probe": "packages/media/tests/sanitizedContent.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "sanitized-media-content"
+    ]
+  },
+  {
+    "id": "media-publication-grants-workspace",
+    "entry": "packages/media/publicationGrants.ts",
+    "factory": "createGrantedMediaContent",
+    "operations": [
+      "read"
+    ],
+    "probe": "packages/media/tests/publicationGrants.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "media-publication-grants"
+    ]
+  },
+  {
+    "id": "static-media-file-inspection-workspace",
+    "entry": "packages/media/fileInspection.ts",
+    "factory": "createStaticMediaFileInspection",
+    "operations": [
+      "inspect"
+    ],
+    "probe": "packages/media/tests/fileInspection.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "static-media-file-inspection"
+    ]
+  },
+  {
+    "id": "media-catalog-workspace",
+    "entry": "packages/media/catalog.ts",
+    "factory": "createMediaCatalog",
+    "operations": [
+      "register",
+      "get",
+      "byIds",
+      "listRevisions",
+      "ensureDemo",
+      "transitionLegacy"
+    ],
+    "probe": "packages/media/tests/catalog.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "editorial-live-roles",
+    "entry": "packages/editorial-access/editorAuthorization.ts",
+    "factory": "createEditorialRoleAccess",
+    "operations": [
+      "assertRole",
+      "hasRole"
+    ],
+    "probe": "packages/editorial-access/tests/editorAuthorization.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "advertiser-identity-deletion",
+    "entry": "packages/advertiser-identity/identityDeletion.ts",
+    "factory": "createAdvertiserIdentityDeletion",
+    "operations": [
+      "preview",
+      "delete"
+    ],
+    "probe": "packages/advertiser-identity/tests/identityDeletion.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-editorial-sourcing-permissions",
+    "entry": "packages/editorial-sourcing/permissions.ts",
+    "factory": "createSourcePermissions",
+    "operations": [
+      "grant",
+      "revoke",
+      "list",
+      "hasValid",
+      "readValidity"
+    ],
+    "probe": "packages/editorial-sourcing/tests/permissions.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "authentication-account-recovery-workspace",
+    "entry": "packages/authentication/accountRecovery.ts",
+    "factory": "createAccountRecovery",
+    "operations": [
+      "reset"
+    ],
+    "probe": "packages/authentication/tests/accountRecovery.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "authentication-identity-transfer-workspace",
+    "entry": "packages/authentication/identityTransfer.ts",
+    "factory": "createIdentityTransfer",
+    "operations": [
+      "prepare",
+      "activate"
+    ],
+    "probe": "packages/authentication/tests/identityTransfer.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-editorial-public-media-content",
+    "entry": "packages/editorial-blog/publicMediaContent.ts",
+    "factory": "createPublicMediaContent",
+    "operations": [
+      "read",
+      "isPublic"
+    ],
+    "probe": "packages/editorial-blog/tests/publicMediaContent.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-public-media-content"
+    ]
+  },
+  {
+    "id": "workspace-editorial-media-cleanup",
+    "entry": "packages/editorial-blog/mediaCleanup.ts",
+    "factory": "createArticleMediaCleanup",
+    "operations": [
+      "synchronize"
+    ],
+    "probe": "packages/editorial-blog/tests/mediaCleanup.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-media-cleanup"
+    ]
+  },
+  {
+    "id": "authentication-attempt-limit-workspace",
+    "entry": "packages/authentication/attemptLimit.ts",
+    "factory": "createAuthenticationAttemptLimit",
+    "operations": [
+      "consume"
+    ],
+    "probe": "packages/authentication/tests/attemptLimit.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-record-codec",
+    "entry": "packages/classifieds-persistence/records.ts",
+    "factory": "createClassifiedsRecordCodec",
+    "operations": [
+      "key",
+      "parse",
+      "indexes"
+    ],
+    "probe": "packages/classifieds-persistence/tests/records.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-artifact-index",
+    "entry": "packages/classifieds-persistence/records.ts",
+    "factory": "createClassifiedsArtifactIndex",
+    "operations": [
+      "artifacts",
+      "encode"
+    ],
+    "probe": "packages/classifieds-persistence/tests/records.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-transfer",
+    "entry": "packages/classifieds-persistence/transfer.ts",
+    "factory": "createClassifiedsTransfer",
+    "operations": [
+      "exportRecords",
+      "importItem"
+    ],
+    "probe": "packages/classifieds-persistence/tests/transfer.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-deletion-policy",
+    "entry": "packages/classifieds-persistence/deletion.ts",
+    "factory": "createClassifiedsDeletionPolicy",
+    "operations": [
+      "audit",
+      "plan"
+    ],
+    "probe": "packages/classifieds-persistence/tests/deletion.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "editorial-record-codec",
+    "entry": "packages/editorial-persistence/records.ts",
+    "factory": "createEditorialRecordCodec",
+    "operations": [
+      "key",
+      "parse"
+    ],
+    "probe": "packages/editorial-persistence/tests/records.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-photo-lifecycle",
+    "entry": "packages/classifieds-photos/index.ts",
+    "factory": "createPhotoLifecycle",
+    "operations": [
+      "reserve",
+      "upload",
+      "remove",
+      "read",
+      "readAd",
+      "retireUnlinked",
+      "sweep",
+      "publication",
+      "revoked"
+    ],
+    "probe": "packages/classifieds-photos/tests/lifecycle.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-photo-transfer",
+    "entry": "packages/classifieds-photos/transfer.ts",
+    "factory": "createPhotoTransfer",
+    "operations": [
+      "importItem"
+    ],
+    "probe": "packages/classifieds-photos/tests/transfer.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-photo-client",
+    "entry": "packages/classifieds-client/photos.ts",
+    "factory": "createClassifiedsPhotoClient",
+    "operations": [
+      "upload",
+      "remove",
+      "readAd",
+      "readPublic"
+    ],
+    "probe": "packages/classifieds-client/tests/photos.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-photo-paths",
+    "entry": "packages/classifieds-photos/paths.ts",
+    "factory": "createPhotoPathPolicy",
+    "operations": [
+      "directory",
+      "owns"
+    ],
+    "probe": "packages/classifieds-photos/tests/paths.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-ad-publication-photos",
+    "entry": "packages/ads/publicationPhotos.ts",
+    "factory": "createPublicationPhotos",
+    "operations": [
+      "sync"
+    ],
+    "probe": "packages/ads/tests/publicationPhotos.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-ad-authority",
+    "entry": "packages/ads/authority.ts",
+    "factory": "createAdAuthority",
+    "operations": [
+      "canListForProfile",
+      "administrator",
+      "owner",
+      "profile",
+      "authorize",
+      "completed",
+      "create",
+      "mutate",
+      "publish"
+    ],
+    "probe": "packages/ads/tests/authority.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "business-reader",
+    "entry": "packages/advertiser-identity/business.ts",
+    "factory": "createBusinessReader",
+    "operations": [
+      "read"
+    ],
+    "probe": "packages/advertiser-identity/tests/businessReader.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-editorial-blog",
+    "entry": "packages/editorial-blog/blog.ts",
+    "factory": "createBlog",
+    "operations": [
+      "read",
+      "list",
+      "save",
+      "takeOffline"
+    ],
+    "probe": "packages/editorial-blog/tests/blog.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-article-inventory",
+      "editorial-story-article-repair",
+      "editorial-mcp-access",
+      "editorial-mcp-control",
+      "article-lifecycle",
+      "article-rejection",
+      "article-image-update-history",
+      "article-image-updates",
+      "workspace-editorial-capture-association",
+      "editorial-capture-association",
+      "workspace-editorial-sourcing-invalidation",
+      "article-publication-assessment",
+      "article-publication-time",
+      "workspace-editorial-story-priority",
+      "editorial-story-priority",
+      "workspace-editorial-story-capture-association",
+      "editorial-story-capture-association",
+      "workspace-editorial-sourcing-sources",
+      "workspace-editorial-sourcing-captures",
+      "workspace-editorial-sourcing-queries",
+      "workspace-editorial-stories",
+      "workspace-editorial-topics",
+      "article-media",
+      "submission-publication",
+      "workspace-editorial-navigation",
+      "editorial-navigation",
+      "editorial-blog"
+    ]
+  },
+  {
+    "id": "workspace-editorial-media-correction",
+    "entry": "packages/editorial-media/mediaCorrection.ts",
+    "factory": "createMediaCorrection",
+    "operations": [
+      "correct"
+    ],
+    "probe": "packages/editorial-media/tests/mediaCorrection.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "editorial-media-correction"
+    ]
+  },
+  {
+    "id": "workspace-published-blog-reader",
+    "entry": "packages/editorial-blog/publishedArticle.ts",
+    "factory": "createPublishedSubmissionReader",
+    "operations": [
+      "read"
+    ],
+    "probe": "packages/editorial-blog/tests/publishedArticle.probe.ts",
+    "remainingOperations": [],
+    "replaces": [
+      "published-blog-reader"
+    ]
+  },
+  {
+    "id": "workspace-public-blog",
+    "entry": "packages/editorial-blog/publicBlog.ts",
+    "factory": "createPublicBlog",
+    "operations": [
+      "article",
+      "page"
+    ],
+    "probe": "packages/editorial-blog/tests/publicBlog.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-photo-object-reservations",
+    "entry": "packages/classifieds-photos/index.ts",
+    "factory": "createReservedPhotoObjects",
+    "operations": [
+      "create",
+      "head",
+      "read",
+      "retire"
+    ],
+    "probe": "packages/classifieds-photos/tests/objectReservations.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "classifieds-photo-inventory",
+    "entry": "packages/classifieds-photos/inventory.ts",
+    "factory": "createPhotoInventory",
+    "operations": [
+      "generate"
+    ],
+    "probe": "packages/classifieds-photos/tests/inventory.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "workspace-ads-visibility",
+    "entry": "packages/ads/visibility.ts",
+    "factory": "createAdVisibility",
+    "operations": [
+      "adStatus",
+      "hasCompletedPublication",
+      "hasPendingPublication",
+      "canDiscoverAd",
+      "visibleAdImages"
+    ],
+    "probe": "packages/ads/tests/visibility.probe.ts",
+    "remainingOperations": []
+  }
+]

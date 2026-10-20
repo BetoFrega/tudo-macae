@@ -1,0 +1,79 @@
+name: Vitest Tests
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main, master]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Vitest Tests
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Classify complete pull request diff
+        id: diff
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { classifyPullRequestDiff, FULL_TEST_PATH } = await import(`${process.env.GITHUB_WORKSPACE}/bin/pullRequestDiff.mjs`);
+            const pullRequest = context.payload.pull_request;
+
+            try {
+              const expected = {
+                baseSha: pullRequest.base.sha,
+                headSha: pullRequest.head.sha,
+              };
+              const readFixedPoint = async () => {
+                const { data } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullRequest.number,
+                });
+                return { baseSha: data.base.sha, headSha: data.head.sha };
+              };
+              const before = await readFixedPoint();
+              const files = await github.paginate(github.rest.pulls.listFiles, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullRequest.number,
+                per_page: 100,
+              });
+              const after = await readFixedPoint();
+              const stable = before.baseSha === expected.baseSha
+                && before.headSha === expected.headSha
+                && after.baseSha === expected.baseSha
+                && after.headSha === expected.headSha
+                // GitHub returns at most 3,000 PR files. Equality is unsafe
+                // because another unseen page could exist at that boundary.
+                && files.length < 3000;
+              const decision = classifyPullRequestDiff({ ...expected, complete: stable, files });
+              core.setOutput("plan", decision.plan);
+              core.setOutput("reason", decision.reason);
+            }
+            catch (error) {
+              core.warning(`Could not classify the complete diff; running the full suite: ${error.message}`);
+              core.setOutput("plan", FULL_TEST_PATH);
+              core.setOutput("reason", "diff-read-failed");
+            }
+
+      - name: Documentation-only fast path
+        if: steps.diff.outputs.plan == 'documentation-fast-path'
+        run: >-
+          echo 'Documentation-only diff: Vitest collection intentionally not required.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run complete Vitest collection
+        if: steps.diff.outputs.plan == 'full-test-path'
+        uses: ./.github/actions/run-vitest

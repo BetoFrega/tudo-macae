@@ -1,0 +1,47 @@
+{
+  "name": "@tudomacae/ads",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./adImageUpload": "./adImageUpload.ts",
+    "./adMutations": "./adMutations.ts",
+    "./publicAdSitemap": "./publicAdSitemap.ts",
+    "./adSitemapFailure": "./adSitemapFailure.ts",
+    "./adUpdate": "./adUpdate.ts",
+    "./client": "./client.ts",
+    "./imageCleanupJob": "./imageCleanupJob.ts",
+    "./imagePath": "./imagePath.ts",
+    "./imageRetirement": "./imageRetirement.ts",
+    "./imageUploadLease": "./imageUploadLease.ts",
+    ".": "./index.ts",
+    "./pendingPublicationTransitions": "./pendingPublicationTransitions.ts",
+    "./profileAssignment": "./profileAssignment.ts",
+    "./publicDiscovery": "./publicDiscovery.ts",
+    "./publicationDrafts": "./publicationDrafts.ts",
+    "./publicationEligibility": "./publicationEligibility.ts",
+    "./rawImagePath": "./rawImagePath.ts",
+    "./syncPendingPublicationImages": "./syncPendingPublicationImages.ts",
+    "./types": "./types.ts",
+    "./validation": "./validation.ts",
+    "./management": "./management.ts",
+    "./visibility": "./visibility.ts",
+    "./publicationPhotos": "./publicationPhotos.ts",
+    "./operationError": "./operationError.ts",
+    "./authority": "./authority.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/ads/tests"
+  },
+  "dependencies": {
+    "@tudomacae/text-normalization": "*",
+    "zod": "^4.6.6",
+    "@tudomacae/public-image-delivery": "*"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

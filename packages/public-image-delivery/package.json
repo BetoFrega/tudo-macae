@@ -1,0 +1,27 @@
+{
+  "name": "@tudomacae/public-image-delivery",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./probeAuthorization": "./probeAuthorization.ts",
+    "./contract": "./contract.ts",
+    "./purge": "./purge.ts",
+    "./verifiedPurge": "./verifiedPurge.ts",
+    "./cacheTag": "./cacheTag.ts",
+    "./worker": "./worker.ts",
+    "./source": "./source.ts",
+    "./editorial": "./editorial.ts",
+    "./cloudflarePurge": "./cloudflarePurge.ts",
+    "./editorialPurge": "./editorialPurge.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/public-image-delivery/tests"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

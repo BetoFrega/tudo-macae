@@ -1,0 +1,37 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "tudo-macae-site-search-local",
+  "main": "entry.ts",
+  "compatibility_date": "2026-09-22",
+  "workers_dev": true,
+  "version_metadata": {
+    "binding": "WORKER_VERSION"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      // Invocation logs carry raw request URLs, outside the telemetry contract.
+      "invocation_logs": false
+    }
+  },
+  "account_id": "abd87961a304b923acbc329f0b0d1919",
+  "env": {
+    "production": {
+      "name": "tudo-macae-site-search",
+      "vars": {
+        "OIDC_AUDIENCE": "https://tudo-macae-site-search.frega.workers.dev",
+        "OIDC_SERVICE_ACCOUNT": "cloud-run-www-runtime@macaetem-dev.iam.gserviceaccount.com"
+      },
+      "ai_search": [
+        {
+          "binding": "AI_SEARCH",
+          "instance_name": "tudo-macae-site-search"
+        }
+      ],
+      "version_metadata": {
+        "binding": "WORKER_VERSION"
+      }
+    }
+  }
+}

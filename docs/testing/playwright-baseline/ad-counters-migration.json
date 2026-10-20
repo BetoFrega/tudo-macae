@@ -1,0 +1,43 @@
+{
+  "ticket": "#789",
+  "replacementBeforeRemoval": {
+    "revision": "58155ca1f7c36faa959d17f804e4380a5c962895",
+    "file": "src/features/ads/components/PublicationJourney.test.tsx",
+    "title": "updates independent title and text counters while typing and clearing the publication form",
+    "result": "passed before E2E removal",
+    "reportedTestSeconds": 0.33135791015625,
+    "reportedCommandSeconds": 2.44,
+    "executionOrder": "Replacement executed successfully and committed first; only then the two E2E assertions were removed in 009bcdee."
+  },
+  "e2e": {
+    "revision": "009bcdeeed9925fd46f9107b05a656819d18e1b1",
+    "command": "PLAYWRIGHT_JSON_OUTPUT_NAME=<results.json> mise exec -- npm run test:e2e -- tests/ads/create-new-ad.spec.ts --reporter=line,json",
+    "wall": {
+      "durationSeconds": 37.63798999786377,
+      "exitCode": 0
+    },
+    "stats": {
+      "startTime": "2026-09-07T14:34:47.686Z",
+      "duration": 37021.562,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "testSeconds": 7.288,
+    "result": "1 passed; no retries/skips; complete creation/publication journey retained"
+  },
+  "additionalValidation": {
+    "command": "mise exec -- npx vitest run --config vitest.unit.config.mts src/features/ads/components/PublicationJourney.test.tsx src/features/ads/hooks/usePublicationJourney.test.tsx",
+    "result": "8 passed in 2 files",
+    "reportedCommandSeconds": 1.85
+  },
+  "comparison": {
+    "baselineE2eTestSeconds": 5.352,
+    "currentE2eTestSeconds": 7.288,
+    "newComponentTestSeconds": 0.33135791015625,
+    "interpretation": "Only two assertions move; no E2E case or fixture lifecycle is removed. Current component cost is reported separately. Focal samples and differing dependencies do not establish whole-suite savings. No historical unit command baseline exists for this new component test; final audit must include affected tiers."
+  },
+  "environment": "Same workstation, Playwright/browser, warm build cache and initially stopped stack; workers 1, retries 0. Vitest 5 and other main dependency updates postdate the baseline. E2E measurement started with clean tree; component command timing is reporter-provided, not an external wall timer.",
+  "realBehavior": "PublicationJourney imported by /publicar, real usePublicationJourney, React Hook Form and useWatch; mocks only provide auth/context/action boundaries. AdForm historical candidate belongs to editing."
+}

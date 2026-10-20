@@ -1,0 +1,62 @@
+[
+  {
+    "key": "advertiser",
+    "email": "advertiser@demo.local",
+    "displayName": "Carla Ribeiro",
+    "role": "advertiser"
+  },
+  {
+    "key": "editor",
+    "email": "editor@demo.local",
+    "displayName": "Marcos Tavares",
+    "role": "editor"
+  },
+  {
+    "key": "admin",
+    "email": "admin@demo.local",
+    "displayName": "Juliana Prado",
+    "role": "admin"
+  },
+  {
+    "key": "bulk-cabral",
+    "email": "cabral@demo.local",
+    "displayName": "Rogério Cabral",
+    "role": "advertiser"
+  },
+  {
+    "key": "bulk-imperial",
+    "email": "imperial@demo.local",
+    "displayName": "Imperial Imóveis",
+    "role": "advertiser"
+  },
+  {
+    "key": "bulk-farol",
+    "email": "farol@demo.local",
+    "displayName": "Oficina Farol",
+    "role": "advertiser"
+  },
+  {
+    "key": "bulk-ilha",
+    "email": "ilha@demo.local",
+    "displayName": "Pousada da Ilha",
+    "role": "advertiser"
+  },
+  {
+    "key": "bulk-lagoa",
+    "email": "lagoa@demo.local",
+    "displayName": "Pet Shop Lagoa",
+    "role": "advertiser"
+  },
+  {
+    "key": "bulk-riviera",
+    "email": "riviera@demo.local",
+    "displayName": "Riviera Climatização",
+    "role": "advertiser"
+  },
+  {
+    "key": "bulk-bare",
+    "email": "bare@demo.local",
+    "displayName": "Sebastião Nunes",
+    "role": "advertiser"
+  }
+]

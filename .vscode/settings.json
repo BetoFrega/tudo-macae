@@ -1,0 +1,33 @@
+{
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "jsonc",
+    "yaml",
+    "markdown",
+    "css"
+  ],
+  "css.format.enable": false,
+  "css.lint.unknownAtRules": "ignore",
+  "terminal.integrated.automationProfile.osx": {
+    "path": "/bin/zsh",
+    "args": [
+      "-l"
+    ]
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "eslint.format.enable": true
+}

@@ -1,0 +1,111 @@
+{
+  "ticket": "#788",
+  "revision": "16cb47474c0e53e4c263b8f9f50bf523c8786b7f",
+  "command": "PLAYWRIGHT_JSON_OUTPUT_NAME=<results.json> mise exec -- npm run test:e2e -- tests/admin/access-control.spec.ts tests/newsroom/access-control.spec.ts --reporter=line,json",
+  "environment": "Same workstation, Playwright/browser and warm build cache as baseline; initially stopped stack; clean worktree, workers 1 and retries 0. Main has since updated ESLint, Vitest to 5.0.0, lucide-react and Node type declarations; this is a focal sample, not a controlled whole-suite comparison.",
+  "wall": {
+    "durationSeconds": 33.91827201843262,
+    "exitCode": 0
+  },
+  "stats": {
+    "startTime": "2026-09-07T14:18:40.789Z",
+    "duration": 33288.971000000005,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "id": "PW001",
+      "title": "Usuário comum não alcança a redação nem as rotas administrativas",
+      "durationMs": 2284,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW002",
+      "title": "Claim concedida pelo fixture já vale na sessão entregue",
+      "durationMs": 635,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW056",
+      "title": "Editor alcança a redação pela sidebar",
+      "durationMs": 1193,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW057",
+      "title": "Administrador não alcança a redação",
+      "durationMs": 422,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW058",
+      "title": "Editor não alcança a administração",
+      "durationMs": 575,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW060",
+      "title": "Visitante não autenticado é convidado a entrar",
+      "durationMs": 186,
+      "status": "passed",
+      "retry": 0
+    }
+  ],
+  "coverage": {
+    "commonUserAdminRoutes": [
+      "/admin",
+      "/admin/anuncios",
+      "/admin/categorias",
+      "/admin/clientes-editoriais",
+      "/admin/mcp",
+      "/admin/midias",
+      "/admin/perfis",
+      "/admin/usuarios"
+    ],
+    "consolidatedDuplicateRoutes": [
+      "/admin",
+      "/admin/categorias",
+      "/admin/clientes-editoriais",
+      "/admin/mcp",
+      "/admin/perfis",
+      "/admin/usuarios"
+    ],
+    "firstNavigationDenial": "PW059-A02 preserved at destination line 40 before reload",
+    "afterReloadDenial": "PW001-A02/A03 preserved at destination lines 42/43",
+    "newsroomDenial": "PW059-A01 preserved at destination line 23",
+    "otherRoles": "Editor, admin, visitor and fresh claim-session cases unchanged"
+  },
+  "collection": {
+    "applicationCases": 103,
+    "harnessCases": 15,
+    "command": "mise exec -- npx playwright test --list --reporter=json",
+    "parityCommand": "mise exec -- npx vitest run --config vitest.unit.config.mts bin/playwrightCollections.test.ts",
+    "result": "passed, including local staging and trusted producer parity"
+  },
+  "comparison": {
+    "baselineRevision": "8e25b95458ebb509ca1ab6495fa70d18ab76fe12",
+    "baselineCaseIds": [
+      "PW001",
+      "PW002",
+      "PW056",
+      "PW057",
+      "PW058",
+      "PW059",
+      "PW060"
+    ],
+    "baselineSummedTestSeconds": 4.943,
+    "currentSummedTestSeconds": 5.295,
+    "differenceSeconds": 0.3520000000000003,
+    "interpretation": "Seven focal cases become six. Six duplicate admin visits and one login/fixture lifecycle are consolidated. Summed durations include fixtures; whole-suite savings and variance are not established."
+  },
+  "reviewCorrection": "Initial green run at e8bd979 omitted first-navigation denial before reload. Excluded from accepted evidence; assertion restored and all six focal cases rerun successfully.",
+  "tierDecision": "No behavior leaves E2E; real session, navigation, sidebar and route denials remain. No lower-tier substitute required."
+}

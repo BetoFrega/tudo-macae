@@ -1,0 +1,147 @@
+{
+  "extends": [
+    "//"
+  ],
+  "tasks": {
+    "test": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    },
+    "test:e2e": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    },
+    "test:e2e:diagnostic": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    },
+    "test:e2e:full": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    },
+    "test:e2e:full:diagnostic": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    },
+    "test:harness": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    },
+    "typecheck": {
+      "cache": false,
+      "dependsOn": [],
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/public/**",
+        "$TURBO_ROOT$/bin/**",
+        "$TURBO_ROOT$/workers/**",
+        "$TURBO_ROOT$/next.config.*",
+        "$TURBO_ROOT$/postcss.config.*",
+        "$TURBO_ROOT$/tsconfig.json",
+        "$TURBO_ROOT$/instrumentation-client.ts",
+        "$TURBO_ROOT$/image-loader.js",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/tests/_helpers/**"
+      ]
+    }
+  }
+}

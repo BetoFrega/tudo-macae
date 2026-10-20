@@ -1,0 +1,27 @@
+name: Run complete Vitest collection
+description: Run only the integration tier; quality-flare's Container tests run the unit tier.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v5
+      with:
+        node-version: 24
+        cache: "npm"
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Run Vitest integration tier
+      shell: bash
+      run: npm test -- --tier=integration --bail=1
+
+    - name: Retain complete sanitized Vitest output
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: vitest-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt }}
+        path: test-results/vitest-logs/
+        retention-days: 7
+        if-no-files-found: error

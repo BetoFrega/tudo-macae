@@ -1,0 +1,57 @@
+name: Release Flag
+
+# Turns a Workers journey flag on or off in PostHog. The edge router re-reads
+# each flag every second, so "off" is the rollback for a journey.
+#
+# POSTHOG_FLAGS_API_KEY is a PostHog personal key with the feature_flag:read
+# and feature_flag:write scopes, stored as a secret of the `release-flags` environment, whose
+# deployment branches are limited to main: a branch that edits this workflow
+# or the script cannot reach the key.
+
+on:
+  workflow_dispatch:
+    inputs:
+      flag:
+        description: Journey flag
+        required: true
+        type: choice
+        options:
+          - site-workers-canary
+          - site-workers-route
+          - terms-workers-canary
+          - terms-workers-route
+      active:
+        description: Turn the flag on
+        required: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  set:
+    name: Set ${{ inputs.flag }}
+    if: github.ref == 'refs/heads/main'
+    environment: release-flags
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Set flag
+        env:
+          POSTHOG_FLAGS_API_KEY: ${{ secrets.POSTHOG_FLAGS_API_KEY }}
+          FLAG_KEY: ${{ inputs.flag }}
+          FLAG_ACTIVE: ${{ inputs.active }}
+        run: node bin/set-release-flag.mjs

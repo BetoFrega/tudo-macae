@@ -1,0 +1,111 @@
+[
+  {
+    "name": "Restaurantes", "slug": "restaurantes", "order": 1, "isActive": true,
+    "subcategories": [
+      { "name": "Lanches", "slug": "lanches", "order": 1, "isActive": true },
+      { "name": "Refeições", "slug": "refeicoes", "order": 2, "isActive": true },
+      { "name": "Doces", "slug": "doces", "order": 3, "isActive": true }
+    ]
+  },
+  {
+    "name": "Imóveis", "slug": "imoveis", "order": 2, "isActive": true,
+    "subcategories": [
+      { "name": "Aluguel", "slug": "aluguel", "order": 1, "isActive": true },
+      { "name": "Venda", "slug": "venda", "order": 2, "isActive": true },
+      { "name": "Temporada", "slug": "temporada", "order": 3, "isActive": true },
+      { "name": "Comercial", "slug": "comercial", "order": 4, "isActive": true }
+    ]
+  },
+  {
+    "name": "Veículos", "slug": "veiculos", "order": 3, "isActive": true,
+    "subcategories": [
+      { "name": "Carros", "slug": "carros", "order": 1, "isActive": true },
+      { "name": "Motos", "slug": "motos", "order": 2, "isActive": true },
+      { "name": "Caminhões", "slug": "caminhoes", "order": 3, "isActive": true },
+      { "name": "Peças", "slug": "pecas", "order": 4, "isActive": true },
+      { "name": "Locação de veículos", "slug": "locacao-de-veiculos", "order": 5, "isActive": true },
+      { "name": "Postos de combustíveis", "slug": "postos-de-combustiveis", "order": 6, "isActive": true }
+    ]
+  },
+  {
+    "name": "Serviços", "slug": "servicos", "order": 4, "isActive": true,
+    "subcategories": [
+      { "name": "Psicologia", "slug": "psicologia", "order": 1, "isActive": true },
+      { "name": "Domésticos", "slug": "domesticos", "order": 2, "isActive": true },
+      { "name": "Manutenção", "slug": "manutencao", "order": 3, "isActive": true },
+      { "name": "Beleza", "slug": "beleza", "order": 4, "isActive": true },
+      { "name": "Transporte", "slug": "transporte", "order": 5, "isActive": true },
+      { "name": "Advocacia", "slug": "advocacia", "order": 6, "isActive": true },
+      { "name": "Apoio administrativo", "slug": "apoio-administrativo", "order": 7, "isActive": true },
+      { "name": "Contabilidade", "slug": "contabilidade", "order": 8, "isActive": true },
+      { "name": "Consultoria empresarial", "slug": "consultoria-empresarial", "order": 9, "isActive": true },
+      { "name": "Seguros", "slug": "seguros", "order": 10, "isActive": true },
+      { "name": "Hospedagem", "slug": "hospedagem", "order": 11, "isActive": true },
+      { "name": "Academias", "slug": "academias", "order": 12, "isActive": true }
+    ]
+  },
+  {
+    "name": "Empregos", "slug": "empregos", "order": 5, "isActive": true,
+    "subcategories": [
+      { "name": "Vagas", "slug": "vagas", "order": 1, "isActive": true },
+      { "name": "Currículos", "slug": "curriculos", "order": 2, "isActive": true }
+    ]
+  },
+  {
+    "name": "Outros", "slug": "outros", "order": 6, "isActive": true,
+    "subcategories": [
+      { "name": "Eletrônicos", "slug": "eletronicos", "order": 1, "isActive": true },
+      { "name": "Móveis", "slug": "moveis", "order": 2, "isActive": true },
+      { "name": "Roupas", "slug": "roupas", "order": 3, "isActive": true },
+      { "name": "Diversos", "slug": "diversos", "order": 4, "isActive": true }
+    ]
+  },
+  {
+    "name": "Educação", "slug": "educacao", "order": 7, "isActive": true,
+    "subcategories": [
+      { "name": "Idiomas", "slug": "idiomas", "order": 1, "isActive": true },
+      { "name": "Ensino técnico", "slug": "ensino-tecnico", "order": 2, "isActive": true },
+      { "name": "Educação básica", "slug": "educacao-basica", "order": 3, "isActive": true },
+      { "name": "Cursos profissionalizantes", "slug": "cursos-profissionalizantes", "order": 4, "isActive": true }
+    ]
+  },
+  {
+    "name": "Saúde", "slug": "saude", "order": 8, "isActive": true,
+    "subcategories": [
+      { "name": "Clínicas médicas", "slug": "clinicas-medicas", "order": 1, "isActive": true },
+      { "name": "Planos de saúde", "slug": "planos-de-saude", "order": 2, "isActive": true },
+      { "name": "Clínicas odontológicas", "slug": "clinicas-odontologicas", "order": 3, "isActive": true },
+      { "name": "Laboratórios", "slug": "laboratorios", "order": 4, "isActive": true },
+      { "name": "Hospitais", "slug": "hospitais", "order": 5, "isActive": true },
+      { "name": "Farmácias", "slug": "farmacias", "order": 6, "isActive": true }
+    ]
+  },
+  {
+    "name": "Construção", "slug": "construcao", "order": 9, "isActive": true,
+    "subcategories": [
+      { "name": "Engenharia e construção", "slug": "engenharia-e-construcao", "order": 1, "isActive": true },
+      { "name": "Materiais de construção", "slug": "materiais-de-construcao", "order": 2, "isActive": true }
+    ]
+  },
+  {
+    "name": "Indústria", "slug": "industria", "order": 10, "isActive": true,
+    "subcategories": [
+      { "name": "Equipamentos industriais", "slug": "equipamentos-industriais", "order": 1, "isActive": true },
+      { "name": "Serviços industriais", "slug": "servicos-industriais", "order": 2, "isActive": true }
+    ]
+  },
+  {
+    "name": "Comércio", "slug": "comercio", "order": 11, "isActive": true,
+    "subcategories": [
+      { "name": "Supermercados e atacadistas", "slug": "supermercados-e-atacadistas", "order": 1, "isActive": true },
+      { "name": "Moda e vestuário", "slug": "moda-e-vestuario", "order": 2, "isActive": true },
+      { "name": "Papelaria e escritório", "slug": "papelaria-e-escritorio", "order": 3, "isActive": true },
+      { "name": "Joias e acessórios", "slug": "joias-e-acessorios", "order": 4, "isActive": true },
+      { "name": "Livrarias", "slug": "livrarias", "order": 5, "isActive": true },
+      { "name": "Shopping centers", "slug": "shopping-centers", "order": 6, "isActive": true },
+      { "name": "Pet shops", "slug": "pet-shops", "order": 7, "isActive": true },
+      { "name": "Cosméticos e perfumaria", "slug": "cosmeticos-e-perfumaria", "order": 8, "isActive": true },
+      { "name": "Flores e jardinagem", "slug": "flores-e-jardinagem", "order": 9, "isActive": true }
+    ]
+  }
+]

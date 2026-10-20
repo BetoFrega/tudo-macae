@@ -1,0 +1,43 @@
+{
+  "name": "@tudomacae/e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node bin/playwright.mjs",
+    "test:e2e": "node bin/playwright.mjs",
+    "test:e2e:diagnostic": "node bin/playwright.mjs --max-failures=0",
+    "test:e2e:full": "node _helpers/offering-catalog-runner.mjs test:e2e -- --config playwright.full.config.ts",
+    "test:e2e:full:diagnostic": "node _helpers/offering-catalog-runner.mjs test:e2e -- --config playwright.full.config.ts --max-failures=0",
+    "test:harness": "node bin/test-harness.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "sharp": "0.35.5",
+    "zod": "^4.6.6",
+    "@types/node": "^26",
+    "typescript": "^6",
+    "@playwright/test": "^1.63.0",
+    "web-workers-app": "*",
+    "www-origin-worker": "*",
+    "@tudomacae/terms-page": "*",
+    "@tudomacae/www-origin-routing": "*",
+    "public-article-index-worker": "*",
+    "@tudomacae/article-index-test-runtime": "*",
+    "public-images-worker": "*",
+    "@tudomacae/site-search": "*",
+    "site-search-worker": "*",
+    "@tudomacae/authentication": "*",
+    "@tudomacae/media": "*",
+    "@tudomacae/media-files": "*",
+    "@tudomacae/civil-time": "*",
+    "@tudomacae/ads": "*",
+    "@tudomacae/text-normalization": "*",
+    "@tudomacae/advertiser-identity": "*",
+    "@tudomacae/categories": "*",
+    "@tudomacae/editorial-access": "*",
+    "@tudomacae/editorial-blog": "*",
+    "@tudomacae/editorial-sourcing": "*",
+    "@tudomacae/editorial-planning": "*",
+    "@tudomacae/classifieds-client": "*"
+  }
+}

@@ -1,0 +1,223 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: SHA completo opcional; vazio usa a main no momento do disparo
+        required: false
+        type: string
+
+# Serialize production deliveries without replacing pending requests.
+concurrency:
+  group: production-delivery
+  queue: max
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      sha: ${{ steps.candidate.outputs.sha }}
+    steps:
+      - name: Fix the candidate for this run
+        id: candidate
+        env:
+          DEFAULT_SHA: ${{ github.sha }}
+          REQUESTED_SHA: ${{ inputs.sha }}
+        run: |
+          set -euo pipefail
+
+          candidate="${REQUESTED_SHA:-$DEFAULT_SHA}"
+          if ! [[ "$candidate" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Informe um SHA completo de 40 caracteres."
+            exit 1
+          fi
+
+          echo "sha=$candidate" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ steps.candidate.outputs.sha }}
+          fetch-depth: 0
+          lfs: true
+          persist-credentials: false
+      - name: Require a SHA already on main
+        env:
+          SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SHA"
+          git merge-base --is-ancestor "$SHA" origin/main
+      - name: Require Worker delivery support in the selected SHA
+        run: test -f bin/deploy-workers-production.mjs
+      - name: Require API Worker delivery support in the selected SHA
+        run: test -f bin/deploy-api-worker-production.mjs
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      # The selected SHA builds the web Worker the way its own delivery script will.
+      - name: Build web Worker before production mutation
+        env:
+          RELEASE_SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          if test -f wrangler.web.jsonc; then
+            CLOUDFLARE_ENV=production WEB_ASSET_RELEASE="$RELEASE_SHA" npx vite build --config vite.vinext.config.ts --logLevel warn
+            # The build's Wrangler redirect makes later Wrangler runs in apps/* refuse their own config.
+            rm -rf .wrangler/deploy
+          elif test -f apps/web-workers/package.json; then
+            npx turbo run build --filter=web-workers-app
+          fi
+      - run: npm run lint
+        env:
+          DOMAIN_SEAMS_BASE: ${{ steps.candidate.outputs.sha }}^
+      - name: Check Worker HTTP, authorization and persistence contracts
+        run: npm run test:worker
+      - name: Check Vitest unit tier without Firebase
+        run: npm test -- --tier=unit --bail=1
+      - name: Check Vitest integration tier and application build before production mutation
+        run: npm test -- --tier=integration --bail=1 && npm run build:check
+      - name: Retain sanitized test diagnostics
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: vitest-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/vitest-logs/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  production:
+    needs: [checks]
+    environment: cloud-run-production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      RELEASE_SHA: ${{ needs.checks.outputs.sha }}
+      RUNTIME_ACCOUNT: cloud-run-www-runtime@macaetem-dev.iam.gserviceaccount.com
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.checks.outputs.sha }}
+          lfs: true
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Require production D1 migrations ready
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_ZONE_ID"
+          test -n "$CLOUDFLARE_API_TOKEN"
+          if ! result="$(./node_modules/.bin/wrangler d1 migrations list DB --remote --config apps/public-article-index/wrangler.jsonc --env production 2>&1)"; then
+            echo "::error::Could not read production D1 migrations."
+            exit 1
+          fi
+          if [[ "$result" != *"No migrations to apply!"* ]]; then
+            echo "::error::Production D1 has pending migrations. Apply and verify them before delivery."
+            exit 1
+          fi
+      - name: Require web Worker and CI access before delivery
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if ! ./node_modules/.bin/wrangler deployments status --config apps/web-workers/wrangler.jsonc --env production --json >/dev/null 2>&1; then
+            echo "::error::Bootstrap the production web Worker and grant the CI token access before delivery."
+            exit 1
+          fi
+      # The web Worker reads the API Worker, so the API publishes first.
+      - name: Apply migrations, publish and read back the production API Worker
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          AUTHENTICATION_D1_ID: ed48dac0-069a-4889-8da7-71c543fe2722
+          CLASSIFIEDS_D1_ID: a76337a4-7cef-4198-9711-f99a8716ea6c
+          EDITORIAL_D1_ID: 38903d3f-3204-497d-8ba9-f9b8bb69753a
+          # Blog saves and the hourly reconciliation reach the index through this binding.
+          PUBLIC_ARTICLE_INDEX_SERVICE: tudo-macae-public-article-index
+          AUTHENTICATION_API_ORIGIN: https://tudo-macae-api-production.frega.workers.dev
+          AUTHENTICATION_RUNTIME_ACCOUNT: ${{ env.RUNTIME_ACCOUNT }}
+          PUBLIC_IMAGE_PURGE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
+          # Empty enforces Turnstile; set the variable to off only while the serving Next sends no token.
+          TURNSTILE_ENFORCEMENT: ${{ vars.TURNSTILE_ENFORCEMENT }}
+        run: node bin/deploy-api-worker-production.mjs
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: api-worker-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/api-worker-recovery.json
+          retention-days: 90
+          if-no-files-found: ignore
+
+  workers:
+    needs: [checks, production]
+    environment: cloud-run-production
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      RELEASE_SHA: ${{ needs.checks.outputs.sha }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.checks.outputs.sha }}
+          # The web Worker bundles the app's `public/` PNGs, which live in Git LFS.
+          lfs: true
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Publish and read back production Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node bin/deploy-workers-production.mjs
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: workers-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/workers-recovery.json
+          retention-days: 90
+          if-no-files-found: ignore
+
+  outcome:
+    if: always() && github.ref == 'refs/heads/main'
+    needs: [checks, production, workers]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Update the delivery correction ticket
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ needs.checks.outputs.sha || github.sha }}
+          CHECKS_RESULT: ${{ needs.checks.result }}
+          PRODUCTION_RESULT: ${{ needs.production.result }}
+          WORKERS_RESULT: ${{ needs.workers.result }}
+        run: node bin/deployment-ticket.mjs

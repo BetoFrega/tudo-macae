@@ -1,0 +1,1281 @@
+{
+  "revision": "8e25b95458ebb509ca1ab6495fa70d18ab76fe12",
+  "command": "PLAYWRIGHT_JSON_OUTPUT_NAME=<local-results.json> mise exec -- npm run test:e2e -- --reporter=line,json",
+  "environment": {
+    "os": "Darwin arm64",
+    "memoryGiB": 16,
+    "logicalCpus": 10,
+    "node": "24.19.0",
+    "java": "OpenJDK 25.0.2",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.34",
+    "workers": 1,
+    "retries": 0,
+    "initialStack": "stopped; reserved ports free",
+    "buildCache": "warm from preflight attempt; dependencies and Chromium installed; LFS hydrated"
+  },
+  "wall": {
+    "startEpoch": 1788784769.072709,
+    "endEpoch": 1788785135.286377,
+    "durationSeconds": 366.2136700153351,
+    "exitCode": 0
+  },
+  "reporterStats": {
+    "startTime": "2026-09-07T12:39:29.679Z",
+    "duration": 365140.019,
+    "expected": 121,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "phasesSeconds": {
+    "beforeFirstTest": 31.63429093360901,
+    "testsWindow": 334.039999961853,
+    "afterLastTest": 0.539376974105835,
+    "summedTestDurations": 332.475
+  },
+  "limitations": [
+    "beforeFirstTest includes CLI, collection, emulator startup, build and global setup; no separate phase timer was installed",
+    "per-test duration includes fixtures; JSON does not expose fixture setup/teardown steps consistently; body/setup/cleanup not independently measurable",
+    "one successful sample; no variance estimate",
+    "warm build cache; not a cold-cache benchmark",
+    "unit/integration suites not timed in #771; migration savings require their measurement in subsequent lots"
+  ],
+  "groupSummedSeconds": {
+    "application": 308.598,
+    "harness": 23.877
+  },
+  "attemptsRejected": [
+    {
+      "kind": "environment",
+      "reason": "four unhydrated LFS snapshot pointers",
+      "durationSeconds": 53.75
+    },
+    {
+      "kind": "test failure",
+      "revision": "e2026a531b170fc62006f1ed5e9697067cec006d",
+      "reason": "strict locator matched hidden and visible profile empty state; 120 passed, 1 failed",
+      "durationSeconds": 360.65
+    }
+  ],
+  "tests": [
+    {
+      "id": "PW001",
+      "file": "admin/access-control.spec.ts",
+      "title": "Usuário não-admin é bloqueado em todas as rotas admin",
+      "status": "passed",
+      "durationMs": 1523,
+      "startTime": "2026-09-07T12:40:00.707Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW002",
+      "file": "admin/access-control.spec.ts",
+      "title": "Claim concedida pelo fixture já vale na sessão entregue",
+      "status": "passed",
+      "durationMs": 395,
+      "startTime": "2026-09-07T12:40:02.625Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW003",
+      "file": "admin/ads.spec.ts",
+      "title": "Jornada: Visualização completa da página de anúncios",
+      "status": "passed",
+      "durationMs": 6421,
+      "startTime": "2026-09-07T12:40:03.031Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW004",
+      "file": "admin/ads.spec.ts",
+      "title": "Jornada: Filtros e navegação de anúncios",
+      "status": "passed",
+      "durationMs": 10466,
+      "startTime": "2026-09-07T12:40:09.459Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW005",
+      "file": "admin/categories.spec.ts",
+      "title": "Jornada: Gerenciamento completo de categorias",
+      "status": "passed",
+      "durationMs": 9117,
+      "startTime": "2026-09-07T12:40:19.940Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW006",
+      "file": "admin/dashboard.spec.ts",
+      "title": "Jornada: Acesso e navegação do dashboard admin",
+      "status": "passed",
+      "durationMs": 1991,
+      "startTime": "2026-09-07T12:40:29.068Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW007",
+      "file": "admin/editorial-mcp-control.spec.ts",
+      "title": "Administrador opera, contém mutações e não sobrescreve conflito",
+      "status": "passed",
+      "durationMs": 1226,
+      "startTime": "2026-09-07T12:40:31.075Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW008",
+      "file": "admin/editorial-mcp-control.spec.ts",
+      "title": "expiração passa o runtime para somente leitura",
+      "status": "passed",
+      "durationMs": 5802,
+      "startTime": "2026-09-07T12:40:32.309Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW009",
+      "file": "admin/media.spec.ts",
+      "title": "Editor ainda não alcança o acervo de mídia",
+      "status": "passed",
+      "durationMs": 319,
+      "startTime": "2026-09-07T12:40:38.146Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW010",
+      "file": "admin/media.spec.ts",
+      "title": "Usuário comum não alcança o acervo de mídia",
+      "status": "passed",
+      "durationMs": 354,
+      "startTime": "2026-09-07T12:40:38.471Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW011",
+      "file": "admin/media.spec.ts",
+      "title": "Administrador cadastra Mídia estruturada, vê no acervo e revisa o crédito",
+      "status": "passed",
+      "durationMs": 1354,
+      "startTime": "2026-09-07T12:40:38.835Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW012",
+      "file": "admin/media.spec.ts",
+      "title": "Cadastro sem texto alternativo e sem Procedência estruturada é recusado",
+      "status": "passed",
+      "durationMs": 1375,
+      "startTime": "2026-09-07T12:40:40.195Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW013",
+      "file": "admin/media.spec.ts",
+      "title": "Administrador escolhe pelo seletor uma mídia já guardada no acervo",
+      "status": "passed",
+      "durationMs": 1623,
+      "startTime": "2026-09-07T12:40:41.576Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW014",
+      "file": "admin/media.spec.ts",
+      "title": "Administrador cadastra uma mídia nova de dentro do seletor, sem sair do fluxo",
+      "status": "passed",
+      "durationMs": 1576,
+      "startTime": "2026-09-07T12:40:43.205Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW015",
+      "file": "admin/media.spec.ts",
+      "title": "Imagem maior que 1920px chega ao acervo redimensionada, em WebP e com menos de 1MB",
+      "status": "passed",
+      "durationMs": 2182,
+      "startTime": "2026-09-07T12:40:44.787Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW016",
+      "file": "admin/profiles.spec.ts",
+      "title": "Jornada: Visualização e gerenciamento de perfis de anunciantes",
+      "status": "passed",
+      "durationMs": 3411,
+      "startTime": "2026-09-07T12:40:46.981Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW017",
+      "file": "admin/users.spec.ts",
+      "title": "Jornada: Visualização da lista de usuários",
+      "status": "passed",
+      "durationMs": 2004,
+      "startTime": "2026-09-07T12:40:50.403Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW018",
+      "file": "admin/users.spec.ts",
+      "title": "Jornada: Gerenciamento de privilégios admin",
+      "status": "passed",
+      "durationMs": 9002,
+      "startTime": "2026-09-07T12:40:52.413Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW019",
+      "file": "ads/ad-advertiser-info.spec.ts",
+      "title": "should display advertiser info on ad page",
+      "status": "passed",
+      "durationMs": 4473,
+      "startTime": "2026-09-07T12:41:01.427Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW020",
+      "file": "ads/ad-canonical-url.spec.ts",
+      "title": "canonical and og:url are absolute",
+      "status": "passed",
+      "durationMs": 4475,
+      "startTime": "2026-09-07T12:41:05.913Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW021",
+      "file": "ads/ad-listing-cache.spec.ts",
+      "title": "Jornada: pausar anúncio atualiza a listagem da categoria na leitura seguinte",
+      "status": "passed",
+      "durationMs": 6711,
+      "startTime": "2026-09-07T12:41:10.400Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW022",
+      "file": "ads/ad-status.spec.ts",
+      "title": "Jornada: Criação de anúncio e comportamento inicial de status",
+      "status": "passed",
+      "durationMs": 5107,
+      "startTime": "2026-09-07T12:41:17.123Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW023",
+      "file": "ads/ad-status.spec.ts",
+      "title": "Jornada: Gerenciamento de status e visibilidade de anúncios",
+      "status": "passed",
+      "durationMs": 11301,
+      "startTime": "2026-09-07T12:41:22.238Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW024",
+      "file": "ads/ad-status.spec.ts",
+      "title": "Jornada: Alteração de status via página de edição",
+      "status": "passed",
+      "durationMs": 7261,
+      "startTime": "2026-09-07T12:41:33.546Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW025",
+      "file": "ads/ad-with-photo.spec.ts",
+      "title": "Anunciante cria um anúncio com foto, e a foto sobrevive à edição",
+      "status": "passed",
+      "durationMs": 6670,
+      "startTime": "2026-09-07T12:41:40.818Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW026",
+      "file": "ads/create-new-ad.spec.ts",
+      "title": "should create a new ad",
+      "status": "passed",
+      "durationMs": 5352,
+      "startTime": "2026-09-07T12:41:47.499Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW027",
+      "file": "ads/delete-ad.spec.ts",
+      "title": "Não-proprietário NÃO vê botão de exclusão",
+      "status": "passed",
+      "durationMs": 4580,
+      "startTime": "2026-09-07T12:41:52.864Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW028",
+      "file": "ads/delete-ad.spec.ts",
+      "title": "Admin vê botão de exclusão em anúncio de outro usuário",
+      "status": "passed",
+      "durationMs": 4559,
+      "startTime": "2026-09-07T12:41:57.452Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW029",
+      "file": "ads/delete-ad.spec.ts",
+      "title": "Proprietário pode excluir seu anúncio",
+      "status": "passed",
+      "durationMs": 5014,
+      "startTime": "2026-09-07T12:42:02.020Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW030",
+      "file": "ads/edit-ad.spec.ts",
+      "title": "Proprietário pode editar seu anúncio",
+      "status": "passed",
+      "durationMs": 5421,
+      "startTime": "2026-09-07T12:42:07.044Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW031",
+      "file": "ads/edit-ad.spec.ts",
+      "title": "Não-proprietário NÃO vê botão de edição e acesso direto é bloqueado",
+      "status": "passed",
+      "durationMs": 4617,
+      "startTime": "2026-09-07T12:42:12.472Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW032",
+      "file": "ads/edit-ad.spec.ts",
+      "title": "Admin pode editar anúncio de outro usuário",
+      "status": "passed",
+      "durationMs": 5584,
+      "startTime": "2026-09-07T12:42:17.098Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW033",
+      "file": "ads/my-ads.spec.ts",
+      "title": "Usuário não autenticado vê componente Unauthorized",
+      "status": "passed",
+      "durationMs": 229,
+      "startTime": "2026-09-07T12:42:22.696Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW034",
+      "file": "ads/my-ads.spec.ts",
+      "title": "Usuário autenticado vê seus próprios anúncios",
+      "status": "passed",
+      "durationMs": 6144,
+      "startTime": "2026-09-07T12:42:22.930Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW035",
+      "file": "ads/my-ads.spec.ts",
+      "title": "Usuário NÃO vê anúncios de outros usuários",
+      "status": "passed",
+      "durationMs": 4537,
+      "startTime": "2026-09-07T12:42:29.083Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW036",
+      "file": "ads/publish-as-visitor.spec.ts",
+      "title": "visitante deslogado publica anúncio registrando-se no modal",
+      "status": "passed",
+      "durationMs": 6690,
+      "startTime": "2026-09-07T12:42:33.634Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW037",
+      "file": "advertiser-profile/advertiser-page.spec.ts",
+      "title": "Exibição de perfil com anúncios e 404 para inexistente",
+      "status": "passed",
+      "durationMs": 4529,
+      "startTime": "2026-09-07T12:42:40.335Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW038",
+      "file": "advertiser-profile/advertiser-page.spec.ts",
+      "title": "Estado vazio e navegação de volta",
+      "status": "passed",
+      "durationMs": 2290,
+      "startTime": "2026-09-07T12:42:44.870Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW039",
+      "file": "advertiser-profile/edit-profile.spec.ts",
+      "title": "should edit an existing advertiser profile",
+      "status": "passed",
+      "durationMs": 4015,
+      "startTime": "2026-09-07T12:42:47.171Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW040",
+      "file": "advertiser-profile/photo-upload.spec.ts",
+      "title": "Jornada: Upload de foto em perfil de anunciante",
+      "status": "passed",
+      "durationMs": 2308,
+      "startTime": "2026-09-07T12:42:51.197Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW041",
+      "file": "authentication/invalid-session.spec.ts",
+      "title": "Cookie de sessão inválido mostra acesso não autorizado e deixa de ser enviado",
+      "status": "passed",
+      "durationMs": 502,
+      "startTime": "2026-09-07T12:42:53.516Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW042",
+      "file": "authentication/login.spec.ts",
+      "title": "should log in with registered user",
+      "status": "passed",
+      "durationMs": 821,
+      "startTime": "2026-09-07T12:42:54.026Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW043",
+      "file": "authentication/registration.spec.ts",
+      "title": "Jornada: Registro de novo usuário",
+      "status": "passed",
+      "durationMs": 1331,
+      "startTime": "2026-09-07T12:42:54.858Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW044",
+      "file": "diagnostics/http-failures.spec.ts",
+      "title": "a real browser captures a 500 and its digest without retaining private body, URL or headers",
+      "status": "passed",
+      "durationMs": 76,
+      "startTime": "2026-09-07T12:42:56.199Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW045",
+      "file": "local-e2e-qualification.spec.ts",
+      "title": "the real local producer binds a clean commit and selected successful tests",
+      "status": "passed",
+      "durationMs": 1795,
+      "startTime": "2026-09-07T12:42:56.283Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW046",
+      "file": "local-e2e-qualification.spec.ts",
+      "title": "large discarded configuration output does not invalidate a successful qualification",
+      "status": "passed",
+      "durationMs": 1684,
+      "startTime": "2026-09-07T12:42:58.082Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW047",
+      "file": "local-e2e-qualification.spec.ts",
+      "title": "local tests preserve Java configuration without receiving staging credentials",
+      "status": "passed",
+      "durationMs": 1835,
+      "startTime": "2026-09-07T12:42:59.771Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW048",
+      "file": "local-e2e-qualification.spec.ts",
+      "title": "failure output remains sanitized and cannot yield a receipt",
+      "status": "passed",
+      "durationMs": 1938,
+      "startTime": "2026-09-07T12:43:01.610Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW049",
+      "file": "local-e2e-qualification.spec.ts",
+      "title": "a dirty candidate and a zero-match selection cannot yield a receipt",
+      "status": "passed",
+      "durationMs": 1286,
+      "startTime": "2026-09-07T12:43:03.552Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW050",
+      "file": "local-e2e-qualification.spec.ts",
+      "title": "candidate drift during otherwise green tests invalidates qualification",
+      "status": "passed",
+      "durationMs": 1839,
+      "startTime": "2026-09-07T12:43:04.847Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW051",
+      "file": "navigation/cache-surface.spec.ts",
+      "title": "A aplicação não expõe invalidação global de cache por HTTP",
+      "status": "passed",
+      "durationMs": 76,
+      "startTime": "2026-09-07T12:43:06.695Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW052",
+      "file": "navigation/cache-surface.spec.ts",
+      "title": "O HTML público de / exige revalidação antes de reutilização",
+      "status": "passed",
+      "durationMs": 69,
+      "startTime": "2026-09-07T12:43:06.777Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW053",
+      "file": "navigation/cache-surface.spec.ts",
+      "title": "O HTML público de /noticias exige revalidação antes de reutilização",
+      "status": "passed",
+      "durationMs": 94,
+      "startTime": "2026-09-07T12:43:06.852Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW054",
+      "file": "navigation/category-navigation.spec.ts",
+      "title": "Should navigate to category and subcategory pages",
+      "status": "passed",
+      "durationMs": 4302,
+      "startTime": "2026-09-07T12:43:06.954Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW055",
+      "file": "navigation/user-sidebar.spec.ts",
+      "title": "Jornada: Navegação completa do usuário logado via sidebar",
+      "status": "passed",
+      "durationMs": 3124,
+      "startTime": "2026-09-07T12:43:11.267Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW056",
+      "file": "newsroom/access-control.spec.ts",
+      "title": "Editor alcança a redação pela sidebar",
+      "status": "passed",
+      "durationMs": 1154,
+      "startTime": "2026-09-07T12:43:14.401Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW057",
+      "file": "newsroom/access-control.spec.ts",
+      "title": "Administrador não alcança a redação",
+      "status": "passed",
+      "durationMs": 362,
+      "startTime": "2026-09-07T12:43:15.561Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW058",
+      "file": "newsroom/access-control.spec.ts",
+      "title": "Editor não alcança a administração",
+      "status": "passed",
+      "durationMs": 643,
+      "startTime": "2026-09-07T12:43:15.930Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW059",
+      "file": "newsroom/access-control.spec.ts",
+      "title": "Usuário sem papel algum não alcança nenhuma das duas áreas",
+      "status": "passed",
+      "durationMs": 662,
+      "startTime": "2026-09-07T12:43:16.579Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW060",
+      "file": "newsroom/access-control.spec.ts",
+      "title": "Visitante não autenticado é convidado a entrar",
+      "status": "passed",
+      "durationMs": 204,
+      "startTime": "2026-09-07T12:43:17.248Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW061",
+      "file": "newsroom/article-correction.spec.ts",
+      "title": "Jornada: Editor publica, corrige com retificação, e o leitor vê o texto novo e a nota",
+      "status": "passed",
+      "durationMs": 4564,
+      "startTime": "2026-09-07T12:43:17.466Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW062",
+      "file": "newsroom/article-draft.spec.ts",
+      "title": "Jornada: Editor cria, reabre e salva o texto com as Capturas escolhidas",
+      "status": "passed",
+      "durationMs": 3099,
+      "startTime": "2026-09-07T12:43:22.041Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW063",
+      "file": "newsroom/article-draft.spec.ts",
+      "title": "Conflito preserva o texto local e permite um novo salvamento deliberado",
+      "status": "passed",
+      "durationMs": 3383,
+      "startTime": "2026-09-07T12:43:25.147Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW064",
+      "file": "newsroom/article-review.spec.ts",
+      "title": "Editor substitui a versão, revisa o Rascunho e apresenta nova Submissão",
+      "status": "passed",
+      "durationMs": 1789,
+      "startTime": "2026-09-07T12:43:28.541Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW065",
+      "file": "newsroom/article-review.spec.ts",
+      "title": "Editor revisa o snapshot, evidências, diferenças e identidade sem material interno",
+      "status": "passed",
+      "durationMs": 2821,
+      "startTime": "2026-09-07T12:43:30.336Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW066",
+      "file": "newsroom/article-review.spec.ts",
+      "title": "Usuário comum não acessa a fila nem o conteúdo de revisão",
+      "status": "passed",
+      "durationMs": 381,
+      "startTime": "2026-09-07T12:43:33.163Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW067",
+      "file": "newsroom/capture-invalidation.spec.ts",
+      "title": "Cliente MCP propõe e Editor decide a invalidação sem apagar a Captura",
+      "status": "passed",
+      "durationMs": 1693,
+      "startTime": "2026-09-07T12:43:33.648Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW068",
+      "file": "newsroom/editor-role.spec.ts",
+      "title": "Jornada: administrador concede o papel e o promovido alcança a redação no login seguinte",
+      "status": "passed",
+      "durationMs": 2942,
+      "startTime": "2026-09-07T12:43:35.354Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW069",
+      "file": "newsroom/editor-role.spec.ts",
+      "title": "Jornada: administrador revoga o papel e o Editor perde a redação no login seguinte",
+      "status": "passed",
+      "durationMs": 2927,
+      "startTime": "2026-09-07T12:43:38.304Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW070",
+      "file": "newsroom/editor-role.spec.ts",
+      "title": "Conceder o papel de Editor a um administrador preserva o papel de administrador",
+      "status": "passed",
+      "durationMs": 4514,
+      "startTime": "2026-09-07T12:43:41.242Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW071",
+      "file": "newsroom/editorial-activity.spec.ts",
+      "title": "Editor encontra uma mutação sem criar ruído ao consultar o histórico",
+      "status": "passed",
+      "durationMs": 2844,
+      "startTime": "2026-09-07T12:43:45.766Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW072",
+      "file": "newsroom/editorial-activity.spec.ts",
+      "title": "Usuário sem papel de Editor não consulta o histórico",
+      "status": "passed",
+      "durationMs": 301,
+      "startTime": "2026-09-07T12:43:48.616Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW073",
+      "file": "newsroom/editorial-activity.spec.ts",
+      "title": "Editor entende retenção e período inválido",
+      "status": "passed",
+      "durationMs": 781,
+      "startTime": "2026-09-07T12:43:48.922Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW074",
+      "file": "newsroom/editorial-clients.spec.ts",
+      "title": "Usuário sem papel não alcança nenhuma administração de PAT",
+      "status": "passed",
+      "durationMs": 364,
+      "startTime": "2026-09-07T12:43:49.714Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW075",
+      "file": "newsroom/editorial-clients.spec.ts",
+      "title": "Jornada: Editor emite, vê uma vez e revoga seu PAT",
+      "status": "passed",
+      "durationMs": 1116,
+      "startTime": "2026-09-07T12:43:50.084Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW076",
+      "file": "newsroom/editorial-clients.spec.ts",
+      "title": "Administrador revoga qualquer PAT sem adquirir autoridade editorial",
+      "status": "passed",
+      "durationMs": 1073,
+      "startTime": "2026-09-07T12:43:51.205Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW077",
+      "file": "newsroom/editorial-mcp.spec.ts",
+      "title": "Hostname de máquina expõe somente o recurso MCP canônico",
+      "status": "passed",
+      "durationMs": 245,
+      "startTime": "2026-09-07T12:43:52.294Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW078",
+      "file": "newsroom/editorial-mcp.spec.ts",
+      "title": "Editor acompanha evidência e encerra uma pesquisa assistida retomável",
+      "status": "passed",
+      "durationMs": 1295,
+      "startTime": "2026-09-07T12:43:52.545Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW079",
+      "file": "newsroom/editorial-mcp.spec.ts",
+      "title": "Cliente local organiza e prioriza uma pauta sem atravessar escopos",
+      "status": "passed",
+      "durationMs": 1130,
+      "startTime": "2026-09-07T12:43:53.846Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW080",
+      "file": "newsroom/editorial-mcp.spec.ts",
+      "title": "Cliente local revisa o Rascunho, retoma a instrução e reapresenta sem publicar",
+      "status": "passed",
+      "durationMs": 1103,
+      "startTime": "2026-09-07T12:43:54.982Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW081",
+      "file": "newsroom/editorial-mcp.spec.ts",
+      "title": "Cliente local pagina e audita leituras",
+      "status": "passed",
+      "durationMs": 526,
+      "startTime": "2026-09-07T12:43:56.092Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW082",
+      "file": "newsroom/editorial-mcp.spec.ts",
+      "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+      "status": "passed",
+      "durationMs": 20319,
+      "startTime": "2026-09-07T12:43:56.624Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW083",
+      "file": "newsroom/homepage-news.spec.ts",
+      "title": "Publicar uma matéria a leva à home, sem limpar cache",
+      "status": "passed",
+      "durationMs": 2982,
+      "startTime": "2026-09-07T12:44:16.961Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW084",
+      "file": "newsroom/homepage-news.spec.ts",
+      "title": "Despublicar uma matéria a tira do noticiário da home",
+      "status": "passed",
+      "durationMs": 3887,
+      "startTime": "2026-09-07T12:44:19.949Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW085",
+      "file": "newsroom/homepage-news.spec.ts",
+      "title": "Da matéria, o leitor chega aos anúncios e ao convite a anunciar",
+      "status": "passed",
+      "durationMs": 2621,
+      "startTime": "2026-09-07T12:44:23.843Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW086",
+      "file": "newsroom/media-correction.spec.ts",
+      "title": "Editor compara e aplica uma proposta MCP; proposta concorrente é recusada e o histórico permanece",
+      "status": "passed",
+      "durationMs": 4593,
+      "startTime": "2026-09-07T12:44:26.482Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW087",
+      "file": "newsroom/media-correction.spec.ts",
+      "title": "Administrador sem papel de Editor não acessa propostas de correção",
+      "status": "passed",
+      "durationMs": 474,
+      "startTime": "2026-09-07T12:44:31.081Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW088",
+      "file": "newsroom/news-article-metadata.spec.ts",
+      "title": "canonical, og:url e JSON-LD NewsArticle levam o que a matéria tem, com imagem da mídia anexada",
+      "status": "passed",
+      "durationMs": 3109,
+      "startTime": "2026-09-07T12:44:31.566Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW089",
+      "file": "newsroom/news-index.spec.ts",
+      "title": "Jornada: leitor abre o índice e navega até a matéria publicada",
+      "status": "passed",
+      "durationMs": 3259,
+      "startTime": "2026-09-07T12:44:34.690Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW090",
+      "file": "newsroom/news-index.spec.ts",
+      "title": "Uma URL de matéria com slug divergente redireciona para o canônico",
+      "status": "passed",
+      "durationMs": 3507,
+      "startTime": "2026-09-07T12:44:37.959Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW091",
+      "file": "newsroom/news-index.spec.ts",
+      "title": "Uma matéria inexistente cai numa página de não encontrado",
+      "status": "passed",
+      "durationMs": 218,
+      "startTime": "2026-09-07T12:44:41.474Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW092",
+      "file": "newsroom/operational-reads.spec.ts",
+      "title": "A redação lê uma Fonte criada por outra operação sem depender de invalidação",
+      "status": "passed",
+      "durationMs": 1972,
+      "startTime": "2026-09-07T12:44:41.701Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW093",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+      "status": "passed",
+      "durationMs": 1091,
+      "startTime": "2026-09-07T12:44:43.688Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW094",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+      "status": "passed",
+      "durationMs": 1138,
+      "startTime": "2026-09-07T12:44:44.786Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW095",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "URL canônica evita duplicar uma fonte",
+      "status": "passed",
+      "durationMs": 545,
+      "startTime": "2026-09-07T12:44:45.930Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW096",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+      "status": "passed",
+      "durationMs": 1669,
+      "startTime": "2026-09-07T12:44:46.482Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW097",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+      "status": "passed",
+      "durationMs": 1559,
+      "startTime": "2026-09-07T12:44:48.157Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW098",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "A tela de captura não oferece origem nenhuma para escolher",
+      "status": "passed",
+      "durationMs": 570,
+      "startTime": "2026-09-07T12:44:49.723Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW099",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "O trecho literal é exibido como evidência, nunca como HTML",
+      "status": "passed",
+      "durationMs": 1287,
+      "startTime": "2026-09-07T12:44:50.299Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW100",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "A captura registrada não aparece em nenhuma superfície pública",
+      "status": "passed",
+      "durationMs": 1449,
+      "startTime": "2026-09-07T12:44:51.592Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW101",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "Usuário comum não alcança as telas de fonte e de captura",
+      "status": "passed",
+      "durationMs": 383,
+      "startTime": "2026-09-07T12:44:53.047Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW102",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+      "status": "passed",
+      "durationMs": 357,
+      "startTime": "2026-09-07T12:44:53.436Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW103",
+      "file": "newsroom/source-and-capture.spec.ts",
+      "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+      "status": "passed",
+      "durationMs": 265,
+      "startTime": "2026-09-07T12:44:53.799Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW104",
+      "file": "newsroom/story-from-captures.spec.ts",
+      "title": "Jornada: Editor unifica duas capturas numa pauta e a vê na fila",
+      "status": "passed",
+      "durationMs": 2394,
+      "startTime": "2026-09-07T12:44:54.074Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW105",
+      "file": "newsroom/story-from-captures.spec.ts",
+      "title": "Uma captura registrada depois se associa à pauta que já existe",
+      "status": "passed",
+      "durationMs": 2827,
+      "startTime": "2026-09-07T12:44:56.475Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW106",
+      "file": "newsroom/story-from-captures.spec.ts",
+      "title": "Usuário comum não alcança a tela de pautas",
+      "status": "passed",
+      "durationMs": 329,
+      "startTime": "2026-09-07T12:44:59.310Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW107",
+      "file": "newsroom/story-from-captures.spec.ts",
+      "title": "Administrador que não é Editor não alcança a tela de pautas",
+      "status": "passed",
+      "durationMs": 307,
+      "startTime": "2026-09-07T12:44:59.645Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW108",
+      "file": "newsroom/story-from-captures.spec.ts",
+      "title": "Visitante sem sessão é mandado entrar antes de ver a tela de pautas",
+      "status": "passed",
+      "durationMs": 186,
+      "startTime": "2026-09-07T12:44:59.958Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW109",
+      "file": "newsroom/story-priority-queue.spec.ts",
+      "title": "Editor prioriza, preserva a recomendação e separa pautas suspensas",
+      "status": "passed",
+      "durationMs": 6534,
+      "startTime": "2026-09-07T12:45:00.156Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW110",
+      "file": "newsroom/story-priority-queue.spec.ts",
+      "title": "Edições concorrentes devolvem a revisão atual",
+      "status": "passed",
+      "durationMs": 2648,
+      "startTime": "2026-09-07T12:45:06.697Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW111",
+      "file": "newsroom/topic-timeline.spec.ts",
+      "title": "Jornada: Editor agrupa duas pautas num assunto e o leitor segue a linha do tempo a partir da matéria",
+      "status": "passed",
+      "durationMs": 10539,
+      "startTime": "2026-09-07T12:45:09.363Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW112",
+      "file": "newsroom/topic-timeline.spec.ts",
+      "title": "Administrador que não é Editor não alcança a tela de assuntos",
+      "status": "passed",
+      "durationMs": 325,
+      "startTime": "2026-09-07T12:45:19.910Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW113",
+      "file": "newsroom/topic-timeline.spec.ts",
+      "title": "Editor percorre a próxima página de pautas de um assunto",
+      "status": "passed",
+      "durationMs": 1012,
+      "startTime": "2026-09-07T12:45:20.241Z",
+      "group": "application",
+      "retry": 0
+    },
+    {
+      "id": "PW114",
+      "file": "page-object-readiness.spec.ts",
+      "title": "Page object espera os controles da pauta ficarem únicos e utilizáveis",
+      "status": "passed",
+      "durationMs": 228,
+      "startTime": "2026-09-07T12:45:21.263Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW115",
+      "file": "page-object-readiness.spec.ts",
+      "title": "Page object encontra a pauta depois da primeira página da fila",
+      "status": "passed",
+      "durationMs": 182,
+      "startTime": "2026-09-07T12:45:21.497Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW116",
+      "file": "staging-artifact-bootstrap.spec.ts",
+      "title": "trusted bootstrap uses suite runtime for commonjs test imports",
+      "status": "passed",
+      "durationMs": 1113,
+      "startTime": "2026-09-07T12:45:21.701Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW117",
+      "file": "staging-artifact-bootstrap.spec.ts",
+      "title": "trusted bootstrap uses suite runtime for module test imports",
+      "status": "passed",
+      "durationMs": 1042,
+      "startTime": "2026-09-07T12:45:22.818Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW118",
+      "file": "staging-artifact-bootstrap.spec.ts",
+      "title": "sanitizes a real failed trace with masked browser frames and a request context",
+      "status": "passed",
+      "durationMs": 2208,
+      "startTime": "2026-09-07T12:45:23.864Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW119",
+      "file": "staging-fixture-readiness.spec.ts",
+      "title": "Salvar anúncio espera a navegação confirmada após resposta do servidor",
+      "status": "passed",
+      "durationMs": 409,
+      "startTime": "2026-09-07T12:45:26.081Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW120",
+      "file": "staging-fixture-readiness.spec.ts",
+      "title": "Salvar subcategoria espera o formulário fechar após confirmação do servidor",
+      "status": "passed",
+      "durationMs": 920,
+      "startTime": "2026-09-07T12:45:26.495Z",
+      "group": "harness",
+      "retry": 0
+    },
+    {
+      "id": "PW121",
+      "file": "staging-fixture-readiness.spec.ts",
+      "title": "Falha ao salvar subcategoria remove a categoria criada pela fixture",
+      "status": "passed",
+      "durationMs": 7322,
+      "startTime": "2026-09-07T12:45:27.425Z",
+      "group": "harness",
+      "retry": 0
+    }
+  ],
+  "previousValidatedRuns": [
+    {
+      "revision": "0fc680e8330a522c3c88c9842c9e31d8c98499f7",
+      "durationSeconds": 356.4231901168823,
+      "passed": 121,
+      "reasonSuperseded": "main #781 changed publication focus and E2E; full baseline repeated after rebase"
+    }
+  ]
+}

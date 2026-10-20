@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // The top level serves `E2E_RENDERER=vinext` locally; deployments select an `env`.
+  "name": "tudo-macae-web-local",
+  "main": "./web-worker/worker.ts",
+  "compatibility_date": "2026-09-27",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "invocation_logs": false }
+  },
+  "assets": { "not_found_handling": "none", "binding": "ASSETS" },
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
+  "exports": { "DataCache": { "type": "durable-object", "storage": "sqlite" } },
+  "durable_objects": { "bindings": [{ "name": "DATA_CACHE", "class_name": "DataCache" }] },
+  "services": [{ "binding": "ARTICLE_INDEX", "service": "tudo-macae-public-article-index-prototype", "entrypoint": "ArticleIndexReader" }],
+  "env": {
+    "production": {
+      // The Terms Worker: the router sends it the journeys in `workersJourneys` and the
+      // `/_terms-workers` assets. `bin/deploy-workers-production.mjs` publishes it.
+      "name": "tudo-macae-terms-workers",
+      "workers_dev": false,
+      // Vars do not inherit between environments. `vite.vinext.config.ts` inlines the
+      // NEXT_PUBLIC_* ones into the browser bundle, `bin/devEnvironment.ts` gives `npm run dev`
+      // the analytics ones, and `web-worker/runtimeIdentity.ts` derives K_REVISION.
+      "vars": {
+        "K_SERVICE": "tudo-macae-terms-workers",
+        "FORWARD_CLIENT_ADDRESS": "1",
+        "AUTHENTICATION_AUTHORITY": "better-auth",
+        "AUTHENTICATION_API_URL": "https://tudo-macae-api-production.frega.workers.dev",
+        "AUTHENTICATION_DIAGNOSTICS_ENABLED": "true",
+        "PUBLIC_APP_ORIGIN": "https://www.tudomacae.com.br",
+        "PUBLIC_ARTICLE_INDEX_URL": "https://tudo-macae-public-article-index.frega.workers.dev",
+        "SITE_SEARCH_URL": "https://tudo-macae-site-search.frega.workers.dev",
+        "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAAFUPX0zOHT6VJ_1g",
+        "NEXT_PUBLIC_POSTHOG_HOST": "https://t.tudomacae.com.br",
+        "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN": "phc_hsJ53t7erFJXLbu8InsQxr85MWzQtkGksfmQMR27mDi",
+        "NEXT_PUBLIC_EDITORIAL_IMAGE_TRANSFORM_ORIGIN": "https://images.tudomacae.com.br",
+        "EDITORIAL_IMAGE_ORIGIN_ENABLED": "1",
+        "EDITORIAL_MCP_MODE": "enabled",
+        "EDITORIAL_MCP_READS_PER_MINUTE": "120",
+        "EDITORIAL_MCP_MUTATIONS_PER_MINUTE": "30"
+      },
+      "assets": { "not_found_handling": "none", "binding": "ASSETS" },
+      "version_metadata": { "binding": "CF_VERSION_METADATA" },
+      "durable_objects": { "bindings": [{ "name": "DATA_CACHE", "class_name": "DataCache" }] },
+      // `web-worker/outboundBindings.ts` sends calls to AUTHENTICATION_API_URL and SITE_SEARCH_URL through these.
+      "services": [
+        { "binding": "ARTICLE_INDEX", "service": "tudo-macae-public-article-index", "entrypoint": "ArticleIndexReader" },
+        { "binding": "API", "service": "tudo-macae-api-production", "entrypoint": "WebRenderer" },
+        { "binding": "SITE_SEARCH", "service": "tudo-macae-site-search", "entrypoint": "WebRenderer" }
+      ]
+    }
+  }
+}

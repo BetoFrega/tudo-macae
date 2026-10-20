@@ -1,0 +1,254 @@
+[
+  {
+    "key": "carla-artesanato",
+    "accountKey": "advertiser",
+    "title": "Carla Artesanato",
+    "description": "Peças de crochê e bordado feitas à mão, no Miramar. Encomendas com uma semana de antecedência.",
+    "contacts": [
+      { "number": "22991230101", "isWhatsapp": true },
+      { "number": "22991230201", "isWhatsapp": true },
+      { "number": "2227410101", "isWhatsapp": false }
+    ],
+    "activityAreas": [
+      { "categorySlug": "outros", "subcategorySlug": "roupas" },
+      { "categorySlug": "outros", "subcategorySlug": "diversos" }
+    ],
+    "createdDaysAgo": 210
+  },
+  {
+    "key": "marcos-fotografia",
+    "accountKey": "editor",
+    "title": "Marcos Fotografia",
+    "description": "Ensaios, eventos e cobertura de inauguração em Macaé e região. Entrega das fotos tratadas em uma semana.",
+    "contacts": [{ "number": "22991230108", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "outros", "subcategorySlug": "diversos" }],
+    "createdDaysAgo": 200
+  },
+  {
+    "key": "juliana-idiomas",
+    "accountKey": "admin",
+    "title": "Juliana Idiomas",
+    "description": "Aulas particulares de inglês e espanhol, presenciais no Centro ou online.",
+    "contacts": [{ "number": "22991230109", "isWhatsapp": false }],
+    "activityAreas": [{ "categorySlug": "outros", "subcategorySlug": "diversos" }],
+    "createdDaysAgo": 195
+  },
+  {
+    "key": "cabral-reformas",
+    "accountKey": "bulk-cabral",
+    "title": "Cabral Reformas",
+    "description": "Pintura, alvenaria e pequenos reparos residenciais em Macaé e Rio das Ostras. Orçamento sem compromisso.",
+    "contacts": [{ "number": "22991230102", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "servicos", "subcategorySlug": "manutencao" }],
+    "createdDaysAgo": 180
+  },
+  {
+    "key": "imperial-imoveis",
+    "accountKey": "bulk-imperial",
+    "title": "Imperial Imóveis",
+    "description": "Aluguel e venda de apartamentos no Centro, Granja dos Cavaleiros e Cavaleiros. Atendimento de segunda a sábado.",
+    "contacts": [
+      { "number": "22991230103", "isWhatsapp": true },
+      { "number": "2227410103", "isWhatsapp": false }
+    ],
+    "activityAreas": [
+      { "categorySlug": "imoveis", "subcategorySlug": "aluguel" },
+      { "categorySlug": "imoveis", "subcategorySlug": "venda" }
+    ],
+    "createdDaysAgo": 150
+  },
+  {
+    "key": "oficina-farol",
+    "accountKey": "bulk-farol",
+    "title": "Oficina Farol",
+    "description": "Mecânica geral, injeção eletrônica e revisão preventiva. Guincho para a região do Farol.",
+    "contacts": [{ "number": "22991230104", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "veiculos", "subcategorySlug": "pecas" }],
+    "createdDaysAgo": 120
+  },
+  {
+    "key": "pousada-da-ilha",
+    "accountKey": "bulk-ilha",
+    "title": "Pousada da Ilha",
+    "description": "Diárias com café da manhã a dez minutos da Praia dos Cavaleiros. Estacionamento próprio.",
+    "contacts": [{ "number": "22991230105", "isWhatsapp": false }],
+    "activityAreas": [{ "categorySlug": "imoveis", "subcategorySlug": "temporada" }],
+    "createdDaysAgo": 90
+  },
+  {
+    "key": "pet-shop-lagoa",
+    "accountKey": "bulk-lagoa",
+    "title": "Pet Shop Lagoa",
+    "description": "Banho, tosa e ração com entrega no bairro. Leva e traz para clientes da Lagomar.",
+    "contacts": [{ "number": "22991230106", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "outros", "subcategorySlug": "diversos" }],
+    "createdDaysAgo": 60
+  },
+  {
+    "key": "riviera-climatizacao",
+    "accountKey": "bulk-riviera",
+    "title": "Riviera Climatização",
+    "description": "Instalação, limpeza e manutenção de ar-condicionado split. Atende comércio e residência.",
+    "contacts": [{ "number": "22991230107", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "servicos", "subcategorySlug": "manutencao" }],
+    "createdDaysAgo": 30
+  },
+  {
+    "key": "bare",
+    "accountKey": "bulk-bare",
+    "title": "Marcenaria Nunes",
+    "description": "Móveis sob medida.",
+    "activityAreas": [{ "categorySlug": "outros", "subcategorySlug": "moveis" }],
+    "createdDaysAgo": 7
+  },
+  {
+    "key": "sabor-da-serra",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/sabor-da-serra",
+    "title": "Sabor da Serra",
+    "description": "Restaurante local com refeições no salão e retirada.",
+    "contacts": [{ "number": "22991230201", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "restaurantes", "subcategorySlug": "refeicoes" }],
+    "createdDaysAgo": 170
+  },
+  {
+    "key": "doce-encontro",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/doce-encontro",
+    "title": "Doce Encontro",
+    "description": "Bolos, doces e sobremesas por encomenda.",
+    "contacts": [{ "number": "22991230202", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "restaurantes", "subcategorySlug": "doces" }],
+    "createdDaysAgo": 160
+  },
+  {
+    "key": "auto-posto-miramar",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/auto-posto-miramar",
+    "title": "Auto Posto Miramar",
+    "description": "Abastecimento e serviços básicos para veículos.",
+    "contacts": [{ "number": "2227410203", "isWhatsapp": false }],
+    "activityAreas": [{ "categorySlug": "veiculos", "subcategorySlug": "postos-de-combustiveis" }],
+    "createdDaysAgo": 150
+  },
+  {
+    "key": "contabil-macae",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/contabil-macae",
+    "title": "Contábil Macaé",
+    "description": "Atendimento contábil para profissionais e pequenos negócios.",
+    "contacts": [{ "number": "22991230204", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "servicos", "subcategorySlug": "contabilidade" }],
+    "createdDaysAgo": 145
+  },
+  {
+    "key": "academia-orla",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/academia-orla",
+    "title": "Academia Orla",
+    "description": "Treinamento de força e aulas coletivas.",
+    "contacts": [{ "number": "22991230205", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "servicos", "subcategorySlug": "academias" }],
+    "createdDaysAgo": 135
+  },
+  {
+    "key": "talentos-macae",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/talentos-macae",
+    "title": "Talentos Macaé",
+    "description": "Recrutamento e divulgação de oportunidades locais.",
+    "contacts": [{ "number": "22991230206", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "empregos", "subcategorySlug": "vagas" }],
+    "createdDaysAgo": 125
+  },
+  {
+    "key": "curso-tecnico-norte",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/curso-tecnico-norte",
+    "title": "Curso Técnico Norte",
+    "description": "Formação técnica e cursos de atualização profissional.",
+    "contacts": [{ "number": "22991230207", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "educacao", "subcategorySlug": "ensino-tecnico" }],
+    "createdDaysAgo": 115
+  },
+  {
+    "key": "escola-pontal",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/escola-pontal",
+    "title": "Escola Pontal",
+    "description": "Educação básica para famílias de Macaé.",
+    "contacts": [{ "number": "2227410208", "isWhatsapp": false }],
+    "activityAreas": [{ "categorySlug": "educacao", "subcategorySlug": "educacao-basica" }],
+    "createdDaysAgo": 105
+  },
+  {
+    "key": "clinica-horizonte",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/clinica-horizonte",
+    "title": "Clínica Horizonte",
+    "description": "Consultas médicas com atendimento agendado.",
+    "contacts": [{ "number": "22991230209", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "saude", "subcategorySlug": "clinicas-medicas" }],
+    "createdDaysAgo": 95
+  },
+  {
+    "key": "farmacia-central",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/farmacia-central",
+    "title": "Farmácia Central",
+    "description": "Medicamentos, higiene e cuidados pessoais.",
+    "contacts": [{ "number": "2227410210", "isWhatsapp": false }],
+    "activityAreas": [{ "categorySlug": "saude", "subcategorySlug": "farmacias" }],
+    "createdDaysAgo": 85
+  },
+  {
+    "key": "construtora-atlantica",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/construtora-atlantica",
+    "title": "Construtora Atlântica",
+    "description": "Projetos, obras e reformas residenciais.",
+    "contacts": [{ "number": "22991230211", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "construcao", "subcategorySlug": "engenharia-e-construcao" }],
+    "createdDaysAgo": 75
+  },
+  {
+    "key": "casa-dos-materiais",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/casa-dos-materiais",
+    "title": "Casa dos Materiais",
+    "description": "Materiais para construção, acabamento e pequenos reparos.",
+    "contacts": [{ "number": "22991230212", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "construcao", "subcategorySlug": "materiais-de-construcao" }],
+    "createdDaysAgo": 65
+  },
+  {
+    "key": "metalmacae",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/metalmacae",
+    "title": "MetalMacaé",
+    "description": "Manutenção e apoio técnico para operações industriais.",
+    "contacts": [{ "number": "22991230213", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "industria", "subcategorySlug": "servicos-industriais" }],
+    "createdDaysAgo": 55
+  },
+  {
+    "key": "mercado-popular",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/mercado-popular",
+    "title": "Mercado Popular",
+    "description": "Mercado de bairro com alimentos e itens para casa.",
+    "contacts": [{ "number": "2227410214", "isWhatsapp": false }],
+    "activityAreas": [{ "categorySlug": "comercio", "subcategorySlug": "supermercados-e-atacadistas" }],
+    "createdDaysAgo": 45
+  },
+  {
+    "key": "flores-da-praia",
+    "claimable": true,
+    "sourceUrl": "https://example.com/negocios/flores-da-praia",
+    "title": "Flores da Praia",
+    "description": "Flores, vasos e arranjos para presente.",
+    "contacts": [{ "number": "22991230215", "isWhatsapp": true }],
+    "activityAreas": [{ "categorySlug": "comercio", "subcategorySlug": "flores-e-jardinagem" }],
+    "createdDaysAgo": 35
+  }
+]

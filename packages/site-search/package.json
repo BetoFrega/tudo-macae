@@ -1,0 +1,36 @@
+{
+  "name": "@tudomacae/site-search",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./search": "./search.ts",
+    "./flag": "./flag.ts",
+    "./providers": "./providers.ts",
+    "./ui": "./ui.ts"
+  },
+  "dependencies": {
+    "@tudomacae/react-primitives": "*",
+    "lucide-react": "^1.48.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.7.0"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/site-search/tests"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@testing-library/jest-dom": "^7.0.1",
+    "jsdom": "^30.1.2",
+    "@types/node": "^26"
+  }
+}

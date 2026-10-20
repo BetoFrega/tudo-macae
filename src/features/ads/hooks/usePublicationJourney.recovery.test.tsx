@@ -1,0 +1,178 @@
+// @vitest-environment jsdom
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fill, mocks, profile, resetJourneyMocks } from "./usePublicationJourney.fixtures";
+import { usePublicationJourney } from "./usePublicationJourney";
+
+vi.mock("next/navigation", () => ({ useSearchParams: () => new URL(window.location.href).searchParams }));
+vi.mock("@/features/authentication/AuthContext", () => ({ useAuth: () => ({ user: mocks.authenticated ? { uid: mocks.uid } : null }) }));
+vi.mock("@/features/authentication/LoginModalContext", () => ({ useLoginModal: () => ({ openLoginModal: mocks.login }) }));
+vi.mock("@/features/advertiser-profile/actions/getUserAdvertiserProfiles", () => ({ getUserAdvertiserProfiles: mocks.profiles }));
+vi.mock("../actions/publication", () => ({ savePendingPublication: mocks.save, publishPendingPublication: mocks.publish }));
+vi.mock("../client/readPendingPublication", () => ({ readPendingPublication: mocks.recover }));
+vi.mock("../client/savePendingPhotos", () => ({ savePendingPhotos: mocks.sync }));
+vi.mock("../contexts/AdFormContext", () => ({ useAdFormContext: () => ({ profiles: [], categories: [], actions: { uploadAdImage: mocks.upload } }) }));
+
+describe("publication journey recovery", () => {
+  beforeEach(resetJourneyMocks);
+  it("preserves an anonymous task across first login and its first save but invalidates an owner change", async () => {
+    mocks.authenticated = false;
+    const { result, rerender } = renderHook(() => usePublicationJourney());
+    const isCurrent = result.current.captureCurrentPublication();
+    expect(isCurrent()).toBe(true);
+    mocks.authenticated = true;
+    mocks.uid = "first-owner";
+    rerender();
+    expect(isCurrent()).toBe(true);
+    act(() => fill(result));
+    await act(() => result.current.persist());
+    expect(result.current.publicationId.current).toBeDefined();
+    expect(isCurrent()).toBe(true);
+    mocks.uid = "another-owner";
+    rerender();
+    expect(isCurrent()).toBe(false);
+    const ownedTask = result.current.captureCurrentPublication();
+    mocks.authenticated = false;
+    rerender();
+    expect(ownedTask()).toBe(false);
+  });
+  it("invalidates captured work when recovering another target or starting a new publication", async () => {
+    const first = { id: "first", userId: "user", title: "Primeiro rascunho", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    window.history.replaceState(null, "", "/publicar?publication=first");
+    const { result, rerender } = renderHook(() => usePublicationJourney(first));
+    const firstTask = result.current.captureCurrentPublication();
+    expect(firstTask()).toBe(true);
+    mocks.recover.mockResolvedValue({ publication: { ...first, id: "second" }, profiles: [] });
+    window.history.replaceState(null, "", "/publicar?publication=second");
+    rerender();
+    await waitFor(() => expect(result.current.publicationId.current).toBe("second"));
+    expect(firstTask()).toBe(false);
+    const secondTask = result.current.captureCurrentPublication();
+    expect(secondTask()).toBe(true);
+    window.history.replaceState(null, "", "/publicar");
+    rerender();
+    await waitFor(() => expect(result.current.publicationId.current).toBeUndefined());
+    expect(secondTask()).toBe(false);
+    expect(result.current.captureCurrentPublication()()).toBe(true);
+  });
+  it("recovers a URL-selected draft when navigation reused the new-publication shell", async () => {
+    const image = { id: "photo", path: "ad-images/draft/photo.webp", title: "Frente", description: "", order: 0, url: "/api/publicacoes-pendentes/draft/fotos/photo" };
+    const publication = { id: "draft", userId: "user", title: "Bicicleta", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [image] };
+    window.history.replaceState(null, "", "/publicar?publication=draft");
+    mocks.recover.mockResolvedValue({ publication, profiles: [] });
+    mocks.profiles.mockResolvedValue([]);
+    const { result } = renderHook(() => usePublicationJourney());
+    await waitFor(() => expect(result.current.recovering).toBe(false));
+    expect(mocks.recover).toHaveBeenCalledExactlyOnceWith("draft");
+    expect(result.current.form.getValues("images")).toEqual([image]);
+    expect(result.current.form.getValues("title")).toBe(publication.title);
+    expect(result.current.savedPhotoCount).toBe(1);
+    expect(result.current.step).toBe("profile");
+    expect(result.current.publicationId.current).toBe("draft");
+  });
+  it("ignores a completed recovery after the URL selects another draft", async () => {
+    let finishFirst!: (value: unknown) => void;
+    mocks.recover.mockImplementationOnce(() => new Promise((resolve) => {
+      finishFirst = resolve;
+    }));
+    const second = { id: "second", userId: "user", title: "Segundo rascunho", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    mocks.recover.mockResolvedValueOnce({ publication: second, profiles: [] });
+    window.history.replaceState(null, "", "/publicar?publication=first");
+    const { result, rerender } = renderHook(() => usePublicationJourney());
+    window.history.replaceState(null, "", "/publicar?publication=second");
+    rerender();
+    await waitFor(() => expect(result.current.publicationId.current).toBe("second"));
+    await act(async () => finishFirst({ publication: { ...second, id: "first", title: "Primeiro rascunho" }, profiles: [] }));
+    expect(result.current.form.getValues("title")).toBe("Segundo rascunho");
+    expect(result.current.publicationId.current).toBe("second");
+  });
+  it("starts a blank creation when navigation removes the query during recovery", async () => {
+    let finishRecovery!: (value: unknown) => void;
+    mocks.recover.mockImplementationOnce(() => new Promise((resolve) => {
+      finishRecovery = resolve;
+    }));
+    window.history.replaceState(null, "", "/publicar?publication=first");
+    const { result, rerender } = renderHook(() => usePublicationJourney());
+    expect(result.current.recovering).toBe(true);
+    window.history.replaceState(null, "", "/publicar");
+    rerender();
+    await waitFor(() => expect(result.current.recovering).toBe(false));
+    expect(result.current.recoveryUnavailable).toBe(false);
+    expect(result.current.publicationId.current).toBeUndefined();
+    const old = { id: "first", userId: "user", title: "Rascunho antigo", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    await act(async () => finishRecovery({ publication: old, profiles: [profile] }));
+    expect(result.current.form.getValues("title")).toBe("");
+    expect(result.current.step).toBe("ad");
+    expect(result.current.saved).toBe(false);
+  });
+  it("creates a new draft after removing the query from a recovered publication", async () => {
+    const old = { id: "first", userId: "user", title: "Rascunho antigo", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [{ id: "old-photo", path: "ad-images/first/photo.png", title: "Antiga", description: "", order: 0, url: "/private-old" }] };
+    mocks.recover.mockResolvedValue({ publication: old, profiles: [] });
+    window.history.replaceState(null, "", "/publicar?publication=first");
+    const { result, rerender } = renderHook(() => usePublicationJourney());
+    await waitFor(() => expect(result.current.saved).toBe(true));
+    window.history.replaceState(null, "", "/publicar");
+    rerender();
+    await waitFor(() => expect(result.current.saved).toBe(false));
+    expect(result.current.form.getValues("images")).toEqual([]);
+    expect(result.current.form.getValues("title")).toBe("");
+    expect(result.current.savedPhotoCount).toBe(0);
+    act(() => fill(result));
+    await act(() => result.current.continueAd());
+    expect(mocks.save.mock.calls[0]![0].id).not.toBe("first");
+    expect(mocks.save.mock.calls[0]![0].title).toBe("Bicicleta");
+  });
+  it("keeps mutation unavailable after recovery of another URL-selected draft fails", async () => {
+    const initial = { id: "first", userId: "user", title: "Primeiro rascunho", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    window.history.replaceState(null, "", "/publicar?publication=second");
+    mocks.recover.mockRejectedValue(new Error("Publicação não encontrada nesta conta."));
+    const { result } = renderHook(() => usePublicationJourney(initial));
+    await waitFor(() => expect(result.current.error).toBe("Publicação não encontrada nesta conta."));
+    expect(result.current.recoveryUnavailable).toBe(true);
+    expect(result.current.form.getValues("title")).toBe("");
+    await expect(result.current.persist()).rejects.toThrow("Aguarde a recuperação");
+    await act(() => result.current.continueAd());
+    expect(mocks.save).not.toHaveBeenCalled();
+  });
+  it("can recover the original URL again after another draft recovery failed", async () => {
+    const initial = { id: "first", userId: "user", title: "Primeiro rascunho", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    window.history.replaceState(null, "", "/publicar?publication=second");
+    mocks.recover.mockRejectedValueOnce(new Error("Publicação não encontrada nesta conta."));
+    mocks.recover.mockResolvedValueOnce({ publication: initial, profiles: [] });
+    const { result, rerender } = renderHook(() => usePublicationJourney(initial));
+    await waitFor(() => expect(result.current.recoveryUnavailable).toBe(true));
+    await waitFor(() => expect(result.current.recovering).toBe(false));
+    window.history.replaceState(null, "", "/publicar?publication=first");
+    rerender();
+    await waitFor(() => expect(result.current.recoveryUnavailable).toBe(false));
+    expect(result.current.form.getValues("title")).toBe(initial.title);
+    expect(mocks.recover).toHaveBeenLastCalledWith("first");
+  });
+  it("reauthorizes the same draft id after the authenticated account changes", async () => {
+    const initial = { id: "draft", userId: "user", title: "Rascunho privado", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    window.history.replaceState(null, "", "/publicar?publication=draft");
+    const { result, rerender } = renderHook(() => usePublicationJourney(initial));
+    expect(mocks.recover).not.toHaveBeenCalled();
+    mocks.uid = "another-owner";
+    mocks.recover.mockRejectedValue(new Error("Publicação não encontrada nesta conta."));
+    rerender();
+    await waitFor(() => expect(result.current.error).toBe("Publicação não encontrada nesta conta."));
+    expect(mocks.recover).toHaveBeenCalledExactlyOnceWith("draft");
+    expect(result.current.form.getValues("title")).toBe("");
+    expect(result.current.profiles).toEqual([]);
+    expect(result.current.recoveryUnavailable).toBe(true);
+  });
+  it("clears private draft data and blocks saving after logout", async () => {
+    const initial = { id: "draft", userId: "user", title: "Rascunho privado", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1, images: [] };
+    window.history.replaceState(null, "", "/publicar?publication=draft");
+    const { result, rerender } = renderHook(() => usePublicationJourney(initial));
+    mocks.authenticated = false;
+    rerender();
+    await waitFor(() => expect(result.current.error).toBe("Entre na sua conta para retomar a publicação."));
+    expect(result.current.form.getValues("title")).toBe("");
+    expect(result.current.profiles).toEqual([]);
+    expect(result.current.recoveryUnavailable).toBe(true);
+    expect(mocks.recover).not.toHaveBeenCalled();
+    await expect(result.current.persist()).rejects.toThrow("Aguarde a recuperação");
+  });
+});

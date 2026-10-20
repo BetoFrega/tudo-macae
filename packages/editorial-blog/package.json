@@ -1,0 +1,43 @@
+{
+  "name": "@tudomacae/editorial-blog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./articleDistribution": "./articleDistribution.ts",
+    "./articleMediaBody": "./articleMediaBody.ts",
+    "./articleMediaRoles": "./articleMediaRoles.ts",
+    "./articleReader": "./articleReader.ts",
+    "./blog": "./blog.ts",
+    "./blogRecords": "./blogRecords.ts",
+    "./client": "./client.ts",
+    "./editorName": "./editorName.ts",
+    "./mediaCleanup": "./mediaCleanup.ts",
+    "./protocol": "./protocol.ts",
+    "./publicBlog": "./publicBlog.ts",
+    "./publicArticleIndex": "./publicArticleIndex.ts",
+    "./publicArticleIndexReconciliation": "./publicArticleIndexReconciliation.ts",
+    "./publicMediaContent": "./publicMediaContent.ts",
+    "./publicClient": "./publicClient.ts",
+    "./publicProtocol": "./publicProtocol.ts",
+    "./publishedArticle": "./publishedArticle.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/editorial-blog/tests"
+  },
+  "dependencies": {
+    "@tudomacae/editorial-planning": "*",
+    "@tudomacae/media": "*",
+    "@tudomacae/public-image-delivery": "*",
+    "@tudomacae/text-normalization": "*",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.0",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

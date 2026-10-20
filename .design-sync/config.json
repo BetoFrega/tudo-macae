@@ -1,0 +1,73 @@
+{
+  "projectId": "57740f6f-2a30-41a7-a1ca-246b657de4af",
+  "shape": "package",
+  "pkg": "macae-classificados",
+  "globalName": "MacaeDS",
+  "buildCmd": "./.ds-sync/node_modules/.bin/tailwindcss -i .design-sync/css-entry.css -o .design-sync/.cache/compiled.css",
+  "srcDir": "src/components/ui",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": ".design-sync/.cache/compiled.css",
+  "extraEntries": [
+    "./.design-sync/extra-exports.ts"
+  ],
+  "extraFonts": [
+    ".design-sync/fonts/geist.css"
+  ],
+  "docsDir": ".design-sync/docs",
+  "overrides": {
+    "Dialog": {
+      "cardMode": "single",
+      "viewport": "900x560",
+      "primaryStory": "ConfirmDelete"
+    },
+    "Sheet": {
+      "cardMode": "single",
+      "viewport": "900x560",
+      "primaryStory": "Filters"
+    },
+    "DropdownMenu": {
+      "cardMode": "single",
+      "viewport": "640x480",
+      "primaryStory": "AdActions"
+    },
+    "Select": {
+      "cardMode": "single",
+      "viewport": "640x480",
+      "primaryStory": "Open"
+    },
+    "Table": {
+      "cardMode": "column"
+    },
+    "Form": {
+      "cardMode": "column"
+    },
+    "NavigationMenu": {
+      "cardMode": "column"
+    },
+    "SheetHeader": {
+      "cardMode": "single",
+      "viewport": "900x520"
+    },
+    "SheetFooter": {
+      "cardMode": "single",
+      "viewport": "900x520"
+    },
+    "DropdownMenuLabel": {
+      "cardMode": "single",
+      "viewport": "640x420"
+    },
+    "TableCell": {
+      "cardMode": "column"
+    },
+    "TableHead": {
+      "cardMode": "column"
+    },
+    "TableCaption": {
+      "cardMode": "column"
+    },
+    "NavigationMenuItem": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

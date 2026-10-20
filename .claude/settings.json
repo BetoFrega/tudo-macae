@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/bootstrap-worktree.sh\"",
+            "timeout": 600,
+            "statusMessage": "Installing worktree dependencies"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/guard-protected-files.sh\"",
+            "timeout": 10,
+            "statusMessage": "Conferindo arquivo protegido"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/lint-touched-file.sh\"",
+            "timeout": 60,
+            "statusMessage": "Lint no arquivo tocado"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.agents/hooks/green-gate.sh\"",
+            "timeout": 300,
+            "statusMessage": "Port\u00e3o de verde"
+          }
+        ]
+      }
+    ]
+  }
+}

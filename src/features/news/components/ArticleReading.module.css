@@ -1,0 +1,155 @@
+.article {
+  width: 100%;
+  max-width: 60rem;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+}
+
+.article > :not(script) ~ * {
+  margin-top: 2rem;
+}
+
+.header {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.header > :not(:first-child) {
+  margin-top: 1rem;
+}
+
+.header > .title + * {
+  margin-top: 1.5rem;
+}
+
+.title {
+  max-width: 42rem;
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.metadata > * {
+  margin: 0;
+}
+
+.sharing > div {
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.sharing > div > * {
+  flex: 0 1 auto;
+}
+
+.body {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.body > div {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--foreground);
+}
+
+.body table {
+  overflow-wrap: normal;
+}
+
+.article figure {
+  margin-inline: 0;
+}
+
+.figure > :first-child {
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 0.25rem);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  max-height: 32rem;
+  object-fit: contain;
+  background: var(--muted);
+}
+
+.article figcaption {
+  margin-top: 0.75rem;
+  padding-inline: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.article > section {
+  max-width: 42rem;
+  margin-inline: auto;
+  padding-top: 1.5rem;
+  line-height: 1.7;
+}
+
+.supportSection {
+  border-top: 1px solid var(--border);
+}
+
+.supportSection h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.supportSection ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.disclosure {
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.supportSection + .disclosure {
+  margin-top: 1.5rem;
+}
+
+.article a:not([data-slot="button"]) {
+  color: var(--primary);
+  text-underline-offset: 0.2em;
+}
+
+.article a:not([data-slot="button"]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+
+@media (min-width: 48rem) {
+  .title {
+    font-size: 2.25rem;
+  }
+
+  .article > :not(script) ~ * {
+    margin-top: 3rem;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .sharing > div > * {
+    flex-basis: 100%;
+  }
+}

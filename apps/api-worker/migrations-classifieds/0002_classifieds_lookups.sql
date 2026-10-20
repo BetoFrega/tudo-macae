@@ -1,0 +1,10 @@
+CREATE INDEX classifieds_rank ON classifieds_records (kind, json_extract(body, '$.order'), namespace, id);
+CREATE INDEX classifieds_child_rank ON classifieds_records (kind, category_id, json_extract(body, '$.order'), namespace, id);
+CREATE INDEX classifieds_created ON classifieds_records (kind, json_extract(body, '$.createdAt') DESC, namespace DESC, id DESC);
+CREATE INDEX classifieds_claimable_created ON classifieds_records (kind, json_extract(body, '$.claimable'), json_extract(body, '$.createdAt') DESC, namespace DESC, id DESC);
+CREATE TABLE classifieds_areas (profile_id TEXT NOT NULL, category_id TEXT NOT NULL, subcategory_id TEXT NOT NULL, PRIMARY KEY (category_id, subcategory_id, profile_id));
+CREATE INDEX classifieds_areas_profile ON classifieds_areas (profile_id);
+INSERT OR IGNORE INTO classifieds_areas SELECT r.id, json_extract(a.value, '$.categoryId'), json_extract(a.value, '$.subcategoryId') FROM classifieds_records r, json_each(r.body, '$.activityAreas') a WHERE r.kind = 'profile';
+CREATE TRIGGER classifieds_profile_areas_insert AFTER INSERT ON classifieds_records WHEN NEW.kind = 'profile' BEGIN INSERT OR IGNORE INTO classifieds_areas SELECT NEW.id, json_extract(value, '$.categoryId'), json_extract(value, '$.subcategoryId') FROM json_each(NEW.body, '$.activityAreas'); END;
+CREATE TRIGGER classifieds_profile_areas_update AFTER UPDATE OF body ON classifieds_records WHEN NEW.kind = 'profile' BEGIN DELETE FROM classifieds_areas WHERE profile_id = NEW.id; INSERT OR IGNORE INTO classifieds_areas SELECT NEW.id, json_extract(value, '$.categoryId'), json_extract(value, '$.subcategoryId') FROM json_each(NEW.body, '$.activityAreas'); END;
+CREATE TRIGGER classifieds_profile_areas_delete AFTER DELETE ON classifieds_records WHEN OLD.kind = 'profile' BEGIN DELETE FROM classifieds_areas WHERE profile_id = OLD.id; END;

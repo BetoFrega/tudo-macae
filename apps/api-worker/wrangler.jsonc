@@ -1,0 +1,76 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "tudo-macae-api-qualification",
+  "main": "entry.ts",
+  "compatibility_date": "2026-09-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "redact_query_string": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": false,
+    },
+    "traces": {
+      "enabled": false,
+    },
+    "head_sampling_rate": 0.1,
+  },
+  "vars": {
+    "PUBLIC_APP_ORIGIN": "https://www.tudomacae.com.br",
+    "EMAIL_FROM": "conta@tudomacae.com.br",
+    "OIDC_AUDIENCE": "",
+    "OIDC_SERVICE_ACCOUNT": "",
+    "WORKERS_ENVIRONMENT": "qualification",
+    "AUTHENTICATION_DIAGNOSTICS_ENABLED": "false",
+    "TURNSTILE_ENFORCEMENT": "off",
+    "PUBLIC_IMAGE_PURGE_ZONE_ID": "",
+    "PUBLIC_IMAGE_ORIGIN": "https://images.tudomacae.com.br",
+  },
+  "env": {
+    "production": {
+      "vars": {
+        "AUTHENTICATION_DIAGNOSTICS_ENABLED": "true",
+      },
+    },
+  },
+  "d1_databases": [
+    {
+      "binding": "AUTHENTICATION_DB",
+      "database_name": "tudo-macae-authentication",
+      "database_id": "local-authentication",
+      "migrations_dir": "migrations",
+    },
+    {
+      "binding": "CLASSIFIEDS_DB",
+      "database_name": "tudo-macae-classifieds",
+      "database_id": "local-classifieds",
+      "migrations_dir": "migrations-classifieds",
+    },
+    // Deployments bind it only when EDITORIAL_D1_ID is configured; Media stays closed without it.
+    {
+      "binding": "EDITORIAL_DB",
+      "database_name": "tudo-macae-editorial",
+      "database_id": "local-editorial",
+      "migrations_dir": "migrations-editorial",
+    },
+  ],
+  "triggers": { "crons": ["23 * * * *"] },
+  "images": { "binding": "IMAGES" },
+  // The Blog distributes to the public article index through its bound writer entrypoint.
+  "services": [{ "binding": "ARTICLE_INDEX", "service": "tudo-macae-public-article-index", "entrypoint": "ArticleIndexWriter" }],
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["conta@tudomacae.com.br"],
+    },
+  ],
+  "secrets": {
+    "required": ["BETTER_AUTH_SECRET"],
+  },
+  "version_metadata": {
+    "binding": "CF_VERSION_METADATA",
+  },
+}

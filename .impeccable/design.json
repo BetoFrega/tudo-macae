@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T03:37:55Z",
+  "title": "Design System: Tudo Macaé",
+  "extensions": {
+    "layout": {
+      "articleBodyMedia": "Article body images preserve their original aspect ratio with automatic height and width bounded by the text column, without a fixed frame, cropping, background, border or rounded mask. A loading estimate reserves space until intrinsic dimensions are known.",
+      "homepageClassifieds": "Native category disclosures use two columns, three from 640px and four from 1024px. Desktop recent ads occupy eight of twelve columns with two cards per row; publishing occupies four columns alongside. Below 1024px, publishing precedes ads.",
+      "businessDirectoryRows": "Avatar beside identity at every width; contacts beneath content until a third column appears at 1280px. Long text wraps without horizontal scrolling. Contact links have a minimum height of 44px; identity, activity and contact links retain visible focus.",
+      "generalAdGrid": "One column, two from 768px, three from 1024px; homepage desktop ads retain two.",
+      "siteHeader": "The shared header keeps brand and actions together when they fit. Its main row and action group wrap within available width when narrow screens or enlarged text require reflow, preserving control labels and avoiding horizontal scrolling."
+    },
+    "colorMeta": {
+      "credit-ink": {"role": "neutral", "displayName": "Tinta de Crédito"},
+      "warm-orange": {"role": "accent", "displayName": "Laranja Quente", "tonalRamp": ["oklch(22% 0.04 55)", "oklch(48% 0.12 45)", "oklch(70% 0.16 55)", "oklch(75% 0.16 55)", "oklch(96% 0.025 65)"]},
+      "macae-blue": {
+        "role": "primary",
+        "displayName": "Azul Macaé",
+        "canonical": "oklch(43.989% 0.30488 264.073)",
+        "tonalRamp": ["oklch(15% 0.18 264.073)", "oklch(25% 0.24 264.073)", "oklch(35% 0.29 264.073)", "oklch(43.989% 0.30488 264.073)", "oklch(55% 0.27 264.073)", "oklch(68% 0.20 264.073)", "oklch(82% 0.11 264.073)", "oklch(95% 0.03 264.073)"]
+      },
+      "atlantic-white": {
+        "role": "neutral",
+        "displayName": "Branco Atlântico",
+        "canonical": "oklch(100% 0.00011 271.152)",
+        "tonalRamp": ["oklch(15% 0.00011 271.152)", "oklch(28% 0.00011 271.152)", "oklch(42% 0.00011 271.152)", "oklch(56% 0.00011 271.152)", "oklch(69% 0.00011 271.152)", "oklch(81% 0.00011 271.152)", "oklch(91% 0.00011 271.152)", "oklch(100% 0.00011 271.152)"]
+      },
+      "pure-white": {
+        "role": "neutral",
+        "displayName": "Branco Puro",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": ["oklch(15% 0 0)", "oklch(28% 0 0)", "oklch(42% 0 0)", "oklch(56% 0 0)", "oklch(69% 0 0)", "oklch(81% 0 0)", "oklch(91% 0 0)", "oklch(100% 0 0)"]
+      },
+      "deep-ink": {
+        "role": "neutral",
+        "displayName": "Tinta Profunda",
+        "canonical": "oklch(10% 0.15244 264.073)",
+        "tonalRamp": ["oklch(10% 0.15244 264.073)", "oklch(22% 0.14 264.073)", "oklch(34% 0.12 264.073)", "oklch(46% 0.10 264.073)", "oklch(59% 0.08 264.073)", "oklch(72% 0.06 264.073)", "oklch(84% 0.035 264.073)", "oklch(95% 0.015 264.073)"]
+      },
+      "card-ink": {
+        "role": "neutral",
+        "displayName": "Tinta de Cartão",
+        "canonical": "oklch(12.9% 0.042 264.695)",
+        "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(25% 0.038 264.695)", "oklch(38% 0.034 264.695)", "oklch(51% 0.03 264.695)", "oklch(64% 0.025 264.695)", "oklch(76% 0.019 264.695)", "oklch(87% 0.012 264.695)", "oklch(95% 0.006 264.695)"]
+      },
+      "neutral-card": {
+        "role": "neutral",
+        "displayName": "Neutro Claro",
+        "canonical": "oklch(98% 0 0)",
+        "tonalRamp": ["oklch(20% 0 0)", "oklch(50% 0 0)", "oklch(98% 0 0)"]
+      },
+      "blue-accent": {
+        "role": "primary",
+        "displayName": "Azul de Ênfase",
+        "canonical": "oklch(43.989% 0.30488 264.073 / 30%)",
+        "tonalRamp": ["oklch(15% 0.18 264.073)", "oklch(25% 0.24 264.073)", "oklch(35% 0.29 264.073)", "oklch(43.989% 0.30488 264.073)", "oklch(55% 0.27 264.073)", "oklch(68% 0.20 264.073)", "oklch(82% 0.11 264.073)", "oklch(95% 0.03 264.073)"]
+      },
+      "cool-mist": {
+        "role": "neutral",
+        "displayName": "Névoa Fria",
+        "canonical": "oklch(96.8% 0.007 247.896)",
+        "tonalRamp": ["oklch(15% 0.007 247.896)", "oklch(28% 0.007 247.896)", "oklch(42% 0.007 247.896)", "oklch(56% 0.007 247.896)", "oklch(69% 0.007 247.896)", "oklch(81% 0.007 247.896)", "oklch(90% 0.007 247.896)", "oklch(96.8% 0.007 247.896)"]
+      },
+      "quiet-slate": {
+        "role": "neutral",
+        "displayName": "Ardósia Silenciosa",
+        "canonical": "oklch(55.4% 0.046 257.417)",
+        "tonalRamp": ["oklch(15% 0.046 257.417)", "oklch(27% 0.046 257.417)", "oklch(40% 0.046 257.417)", "oklch(55.4% 0.046 257.417)", "oklch(66% 0.038 257.417)", "oklch(76% 0.03 257.417)", "oklch(86% 0.019 257.417)", "oklch(95% 0.008 257.417)"]
+      },
+      "cool-line": {
+        "role": "neutral",
+        "displayName": "Linha Fria",
+        "canonical": "oklch(92.9% 0.013 255.508)",
+        "tonalRamp": ["oklch(15% 0.013 255.508)", "oklch(28% 0.013 255.508)", "oklch(42% 0.013 255.508)", "oklch(56% 0.013 255.508)", "oklch(69% 0.013 255.508)", "oklch(80% 0.013 255.508)", "oklch(88% 0.013 255.508)", "oklch(92.9% 0.013 255.508)"]
+      },
+      "focus-slate": {
+        "role": "neutral",
+        "displayName": "Ardósia de Foco",
+        "canonical": "oklch(70.4% 0.04 256.788)",
+        "tonalRamp": ["oklch(15% 0.04 256.788)", "oklch(27% 0.04 256.788)", "oklch(40% 0.04 256.788)", "oklch(53% 0.04 256.788)", "oklch(70.4% 0.04 256.788)", "oklch(79% 0.032 256.788)", "oklch(88% 0.02 256.788)", "oklch(95% 0.008 256.788)"]
+      },
+      "danger-red": {
+        "role": "tertiary",
+        "displayName": "Vermelho de Alerta",
+        "canonical": "oklch(57.7% 0.245 27.325)",
+        "tonalRamp": ["oklch(15% 0.12 27.325)", "oklch(26% 0.17 27.325)", "oklch(39% 0.22 27.325)", "oklch(57.7% 0.245 27.325)", "oklch(67% 0.20 27.325)", "oklch(77% 0.14 27.325)", "oklch(87% 0.08 27.325)", "oklch(95% 0.03 27.325)"]
+      },
+      "success-green": {
+        "role": "tertiary",
+        "displayName": "Verde de Confirmação",
+        "canonical": "oklch(30.936% 0.09324 136.737)",
+        "tonalRamp": ["oklch(15% 0.055 136.737)", "oklch(23% 0.075 136.737)", "oklch(30.936% 0.09324 136.737)", "oklch(45% 0.09 136.737)", "oklch(58% 0.08 136.737)", "oklch(71% 0.06 136.737)", "oklch(84% 0.035 136.737)", "oklch(95% 0.014 136.737)"]
+      }
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Display", "purpose": "Títulos centrais de maior expressão em telas médias ou maiores."},
+      "headline": {"displayName": "Headline", "purpose": "Títulos de página e seções principais em telas compactas."},
+      "title": {"displayName": "Title", "purpose": "Títulos de cartões, categorias e blocos operacionais."},
+      "body": {"displayName": "Body", "purpose": "Leitura corrente, descrições e conteúdo."},
+      "label": {"displayName": "Label", "purpose": "Botões, campos, navegação e metadados."},
+      "caption": {"displayName": "Caption", "purpose": "Legendas editoriais junto das imagens, subordinadas à leitura corrente."},
+      "credit": {"displayName": "Credit", "purpose": "Atribuição pequena e legível dentro da área visual da imagem."}
+    },
+    "shadows": [
+      {"name": "micro", "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)", "purpose": "Separação tátil mínima em campos e controles."},
+      {"name": "ambient-low", "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)", "purpose": "Cabeçalho e cartões em repouso."},
+      {"name": "interactive-lift", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Hover de cartões e chamadas principais."},
+      {"name": "modal", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Separação estrutural de diálogos e sheets."}
+    ],
+    "motion": [
+      {"name": "state-fast", "value": "150ms ease", "purpose": "Mudanças simples de cor, foco e opacidade."},
+      {"name": "directional", "value": "200ms ease", "purpose": "Setas e deslocamentos curtos que indicam direção."},
+      {"name": "card-response", "value": "300ms ease", "purpose": "Elevação, cor e revelação em cartões acionáveis."},
+      {"name": "ambient", "value": "500ms ease", "purpose": "Brilhos tonais decorativos vinculados a hover."}
+    ],
+    "breakpoints": [
+      {"name": "sm", "value": "640px"},
+      {"name": "md", "value": "768px"},
+      {"name": "lg", "value": "1024px"},
+      {"name": "xl", "value": "1280px"}
+    ]
+  },
+  "components": [
+    {"name": "Highlight Button", "kind": "button", "description": "Chamadas para anunciar, com laranja quente e texto escuro.", "html": "<button class=\"ds-btn-highlight\">Anunciar</button>", "css": ".ds-btn-highlight { padding: 8px 16px; border: 0; border-radius: 8px; background: var(--highlight); color: var(--highlight-foreground); font-weight: 700; } .ds-btn-highlight:hover { background: var(--highlight-hover); } .ds-btn-highlight:focus-visible { outline: 2px solid var(--highlight-ink); outline-offset: 2px; }"},
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal em Azul Macaé com foco inequívoco.",
+      "html": "<button class=\"ds-btn-primary\">Salvar</button>",
+      "css": ".ds-btn-primary { height: 36px; padding: 8px 16px; border: 2px solid var(--secondary); border-radius: 8px; background: var(--primary); color: var(--primary-foreground); font: 700 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; cursor: pointer; transition: background-color 150ms ease, box-shadow 150ms ease; } .ds-btn-primary:hover { background: oklch(43.989% 0.30488 264.073 / 90%); } .ds-btn-primary:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px oklch(70.4% 0.04 256.788 / 50%); } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária clara que preserva a hierarquia da ação primária.",
+      "html": "<button class=\"ds-btn-outline\">Entrar</button>",
+      "css": ".ds-btn-outline { height: 36px; padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--foreground); font: 500 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); cursor: pointer; transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease; } .ds-btn-outline:hover { background: var(--accent); color: var(--accent-foreground); } .ds-btn-outline:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px oklch(70.4% 0.04 256.788 / 50%); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Campo compacto, transparente e claramente focável.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Email</span><input class=\"ds-input\" placeholder=\"seu@email.com\"></label>",
+      "css": ".ds-field { display: grid; gap: 8px; color: var(--foreground); font: 500 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-input { width: 100%; height: 36px; padding: 4px 12px; border: 1px solid var(--input); border-radius: 8px; background: transparent; color: var(--foreground); font: 400 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); transition: border-color 150ms ease, box-shadow 150ms ease; } .ds-input::placeholder { color: var(--muted-foreground); } .ds-input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px oklch(70.4% 0.04 256.788 / 50%); }"
+    },
+    {
+      "name": "Secondary Badge",
+      "kind": "chip",
+      "refersTo": "badge-secondary",
+      "description": "Categoria ou metadado curto em cápsula neutra.",
+      "html": "<span class=\"ds-badge-secondary\">Serviços</span>",
+      "css": ".ds-badge-secondary { display: inline-flex; align-items: center; width: fit-content; padding: 2px 8px; border: 1px solid transparent; border-radius: 9999px; background: var(--secondary); color: var(--secondary-foreground); font: 500 12px/16px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; white-space: nowrap; transition: background-color 150ms ease, box-shadow 150ms ease; } .ds-badge-secondary:hover { background: oklch(96.8% 0.007 247.896 / 80%); } .ds-badge-secondary:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px oklch(70.4% 0.04 256.788 / 50%); }"
+    },
+    {
+      "name": "Default Card",
+      "kind": "card",
+      "refersTo": "card-default",
+      "description": "Contêiner tonal para conteúdo público ou operacional.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Oportunidade local</h3><p class=\"ds-card-copy\">Informação organizada para continuar encontrável.</p></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 24px; padding: 24px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); color: var(--card-foreground); box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); } .ds-card-title { margin: 0; font: 600 20px/28px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-card-copy { margin: 0; color: var(--muted-foreground); font: 400 16px/24px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }"
+    },
+    {
+      "name": "Homepage Category Disclosure",
+      "kind": "nav",
+      "description": "Categorias da home em grupos nativos: duas colunas, três a partir de 640px e quatro a partir de 1024px.",
+      "html": "<nav class=\"ds-home-categories\" aria-label=\"Categorias de anúncios\"><details class=\"ds-home-category\"><summary>Empregos <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></summary><ul><li><a class=\"ds-category-all\" href=\"#\">Ver todos</a></li><li><a href=\"#\">Vagas locais</a></li></ul></details></nav>",
+      "css": ".ds-home-categories { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; column-gap:24px; font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif; } .ds-home-category { border-top:1px solid var(--border); padding-block:4px; } .ds-home-category summary { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:48px; padding-block:8px; border-radius:var(--radius-sm); color:var(--primary); font-size:14px; line-height:20px; font-weight:600; cursor:pointer; list-style:none; } .ds-home-category summary::-webkit-details-marker { display:none; } .ds-home-category summary:focus-visible, .ds-home-category a:focus-visible { outline:2px solid currentColor; outline-offset:2px; } .ds-home-category svg { width:16px; height:16px; flex-shrink:0; transition:transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-home-category[open] svg { transform:rotate(180deg); } .ds-home-category ul { margin:0; padding:0 0 12px; list-style:none; font-size:14px; line-height:20px; } .ds-home-category a { display:flex; align-items:center; min-height:44px; padding-block:8px; color:var(--muted-foreground); text-decoration:none; text-underline-offset:4px; } .ds-home-category .ds-category-all { color:var(--primary); font-weight:500; } .ds-home-category a:hover { color:var(--foreground); text-decoration:underline; } .ds-home-category .ds-category-all:hover { color:var(--primary); } @media(min-width:640px) { .ds-home-categories { grid-template-columns:repeat(3,minmax(0,1fr)); } } @media(min-width:1024px) { .ds-home-categories { grid-template-columns:repeat(4,minmax(0,1fr)); } } @media(prefers-reduced-motion:reduce) { .ds-home-category svg { transition:none; } }"
+    },
+    {
+      "name": "Dialog",
+      "kind": "custom",
+      "description": "Superfície modal focada para autenticação e tarefas curtas.",
+      "html": "<section class=\"ds-dialog\" role=\"dialog\" aria-label=\"Entre na sua conta\"><h2>Entre na sua conta</h2><p>Você precisa estar logado para continuar.</p><button class=\"ds-dialog-close\" aria-label=\"Fechar\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg></button></section>",
+      "css": ".ds-dialog { position: relative; display: grid; gap: 16px; width: min(100%, 512px); padding: 24px; border: 1px solid var(--border); border-radius: 10px; background: var(--background); color: var(--foreground); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-dialog h2 { margin: 0; padding-right: 32px; font-size: 20px; line-height: 28px; font-weight: 600; } .ds-dialog p { margin: 0; color: var(--muted-foreground); font-size: 14px; line-height: 20px; } .ds-dialog-close { position: absolute; top: 16px; right: 16px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--foreground); opacity: 0.7; cursor: pointer; } .ds-dialog-close svg { width: 16px; height: 16px; } .ds-dialog-close:hover { opacity: 1; } .ds-dialog-close:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(70.4% 0.04 256.788 / 50%); }"
+    },
+    {
+      "name": "Navigation Trigger",
+      "kind": "nav",
+      "description": "Categorias no desktop; abaixo de 768px, Menu abre um painel com Negócios, Classificados, expansão de subcategorias e Anunciar grátis. Conta permanece separada no cabeçalho compacto; controles mobile têm área de toque mínima de 44px.",
+      "html": "<button class=\"ds-nav-trigger\">Categorias <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>",
+      "css": ".ds-nav-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 8px 16px; border: 0; border-radius: 8px; background: var(--background); color: var(--foreground); font: 500 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; cursor: pointer; transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease; } .ds-nav-trigger svg { width: 12px; height: 12px; transition: transform 200ms ease; } .ds-nav-trigger:hover, .ds-nav-trigger[aria-expanded='true'] { background: var(--accent); color: var(--accent-foreground); } .ds-nav-trigger[aria-expanded='true'] svg { transform: rotate(180deg); } .ds-nav-trigger:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(70.4% 0.04 256.788 / 50%); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Mural Vivo de Macaé",
+    "overview": "O sistema visual funciona como um mural local contemporâneo: direto o bastante para localizar informação depressa, aberto o bastante para receber notícias e classificados como partes da mesma vida cotidiana. O Azul Macaé cria reconhecimento imediato; o Branco Atlântico mantém a leitura clara e dá espaço para conteúdos muito diferentes coexistirem.\n\nA atmosfera é cívica, acessível, otimista e prática. A interface usa densidade confortável, hierarquia tipográfica inequívoca e interação gentilmente tátil. Ela não tenta parecer um marketplace genérico de big tech, um portal burocrático municipal ou um site de notícias sensacionalista.",
+    "keyCharacteristics": [
+      "Identidade azul com laranja quente reservado a destaques.",
+      "Superfícies claras com camadas serenas.",
+      "Tipografia de sistema direta e inclusiva.",
+      "Cantos suaves, bordas discretas e estados evidentes.",
+      "Movimento funcional, nunca coreografia gratuita."
+    ],
+    "rules": [
+      {"name": "The Selective Warm Accent Rule", "body": "O Azul Macaé identifica marca, links e navegação. Laranja quente destaca as chamadas para anunciar; a manchete principal usa laranja escuro. Vermelho e verde continuam reservados a estados.", "section": "colors"},
+      {"name": "The Content First Rule", "body": "Fundos e bordas permanecem frios e discretos para que texto, mídia e informação local liderem.", "section": "colors"},
+      {"name": "The Logo Is an Asset Rule", "body": "Graphik pertence ao desenho do logotipo; texto de produto usa a pilha nativa realmente renderizada.", "section": "typography"},
+      {"name": "The Weight Before Decoration Rule", "body": "Crie hierarquia com tamanho, peso e espaço antes de introduzir cor, caixa alta ou ornamento.", "section": "typography"},
+      {"name": "The Image Metadata Rule", "body": "O texto alternativo pertence ao atributo alt; a legenda editorial fica junto da imagem e pode estar vazia. O conteúdo dos metadados segue o glossário de Mídia. O crédito usa typography.credit dentro da área visual, em colors.credit-ink oculto por padrão e revelado em hover ou foco, sobre branco translúcido a 70%, com quebra livre e ampliação relativa ao texto. Teclado e toque focam a área visual; capas vinculadas usam o foco do link pelo teclado e dois toques na imagem: revelar crédito, depois abrir o destino. Seletores em botão mantêm o crédito visível no toque e escolha direta. Escape oculta o crédito até uma nova entrada de ponteiro ou foco. As figuras do corpo usam esse mesmo crédito sobreposto. Nenhum campo substitui outro. O aviso de IA permanece independente ao final da Matéria.", "section": "typography"},
+      {"name": "The Quiet at Rest Rule", "body": "Superfícies em repouso usam no máximo elevação ambiente baixa; sombra forte comunica estado ou sobreposição.", "section": "elevation"},
+      {"name": "The Soft, Not Bubbly Rule", "body": "Preserve cantos suavemente curvos, mas reserve a forma de cápsula para badges, switches e identidades circulares.", "section": "elevation"}
+    ],
+    "dos": [
+      "Do use Azul Macaé for brand recognition, primary action and navigational emphasis.",
+      "Do preserve the 8px rhythm and use 24px as the default card composition space.",
+      "Do let borders and tonal surfaces establish structure before adding shadow.",
+      "Do keep hover, focus, invalid and disabled states visually explicit.",
+      "Do grow the general ad grid from one to two to three columns; preserve compact category disclosures and two-column desktop ad region."
+    ],
+    "donts": [
+      "Don't spread the warm accent across ordinary navigation, cards or status indicators.",
+      "Don't use danger red or success green as decoration.",
+      "Don't apply permanent heavy shadows to resting surfaces.",
+      "Don't use Graphik outside the existing logo asset unless the brand typography is deliberately redesigned.",
+      "Don't animate content without an interaction, state change or directional purpose."
+    ]
+  }
+}

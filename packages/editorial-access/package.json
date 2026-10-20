@@ -1,0 +1,20 @@
+{
+  "name": "@tudomacae/editorial-access",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./editorAuthorization": "./editorAuthorization.ts",
+    "./errors": "./errors.ts",
+    "./activity": "./activity.ts",
+    "./caller": "./caller.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/editorial-access/tests"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "@types/node": "^26"
+  }
+}

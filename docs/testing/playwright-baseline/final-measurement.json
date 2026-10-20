@@ -1,0 +1,2289 @@
+{
+  "environment": {
+    "revision": "12ac9d14617aa262a0c7e62705c37c7b182af410",
+    "cleanTree": true,
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "architecture": "arm64",
+    "node": "v24.19.0",
+    "java": "openjdk 25.0.2 2026-01-20\nOpenJDK Runtime Environment (build 25.0.2+10-69)\nOpenJDK 64-Bit Server VM (build 25.0.2+10-69, mixed mode, sharing)",
+    "playwright": "Version 1.62.1",
+    "portsVerifiedFree": [
+      25864,
+      25865,
+      25866,
+      25867,
+      25868,
+      25869,
+      25870,
+      25871
+    ],
+    "workers": 1,
+    "retries": 0,
+    "initialStack": "stopped",
+    "caches": "warm build and dependencies retained"
+  },
+  "historicalBaseline": {
+    "file": "measurement.json",
+    "wallSeconds": 366.21367,
+    "cases": 121
+  },
+  "sameApplicationBeforeSharedStartup": {
+    "application": {
+      "revision": "a9920b013226a3e0218b8a451f2f7bac845ff3ce",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e",
+        "--",
+        "--reporter=line,json"
+      ],
+      "startedAtEpochMs": 1788804925864.0361,
+      "wallSeconds": 332.778584,
+      "exitCode": 0
+    },
+    "harness-standalone": {
+      "revision": "a9920b013226a3e0218b8a451f2f7bac845ff3ce",
+      "command": [
+        "npx",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.harness.config.ts",
+        "--reporter=line,json"
+      ],
+      "startedAtEpochMs": 1788805258675.2341,
+      "wallSeconds": 15.412304542000015,
+      "exitCode": 0
+    },
+    "harness-application": {
+      "revision": "a9920b013226a3e0218b8a451f2f7bac845ff3ce",
+      "command": [
+        "npx",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.harness-app.config.ts",
+        "--reporter=line,json"
+      ],
+      "startedAtEpochMs": 1788805274088.2239,
+      "wallSeconds": 32.58460945899998,
+      "exitCode": 0
+    },
+    "aggregateWallSeconds": 380.775498001,
+    "revision": "a9920b013226a3e0218b8a451f2f7bac845ff3ce"
+  },
+  "sharedStartupBeforeConsolidation": {
+    "revision": "1398478e6c0ab626cdebeac257115e5371345e31",
+    "command": [
+      "npm",
+      "run",
+      "test:e2e:full",
+      "--",
+      "--reporter=line,json"
+    ],
+    "startedAtEpochMs": 1788805870104.188,
+    "wallSeconds": 347.730784083,
+    "exitCode": 0,
+    "result": {
+      "startTime": "2026-09-07T18:31:10.642Z",
+      "duration": 347161.461,
+      "expected": 117,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "groups": {
+      "application": {
+        "cases": 101,
+        "testSeconds": 288.73199999999997
+      },
+      "applicationHarness": {
+        "cases": 2,
+        "testSeconds": 7.344
+      },
+      "standaloneHarness": {
+        "cases": 14,
+        "testSeconds": 16.325000000000003
+      }
+    },
+    "phases": {
+      "beforeFirstTestSeconds": 31.45281201171875,
+      "testWindowSeconds": 315.772,
+      "afterLastTestSeconds": 0.505972071281235
+    },
+    "cases": [
+      {
+        "file": "admin/access-control.spec.ts",
+        "title": "Usuário comum não alcança a redação nem as rotas administrativas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3070,
+        "startTime": "2026-09-07T18:31:41.557Z"
+      },
+      {
+        "file": "admin/access-control.spec.ts",
+        "title": "Claim concedida pelo fixture já vale na sessão entregue",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 784,
+        "startTime": "2026-09-07T18:31:45.040Z"
+      },
+      {
+        "file": "admin/ads.spec.ts",
+        "title": "Jornada: Visualização completa da página de anúncios",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 6595,
+        "startTime": "2026-09-07T18:31:45.843Z"
+      },
+      {
+        "file": "admin/ads.spec.ts",
+        "title": "Jornada: Filtros e navegação de anúncios",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 10677,
+        "startTime": "2026-09-07T18:31:52.447Z"
+      },
+      {
+        "file": "admin/categories.spec.ts",
+        "title": "Jornada: Gerenciamento completo de categorias",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 9174,
+        "startTime": "2026-09-07T18:32:03.149Z"
+      },
+      {
+        "file": "admin/dashboard.spec.ts",
+        "title": "Jornada: Acesso e navegação do dashboard admin",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1747,
+        "startTime": "2026-09-07T18:32:12.336Z"
+      },
+      {
+        "file": "admin/editorial-mcp-control.spec.ts",
+        "title": "Administrador opera, contém mutações e não sobrescreve conflito",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2209,
+        "startTime": "2026-09-07T18:32:14.098Z"
+      },
+      {
+        "file": "admin/editorial-mcp-control.spec.ts",
+        "title": "expiração passa o runtime para somente leitura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5798,
+        "startTime": "2026-09-07T18:32:16.316Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Editor ainda não alcança o acervo de mídia",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 333,
+        "startTime": "2026-09-07T18:32:22.160Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Usuário comum não alcança o acervo de mídia",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 288,
+        "startTime": "2026-09-07T18:32:22.499Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Administrador cadastra Mídia estruturada, vê no acervo e revisa o crédito",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1163,
+        "startTime": "2026-09-07T18:32:22.793Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Cadastro sem texto alternativo e sem Procedência estruturada é recusado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1008,
+        "startTime": "2026-09-07T18:32:23.962Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Administrador escolhe pelo seletor uma mídia já guardada no acervo",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1614,
+        "startTime": "2026-09-07T18:32:24.976Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Administrador cadastra uma mídia nova de dentro do seletor, sem sair do fluxo",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1589,
+        "startTime": "2026-09-07T18:32:26.596Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Imagem maior que 1920px chega ao acervo redimensionada, em WebP e com menos de 1MB",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2226,
+        "startTime": "2026-09-07T18:32:28.192Z"
+      },
+      {
+        "file": "admin/profiles.spec.ts",
+        "title": "Jornada: Visualização e gerenciamento de perfis de anunciantes",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2924,
+        "startTime": "2026-09-07T18:32:30.428Z"
+      },
+      {
+        "file": "admin/users.spec.ts",
+        "title": "Jornada: Visualização da lista de usuários",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2021,
+        "startTime": "2026-09-07T18:32:33.364Z"
+      },
+      {
+        "file": "admin/users.spec.ts",
+        "title": "Jornada: Gerenciamento de privilégios admin",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 8499,
+        "startTime": "2026-09-07T18:32:35.391Z"
+      },
+      {
+        "file": "ads/ad-advertiser-info.spec.ts",
+        "title": "should display advertiser info on ad page",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4432,
+        "startTime": "2026-09-07T18:32:43.900Z"
+      },
+      {
+        "file": "ads/ad-canonical-url.spec.ts",
+        "title": "canonical and og:url are absolute",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4385,
+        "startTime": "2026-09-07T18:32:48.344Z"
+      },
+      {
+        "file": "ads/ad-listing-cache.spec.ts",
+        "title": "Jornada: pausar anúncio atualiza a listagem da categoria na leitura seguinte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 6587,
+        "startTime": "2026-09-07T18:32:52.741Z"
+      },
+      {
+        "file": "ads/ad-status.spec.ts",
+        "title": "Jornada: Criação de anúncio e comportamento inicial de status",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5109,
+        "startTime": "2026-09-07T18:32:59.340Z"
+      },
+      {
+        "file": "ads/ad-status.spec.ts",
+        "title": "Jornada: Gerenciamento de status e visibilidade de anúncios",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 11053,
+        "startTime": "2026-09-07T18:33:04.457Z"
+      },
+      {
+        "file": "ads/ad-status.spec.ts",
+        "title": "Jornada: Alteração de status via página de edição",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7118,
+        "startTime": "2026-09-07T18:33:15.519Z"
+      },
+      {
+        "file": "ads/ad-with-photo.spec.ts",
+        "title": "Anunciante cria um anúncio com foto, e a foto sobrevive à edição",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7278,
+        "startTime": "2026-09-07T18:33:22.651Z"
+      },
+      {
+        "file": "ads/create-new-ad.spec.ts",
+        "title": "should create a new ad",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5373,
+        "startTime": "2026-09-07T18:33:29.943Z"
+      },
+      {
+        "file": "ads/delete-ad.spec.ts",
+        "title": "Proprietário pode excluir seu anúncio",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5067,
+        "startTime": "2026-09-07T18:33:35.327Z"
+      },
+      {
+        "file": "ads/edit-ad.spec.ts",
+        "title": "Proprietário pode editar seu anúncio",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5023,
+        "startTime": "2026-09-07T18:33:40.405Z"
+      },
+      {
+        "file": "ads/edit-ad.spec.ts",
+        "title": "Não-proprietário não vê controles de edição/exclusão e acesso direto é bloqueado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4632,
+        "startTime": "2026-09-07T18:33:45.436Z"
+      },
+      {
+        "file": "ads/edit-ad.spec.ts",
+        "title": "Admin vê exclusão e pode editar anúncio de outro usuário",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5446,
+        "startTime": "2026-09-07T18:33:50.075Z"
+      },
+      {
+        "file": "ads/my-ads.spec.ts",
+        "title": "Usuário não autenticado vê componente Unauthorized",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 212,
+        "startTime": "2026-09-07T18:33:55.534Z"
+      },
+      {
+        "file": "ads/my-ads.spec.ts",
+        "title": "Usuário autenticado vê seus próprios anúncios",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5620,
+        "startTime": "2026-09-07T18:33:55.752Z"
+      },
+      {
+        "file": "ads/my-ads.spec.ts",
+        "title": "Usuário NÃO vê anúncios de outros usuários",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4395,
+        "startTime": "2026-09-07T18:34:01.379Z"
+      },
+      {
+        "file": "ads/publish-as-visitor.spec.ts",
+        "title": "visitante deslogado publica anúncio registrando-se no modal",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7368,
+        "startTime": "2026-09-07T18:34:05.789Z"
+      },
+      {
+        "file": "advertiser-profile/advertiser-page.spec.ts",
+        "title": "Exibição de perfil com anúncios e 404 para inexistente",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4751,
+        "startTime": "2026-09-07T18:34:13.167Z"
+      },
+      {
+        "file": "advertiser-profile/advertiser-page.spec.ts",
+        "title": "Estado vazio e navegação de volta",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2352,
+        "startTime": "2026-09-07T18:34:17.927Z"
+      },
+      {
+        "file": "advertiser-profile/edit-profile.spec.ts",
+        "title": "should edit an existing advertiser profile",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4138,
+        "startTime": "2026-09-07T18:34:20.296Z"
+      },
+      {
+        "file": "advertiser-profile/photo-upload.spec.ts",
+        "title": "Jornada: Upload de foto em perfil de anunciante",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3128,
+        "startTime": "2026-09-07T18:34:24.446Z"
+      },
+      {
+        "file": "authentication/email-verification.spec.ts",
+        "title": "cadastro confirma por link nativo e retoma a publicação sem publicar automaticamente",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 6924,
+        "startTime": "2026-09-07T18:36:32.565Z"
+      },
+      {
+        "file": "authentication/email-verification.spec.ts",
+        "title": "corrige o e-mail com senha e aplica o link nativo antes de trocar o acesso",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 705,
+        "startTime": "2026-09-07T18:36:39.659Z"
+      },
+      {
+        "file": "authentication/invalid-session.spec.ts",
+        "title": "Cookie de sessão inválido mostra acesso não autorizado e deixa de ser enviado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 587,
+        "startTime": "2026-09-07T18:34:27.585Z"
+      },
+      {
+        "file": "authentication/login.spec.ts",
+        "title": "should log in with registered user",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 785,
+        "startTime": "2026-09-07T18:34:28.182Z"
+      },
+      {
+        "file": "authentication/registration.spec.ts",
+        "title": "Jornada: Registro de novo usuário",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1303,
+        "startTime": "2026-09-07T18:34:28.979Z"
+      },
+      {
+        "file": "fixture-cleanup.spec.ts",
+        "title": "Falha ao salvar subcategoria remove a categoria criada pela fixture",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7304,
+        "startTime": "2026-09-07T18:34:30.292Z"
+      },
+      {
+        "file": "fixture-cleanup.spec.ts",
+        "title": "Verificação artificial limita-se às contas descartáveis e limpa estado auxiliar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 40,
+        "startTime": "2026-09-07T18:34:37.600Z"
+      },
+      {
+        "file": "navigation/cache-surface.spec.ts",
+        "title": "A aplicação não expõe invalidação global de cache por HTTP",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 76,
+        "startTime": "2026-09-07T18:34:37.648Z"
+      },
+      {
+        "file": "navigation/cache-surface.spec.ts",
+        "title": "O HTML público de / exige revalidação antes de reutilização",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 65,
+        "startTime": "2026-09-07T18:34:37.730Z"
+      },
+      {
+        "file": "navigation/cache-surface.spec.ts",
+        "title": "O HTML público de /noticias exige revalidação antes de reutilização",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 82,
+        "startTime": "2026-09-07T18:34:37.802Z"
+      },
+      {
+        "file": "navigation/category-navigation.spec.ts",
+        "title": "Should navigate to category and subcategory pages",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4350,
+        "startTime": "2026-09-07T18:34:37.891Z"
+      },
+      {
+        "file": "navigation/user-sidebar.spec.ts",
+        "title": "Jornada: Navegação completa do usuário logado via sidebar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3122,
+        "startTime": "2026-09-07T18:34:42.255Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Editor alcança a redação pela sidebar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1184,
+        "startTime": "2026-09-07T18:34:45.388Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Administrador não alcança a redação",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 405,
+        "startTime": "2026-09-07T18:34:46.578Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Editor não alcança a administração",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 582,
+        "startTime": "2026-09-07T18:34:46.989Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Visitante não autenticado é convidado a entrar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 200,
+        "startTime": "2026-09-07T18:34:47.577Z"
+      },
+      {
+        "file": "newsroom/article-correction.spec.ts",
+        "title": "Jornada: Editor publica, corrige com retificação, e o leitor vê o texto novo e a nota",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5160,
+        "startTime": "2026-09-07T18:34:47.791Z"
+      },
+      {
+        "file": "newsroom/article-draft.spec.ts",
+        "title": "Jornada: Editor cria, reabre e salva o texto com as Capturas escolhidas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3036,
+        "startTime": "2026-09-07T18:34:52.961Z"
+      },
+      {
+        "file": "newsroom/article-draft.spec.ts",
+        "title": "Conflito preserva o texto local e permite um novo salvamento deliberado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3046,
+        "startTime": "2026-09-07T18:34:56.004Z"
+      },
+      {
+        "file": "newsroom/article-review.spec.ts",
+        "title": "Editor substitui a versão, revisa o Rascunho e apresenta nova Submissão",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1259,
+        "startTime": "2026-09-07T18:34:59.063Z"
+      },
+      {
+        "file": "newsroom/article-review.spec.ts",
+        "title": "Editor revisa o snapshot, evidências, diferenças e identidade sem material interno",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2402,
+        "startTime": "2026-09-07T18:35:00.329Z"
+      },
+      {
+        "file": "newsroom/article-review.spec.ts",
+        "title": "Usuário comum não acessa a fila nem o conteúdo de revisão",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 359,
+        "startTime": "2026-09-07T18:35:02.737Z"
+      },
+      {
+        "file": "newsroom/capture-invalidation.spec.ts",
+        "title": "Cliente MCP propõe e Editor decide a invalidação sem apagar a Captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1617,
+        "startTime": "2026-09-07T18:35:03.211Z"
+      },
+      {
+        "file": "newsroom/editor-role.spec.ts",
+        "title": "Jornada: administrador concede o papel e o promovido alcança a redação no login seguinte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2985,
+        "startTime": "2026-09-07T18:35:04.842Z"
+      },
+      {
+        "file": "newsroom/editor-role.spec.ts",
+        "title": "Jornada: administrador revoga o papel e o Editor perde a redação no login seguinte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3009,
+        "startTime": "2026-09-07T18:35:07.836Z"
+      },
+      {
+        "file": "newsroom/editor-role.spec.ts",
+        "title": "Conceder o papel de Editor a um administrador preserva o papel de administrador",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3648,
+        "startTime": "2026-09-07T18:35:10.854Z"
+      },
+      {
+        "file": "newsroom/editorial-activity.spec.ts",
+        "title": "Editor encontra uma mutação sem criar ruído ao consultar o histórico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2499,
+        "startTime": "2026-09-07T18:35:14.515Z"
+      },
+      {
+        "file": "newsroom/editorial-activity.spec.ts",
+        "title": "Usuário sem papel de Editor não consulta o histórico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 318,
+        "startTime": "2026-09-07T18:35:17.021Z"
+      },
+      {
+        "file": "newsroom/editorial-activity.spec.ts",
+        "title": "Editor entende retenção e período inválido",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 810,
+        "startTime": "2026-09-07T18:35:17.345Z"
+      },
+      {
+        "file": "newsroom/editorial-clients.spec.ts",
+        "title": "Usuário sem papel não alcança nenhuma administração de PAT",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 372,
+        "startTime": "2026-09-07T18:35:18.167Z"
+      },
+      {
+        "file": "newsroom/editorial-clients.spec.ts",
+        "title": "Jornada: Editor emite, vê uma vez e revoga seu PAT",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1169,
+        "startTime": "2026-09-07T18:35:18.545Z"
+      },
+      {
+        "file": "newsroom/editorial-clients.spec.ts",
+        "title": "Administrador revoga qualquer PAT sem adquirir autoridade editorial",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1194,
+        "startTime": "2026-09-07T18:35:19.720Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Hostname de máquina expõe somente o recurso MCP canônico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5290,
+        "startTime": "2026-09-07T18:35:20.928Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Editor acompanha evidência e encerra uma pesquisa assistida retomável",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1346,
+        "startTime": "2026-09-07T18:35:26.224Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local organiza e prioriza uma pauta com as Capturas selecionadas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1096,
+        "startTime": "2026-09-07T18:35:27.576Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local revisa o Rascunho, retoma a instrução e reapresenta sem publicar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 992,
+        "startTime": "2026-09-07T18:35:28.679Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1205,
+        "startTime": "2026-09-07T18:35:29.676Z"
+      },
+      {
+        "file": "newsroom/homepage-news.spec.ts",
+        "title": "Publicar uma matéria a leva à home, sem limpar cache",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3597,
+        "startTime": "2026-09-07T18:35:30.891Z"
+      },
+      {
+        "file": "newsroom/homepage-news.spec.ts",
+        "title": "Despublicar uma matéria a tira do noticiário da home",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3542,
+        "startTime": "2026-09-07T18:35:34.495Z"
+      },
+      {
+        "file": "newsroom/homepage-news.spec.ts",
+        "title": "Da matéria, o leitor chega aos anúncios e ao convite a anunciar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3539,
+        "startTime": "2026-09-07T18:35:38.044Z"
+      },
+      {
+        "file": "newsroom/media-correction.spec.ts",
+        "title": "Editor compara e aplica uma proposta MCP; proposta concorrente é recusada e o histórico permanece",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3936,
+        "startTime": "2026-09-07T18:35:41.602Z"
+      },
+      {
+        "file": "newsroom/media-correction.spec.ts",
+        "title": "Administrador sem papel de Editor não acessa propostas de correção",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 410,
+        "startTime": "2026-09-07T18:35:45.545Z"
+      },
+      {
+        "file": "newsroom/news-article-metadata.spec.ts",
+        "title": "canonical, og:url e JSON-LD NewsArticle levam o que a matéria tem, com imagem da mídia anexada",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2474,
+        "startTime": "2026-09-07T18:35:45.967Z"
+      },
+      {
+        "file": "newsroom/news-index.spec.ts",
+        "title": "Jornada: leitor abre o índice e navega até a matéria publicada",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3270,
+        "startTime": "2026-09-07T18:35:48.453Z"
+      },
+      {
+        "file": "newsroom/news-index.spec.ts",
+        "title": "Uma URL de matéria com slug divergente redireciona para o canônico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3984,
+        "startTime": "2026-09-07T18:35:51.729Z"
+      },
+      {
+        "file": "newsroom/news-index.spec.ts",
+        "title": "Uma matéria inexistente cai numa página de não encontrado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 209,
+        "startTime": "2026-09-07T18:35:55.721Z"
+      },
+      {
+        "file": "newsroom/operational-reads.spec.ts",
+        "title": "A redação lê uma Fonte criada por outra operação sem depender de invalidação",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1502,
+        "startTime": "2026-09-07T18:35:55.940Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1119,
+        "startTime": "2026-09-07T18:35:57.456Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1408,
+        "startTime": "2026-09-07T18:35:58.583Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1639,
+        "startTime": "2026-09-07T18:35:59.997Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1197,
+        "startTime": "2026-09-07T18:36:01.643Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "A captura registrada não aparece em nenhuma superfície pública",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1370,
+        "startTime": "2026-09-07T18:36:02.847Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Usuário comum não alcança as telas de fonte e de captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 380,
+        "startTime": "2026-09-07T18:36:04.223Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 359,
+        "startTime": "2026-09-07T18:36:04.611Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 538,
+        "startTime": "2026-09-07T18:36:04.975Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Jornada: Editor unifica duas capturas numa pauta e a vê na fila",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2018,
+        "startTime": "2026-09-07T18:36:05.528Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Uma captura registrada depois se associa à pauta que já existe",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3440,
+        "startTime": "2026-09-07T18:36:07.554Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Usuário comum não alcança a tela de pautas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 304,
+        "startTime": "2026-09-07T18:36:11.000Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Administrador que não é Editor não alcança a tela de pautas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 306,
+        "startTime": "2026-09-07T18:36:11.310Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Visitante sem sessão é mandado entrar antes de ver a tela de pautas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 192,
+        "startTime": "2026-09-07T18:36:11.622Z"
+      },
+      {
+        "file": "newsroom/story-priority-queue.spec.ts",
+        "title": "Editor prioriza, preserva a recomendação e separa pautas suspensas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5443,
+        "startTime": "2026-09-07T18:36:11.823Z"
+      },
+      {
+        "file": "newsroom/story-priority-queue.spec.ts",
+        "title": "Edições concorrentes devolvem a revisão atual",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2860,
+        "startTime": "2026-09-07T18:36:17.272Z"
+      },
+      {
+        "file": "newsroom/topic-timeline.spec.ts",
+        "title": "Jornada: Editor agrupa duas pautas num assunto e o leitor segue a linha do tempo a partir da matéria",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 9966,
+        "startTime": "2026-09-07T18:36:20.145Z"
+      },
+      {
+        "file": "newsroom/topic-timeline.spec.ts",
+        "title": "Administrador que não é Editor não alcança a tela de assuntos",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 341,
+        "startTime": "2026-09-07T18:36:30.119Z"
+      },
+      {
+        "file": "newsroom/topic-timeline.spec.ts",
+        "title": "Editor percorre a próxima página de pautas de um assunto",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1021,
+        "startTime": "2026-09-07T18:36:30.467Z"
+      },
+      {
+        "file": "diagnostics/http-failures.spec.ts",
+        "title": "a real browser captures a 500 and its digest without retaining private body, URL or headers",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 91,
+        "startTime": "2026-09-07T18:36:40.758Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "the real local producer binds a clean commit and selected successful tests",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1891,
+        "startTime": "2026-09-07T18:36:40.994Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "large discarded configuration output does not invalidate a successful qualification",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1697,
+        "startTime": "2026-09-07T18:36:42.891Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "local tests preserve Java configuration without receiving staging credentials",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1657,
+        "startTime": "2026-09-07T18:36:44.598Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "failure output remains sanitized and cannot yield a receipt",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1838,
+        "startTime": "2026-09-07T18:36:46.261Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "a dirty candidate and a zero-match selection cannot yield a receipt",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1271,
+        "startTime": "2026-09-07T18:36:48.104Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "candidate drift during otherwise green tests invalidates qualification",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1644,
+        "startTime": "2026-09-07T18:36:49.378Z"
+      },
+      {
+        "file": "page-object-readiness.spec.ts",
+        "title": "Page object espera os controles da pauta ficarem únicos e utilizáveis",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 236,
+        "startTime": "2026-09-07T18:36:51.037Z"
+      },
+      {
+        "file": "page-object-readiness.spec.ts",
+        "title": "Page object encontra a pauta depois da primeira página da fila",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 182,
+        "startTime": "2026-09-07T18:36:51.278Z"
+      },
+      {
+        "file": "staging-artifact-bootstrap.spec.ts",
+        "title": "trusted bootstrap uses suite runtime for commonjs test imports",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1046,
+        "startTime": "2026-09-07T18:36:51.482Z"
+      },
+      {
+        "file": "staging-artifact-bootstrap.spec.ts",
+        "title": "trusted bootstrap uses suite runtime for module test imports",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1024,
+        "startTime": "2026-09-07T18:36:52.533Z"
+      },
+      {
+        "file": "staging-artifact-bootstrap.spec.ts",
+        "title": "sanitizes a real failed trace with masked browser frames and a request context",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2436,
+        "startTime": "2026-09-07T18:36:53.563Z"
+      },
+      {
+        "file": "staging-fixture-readiness.spec.ts",
+        "title": "Salvar anúncio espera a navegação confirmada após resposta do servidor",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 416,
+        "startTime": "2026-09-07T18:36:56.010Z"
+      },
+      {
+        "file": "staging-fixture-readiness.spec.ts",
+        "title": "Salvar subcategoria espera o formulário fechar após confirmação do servidor",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 896,
+        "startTime": "2026-09-07T18:36:56.433Z"
+      }
+    ]
+  },
+  "finalPlaywright": {
+    "revision": "12ac9d14617aa262a0c7e62705c37c7b182af410",
+    "command": [
+      "npm",
+      "run",
+      "test:e2e:full",
+      "--",
+      "--reporter=line,json"
+    ],
+    "startedAtEpochMs": 1788806614712.1248,
+    "wallSeconds": 315.092144208,
+    "exitCode": 0,
+    "result": {
+      "startTime": "2026-09-07T18:43:35.285Z",
+      "duration": 314494.925,
+      "expected": 108,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "groups": {
+      "application": {
+        "cases": 92,
+        "testSeconds": 258.9099999999999
+      },
+      "applicationHarness": {
+        "cases": 2,
+        "testSeconds": 7.3260000000000005
+      },
+      "standaloneHarness": {
+        "cases": 14,
+        "testSeconds": 16.252000000000002
+      }
+    },
+    "phases": {
+      "beforeFirstTestSeconds": 27.877875244140625,
+      "testWindowSeconds": 286.612,
+      "afterLastTestSeconds": 0.6022689638593306
+    },
+    "cases": [
+      {
+        "file": "admin/access-control.spec.ts",
+        "title": "Usuário comum não alcança a redação nem as rotas administrativas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2766,
+        "startTime": "2026-09-07T18:44:02.590Z"
+      },
+      {
+        "file": "admin/access-control.spec.ts",
+        "title": "Claim concedida pelo fixture já vale na sessão entregue",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 607,
+        "startTime": "2026-09-07T18:44:05.790Z"
+      },
+      {
+        "file": "admin/ads.spec.ts",
+        "title": "Jornada: Filtros e navegação de anúncios",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 10972,
+        "startTime": "2026-09-07T18:44:06.412Z"
+      },
+      {
+        "file": "admin/categories.spec.ts",
+        "title": "Jornada: Gerenciamento completo de categorias",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 9527,
+        "startTime": "2026-09-07T18:44:17.396Z"
+      },
+      {
+        "file": "admin/dashboard.spec.ts",
+        "title": "Jornada: Acesso e navegação do dashboard admin",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2079,
+        "startTime": "2026-09-07T18:44:26.935Z"
+      },
+      {
+        "file": "admin/editorial-mcp-control.spec.ts",
+        "title": "Administrador opera, contém mutações e não sobrescreve conflito",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1147,
+        "startTime": "2026-09-07T18:44:29.030Z"
+      },
+      {
+        "file": "admin/editorial-mcp-control.spec.ts",
+        "title": "expiração passa o runtime para somente leitura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5798,
+        "startTime": "2026-09-07T18:44:30.184Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Administrador cadastra Mídia estruturada, vê no acervo e revisa o crédito",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1541,
+        "startTime": "2026-09-07T18:44:36.019Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Cadastro sem texto alternativo e sem Procedência estruturada é recusado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1021,
+        "startTime": "2026-09-07T18:44:37.566Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Administrador escolhe pelo seletor uma mídia já guardada no acervo",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1235,
+        "startTime": "2026-09-07T18:44:38.594Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Administrador cadastra uma mídia nova de dentro do seletor, sem sair do fluxo",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1738,
+        "startTime": "2026-09-07T18:44:39.835Z"
+      },
+      {
+        "file": "admin/media.spec.ts",
+        "title": "Imagem maior que 1920px chega ao acervo redimensionada, em WebP e com menos de 1MB",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2244,
+        "startTime": "2026-09-07T18:44:41.579Z"
+      },
+      {
+        "file": "admin/profiles.spec.ts",
+        "title": "Jornada: Visualização e gerenciamento de perfis de anunciantes",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2718,
+        "startTime": "2026-09-07T18:44:43.834Z"
+      },
+      {
+        "file": "admin/users.spec.ts",
+        "title": "Jornada: Gerenciamento de privilégios admin",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 9315,
+        "startTime": "2026-09-07T18:44:46.564Z"
+      },
+      {
+        "file": "ads/ad-advertiser-info.spec.ts",
+        "title": "should display advertiser info on ad page",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4479,
+        "startTime": "2026-09-07T18:44:55.892Z"
+      },
+      {
+        "file": "ads/ad-listing-cache.spec.ts",
+        "title": "Jornada: pausar anúncio atualiza a listagem da categoria na leitura seguinte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 6071,
+        "startTime": "2026-09-07T18:45:00.382Z"
+      },
+      {
+        "file": "ads/ad-status.spec.ts",
+        "title": "Jornada: Criação de anúncio e comportamento inicial de status",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4566,
+        "startTime": "2026-09-07T18:45:06.467Z"
+      },
+      {
+        "file": "ads/ad-status.spec.ts",
+        "title": "Jornada: Gerenciamento de status e visibilidade de anúncios",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 10640,
+        "startTime": "2026-09-07T18:45:11.041Z"
+      },
+      {
+        "file": "ads/ad-status.spec.ts",
+        "title": "Jornada: Alteração de status via página de edição",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 6933,
+        "startTime": "2026-09-07T18:45:21.691Z"
+      },
+      {
+        "file": "ads/ad-with-photo.spec.ts",
+        "title": "Anunciante cria um anúncio com foto, e a foto sobrevive à edição",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7173,
+        "startTime": "2026-09-07T18:45:28.636Z"
+      },
+      {
+        "file": "ads/create-new-ad.spec.ts",
+        "title": "should create a new ad",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4544,
+        "startTime": "2026-09-07T18:45:35.822Z"
+      },
+      {
+        "file": "ads/delete-ad.spec.ts",
+        "title": "Proprietário pode excluir seu anúncio",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5149,
+        "startTime": "2026-09-07T18:45:40.381Z"
+      },
+      {
+        "file": "ads/edit-ad.spec.ts",
+        "title": "Proprietário pode editar seu anúncio",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5597,
+        "startTime": "2026-09-07T18:45:45.542Z"
+      },
+      {
+        "file": "ads/edit-ad.spec.ts",
+        "title": "Não-proprietário não vê controles de edição/exclusão e acesso direto é bloqueado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4705,
+        "startTime": "2026-09-07T18:45:51.147Z"
+      },
+      {
+        "file": "ads/edit-ad.spec.ts",
+        "title": "Admin vê exclusão e pode editar anúncio de outro usuário",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4769,
+        "startTime": "2026-09-07T18:45:55.861Z"
+      },
+      {
+        "file": "ads/my-ads.spec.ts",
+        "title": "Usuário não autenticado vê componente Unauthorized",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 231,
+        "startTime": "2026-09-07T18:46:00.642Z"
+      },
+      {
+        "file": "ads/my-ads.spec.ts",
+        "title": "Meus Anúncios mostra apenas os anúncios do usuário da sessão",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5767,
+        "startTime": "2026-09-07T18:46:00.877Z"
+      },
+      {
+        "file": "ads/publish-as-visitor.spec.ts",
+        "title": "visitante deslogado publica anúncio registrando-se no modal",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7249,
+        "startTime": "2026-09-07T18:46:06.658Z"
+      },
+      {
+        "file": "advertiser-profile/advertiser-page.spec.ts",
+        "title": "Exibição de perfil com anúncios e 404 para inexistente",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4645,
+        "startTime": "2026-09-07T18:46:13.917Z"
+      },
+      {
+        "file": "advertiser-profile/advertiser-page.spec.ts",
+        "title": "Estado vazio e navegação de volta",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1547,
+        "startTime": "2026-09-07T18:46:18.571Z"
+      },
+      {
+        "file": "advertiser-profile/edit-profile.spec.ts",
+        "title": "should edit an existing advertiser profile",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4104,
+        "startTime": "2026-09-07T18:46:20.131Z"
+      },
+      {
+        "file": "advertiser-profile/photo-upload.spec.ts",
+        "title": "Jornada: Upload de foto em perfil de anunciante",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2358,
+        "startTime": "2026-09-07T18:46:24.249Z"
+      },
+      {
+        "file": "authentication/email-verification.spec.ts",
+        "title": "cadastro confirma por link nativo e retoma a publicação sem publicar automaticamente",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 6703,
+        "startTime": "2026-09-07T18:48:24.719Z"
+      },
+      {
+        "file": "authentication/email-verification.spec.ts",
+        "title": "corrige o e-mail com senha e aplica o link nativo antes de trocar o acesso",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 690,
+        "startTime": "2026-09-07T18:48:31.630Z"
+      },
+      {
+        "file": "authentication/invalid-session.spec.ts",
+        "title": "Cookie de sessão inválido mostra acesso não autorizado e deixa de ser enviado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 503,
+        "startTime": "2026-09-07T18:46:26.621Z"
+      },
+      {
+        "file": "authentication/login.spec.ts",
+        "title": "should log in with registered user",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 776,
+        "startTime": "2026-09-07T18:46:27.132Z"
+      },
+      {
+        "file": "authentication/registration.spec.ts",
+        "title": "Jornada: Registro de novo usuário",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1290,
+        "startTime": "2026-09-07T18:46:27.921Z"
+      },
+      {
+        "file": "fixture-cleanup.spec.ts",
+        "title": "Falha ao salvar subcategoria remove a categoria criada pela fixture",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7280,
+        "startTime": "2026-09-07T18:46:29.221Z"
+      },
+      {
+        "file": "fixture-cleanup.spec.ts",
+        "title": "Verificação artificial limita-se às contas descartáveis e limpa estado auxiliar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 46,
+        "startTime": "2026-09-07T18:46:36.506Z"
+      },
+      {
+        "file": "navigation/cache-surface.spec.ts",
+        "title": "A aplicação não expõe invalidação global de cache por HTTP",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 100,
+        "startTime": "2026-09-07T18:46:36.562Z"
+      },
+      {
+        "file": "navigation/cache-surface.spec.ts",
+        "title": "O HTML público de / exige revalidação antes de reutilização",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 63,
+        "startTime": "2026-09-07T18:46:36.667Z"
+      },
+      {
+        "file": "navigation/cache-surface.spec.ts",
+        "title": "O HTML público de /noticias exige revalidação antes de reutilização",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 85,
+        "startTime": "2026-09-07T18:46:36.734Z"
+      },
+      {
+        "file": "navigation/category-navigation.spec.ts",
+        "title": "Should navigate to category and subcategory pages",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3184,
+        "startTime": "2026-09-07T18:46:36.827Z"
+      },
+      {
+        "file": "navigation/user-sidebar.spec.ts",
+        "title": "Jornada: Navegação completa do usuário logado via sidebar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3124,
+        "startTime": "2026-09-07T18:46:40.020Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Editor alcança a redação pela sidebar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1937,
+        "startTime": "2026-09-07T18:46:43.153Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Administrador não alcança a redação",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 363,
+        "startTime": "2026-09-07T18:46:45.098Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Editor não alcança a administração",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 627,
+        "startTime": "2026-09-07T18:46:45.467Z"
+      },
+      {
+        "file": "newsroom/access-control.spec.ts",
+        "title": "Visitante não autenticado é convidado a entrar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 187,
+        "startTime": "2026-09-07T18:46:46.099Z"
+      },
+      {
+        "file": "newsroom/article-correction.spec.ts",
+        "title": "Jornada: Editor publica, corrige com retificação, e o leitor vê o texto novo e a nota",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 5106,
+        "startTime": "2026-09-07T18:46:46.297Z"
+      },
+      {
+        "file": "newsroom/article-draft.spec.ts",
+        "title": "Jornada: Editor cria, reabre e salva o texto com as Capturas escolhidas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4027,
+        "startTime": "2026-09-07T18:46:51.414Z"
+      },
+      {
+        "file": "newsroom/article-draft.spec.ts",
+        "title": "Conflito preserva o texto local e permite um novo salvamento deliberado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3220,
+        "startTime": "2026-09-07T18:46:55.447Z"
+      },
+      {
+        "file": "newsroom/article-review.spec.ts",
+        "title": "Editor substitui a versão, revisa o Rascunho e apresenta nova Submissão",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1678,
+        "startTime": "2026-09-07T18:46:58.680Z"
+      },
+      {
+        "file": "newsroom/article-review.spec.ts",
+        "title": "Editor revisa o snapshot, evidências, diferenças e identidade sem material interno",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2436,
+        "startTime": "2026-09-07T18:47:00.365Z"
+      },
+      {
+        "file": "newsroom/article-review.spec.ts",
+        "title": "Usuário comum não acessa a fila nem o conteúdo de revisão",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 361,
+        "startTime": "2026-09-07T18:47:02.807Z"
+      },
+      {
+        "file": "newsroom/capture-invalidation.spec.ts",
+        "title": "Cliente MCP propõe e Editor decide a invalidação sem apagar a Captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1986,
+        "startTime": "2026-09-07T18:47:03.274Z"
+      },
+      {
+        "file": "newsroom/editor-role.spec.ts",
+        "title": "Jornada: administrador concede o papel e o promovido alcança a redação no login seguinte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2941,
+        "startTime": "2026-09-07T18:47:05.271Z"
+      },
+      {
+        "file": "newsroom/editor-role.spec.ts",
+        "title": "Jornada: administrador revoga o papel e o Editor perde a redação no login seguinte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2932,
+        "startTime": "2026-09-07T18:47:08.220Z"
+      },
+      {
+        "file": "newsroom/editor-role.spec.ts",
+        "title": "Conceder o papel de Editor a um administrador preserva o papel de administrador",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4593,
+        "startTime": "2026-09-07T18:47:11.158Z"
+      },
+      {
+        "file": "newsroom/editorial-activity.spec.ts",
+        "title": "Editor encontra uma mutação sem criar ruído ao consultar o histórico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1885,
+        "startTime": "2026-09-07T18:47:15.762Z"
+      },
+      {
+        "file": "newsroom/editorial-activity.spec.ts",
+        "title": "Usuário sem papel de Editor não consulta o histórico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 289,
+        "startTime": "2026-09-07T18:47:17.654Z"
+      },
+      {
+        "file": "newsroom/editorial-clients.spec.ts",
+        "title": "Usuário sem papel não alcança nenhuma administração de PAT",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 346,
+        "startTime": "2026-09-07T18:47:17.953Z"
+      },
+      {
+        "file": "newsroom/editorial-clients.spec.ts",
+        "title": "Jornada: Editor emite, vê uma vez e revoga seu PAT",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1095,
+        "startTime": "2026-09-07T18:47:18.306Z"
+      },
+      {
+        "file": "newsroom/editorial-clients.spec.ts",
+        "title": "Administrador revoga qualquer PAT sem adquirir autoridade editorial",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1193,
+        "startTime": "2026-09-07T18:47:19.406Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Hostname de máquina expõe somente o recurso MCP canônico",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 263,
+        "startTime": "2026-09-07T18:47:20.615Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Editor acompanha evidência e encerra uma pesquisa assistida retomável",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1266,
+        "startTime": "2026-09-07T18:47:20.883Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local organiza e prioriza uma pauta com as Capturas selecionadas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1008,
+        "startTime": "2026-09-07T18:47:22.155Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local revisa o Rascunho, retoma a instrução e reapresenta sem publicar",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 958,
+        "startTime": "2026-09-07T18:47:23.169Z"
+      },
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1153,
+        "startTime": "2026-09-07T18:47:24.134Z"
+      },
+      {
+        "file": "newsroom/homepage-news.spec.ts",
+        "title": "Publicar uma matéria a leva à home, sem limpar cache",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3313,
+        "startTime": "2026-09-07T18:47:25.304Z"
+      },
+      {
+        "file": "newsroom/homepage-news.spec.ts",
+        "title": "Despublicar uma matéria a tira do noticiário da home",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3806,
+        "startTime": "2026-09-07T18:47:28.623Z"
+      },
+      {
+        "file": "newsroom/media-correction.spec.ts",
+        "title": "Editor compara e aplica uma proposta MCP; proposta concorrente é recusada e o histórico permanece",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 4267,
+        "startTime": "2026-09-07T18:47:32.448Z"
+      },
+      {
+        "file": "newsroom/media-correction.spec.ts",
+        "title": "Administrador sem papel de Editor não acessa propostas de correção",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 498,
+        "startTime": "2026-09-07T18:47:36.721Z"
+      },
+      {
+        "file": "newsroom/news-article-metadata.spec.ts",
+        "title": "canonical, og:url e JSON-LD NewsArticle levam o que a matéria tem, com imagem da mídia anexada",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3493,
+        "startTime": "2026-09-07T18:47:37.230Z"
+      },
+      {
+        "file": "newsroom/news-index.spec.ts",
+        "title": "Jornada: leitor abre o índice e navega até a matéria publicada",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3709,
+        "startTime": "2026-09-07T18:47:40.735Z"
+      },
+      {
+        "file": "newsroom/news-index.spec.ts",
+        "title": "Uma matéria inexistente cai numa página de não encontrado",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 189,
+        "startTime": "2026-09-07T18:47:44.398Z"
+      },
+      {
+        "file": "newsroom/operational-reads.spec.ts",
+        "title": "A redação lê uma Fonte criada por outra operação sem depender de invalidação",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1515,
+        "startTime": "2026-09-07T18:47:44.597Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1392,
+        "startTime": "2026-09-07T18:47:46.125Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1321,
+        "startTime": "2026-09-07T18:47:47.522Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1847,
+        "startTime": "2026-09-07T18:47:48.849Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1979,
+        "startTime": "2026-09-07T18:47:50.701Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "A captura registrada não aparece em nenhuma superfície pública",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1336,
+        "startTime": "2026-09-07T18:47:52.686Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Usuário comum não alcança as telas de fonte e de captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 353,
+        "startTime": "2026-09-07T18:47:54.029Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 337,
+        "startTime": "2026-09-07T18:47:54.388Z"
+      },
+      {
+        "file": "newsroom/source-and-capture.spec.ts",
+        "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 247,
+        "startTime": "2026-09-07T18:47:54.730Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Jornada: Editor unifica duas capturas numa pauta e a vê na fila",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1984,
+        "startTime": "2026-09-07T18:47:54.987Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Uma captura registrada depois se associa à pauta que já existe",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3004,
+        "startTime": "2026-09-07T18:47:56.978Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Usuário comum não alcança a tela de pautas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 354,
+        "startTime": "2026-09-07T18:47:59.990Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Administrador que não é Editor não alcança a tela de pautas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 326,
+        "startTime": "2026-09-07T18:48:00.351Z"
+      },
+      {
+        "file": "newsroom/story-from-captures.spec.ts",
+        "title": "Visitante sem sessão é mandado entrar antes de ver a tela de pautas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 182,
+        "startTime": "2026-09-07T18:48:00.691Z"
+      },
+      {
+        "file": "newsroom/story-priority-queue.spec.ts",
+        "title": "Editor prioriza, preserva a recomendação e separa pautas suspensas",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 7821,
+        "startTime": "2026-09-07T18:48:00.889Z"
+      },
+      {
+        "file": "newsroom/story-priority-queue.spec.ts",
+        "title": "Edições concorrentes devolvem a revisão atual",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 3380,
+        "startTime": "2026-09-07T18:48:08.717Z"
+      },
+      {
+        "file": "newsroom/topic-timeline.spec.ts",
+        "title": "Jornada: Editor agrupa duas pautas num assunto e o leitor segue a linha do tempo a partir da matéria",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 9338,
+        "startTime": "2026-09-07T18:48:12.120Z"
+      },
+      {
+        "file": "newsroom/topic-timeline.spec.ts",
+        "title": "Administrador que não é Editor não alcança a tela de assuntos",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 320,
+        "startTime": "2026-09-07T18:48:21.465Z"
+      },
+      {
+        "file": "newsroom/topic-timeline.spec.ts",
+        "title": "Editor percorre a próxima página de pautas de um assunto",
+        "project": "chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 996,
+        "startTime": "2026-09-07T18:48:21.791Z"
+      },
+      {
+        "file": "diagnostics/http-failures.spec.ts",
+        "title": "a real browser captures a 500 and its digest without retaining private body, URL or headers",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 98,
+        "startTime": "2026-09-07T18:48:32.716Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "the real local producer binds a clean commit and selected successful tests",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1845,
+        "startTime": "2026-09-07T18:48:32.953Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "large discarded configuration output does not invalidate a successful qualification",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1685,
+        "startTime": "2026-09-07T18:48:34.804Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "local tests preserve Java configuration without receiving staging credentials",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1684,
+        "startTime": "2026-09-07T18:48:36.499Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "failure output remains sanitized and cannot yield a receipt",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1879,
+        "startTime": "2026-09-07T18:48:38.187Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "a dirty candidate and a zero-match selection cannot yield a receipt",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1295,
+        "startTime": "2026-09-07T18:48:40.071Z"
+      },
+      {
+        "file": "local-e2e-qualification.spec.ts",
+        "title": "candidate drift during otherwise green tests invalidates qualification",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1596,
+        "startTime": "2026-09-07T18:48:41.370Z"
+      },
+      {
+        "file": "page-object-readiness.spec.ts",
+        "title": "Page object espera os controles da pauta ficarem únicos e utilizáveis",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 253,
+        "startTime": "2026-09-07T18:48:42.979Z"
+      },
+      {
+        "file": "page-object-readiness.spec.ts",
+        "title": "Page object encontra a pauta depois da primeira página da fila",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 183,
+        "startTime": "2026-09-07T18:48:43.237Z"
+      },
+      {
+        "file": "staging-artifact-bootstrap.spec.ts",
+        "title": "trusted bootstrap uses suite runtime for commonjs test imports",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1097,
+        "startTime": "2026-09-07T18:48:43.442Z"
+      },
+      {
+        "file": "staging-artifact-bootstrap.spec.ts",
+        "title": "trusted bootstrap uses suite runtime for module test imports",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 1066,
+        "startTime": "2026-09-07T18:48:44.544Z"
+      },
+      {
+        "file": "staging-artifact-bootstrap.spec.ts",
+        "title": "sanitizes a real failed trace with masked browser frames and a request context",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 2238,
+        "startTime": "2026-09-07T18:48:45.614Z"
+      },
+      {
+        "file": "staging-fixture-readiness.spec.ts",
+        "title": "Salvar anúncio espera a navegação confirmada após resposta do servidor",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 422,
+        "startTime": "2026-09-07T18:48:47.864Z"
+      },
+      {
+        "file": "staging-fixture-readiness.spec.ts",
+        "title": "Salvar subcategoria espera o formulário fechar após confirmação do servidor",
+        "project": "harness-chromium",
+        "status": "passed",
+        "retry": 0,
+        "durationMs": 911,
+        "startTime": "2026-09-07T18:48:48.291Z"
+      }
+    ]
+  },
+  "affectedOrdinary": {
+    "revision": "12ac9d14617aa262a0c7e62705c37c7b182af410",
+    "command": [
+      "node",
+      "bin/emulators.mjs",
+      "emulators:exec",
+      "--only",
+      "auth,firestore,storage",
+      "python3 /private/tmp/797-run-final-affected-tiers.py"
+    ],
+    "startedAtEpochMs": 1788806957537.549,
+    "wallSeconds": 46.739919667,
+    "exitCode": 0,
+    "tiers": [
+      {
+        "tier": "unit",
+        "files": [
+          "bin/playwrightCollections.test.ts",
+          "src/features/ads/components/PublicationJourney.test.tsx",
+          "src/features/ads/hooks/usePublicationJourney.test.tsx",
+          "src/features/news/actions/createCapture.test.ts",
+          "src/features/news/actions/createSource.test.ts",
+          "src/features/news/actions/editorialMcpControlActions.test.ts",
+          "src/features/news/components/CaptureForm.test.tsx",
+          "src/features/news/components/CaptureInvalidationReview.test.tsx",
+          "src/features/news/components/EditorialMcpControlPanel.test.tsx",
+          "src/features/news/components/SourceForm.test.tsx",
+          "src/packages/editorial-mcp/tests/policy.test.ts",
+          "src/packages/editorial/tests/canonicalSourceUrl.test.ts"
+        ],
+        "command": [
+          "npm",
+          "run",
+          "test:unit",
+          "--",
+          "bin/playwrightCollections.test.ts",
+          "src/features/ads/components/PublicationJourney.test.tsx",
+          "src/features/ads/hooks/usePublicationJourney.test.tsx",
+          "src/features/news/actions/createCapture.test.ts",
+          "src/features/news/actions/createSource.test.ts",
+          "src/features/news/actions/editorialMcpControlActions.test.ts",
+          "src/features/news/components/CaptureForm.test.tsx",
+          "src/features/news/components/CaptureInvalidationReview.test.tsx",
+          "src/features/news/components/EditorialMcpControlPanel.test.tsx",
+          "src/features/news/components/SourceForm.test.tsx",
+          "src/packages/editorial-mcp/tests/policy.test.ts",
+          "src/packages/editorial/tests/canonicalSourceUrl.test.ts",
+          "--reporter=json",
+          "--outputFile=/private/tmp/797-final-affected-unit.json"
+        ],
+        "wallSeconds": 5.868442667,
+        "exitCode": 0,
+        "result": {
+          "numTotalTests": 75,
+          "numPassedTests": 75,
+          "numFailedTests": 0,
+          "numPendingTests": 0,
+          "numTodoTests": 0,
+          "success": true
+        }
+      },
+      {
+        "tier": "integration",
+        "files": [
+          "src/features/news/actions/createSource.integration.test.ts",
+          "src/packages/editorial-mcp/tests/articleDevelopmentContract.integration.test.ts",
+          "src/packages/editorial-mcp/tests/contract.integration.test.ts",
+          "src/packages/editorial-mcp/tests/control.integration.test.ts",
+          "src/packages/editorial/tests/editorialSources.integration.test.ts"
+        ],
+        "command": [
+          "npm",
+          "run",
+          "test:integration",
+          "--",
+          "src/features/news/actions/createSource.integration.test.ts",
+          "src/packages/editorial-mcp/tests/articleDevelopmentContract.integration.test.ts",
+          "src/packages/editorial-mcp/tests/contract.integration.test.ts",
+          "src/packages/editorial-mcp/tests/control.integration.test.ts",
+          "src/packages/editorial/tests/editorialSources.integration.test.ts",
+          "--reporter=json",
+          "--outputFile=/private/tmp/797-final-affected-integration.json"
+        ],
+        "wallSeconds": 31.555992957999997,
+        "exitCode": 0,
+        "result": {
+          "numTotalTests": 71,
+          "numPassedTests": 71,
+          "numFailedTests": 0,
+          "numPendingTests": 0,
+          "numTodoTests": 0,
+          "success": true
+        }
+      }
+    ]
+  },
+  "currentAffectedAggregateWallSeconds": 361.83206387499996,
+  "limitations": [
+    "Uma amostra completa por revisão; variância não estimada.",
+    "Baseline histórico tem outra revisão da aplicação. Comparação a9920b01 -> 1398478e -> 12ac9d14 mantém o mesmo código de aplicação e muda configuração/testes/documentação.",
+    "Tempo de cada caso inclui fixtures e limpeza atribuídas pelo runner; não separa seu corpo. Inicialização/build também não têm timers independentes; beforeFirstTest inclui todo o custo observado antes do primeiro caso.",
+    "Não há medição ordinária histórica equivalente: não interpretar o custo atual dos 146 testes já existentes/em parte ampliados como custo incremental da migração. A diferença agregada de todas as camadas não foi estimada.",
+    "A tentativa inicial restrita falhou com listen EPERM antes dos testes; foi descartada da comparação. As medições válidas usaram portas locais autorizadas.",
+    "Os candidatos anteriores 82ca332b/4c633514 foram superados pela integração da verificação de email e não são o resultado final."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "../../src/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "../../next-env.d.ts",
+    "../../.next/types/**/*.ts",
+    "../../src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

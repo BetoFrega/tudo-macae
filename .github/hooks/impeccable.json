@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "matcher": "edit|create|apply_patch",
+        "bash": "\"$(git rev-parse --show-toplevel)/.agents/hooks/impeccable-design-detector.sh\"",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}

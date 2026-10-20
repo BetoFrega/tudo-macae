@@ -1,0 +1,5 @@
+title: Media upload URL signer
+description: Signs the bounded upload request using the runtime service account.
+stage: GA
+includedPermissions:
+  - iam.serviceAccounts.signBlob

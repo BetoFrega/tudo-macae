@@ -1,0 +1,102 @@
+{
+  "revision": "2b9beba833ace7158e3081d2790941025f12b074",
+  "scope": [
+    "PW080"
+  ],
+  "removedAssertions": [
+    "PW080-A01",
+    "PW080-A02",
+    "PW080-A03",
+    "PW080-A04",
+    "PW080-A05",
+    "PW080-A06",
+    "PW080-A07",
+    "PW080-A11"
+  ],
+  "retainedAssertions": [
+    "PW080-A08",
+    "PW080-A09",
+    "PW080-A10",
+    "PW080-A12",
+    "PW080-A13",
+    "PW080-A14"
+  ],
+  "executionBeforeRemoval": {
+    "replacementRevision": "37bd5ce829571e889f2ddba9f5e1764944f3dc7e",
+    "removedInRevision": "2b9beba833ace7158e3081d2790941025f12b074",
+    "passed": 13,
+    "runnerDurationSeconds": 13.55
+  },
+  "integration": {
+    "command": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial-mcp/tests/articleDevelopmentContract.integration.test.ts'",
+    "passed": 13,
+    "runnerDurationSeconds": 13.55,
+    "addedCases": 0,
+    "replacementTests": [
+      {
+        "title": "writes, conflicts, resumes instructions and presents immutable Submissions with a direct review URL",
+        "status": "passed",
+        "durationMs": 809.1529170000013
+      },
+      {
+        "title": "reevaluates readOnly, scopes and the optional Story boundary without exposing human tools",
+        "status": "passed",
+        "durationMs": 393.88754100000006
+      }
+    ],
+    "additionalWork": "Uma chamada publish_article com Submissão válida e URL exata na resposta de reapresentação; a credencial limitada usa o mesmo Editor em vez de criar outro usuário."
+  },
+  "e2e": {
+    "command": "npm run test:e2e -- tests/newsroom/editorial-mcp.spec.ts --grep \"Cliente local revisa\" --reporter=line,json",
+    "wall": {
+      "startedAtEpochMs": 1788795554033.6157,
+      "wallSeconds": 47.923799991607666,
+      "exitCode": 0
+    },
+    "stats": {
+      "startTime": "2026-09-07T15:39:14.866Z",
+      "duration": 47048.252,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local revisa o Rascunho, retoma a instrução e reapresenta sem publicar",
+        "status": "passed",
+        "durationMs": 3514,
+        "retry": 0
+      }
+    ],
+    "workers": 1,
+    "retries": 0,
+    "removedToolCalls": [
+      "begin_editorial_task da credencial limitada",
+      "submit_article_draft sem escopo",
+      "get_article_development inicial",
+      "update_article_draft obsoleto",
+      "submit_article_draft replay",
+      "publish_article"
+    ],
+    "removedPreparation": "Cliente/PAT limitado a Rascunho, Delegação e suas conexões MCP; não foi alterada a limpeza das fixtures.",
+    "preservedJourney": "Revisão humana na interface, instrução retornada por resume_editorial_task, reapresentação, previews, link anterior e ausência na página pública."
+  },
+  "comparison": {
+    "baselineTestSeconds": 1.103,
+    "currentTestSeconds": 3.514,
+    "baselineAssertions": 14,
+    "currentAssertions": 6,
+    "baselineToolCalls": 12,
+    "currentToolCalls": 6,
+    "removedCases": 0,
+    "conclusion": "Menos chamadas/preparação E2E e trabalho adicional no contrato existente; a amostra focal não prova ganho integral."
+  },
+  "limitations": [
+    "Uma amostra focal, stack inicialmente parada e caches aquecidos no mesmo worktree/máquina do baseline.",
+    "Baseline histórico e revisão atual têm outras mudanças/dependências; comparação não pareada.",
+    "Duração Vitest informada pelo runner exclui startup dos emuladores; wall E2E medido externamente.",
+    "A auditoria final deve somar todos os tiers afetados e não inferir economia total da redução de chamadas."
+  ]
+}

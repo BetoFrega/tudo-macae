@@ -1,0 +1,130 @@
+name: Edge Probe
+
+# Measures the public site and the credential-free MCP surface against the
+# contracts under `docs/agents/`, on a
+# schedule. Without this they are only as fresh as the last
+# person who happened to run the probe by hand — and the failure it exists to
+# catch (an edge setting changed with no trace in the repository) is silent by
+# definition.
+#
+# Deliberately not a pull-request check: this reads the public internet through a
+# layer that challenges automated clients, so a challenge or a network blip would
+# block unrelated merges. Drift in production is also not a statement about the
+# correctness of anyone's branch.
+
+on:
+  schedule:
+    # Mondays, 08:17 BRT. Weekly, because the edge is configuration that changes
+    # on the order of months; the cost of a run is seconds, so tighten the cron
+    # if a week of blindness ever turns out to be too long.
+    - cron: "17 11 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+# Never cancel: a scheduled run that gets cancelled leaves no verdict, and this
+# workflow's whole job is to produce one.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: Production edge drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Exit 1 is drift, exit 2 is "could not measure" — see bin/probe-edge.mjs.
+      # The retry is for exit 2 only: a single challenged request says nothing,
+      # and reporting every blip would train everyone to ignore this workflow.
+      - name: Probe production
+        id: probe
+        run: |
+          set +e
+          npm run probe:edge --silent | tee probe-output.txt
+          status=${PIPESTATUS[0]}
+          if [ "$status" = "2" ]; then
+            echo "::notice::Probe could not measure production; retrying once in 60s."
+            sleep 60
+            npm run probe:edge --silent | tee probe-output.txt
+            status=${PIPESTATUS[0]}
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+
+      # A scheduled run that only goes red in a tab nobody opens is the same
+      # silence this workflow exists to break, so both failures raise a ticket —
+      # they just say different things. Drift needs a decision about production;
+      # a probe that cannot measure is a broken instrument, which is its own kind
+      # of "control that looks like it exists and does nothing".
+      - name: Raise a ticket
+        if: steps.probe.outputs.status != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STATUS: ${{ steps.probe.outputs.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create edge-drift --color FBCA04 \
+            --description "The edge probe has something to say about production" 2>/dev/null || true
+
+          if [ "$STATUS" = "1" ]; then
+            title="Borda de produção divergiu da topologia registrada"
+            {
+              echo "A borda de produção não bate mais com o contrato registrado em \`docs/agents/\`."
+              echo
+              echo "Ou produção mudou, ou o contrato ficou obsoleto. Nos dois casos alguém precisa"
+              echo "decidir qual dos dois está certo e atualizar o outro — o valor gravado vive em"
+              echo "\`bin/probe-edge.mjs\`, campo \`expected\` do check que falhou."
+            } > report.md
+          else
+            title="Probe da borda não consegue medir produção"
+            {
+              echo "O probe falhou em medir produção duas vezes seguidas, com um minuto de intervalo."
+              echo "**Isto não diz que produção mudou** — diz que o instrumento não conseguiu ler."
+              echo
+              echo "Causas prováveis, da mais para a menos provável: o Cloudflare desafiou o runner do"
+              echo "GitHub Actions (o documento registra o 403 a cliente automatizado como risco real),"
+              echo "rede, ou produção fora do ar. Se persistir, o probe não serve de sentinela a partir"
+              echo "da CI e precisa de outro ponto de observação."
+            } > report.md
+          fi
+
+          {
+            echo
+            echo "Medição de \`$(date -u '+%Y-%m-%d %H:%M') UTC\` ([execução completa]($RUN_URL)):"
+            echo
+            echo '```'
+            cat probe-output.txt
+            echo '```'
+            echo
+            echo "Reproduza local com \`npm run probe:edge\`."
+          } >> report.md
+
+          # One live ticket at a time: a second one nagging about the same
+          # instrument is noise, so a repeat lands as a comment on the open one.
+          existing=$(gh issue list --label edge-drift --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file report.md
+            echo "Comentado em #$existing"
+          else
+            gh issue create --title "$title" \
+              --label edge-drift --label needs-triage \
+              --body-file report.md
+          fi
+
+          echo "probe exited with $STATUS (1 = drift, 2 = could not measure)"
+          exit 1

@@ -1,0 +1,71 @@
+{
+  "ticket": "#773",
+  "revision": "04efad4b8cdc6cdce94c262417940c6ccf9180b0",
+  "command": "PLAYWRIGHT_JSON_OUTPUT_NAME=<results.json> mise exec -- npm run test:e2e -- tests/ads/edit-ad.spec.ts tests/ads/delete-ad.spec.ts --reporter=line,json",
+  "environment": "Same workstation, versions, warm build cache and stopped stack as measurement.json; workers 1, retries 0; clean worktree at start.",
+  "wall": {
+    "durationSeconds": 53.062451124191284,
+    "exitCode": 0
+  },
+  "stats": {
+    "startTime": "2026-09-07T13:25:05.322Z",
+    "duration": 52477.394,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "id": "PW029",
+      "title": "Proprietário pode excluir seu anúncio",
+      "durationMs": 5969,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW030",
+      "title": "Proprietário pode editar seu anúncio",
+      "durationMs": 5532,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW031",
+      "title": "Não-proprietário não vê controles de edição/exclusão e acesso direto é bloqueado",
+      "durationMs": 4886,
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "id": "PW032",
+      "title": "Admin vê exclusão e pode editar anúncio de outro usuário",
+      "durationMs": 5566,
+      "status": "passed",
+      "retry": 0
+    }
+  ],
+  "collection": {
+    "applicationCases": 104,
+    "harnessCases": 15,
+    "command": "mise exec -- npx playwright test --list --reporter=json",
+    "parityCheck": "mise exec -- npx vitest run --config vitest.unit.config.mts bin/playwrightCollections.test.ts",
+    "result": "passed; complete partition, no accidental overlap, local staging and trusted staging equal application"
+  },
+  "comparison": {
+    "baselineRevision": "8e25b95458ebb509ca1ab6495fa70d18ab76fe12",
+    "baselineCaseIds": [
+      "PW027",
+      "PW028",
+      "PW029",
+      "PW030",
+      "PW031",
+      "PW032"
+    ],
+    "baselineSummedTestSeconds": 29.775,
+    "currentSummedTestSeconds": 21.953,
+    "differenceSeconds": -7.822,
+    "interpretation": "Six preparations become four independent journeys; all behavioral assertions remain. Compare summed test durations including fixtures; focal wall time includes startup and cannot be compared to whole-suite wall time. One sample per revision; no claim of whole-suite savings."
+  },
+  "tierDecision": "No verification leaves E2E. Session-backed controls, direct-route blocking and visible edit/delete effects still exercise the integrated application; no lower-tier replacement is required by this consolidation."
+}

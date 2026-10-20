@@ -1,0 +1,128 @@
+{
+  "revision": "0cbd942c079787914e8efe527ae550663995f4a0",
+  "scope": [
+    "PW079"
+  ],
+  "removedAssertions": [
+    "PW079-A02",
+    "PW079-A03",
+    "PW079-A04",
+    "PW079-A05",
+    "PW079-A06",
+    "PW079-A08"
+  ],
+  "retainedAssertions": [
+    "PW079-A01",
+    "PW079-A07",
+    "PW079-A09",
+    "PW079-A10",
+    "PW079-A11",
+    "PW079-A12",
+    "PW079-A13",
+    "PW079-A14"
+  ],
+  "executionBeforeRemoval": [
+    {
+      "replacementRevision": "ee58803929d50824967cafb63bca35f37fe049b4",
+      "removedInRevision": "12aeafa1",
+      "assertions": [
+        "PW079-A02",
+        "PW079-A03",
+        "PW079-A04",
+        "PW079-A05",
+        "PW079-A08"
+      ],
+      "passed": 31,
+      "runnerDurationSeconds": 7.55
+    },
+    {
+      "replacementRevision": "02bc87f448b7877480d606fec6ba0de4faba88f6",
+      "removedInRevision": "0cbd942c079787914e8efe527ae550663995f4a0",
+      "assertions": [
+        "PW079-A06"
+      ],
+      "passed": 31,
+      "runnerDurationSeconds": 10.56
+    }
+  ],
+  "integration": {
+    "command": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial-mcp/tests/contract.integration.test.ts'",
+    "passed": 31,
+    "runnerDurationSeconds": 10.56,
+    "replacementTests": [
+      {
+        "title": "filters and paginates Sources, Captures and Topics without exporting the newsroom",
+        "status": "passed",
+        "durationMs": 407.211417
+      },
+      {
+        "title": "creates one Story from existing evidence across idempotent retries",
+        "status": "passed",
+        "durationMs": 271.0668340000002
+      },
+      {
+        "title": "attaches evidence with revision conflicts and a Story-bounded Delegation",
+        "status": "passed",
+        "durationMs": 333.8574580000004
+      },
+      {
+        "title": "reuses a Topic and associates it idempotently at the expected revision",
+        "status": "passed",
+        "durationMs": 3643.8062499999996
+      }
+    ],
+    "addedCases": 0,
+    "additionalWork": "Terceira Captura e listagem limit 3, credencial do mesmo Editor limitada a Fontes e tentativa de Pauta recusada, recomendação antes da decisão humana."
+  },
+  "e2e": {
+    "command": "npm run test:e2e -- tests/newsroom/editorial-mcp.spec.ts --grep \"Cliente local organiza\" --reporter=line,json",
+    "wall": {
+      "startedAtEpochMs": 1788793921853.162,
+      "wallSeconds": 31.671430110931396,
+      "exitCode": 0
+    },
+    "stats": {
+      "startTime": "2026-09-07T15:12:02.443Z",
+      "duration": 31051.607,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "newsroom/editorial-mcp.spec.ts",
+        "title": "Cliente local organiza e prioriza uma pauta com as Capturas selecionadas",
+        "status": "passed",
+        "durationMs": 2780,
+        "retry": 0
+      }
+    ],
+    "workers": 1,
+    "retries": 0,
+    "removedToolCalls": [
+      "list_captures",
+      "register_story replay",
+      "register_story sem escopo"
+    ],
+    "removedPreparation": "Um EditorialClient, um PAT e conexão MCP limitada; limpeza correspondente usa as fixtures existentes.",
+    "retainedContract": "Tentativa conflitante de anexação seguida da ausência visual da Captura e efeitos visuais das mutações aceitas."
+  },
+  "comparison": {
+    "baselineTestSeconds": 1.13,
+    "currentTestSeconds": 2.78,
+    "baselineAssertions": 14,
+    "currentAssertions": 8,
+    "baselineToolCalls": 14,
+    "currentToolCalls": 11,
+    "removedCases": 0,
+    "conclusion": "Redução de chamadas/preparação E2E com custo adicional em contratos existentes. A variação focal não prova ganho integral; contabilizar todos os tiers na auditoria final."
+  },
+  "limitations": [
+    "Uma amostra focal final, com stack inicialmente parada e caches aquecidos no mesmo worktree/máquina do baseline.",
+    "Baseline histórico e revisão atual têm outras mudanças/dependências; não há comparação pareada.",
+    "Tempos Vitest são do runner, sem inicialização dos emuladores; wall E2E medido externamente.",
+    "Jornada intermediária em 12aeafa1 passou antes da migração de A06; a amostra de comparação usa somente a revisão final.",
+    "Não se presume equivalência de getStory com ausência no navegador: A07 e A12 permanecem juntos."
+  ]
+}

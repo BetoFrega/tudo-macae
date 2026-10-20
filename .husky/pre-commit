@@ -1,0 +1,2 @@
+npm run check:harness -- --staged
+npx lint-staged

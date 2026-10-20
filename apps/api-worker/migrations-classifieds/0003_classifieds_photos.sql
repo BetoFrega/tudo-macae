@@ -1,0 +1,2 @@
+CREATE INDEX IF NOT EXISTS classifieds_photo_due ON classifieds_records (json_extract(body, '$.retryAt'), id) WHERE kind = 'retirement' AND namespace = 'classifieds_photos' AND json_extract(body, '$.status') IN ('reserved', 'retiring');
+CREATE INDEX IF NOT EXISTS classifieds_photo_deletion_due ON classifieds_records (coalesce(json_extract(body, '$.dueAt'), 0), kind, id) WHERE kind IN ('adCleanup', 'photoCleanup') AND coalesce(json_extract(body, '$.status'), 'pending') NOT IN ('completed', 'success');

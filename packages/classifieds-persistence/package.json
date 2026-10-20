@@ -1,0 +1,17 @@
+{
+  "name": "@tudomacae/classifieds-persistence",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./index.ts", "./records": "./records.ts", "./transfer": "./transfer.ts", "./deletion": "./deletion.ts" },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/classifieds-persistence/tests"
+  },
+  "dependencies": {
+    "@tudomacae/ads": "*",
+    "@tudomacae/advertiser-identity": "*",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": { "typescript": "^6", "vitest": "^5.0.3", "@types/node": "^26" }
+}

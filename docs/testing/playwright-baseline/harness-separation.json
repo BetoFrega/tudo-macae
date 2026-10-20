@@ -1,0 +1,753 @@
+{
+  "ticket": "#772",
+  "measuredRevision": "c78bab5e98ecaefc7da25061d88d6d7128218d02",
+  "baseline": "measurement.json",
+  "environment": "Same workstation and toolchain as baseline; warm build cache, stopped stack at each invocation; workers 1, retries 0. Harness measured immediately before commit, same executable files.",
+  "application": {
+    "command": "PLAYWRIGHT_JSON_OUTPUT_NAME=<application.json> mise exec -- npm run test:e2e -- --reporter=line,json",
+    "wallSeconds": 322.23164796829224,
+    "stats": {
+      "startTime": "2026-09-07T13:05:15.802Z",
+      "duration": 321697.89499999996,
+      "expected": 106,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "id": "PW001",
+        "status": "passed",
+        "durationMs": 2088,
+        "retry": 0
+      },
+      {
+        "id": "PW002",
+        "status": "passed",
+        "durationMs": 577,
+        "retry": 0
+      },
+      {
+        "id": "PW003",
+        "status": "passed",
+        "durationMs": 6390,
+        "retry": 0
+      },
+      {
+        "id": "PW004",
+        "status": "passed",
+        "durationMs": 9869,
+        "retry": 0
+      },
+      {
+        "id": "PW005",
+        "status": "passed",
+        "durationMs": 7799,
+        "retry": 0
+      },
+      {
+        "id": "PW006",
+        "status": "passed",
+        "durationMs": 1968,
+        "retry": 0
+      },
+      {
+        "id": "PW007",
+        "status": "passed",
+        "durationMs": 1006,
+        "retry": 0
+      },
+      {
+        "id": "PW008",
+        "status": "passed",
+        "durationMs": 5642,
+        "retry": 0
+      },
+      {
+        "id": "PW009",
+        "status": "passed",
+        "durationMs": 260,
+        "retry": 0
+      },
+      {
+        "id": "PW010",
+        "status": "passed",
+        "durationMs": 263,
+        "retry": 0
+      },
+      {
+        "id": "PW011",
+        "status": "passed",
+        "durationMs": 1369,
+        "retry": 0
+      },
+      {
+        "id": "PW012",
+        "status": "passed",
+        "durationMs": 1328,
+        "retry": 0
+      },
+      {
+        "id": "PW013",
+        "status": "passed",
+        "durationMs": 1522,
+        "retry": 0
+      },
+      {
+        "id": "PW014",
+        "status": "passed",
+        "durationMs": 1511,
+        "retry": 0
+      },
+      {
+        "id": "PW015",
+        "status": "passed",
+        "durationMs": 2165,
+        "retry": 0
+      },
+      {
+        "id": "PW016",
+        "status": "passed",
+        "durationMs": 2568,
+        "retry": 0
+      },
+      {
+        "id": "PW017",
+        "status": "passed",
+        "durationMs": 1993,
+        "retry": 0
+      },
+      {
+        "id": "PW018",
+        "status": "passed",
+        "durationMs": 8493,
+        "retry": 0
+      },
+      {
+        "id": "PW019",
+        "status": "passed",
+        "durationMs": 4277,
+        "retry": 0
+      },
+      {
+        "id": "PW020",
+        "status": "passed",
+        "durationMs": 4387,
+        "retry": 0
+      },
+      {
+        "id": "PW021",
+        "status": "passed",
+        "durationMs": 5961,
+        "retry": 0
+      },
+      {
+        "id": "PW022",
+        "status": "passed",
+        "durationMs": 4842,
+        "retry": 0
+      },
+      {
+        "id": "PW023",
+        "status": "passed",
+        "durationMs": 11132,
+        "retry": 0
+      },
+      {
+        "id": "PW024",
+        "status": "passed",
+        "durationMs": 7882,
+        "retry": 0
+      },
+      {
+        "id": "PW025",
+        "status": "passed",
+        "durationMs": 6270,
+        "retry": 0
+      },
+      {
+        "id": "PW026",
+        "status": "passed",
+        "durationMs": 6451,
+        "retry": 0
+      },
+      {
+        "id": "PW027",
+        "status": "passed",
+        "durationMs": 5248,
+        "retry": 0
+      },
+      {
+        "id": "PW028",
+        "status": "passed",
+        "durationMs": 5339,
+        "retry": 0
+      },
+      {
+        "id": "PW029",
+        "status": "passed",
+        "durationMs": 5118,
+        "retry": 0
+      },
+      {
+        "id": "PW030",
+        "status": "passed",
+        "durationMs": 5494,
+        "retry": 0
+      },
+      {
+        "id": "PW031",
+        "status": "passed",
+        "durationMs": 4914,
+        "retry": 0
+      },
+      {
+        "id": "PW032",
+        "status": "passed",
+        "durationMs": 4536,
+        "retry": 0
+      },
+      {
+        "id": "PW033",
+        "status": "passed",
+        "durationMs": 196,
+        "retry": 0
+      },
+      {
+        "id": "PW034",
+        "status": "passed",
+        "durationMs": 6166,
+        "retry": 0
+      },
+      {
+        "id": "PW035",
+        "status": "passed",
+        "durationMs": 4656,
+        "retry": 0
+      },
+      {
+        "id": "PW036",
+        "status": "passed",
+        "durationMs": 6405,
+        "retry": 0
+      },
+      {
+        "id": "PW037",
+        "status": "passed",
+        "durationMs": 4486,
+        "retry": 0
+      },
+      {
+        "id": "PW038",
+        "status": "passed",
+        "durationMs": 1502,
+        "retry": 0
+      },
+      {
+        "id": "PW039",
+        "status": "passed",
+        "durationMs": 3716,
+        "retry": 0
+      },
+      {
+        "id": "PW040",
+        "status": "passed",
+        "durationMs": 1455,
+        "retry": 0
+      },
+      {
+        "id": "PW041",
+        "status": "passed",
+        "durationMs": 437,
+        "retry": 0
+      },
+      {
+        "id": "PW042",
+        "status": "passed",
+        "durationMs": 725,
+        "retry": 0
+      },
+      {
+        "id": "PW043",
+        "status": "passed",
+        "durationMs": 1237,
+        "retry": 0
+      },
+      {
+        "id": "PW051",
+        "status": "passed",
+        "durationMs": 64,
+        "retry": 0
+      },
+      {
+        "id": "PW052",
+        "status": "passed",
+        "durationMs": 58,
+        "retry": 0
+      },
+      {
+        "id": "PW053",
+        "status": "passed",
+        "durationMs": 77,
+        "retry": 0
+      },
+      {
+        "id": "PW054",
+        "status": "passed",
+        "durationMs": 4239,
+        "retry": 0
+      },
+      {
+        "id": "PW055",
+        "status": "passed",
+        "durationMs": 3063,
+        "retry": 0
+      },
+      {
+        "id": "PW056",
+        "status": "passed",
+        "durationMs": 1098,
+        "retry": 0
+      },
+      {
+        "id": "PW057",
+        "status": "passed",
+        "durationMs": 311,
+        "retry": 0
+      },
+      {
+        "id": "PW058",
+        "status": "passed",
+        "durationMs": 509,
+        "retry": 0
+      },
+      {
+        "id": "PW059",
+        "status": "passed",
+        "durationMs": 519,
+        "retry": 0
+      },
+      {
+        "id": "PW060",
+        "status": "passed",
+        "durationMs": 154,
+        "retry": 0
+      },
+      {
+        "id": "PW061",
+        "status": "passed",
+        "durationMs": 5713,
+        "retry": 0
+      },
+      {
+        "id": "PW062",
+        "status": "passed",
+        "durationMs": 2703,
+        "retry": 0
+      },
+      {
+        "id": "PW063",
+        "status": "passed",
+        "durationMs": 2766,
+        "retry": 0
+      },
+      {
+        "id": "PW064",
+        "status": "passed",
+        "durationMs": 1296,
+        "retry": 0
+      },
+      {
+        "id": "PW065",
+        "status": "passed",
+        "durationMs": 2209,
+        "retry": 0
+      },
+      {
+        "id": "PW066",
+        "status": "passed",
+        "durationMs": 298,
+        "retry": 0
+      },
+      {
+        "id": "PW067",
+        "status": "passed",
+        "durationMs": 1480,
+        "retry": 0
+      },
+      {
+        "id": "PW068",
+        "status": "passed",
+        "durationMs": 2845,
+        "retry": 0
+      },
+      {
+        "id": "PW069",
+        "status": "passed",
+        "durationMs": 2827,
+        "retry": 0
+      },
+      {
+        "id": "PW070",
+        "status": "passed",
+        "durationMs": 4491,
+        "retry": 0
+      },
+      {
+        "id": "PW071",
+        "status": "passed",
+        "durationMs": 1914,
+        "retry": 0
+      },
+      {
+        "id": "PW072",
+        "status": "passed",
+        "durationMs": 250,
+        "retry": 0
+      },
+      {
+        "id": "PW073",
+        "status": "passed",
+        "durationMs": 722,
+        "retry": 0
+      },
+      {
+        "id": "PW074",
+        "status": "passed",
+        "durationMs": 303,
+        "retry": 0
+      },
+      {
+        "id": "PW075",
+        "status": "passed",
+        "durationMs": 1034,
+        "retry": 0
+      },
+      {
+        "id": "PW076",
+        "status": "passed",
+        "durationMs": 985,
+        "retry": 0
+      },
+      {
+        "id": "PW077",
+        "status": "passed",
+        "durationMs": 222,
+        "retry": 0
+      },
+      {
+        "id": "PW078",
+        "status": "passed",
+        "durationMs": 1190,
+        "retry": 0
+      },
+      {
+        "id": "PW079",
+        "status": "passed",
+        "durationMs": 1025,
+        "retry": 0
+      },
+      {
+        "id": "PW080",
+        "status": "passed",
+        "durationMs": 924,
+        "retry": 0
+      },
+      {
+        "id": "PW081",
+        "status": "passed",
+        "durationMs": 412,
+        "retry": 0
+      },
+      {
+        "id": "PW082",
+        "status": "passed",
+        "durationMs": 16990,
+        "retry": 0
+      },
+      {
+        "id": "PW083",
+        "status": "passed",
+        "durationMs": 3294,
+        "retry": 0
+      },
+      {
+        "id": "PW084",
+        "status": "passed",
+        "durationMs": 2835,
+        "retry": 0
+      },
+      {
+        "id": "PW085",
+        "status": "passed",
+        "durationMs": 3115,
+        "retry": 0
+      },
+      {
+        "id": "PW086",
+        "status": "passed",
+        "durationMs": 4330,
+        "retry": 0
+      },
+      {
+        "id": "PW087",
+        "status": "passed",
+        "durationMs": 1125,
+        "retry": 0
+      },
+      {
+        "id": "PW088",
+        "status": "passed",
+        "durationMs": 3515,
+        "retry": 0
+      },
+      {
+        "id": "PW089",
+        "status": "passed",
+        "durationMs": 3779,
+        "retry": 0
+      },
+      {
+        "id": "PW090",
+        "status": "passed",
+        "durationMs": 3476,
+        "retry": 0
+      },
+      {
+        "id": "PW091",
+        "status": "passed",
+        "durationMs": 177,
+        "retry": 0
+      },
+      {
+        "id": "PW092",
+        "status": "passed",
+        "durationMs": 1392,
+        "retry": 0
+      },
+      {
+        "id": "PW093",
+        "status": "passed",
+        "durationMs": 1380,
+        "retry": 0
+      },
+      {
+        "id": "PW094",
+        "status": "passed",
+        "durationMs": 958,
+        "retry": 0
+      },
+      {
+        "id": "PW095",
+        "status": "passed",
+        "durationMs": 817,
+        "retry": 0
+      },
+      {
+        "id": "PW096",
+        "status": "passed",
+        "durationMs": 1784,
+        "retry": 0
+      },
+      {
+        "id": "PW097",
+        "status": "passed",
+        "durationMs": 1571,
+        "retry": 0
+      },
+      {
+        "id": "PW098",
+        "status": "passed",
+        "durationMs": 871,
+        "retry": 0
+      },
+      {
+        "id": "PW099",
+        "status": "passed",
+        "durationMs": 1450,
+        "retry": 0
+      },
+      {
+        "id": "PW100",
+        "status": "passed",
+        "durationMs": 1657,
+        "retry": 0
+      },
+      {
+        "id": "PW101",
+        "status": "passed",
+        "durationMs": 304,
+        "retry": 0
+      },
+      {
+        "id": "PW102",
+        "status": "passed",
+        "durationMs": 299,
+        "retry": 0
+      },
+      {
+        "id": "PW103",
+        "status": "passed",
+        "durationMs": 222,
+        "retry": 0
+      },
+      {
+        "id": "PW104",
+        "status": "passed",
+        "durationMs": 1852,
+        "retry": 0
+      },
+      {
+        "id": "PW105",
+        "status": "passed",
+        "durationMs": 2584,
+        "retry": 0
+      },
+      {
+        "id": "PW106",
+        "status": "passed",
+        "durationMs": 267,
+        "retry": 0
+      },
+      {
+        "id": "PW107",
+        "status": "passed",
+        "durationMs": 247,
+        "retry": 0
+      },
+      {
+        "id": "PW108",
+        "status": "passed",
+        "durationMs": 163,
+        "retry": 0
+      },
+      {
+        "id": "PW109",
+        "status": "passed",
+        "durationMs": 5519,
+        "retry": 0
+      },
+      {
+        "id": "PW110",
+        "status": "passed",
+        "durationMs": 2952,
+        "retry": 0
+      },
+      {
+        "id": "PW111",
+        "status": "passed",
+        "durationMs": 9785,
+        "retry": 0
+      },
+      {
+        "id": "PW112",
+        "status": "passed",
+        "durationMs": 265,
+        "retry": 0
+      },
+      {
+        "id": "PW113",
+        "status": "passed",
+        "durationMs": 952,
+        "retry": 0
+      }
+    ]
+  },
+  "harness": {
+    "command": "mise exec -- npm run test:harness",
+    "wallSeconds": 51.672428131103516,
+    "standaloneReportedSeconds": 15.1,
+    "applicationDependentReportedSeconds": 35.7,
+    "tests": [
+      {
+        "id": "PW044",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW045",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW046",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW047",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW048",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW049",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW050",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW114",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW115",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW116",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW117",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW118",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW119",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW120",
+        "config": "playwright.harness.config.ts",
+        "status": "passed"
+      },
+      {
+        "id": "PW121",
+        "config": "playwright.harness-app.config.ts",
+        "status": "passed"
+      }
+    ]
+  },
+  "collectionContract": {
+    "command": "mise exec -- npx vitest run --config vitest.unit.config.mts bin/playwrightCollections.test.ts",
+    "result": "passed; complete disjoint partition of 121 cases into 106 application, 14 standalone harness and 1 application-dependent harness; local staging and trusted staging match application"
+  },
+  "comparison": {
+    "baselineWallSeconds": 366.2136700153351,
+    "applicationPlusHarnessWallSeconds": 373.90407609939575,
+    "interpretation": "Application command is 43.98 seconds shorter in this sample, but full application plus harness is 7.69 seconds longer. This is cost displacement with an additional application startup, not demonstrated total savings. One sample per revision does not establish causality or variance."
+  },
+  "limitations": [
+    "Application and harness measured separately; global CLI/build/setup/teardown cost is included in wall time.",
+    "Main advanced after the measurement; measured revision is historical and remains recoverable, not a claim of a full run at the final PR head. Post-rebase checks are recorded separately in the PR.",
+    "No business assertions were migrated to unit/integration in this lot. Final audit still requires full execution of all affected tiers."
+  ]
+}

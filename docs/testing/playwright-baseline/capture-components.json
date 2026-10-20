@@ -1,0 +1,200 @@
+{
+  "scope": [
+    "PW098",
+    "PW099"
+  ],
+  "baseRevision": "c8ba6cb5bdaae0281f82850215f1ca2218a01c47",
+  "replacement": {
+    "revisionBeforeRemoval": "118fbf93",
+    "command": "npm run test:unit -- src/features/news/components/CaptureForm.test.tsx src/features/news/components/CaptureInvalidationReview.test.tsx src/features/news/actions/createCapture.test.ts",
+    "passed": 31,
+    "runnerSeconds": 2.75,
+    "components": [
+      "CaptureForm",
+      "CaptureInvalidationReview"
+    ],
+    "detailPage": "src/app/redacao/capturas/[id]/page.tsx",
+    "additionalWork": "Seis labels exatos no teste existente; um novo caso de renderizacao literal sem img. Nenhuma refatoracao da aplicacao."
+  },
+  "consolidation": {
+    "assertion": "PW099-A01",
+    "target": "PW097",
+    "guarantee": "Mesmo trecho literal preenchido no formulario e lido no detalhe; somente uma jornada de cadastro/leitura prepara os dados.",
+    "migratedAssertions": [
+      "PW098-A01",
+      "PW099-A02"
+    ]
+  },
+  "e2eCommand": "npm run test:e2e -- tests/newsroom/source-and-capture.spec.ts --reporter=line,json",
+  "before": {
+    "stats": {
+      "startTime": "2026-09-07T17:27:03.368Z",
+      "duration": 34833.494999999995,
+      "expected": 10,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+        "status": "passed",
+        "durationMs": 2248,
+        "retry": 0
+      },
+      {
+        "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+        "status": "passed",
+        "durationMs": 1572,
+        "retry": 0
+      },
+      {
+        "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+        "status": "passed",
+        "durationMs": 1859,
+        "retry": 0
+      },
+      {
+        "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+        "status": "passed",
+        "durationMs": 1435,
+        "retry": 0
+      },
+      {
+        "title": "A tela de captura não oferece origem nenhuma para escolher",
+        "status": "passed",
+        "durationMs": 838,
+        "retry": 0
+      },
+      {
+        "title": "O trecho literal é exibido como evidência, nunca como HTML",
+        "status": "passed",
+        "durationMs": 1824,
+        "retry": 0
+      },
+      {
+        "title": "A captura registrada não aparece em nenhuma superfície pública",
+        "status": "passed",
+        "durationMs": 1590,
+        "retry": 0
+      },
+      {
+        "title": "Usuário comum não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 309,
+        "retry": 0
+      },
+      {
+        "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 298,
+        "retry": 0
+      },
+      {
+        "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+        "status": "passed",
+        "durationMs": 205,
+        "retry": 0
+      }
+    ],
+    "summedCaseSeconds": 12.178
+  },
+  "after": {
+    "stats": {
+      "startTime": "2026-09-07T17:50:12.304Z",
+      "duration": 36827.479,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+        "status": "passed",
+        "durationMs": 2654,
+        "retry": 0
+      },
+      {
+        "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+        "status": "passed",
+        "durationMs": 1366,
+        "retry": 0
+      },
+      {
+        "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+        "status": "passed",
+        "durationMs": 1854,
+        "retry": 0
+      },
+      {
+        "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+        "status": "passed",
+        "durationMs": 1229,
+        "retry": 0
+      },
+      {
+        "title": "A captura registrada não aparece em nenhuma superfície pública",
+        "status": "passed",
+        "durationMs": 1733,
+        "retry": 0
+      },
+      {
+        "title": "Usuário comum não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 310,
+        "retry": 0
+      },
+      {
+        "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 301,
+        "retry": 0
+      },
+      {
+        "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+        "status": "passed",
+        "durationMs": 207,
+        "retry": 0
+      }
+    ],
+    "summedCaseSeconds": 9.654
+  },
+  "removedWork": {
+    "cases": 2,
+    "setup": [
+      "Duas sessoes de editor",
+      "Dois cadastros de Fonte",
+      "Duas navegacoes ao formulario de Captura",
+      "Um cadastro de Captura e abertura do detalhe"
+    ],
+    "retainedWork": "Preenchimento do trecho literal e sua assercao de leitura foram incorporados a PW097."
+  },
+  "limitations": [
+    "Uma amostra por versao, stack reiniciada e caches aquecidos; variancia nao estimada.",
+    "Referencia de dez casos vem da #795 antes do rebase de consultas de midia #820; nao e comparacao isolada da alteracao.",
+    "O reporter inclui startup; o runner Vitest exclui startup de browser/stack, que nao sao necessarios para estes componentes.",
+    "A reducao de casos/setup nao comprova economia integral; a auditoria final deve medir todas as colecoes e tiers."
+  ],
+  "synchronization": {
+    "base": "0180ecf683617b4ba912344747d05ea878c0b268",
+    "headBeforeDocumentation": "570634bcb690d84e21c88f676ec024e6da860c0d",
+    "rangeDiff": "Both patches unchanged: 118fbf93 -> e079f506; 82ca332b -> 570634bc.",
+    "integrationCommand": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/media/tests/search.integration.test.ts src/packages/media/tests/media.integration.test.ts'",
+    "integrationPassed": 15,
+    "integrationRunnerSeconds": 1.49,
+    "unitCommand": "npm run test:unit -- src/packages/media/tests/search.test.ts src/features/news/components/CaptureForm.test.tsx src/features/news/components/CaptureInvalidationReview.test.tsx src/features/news/actions/createCapture.test.ts",
+    "unitPassed": 54,
+    "unitRunnerSeconds": 2.74,
+    "e2eCommand": "npm run test:e2e -- tests/admin/media.spec.ts --reporter=line,json",
+    "e2eStats": {
+      "startTime": "2026-09-07T18:03:21.586Z",
+      "duration": 39399.173,
+      "expected": 7,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "note": "Rebase incorporates media search. Source/Capture patches remain unchanged; affected media journey revalidated."
+  }
+}

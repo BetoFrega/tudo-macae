@@ -1,0 +1,102 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "globalDependencies": [
+    "tsconfig.json",
+    "vitest*.mts",
+    "vitest.setup.ts"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "RELEASE_SHA",
+        "CLOUDFLARE_ENV",
+        "VITE_*"
+      ],
+      "passThroughEnv": [
+        "XDG_CONFIG_HOME",
+        "WRANGLER_LOG_PATH",
+        "WRANGLER_SEND_METRICS"
+      ],
+      "outputs": [
+        "dist/**",
+        ".wrangler/deploy/**"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^typecheck"
+      ],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": [
+        "^test"
+      ],
+      "passThroughEnv": [
+        "XDG_CONFIG_HOME",
+        "WRANGLER_LOG_PATH",
+        "WRANGLER_SEND_METRICS"
+      ],
+      "outputs": []
+    },
+    "//#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false,
+      "env": [
+        "SOURCE_SHA",
+        "NEXT_DEPLOYMENT_ID",
+        "RELEASE_SHA",
+        "NEXT_PUBLIC_*"
+      ],
+      "envMode": "loose",
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!apps/**",
+        "!packages/**",
+        "!workers/**"
+      ]
+    },
+    "//#typecheck": {
+      "dependsOn": [
+        "^typecheck"
+      ],
+      "cache": false,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!apps/**",
+        "!packages/**",
+        "!workers/**"
+      ]
+    },
+    "//#test": {
+      "dependsOn": [
+        "^test"
+      ],
+      "cache": false,
+      "envMode": "loose",
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!apps/**",
+        "!packages/**",
+        "!workers/**"
+      ]
+    },
+    "deploy": {
+      "cache": false
+    }
+  },
+  "cacheDir": ".turbo/cache",
+  "futureFlags": {
+    "affectedUsingTaskInputs": true
+  },
+  "agentGuidance": false
+}

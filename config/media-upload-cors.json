@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://www.tudomacae.com.br"],
+    "method": ["PUT"],
+    "responseHeader": ["Content-Type", "x-goog-content-length-range", "x-goog-if-generation-match"],
+    "maxAgeSeconds": 600
+  }
+]

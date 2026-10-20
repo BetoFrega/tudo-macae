@@ -1,0 +1,13 @@
+@import "@tudomacae/design-foundations/styles.css";
+@source "../../packages/react-primitives/lib";
+@source "../../packages/site-layout/lib";
+@source "../../packages/terms-page/lib";
+@source "../../packages/site-search/lib";
+@source "../../packages/media/lib";
+@source "../../packages/authentication/lib";
+@source "../../packages/advertiser-identity/lib";
+@source "../../packages/categories/lib/ui";
+@source "../../packages/editorial-access/lib/ui";
+@source "../../packages/editorial-sourcing/lib/ui";
+@source "../../packages/editorial-planning/lib/ui";
+@source "../";

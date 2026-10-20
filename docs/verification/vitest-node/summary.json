@@ -1,0 +1,105 @@
+{
+  "before": {
+    "runs": [
+      {
+        "durationMs": 165874.73733300003,
+        "setupMs": 165623,
+        "environmentMs": 287329
+      },
+      {
+        "durationMs": 97069.22608200001,
+        "setupMs": 70647,
+        "environmentMs": 129969.00000000001
+      },
+      {
+        "durationMs": 112726.293334,
+        "setupMs": 80323,
+        "environmentMs": 153063
+      },
+      {
+        "durationMs": 122152.572583,
+        "setupMs": 93360,
+        "environmentMs": 195803
+      },
+      {
+        "durationMs": 105525.444292,
+        "setupMs": 77955,
+        "environmentMs": 139274
+      }
+    ],
+    "percentiles": {
+      "durationMs": {
+        "p50": 112726.293334,
+        "p75": 122152.572583,
+        "p90": 165874.73733300003
+      },
+      "setupMs": {
+        "p50": 80323,
+        "p75": 93360,
+        "p90": 165623
+      },
+      "environmentMs": {
+        "p50": 153063,
+        "p75": 195803,
+        "p90": 287329
+      }
+    }
+  },
+  "after": {
+    "runs": [
+      {
+        "durationMs": 98351.84508399999,
+        "setupMs": 55413,
+        "environmentMs": 69304
+      },
+      {
+        "durationMs": 103196.65645899999,
+        "setupMs": 55774,
+        "environmentMs": 73436
+      },
+      {
+        "durationMs": 99605.991042,
+        "setupMs": 57163,
+        "environmentMs": 69643
+      },
+      {
+        "durationMs": 133062.41575,
+        "setupMs": 68077,
+        "environmentMs": 71573
+      },
+      {
+        "durationMs": 101141.21708399999,
+        "setupMs": 60214,
+        "environmentMs": 71713
+      }
+    ],
+    "percentiles": {
+      "durationMs": {
+        "p50": 101141.21708399999,
+        "p75": 103196.65645899999,
+        "p90": 133062.41575
+      },
+      "setupMs": {
+        "p50": 57163,
+        "p75": 60214,
+        "p90": 68077
+      },
+      "environmentMs": {
+        "p50": 71573,
+        "p75": 71713,
+        "p90": 73436
+      }
+    }
+  },
+  "collection": {
+    "files": 235,
+    "cases": 2233,
+    "nonPassing": 0,
+    "sha256": "6629c7fa01cb7019ff81f7d3e48f44b360c49d7d138389979b12e7d180bae366",
+    "addedContractTests": [
+      "runs unannotated tests without browser globals",
+      "defaults every ordinary entrypoint to Node",
+      "requires explicit DOM opt-in and keeps server integration in Node"
+    ]
+  }
+}

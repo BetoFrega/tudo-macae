@@ -1,0 +1,117 @@
+{
+  "scope": [
+    "PW082"
+  ],
+  "baseRevision": "c320c6ca63c046c6175c30652d9c996dddb3a5f0",
+  "change": "41 chamadas sequenciais substituem grupos concorrentes de até quatro; todas as cinco asserções E2E permanecem.",
+  "configuration": {
+    "production": {
+      "file": "apphosting.yaml",
+      "readsPerMinute": 120
+    },
+    "staging": {
+      "file": "apphosting.staging.yaml",
+      "readsPerMinute": 20
+    },
+    "local": {
+      "file": "bin/setTestEnvVars.ts",
+      "readsPerMinute": 20
+    },
+    "unchanged": true,
+    "boundary": "O E2E comprova o limite configurado em local/staging, não o limite de 120 de produção."
+  },
+  "integrationBeforeFinalChange": {
+    "revision": "9ffa4e84",
+    "command": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial-mcp/tests/contract.integration.test.ts'",
+    "passed": 31,
+    "runnerSeconds": 12.27,
+    "test": "rate limits reads per EditorialClient and states when retry is allowed",
+    "equivalence": "Duas chamadas simultâneas esgotam a cota dois; ambas são aceitas e a terceira é bloqueada. A transação real preserva o consumo concorrente, envelope e retryAfterMs.",
+    "additionalCases": 0,
+    "additionalRequests": 0,
+    "sequence": "Experimento E2E revertido; contrato concorrente passou e foi registrado antes de reaplicar a mudança definitiva."
+  },
+  "e2eCommand": "npm run test:e2e -- tests/newsroom/editorial-mcp.spec.ts --grep 'Cliente local recebe rateLimited' --reporter=line,json",
+  "before": {
+    "stats": {
+      "startTime": "2026-09-07T17:06:06.853Z",
+      "duration": 42177.052,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+        "status": "passed",
+        "durationMs": 18157,
+        "retry": 0
+      }
+    ]
+  },
+  "experiment": {
+    "stats": {
+      "startTime": "2026-09-07T17:10:35.475Z",
+      "duration": 26243.585000000003,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+        "status": "passed",
+        "durationMs": 2801,
+        "retry": 0
+      }
+    ]
+  },
+  "final": {
+    "stats": {
+      "startTime": "2026-09-07T17:12:52.364Z",
+      "duration": 25534.408,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Cliente local recebe rateLimited mesmo na virada do minuto",
+        "status": "passed",
+        "durationMs": 2642,
+        "retry": 0
+      }
+    ]
+  },
+  "retainedGuarantees": [
+    "41 chamadas em menos de 60 segundos atravessam no máximo duas janelas de minuto",
+    "Entre 20 e 40 leituras autenticadas aceitas no endpoint construído",
+    "Ao menos uma chamada bloqueada e envelope rateLimited/retryAfterMs em todas as bloqueadas",
+    "Prova integrada de leitura autenticada compartilhada com PW081 continua presente"
+  ],
+  "comparison": {
+    "beforeCaseSeconds": 18.157,
+    "afterCaseSeconds": [
+      2.801,
+      2.642
+    ],
+    "beforeReportSeconds": 42.177052,
+    "afterReportSeconds": [
+      26.243585,
+      25.534408
+    ],
+    "removedCases": 0,
+    "removedRequests": 0,
+    "conclusion": "Redução focal observada ao retirar disputa concorrente pelo mesmo contador do E2E; sem alteração de limites ou quantidade de chamadas."
+  },
+  "limitations": [
+    "Uma referência e duas amostras sequenciais no mesmo worktree, mesmas dependências, stack reiniciada e caches aquecidos; não são uma estimativa estatística.",
+    "A amostra de referência antecede o squash da PR #817; o conteúdo executável é equivalente à base c320c6ca.",
+    "O contrato de integração agora exerce concorrência; o runner levou 12.27 s, enquanto a amostra anterior da #793 levou 9.23 s. Escopos de execução iguais, amostras não controladas para atribuir a diferença à mudança.",
+    "Tempo do reporter E2E inclui startup da stack; tempo do runner Vitest exclui startup dos emuladores.",
+    "A auditoria final deve medir todos os tiers e a suíte completa antes de alegar economia integral."
+  ]
+}

@@ -1,0 +1,1 @@
+CREATE INDEX classifieds_unassociated_owner_created ON classifieds_records (kind, owner_id, json_extract(body, '$.createdAt') DESC, namespace DESC, id DESC) WHERE kind = 'ad' AND (profile_id IS NULL OR profile_id = '');

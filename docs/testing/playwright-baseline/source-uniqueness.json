@@ -1,0 +1,206 @@
+{
+  "scope": [
+    "PW095"
+  ],
+  "baseRevision": "13a37af798fe3c85851cdfa3990090cfef8d7c6c",
+  "replacement": {
+    "file": "src/packages/editorial/tests/editorialSources.integration.test.ts",
+    "test": "returns the existing source for canonically equal URLs without replacing it",
+    "revisionBeforeRemoval": "37a4f8d8",
+    "integrationCommand": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial/tests/editorialSources.integration.test.ts src/features/news/actions/createSource.integration.test.ts'",
+    "integrationPassed": 17,
+    "integrationRunnerSeconds": 1.56,
+    "unitCommand": "npm run test:unit -- src/features/news/components/SourceForm.test.tsx src/features/news/actions/createSource.test.ts src/packages/editorial/tests/canonicalSourceUrl.test.ts",
+    "unitPassed": 16,
+    "unitRunnerSeconds": 1.73,
+    "additionalWork": "Duas consultas públicas no contrato existente: listagem filtrada por suffix e leitura do ID; nenhum caso ou setup acrescentado."
+  },
+  "remainingE2e": {
+    "id": "PW097",
+    "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+    "guarantee": "Cadastro pela UI, leitura da Fonte e sua utilização na Captura após mutação real."
+  },
+  "command": "npm run test:e2e -- tests/newsroom/source-and-capture.spec.ts --reporter=line,json",
+  "before": {
+    "stats": {
+      "startTime": "2026-09-07T17:20:26.094Z",
+      "duration": 36833.265999999996,
+      "expected": 11,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+        "status": "passed",
+        "durationMs": 2519,
+        "retry": 0
+      },
+      {
+        "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+        "status": "passed",
+        "durationMs": 1465,
+        "retry": 0
+      },
+      {
+        "title": "URL canônica evita duplicar uma fonte",
+        "status": "passed",
+        "durationMs": 799,
+        "retry": 0
+      },
+      {
+        "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+        "status": "passed",
+        "durationMs": 1900,
+        "retry": 0
+      },
+      {
+        "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+        "status": "passed",
+        "durationMs": 1451,
+        "retry": 0
+      },
+      {
+        "title": "A tela de captura não oferece origem nenhuma para escolher",
+        "status": "passed",
+        "durationMs": 1279,
+        "retry": 0
+      },
+      {
+        "title": "O trecho literal é exibido como evidência, nunca como HTML",
+        "status": "passed",
+        "durationMs": 1889,
+        "retry": 0
+      },
+      {
+        "title": "A captura registrada não aparece em nenhuma superfície pública",
+        "status": "passed",
+        "durationMs": 1553,
+        "retry": 0
+      },
+      {
+        "title": "Usuário comum não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 295,
+        "retry": 0
+      },
+      {
+        "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 304,
+        "retry": 0
+      },
+      {
+        "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+        "status": "passed",
+        "durationMs": 211,
+        "retry": 0
+      }
+    ],
+    "summedCaseSeconds": 13.665
+  },
+  "after": {
+    "stats": {
+      "startTime": "2026-09-07T17:27:03.368Z",
+      "duration": 34833.494999999995,
+      "expected": 10,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "Editor concede e revoga uma capacidade sem apagar a Permissão da fonte",
+        "status": "passed",
+        "durationMs": 2248,
+        "retry": 0
+      },
+      {
+        "title": "papel de Editor removido bloqueia a próxima concessão na sessão aberta",
+        "status": "passed",
+        "durationMs": 1572,
+        "retry": 0
+      },
+      {
+        "title": "Editor corrige Fonte sem perder histórico, fundir colisão ou sobrescrever concorrência",
+        "status": "passed",
+        "durationMs": 1859,
+        "retry": 0
+      },
+      {
+        "title": "Jornada: Editor cadastra a fonte, registra a captura e abre a captura na lista",
+        "status": "passed",
+        "durationMs": 1435,
+        "retry": 0
+      },
+      {
+        "title": "A tela de captura não oferece origem nenhuma para escolher",
+        "status": "passed",
+        "durationMs": 838,
+        "retry": 0
+      },
+      {
+        "title": "O trecho literal é exibido como evidência, nunca como HTML",
+        "status": "passed",
+        "durationMs": 1824,
+        "retry": 0
+      },
+      {
+        "title": "A captura registrada não aparece em nenhuma superfície pública",
+        "status": "passed",
+        "durationMs": 1590,
+        "retry": 0
+      },
+      {
+        "title": "Usuário comum não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 309,
+        "retry": 0
+      },
+      {
+        "title": "Administrador que não é Editor não alcança as telas de fonte e de captura",
+        "status": "passed",
+        "durationMs": 298,
+        "retry": 0
+      },
+      {
+        "title": "Visitante sem sessão é mandado entrar antes de ver fonte ou captura",
+        "status": "passed",
+        "durationMs": 205,
+        "retry": 0
+      }
+    ],
+    "summedCaseSeconds": 12.178
+  },
+  "removedWork": {
+    "cases": 1,
+    "setup": [
+      "Usuário editor/sessão",
+      "Navegação à lista de Fontes",
+      "Primeiro cadastro de Fonte",
+      "Segunda tentativa de cadastro com URL equivalente"
+    ],
+    "originalAssertions": [
+      "PW095-A01"
+    ]
+  },
+  "limitations": [
+    "Uma amostra por versão no mesmo worktree, mesmas dependências, stack reiniciada e caches aquecidos; variação entre execuções não é isolada.",
+    "A referência foi executada em d518ae7b antes do squash #821; conteúdo executável equivalente à base 13a37af7.",
+    "O E2E passa de 11 para 10 casos neste arquivo; os tempos incluem startup. O runner Vitest exclui startup dos emuladores.",
+    "Duas leituras foram acrescentadas à integração; medição integral dos tiers fica para a auditoria final da #765."
+  ],
+  "synchronization": {
+    "base": "c86da4ceba6f081dcf62da78c5115aae727ccd31",
+    "headBeforeDocumentation": "5789bcc00de743e31c45468017ecec5db2f4c557",
+    "rangeDiff": "Both patches unchanged: 37a4f8d8 -> 5d10a47d; b1fea42e -> 5789bcc0.",
+    "integrationCommand": "mise exec -- node bin/emulators.mjs emulators:exec --only auth,firestore,storage 'npm run test:integration -- src/packages/editorial/tests/editorialSources.integration.test.ts src/features/news/actions/createSource.integration.test.ts src/packages/media/tests/uploadProvider.integration.test.ts'",
+    "integrationPassed": 38,
+    "integrationRunnerSeconds": 11.85,
+    "unitCommand": "npm run test:unit -- src/packages/media/tests/uploadQueries.test.ts src/features/news/components/SourceForm.test.tsx src/features/news/actions/createSource.test.ts src/packages/editorial/tests/canonicalSourceUrl.test.ts",
+    "unitPassed": 27,
+    "unitRunnerSeconds": 1.74,
+    "note": "Rebase incorporates media queries; both patches and Source E2E remain equivalent. E2E measurement predates synchronization."
+  }
+}

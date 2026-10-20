@@ -1,0 +1,23 @@
+{
+  "name": "public-images-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "cd ../.. && vitest run --config vitest.unit.config.mts apps/public-images/adapters && vitest run --config vitest.worker.config.mts apps/public-images/index.runtime.test.ts",
+    "build": "node deploy.mjs --dry-run --outdir dist",
+    "deploy": "node deploy.mjs"
+  },
+  "dependencies": {
+    "@tudomacae/public-image-delivery": "*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261016.1",
+    "@types/node": "^26",
+    "miniflare": "^5.20260918.0-alpha",
+    "typescript": "^6",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.149.0"
+  }
+}

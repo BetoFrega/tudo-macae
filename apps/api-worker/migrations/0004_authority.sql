@@ -1,0 +1,8 @@
+CREATE TABLE authentication_authority (singleton INTEGER PRIMARY KEY CHECK(singleton=1), phase TEXT NOT NULL CHECK(phase IN ('preparing','active')), activatedAt INTEGER, revision INTEGER NOT NULL DEFAULT 0);
+INSERT INTO authentication_authority (singleton,phase) VALUES (1,'preparing');
+CREATE TRIGGER reject_import_after_activation BEFORE UPDATE OF migrated ON user WHEN (SELECT phase FROM authentication_authority WHERE singleton=1)='active' BEGIN SELECT RAISE(ABORT,'Authentication authority active'); END;
+CREATE TRIGGER record_import_insert AFTER INSERT ON user WHEN (SELECT phase FROM authentication_authority WHERE singleton=1)='preparing' BEGIN UPDATE authentication_authority SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER record_import_update AFTER UPDATE ON user WHEN (SELECT phase FROM authentication_authority WHERE singleton=1)='preparing' BEGIN UPDATE authentication_authority SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER reject_authority_regression BEFORE UPDATE OF phase ON authentication_authority WHEN OLD.phase='active' AND NEW.phase!='active' BEGIN SELECT RAISE(ABORT,'Authentication authority active'); END;
+CREATE TRIGGER record_attempt_import_insert AFTER INSERT ON verification_attempt WHEN (SELECT phase FROM authentication_authority WHERE singleton=1)='preparing' BEGIN UPDATE authentication_authority SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER record_attempt_import_update AFTER UPDATE ON verification_attempt WHEN (SELECT phase FROM authentication_authority WHERE singleton=1)='preparing' BEGIN UPDATE authentication_authority SET revision=revision+1 WHERE singleton=1; END;

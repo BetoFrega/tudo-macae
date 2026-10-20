@@ -1,0 +1,32 @@
+{
+  "name": "web-workers-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build --logLevel warn",
+    "test": "vitest run --config vitest.config.mts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tudomacae/terms-page": "*",
+    "next": "^16.4.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "@tudomacae/www-origin-routing": "*",
+    "@tudomacae/design-foundations": "*",
+    "@tudomacae/react-primitives": "*",
+    "@tudomacae/site-layout": "*"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.20",
+    "@cloudflare/vite-plugin": "1.64.0",
+    "@vitejs/plugin-rsc": "^0.5.34",
+    "@vinext/cloudflare": "1.0.1",
+    "react-server-dom-webpack": "^19.2.6",
+    "tailwindcss": "^4",
+    "vite": "^8.3.4",
+    "vinext": "1.0.1"
+  }
+}

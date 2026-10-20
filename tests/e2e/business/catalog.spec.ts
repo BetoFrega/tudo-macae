@@ -104,6 +104,8 @@ test("visitante encontra Negócios por categoria em páginas limitadas", async (
       has: pageObject(page).getByRole("link", { name: `${prefix} 00`, exact: true }),
     })).toBeInViewport();
     await expect(pageObject(page).locator("article")).toHaveCount(20);
+    const filteredCta = pageObject(page).getByRole("main").getByRole("button", { name: "Cadastre seu negócio ou serviço", exact: true });
+    expect(await filteredCta.evaluate(button => Boolean(button.compareDocumentPosition(document.querySelector("section[aria-label=\"Resultados\"]")!) & Node.DOCUMENT_POSITION_PRECEDING))).toBe(true);
     await page.setViewportSize({ width: 1440, height: 900 });
 
     await page.goto("/negocios");

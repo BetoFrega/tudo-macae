@@ -61,7 +61,7 @@
     "@radix-ui/react-navigation-menu": "^1.3.0",
     "@radix-ui/react-select": "^2.4.1",
     "@radix-ui/react-slot": "^1.5.0",
-    "@radix-ui/react-switch": "^1.3.7",
+    "@radix-ui/react-switch": "^1.4.1",
     "@tailwindcss/typography": "^0.5.20",
     "@tudomacae/ads": "*",
     "@tudomacae/advertiser-identity": "*",

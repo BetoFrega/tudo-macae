@@ -27,7 +27,7 @@
     "./image": "./image.ts"
   },
   "dependencies": {
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@tudomacae/civil-time": "*",
     "@tudomacae/react-primitives": "*",
     "@hookform/resolvers": "^5.9.1",

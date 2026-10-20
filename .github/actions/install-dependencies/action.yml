@@ -1,0 +1,14 @@
+name: Install dependencies
+description: Set up Node 24 with the npm cache and install the locked dependencies.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v5
+      with:
+        node-version: 24
+        cache: "npm"
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci

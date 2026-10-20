@@ -139,8 +139,8 @@ jobs:
       - run: npm ci
       - name: Require production D1 migrations ready
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
+          CLOUDFLARE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
@@ -157,7 +157,7 @@ jobs:
           fi
       - name: Require web Worker and CI access before delivery
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           if ! ./node_modules/.bin/wrangler deployments status --config apps/web-workers/wrangler.jsonc --env production --json >/dev/null 2>&1; then
@@ -167,7 +167,7 @@ jobs:
       # The web Worker reads the API Worker, so the API publishes first.
       - name: Apply migrations, publish and read back the production API Worker
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           AUTHENTICATION_D1_ID: ed48dac0-069a-4889-8da7-71c543fe2722
           CLASSIFIEDS_D1_ID: a76337a4-7cef-4198-9711-f99a8716ea6c
@@ -197,8 +197,8 @@ jobs:
       contents: read
     env:
       RELEASE_SHA: ${{ needs.checks.outputs.sha }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+      CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
+      CLOUDFLARE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
     steps:
       - uses: actions/checkout@v5
         with:

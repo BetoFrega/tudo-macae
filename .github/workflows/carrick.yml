@@ -1,8 +1,9 @@
 name: Carrick
 
 on:
-  # No pull_request trigger: the index reflects main only.
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   # Carrick Cloud sends this when a sibling repo in the same project changes
   # on its main branch, so this repo's cross-repo results catch up without

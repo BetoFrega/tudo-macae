@@ -1,0 +1,88 @@
+name: Checks
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Each check runs on its own runner so they finish in parallel.
+jobs:
+  typecheck:
+    name: Typecheck
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/install-dependencies
+      - uses: actions/cache@v4
+        with:
+          path: tsconfig.tsbuildinfo
+          key: tsbuildinfo-${{ github.sha }}
+          restore-keys: tsbuildinfo-
+      - run: npm run typecheck
+
+  lint:
+    name: Lint
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/install-dependencies
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/eslint
+          key: eslint-${{ github.sha }}
+          restore-keys: eslint-
+      - run: npm run lint
+
+  workers:
+    name: Web Workers
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      TURBO_SCM_BASE: origin/${{ github.base_ref }}
+      TURBO_SCM_HEAD: HEAD
+      RELEASE_SHA: ${{ github.sha }}
+      XDG_CONFIG_HOME: /tmp/wrangler-config
+    steps:
+      # turbo --affected needs the merge base with the base branch.
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/install-dependencies
+      - name: Type-check and build the affected Workers
+        run: npx turbo run typecheck build --affected --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
+      - name: Test the affected Workers
+        run: npx turbo run test --affected --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
+      - name: Test the Worker runtime contracts
+        run: npm run test:worker -- bin/workerSetup.runtime.test.ts bin/articleIndexConsumer.runtime.test.ts
+
+  unit:
+    name: Unit tests (${{ matrix.shard }}/2)
+    if: >-
+      !github.event.pull_request.draft
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - uses: ./.github/actions/install-dependencies
+      - run: npm run test:unit -- --shard=${{ matrix.shard }}/2

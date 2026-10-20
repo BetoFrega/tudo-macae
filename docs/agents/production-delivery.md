@@ -3,15 +3,15 @@
 [ADR 0022](../adr/0022-production-only-with-disposable-e2e.md) owns the decision;
 [deploy.yml](../../.github/workflows/deploy.yml) owns the executable pipeline.
 Every push to `main` starts delivery of the pushed SHA; `workflow_dispatch` retries
-or selects another SHA. E2E is explicit local/manual work, never scheduled by a
-pipeline or a deployment gate.
+or selects another SHA.
 
 Each run fixes an immutable SHA: the event's main SHA by default, or an explicitly
 dispatched full SHA already on `origin/main`. Protection lint uses that SHA's first
 parent and still rejects protected reductions. Before production mutation, checks
 run typecheck, the web Worker build when present, typecheck, build and tests of
-every Worker app (PR checks cover only affected apps), lint, Worker contracts and
-both Vitest tiers plus `build:check`. Test jobs receive no production secrets or
+every Worker app (PR checks cover only affected apps), lint, Worker contracts,
+both Vitest tiers plus `build:check`, and the complete E2E collection
+(`npm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
 Google identity.
 
 Delivery builds and promotes no Cloud Run revision, and the `www-origin` router
@@ -233,9 +233,10 @@ Rollback leaves D1 migrations applied.
 
 ## Verification and limits
 
-Use run steps/recovery artifacts for delivery failures and
-[Test Harness Operation](test-harness-operation.md#e2e-stack-and-preflight) for
-explicit local/manual E2E. Verify provider configuration; emulators do not prove IAM.
+Use run steps, the `playwright-<run-id>-<attempt>` report and recovery artifacts
+for delivery failures, and
+[Test Harness Operation](test-harness-operation.md#e2e-stack-and-preflight) to
+reproduce E2E locally. Verify provider configuration; emulators do not prove IAM.
 `npm run probe:edge` verifies the outer delivery contract.
 
 Reference: [GitHub concurrency](https://docs.github.com/en/actions/concepts/workflows-and-actions/concurrency).

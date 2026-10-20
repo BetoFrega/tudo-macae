@@ -69,8 +69,11 @@ test("checks domain protection against the selected revision's history when main
   expect(eligibility.run).toContain("git merge-base --is-ancestor \"$SHA\" origin/main");
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
 });
-test("keeps browser suites and their setup outside production delivery", () => {
-  expect(JSON.stringify(workflow.jobs)).not.toMatch(/playwright|test:e2e|test:harness|chromium/);
+test("runs the complete E2E collection in checks, never with production access", () => {
+  const steps = workflow.jobs.checks.steps as Array<{ run?: string }>;
+  expect(steps.some(step => step.run === "npm run test:e2e:full -- --max-failures=1")).toBe(true);
+  const mutation = JSON.stringify([workflow.jobs.production, workflow.jobs.workers]);
+  expect(mutation).not.toMatch(/playwright|test:e2e|test:harness|chromium/);
 });
 test("runs fail-fast Vitest and the application build before production mutation", () => {
   const steps = workflow.jobs.checks.steps as Array<{ run?: string; uses?: string }>;

@@ -19,14 +19,15 @@ incidents, recovery and external resource retirement.
 Production is the only persistent application environment. Each delivery fixes
 the candidate SHA and deploys that exact tested SHA only after delivery checks pass.
 Every push to main delivers its SHA; a trusted operator can dispatch a retry or
-explicitly select another full main SHA. Ordinary PR checks remain independent. E2E execution is local/manual only; no
-pipeline executes or schedules it, and it is not a deployment gate.
+explicitly select another full main SHA. Ordinary PR checks remain independent.
+The complete E2E collection runs on a disposable local stack in the delivery checks
+and gates production mutation.
 
 ## Alternatives and consequences
 
 One persistent environment avoids maintaining permanent staging identities/data.
-Keeping E2E local/manual removes recurring runner cost and browser-suite failures
-from delivery, while other checks and production probes retain their own gates.
+Standard runners are free on the public repository, so the E2E gate costs delivery
+time, not runner minutes; a browser-suite failure blocks delivery until fixed.
 Emulator checks do not prove real IAM, indexes or provider behavior.
 Local tests remain development/diagnostic tools without mandatory qualification receipts.
 Production verification and compensation follow the operating guide, not a second pipeline
@@ -37,7 +38,7 @@ replacement and preservation of shared resources/data; acceptance is not a retir
 
 Amended 2026-09-26, 2026-10-04 and 2026-10-20. The 2026-10-04 amendment supersedes
 the automatic E2E deployment gate; the 2026-10-20 amendment replaces manual-only
-dispatch with delivery on every main push. The original decision date remains
+dispatch with delivery on every main push and restores the E2E delivery gate. The original decision date remains
 2026-09-10.
 Supersedes the staging architecture in
 [0016](0016-separate-disposable-staging-data-from-permanent-control.md),

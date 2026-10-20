@@ -92,12 +92,25 @@ jobs:
         run: npm test -- --tier=unit --bail=1
       - name: Check Vitest integration tier and application build before production mutation
         run: npm test -- --tier=integration --bail=1 && npm run build:check
+      - run: npm exec --workspace=@tudomacae/e2e -- playwright install --with-deps chromium
+      - name: Check E2E journeys and harness on a disposable local stack
+        run: npm run test:e2e:full -- --max-failures=1
       - name: Retain sanitized test diagnostics
         uses: actions/upload-artifact@v6
         if: always()
         with:
           name: vitest-${{ github.run_id }}-${{ github.run_attempt }}
           path: test-results/vitest-logs/
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Retain Playwright report and traces
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            tests/e2e/playwright-report/
+            tests/e2e/test-results/
           retention-days: 7
           if-no-files-found: ignore
 

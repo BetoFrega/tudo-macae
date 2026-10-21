@@ -37,7 +37,7 @@ original decision date; acceptance does not certify implementation or activation
 | [19. Read current state in every operational screen](0019-read-current-state-in-operational-screens.md) |
 | [20. Restrict staging application access through Cloudflare Access](0020-restrict-staging-application-access.md) |
 | [21. Share staging operations across human and test callers](0021-share-staging-operations-across-human-and-test-callers.md) |
-| [22. One persistent production environment with manually dispatched delivery](0022-production-only-with-disposable-e2e.md) |
+| [22. One persistent production environment with delivery on every main push](0022-production-only-with-disposable-e2e.md) |
 | [23. Permanent MCP and HTTP CLI over one canonical catalog and executor](0023-editorial-cli-over-http.md) |
 | [25. Neutral shared machine transport for separate domain capabilities](0025-neutral-machine-tools-with-administrative-categories.md) |
 | [26. Provisional Tudo Macaé MCP discovery with live execution authority](0026-provisional-editorial-mcp-discovery-with-live-execution-authority.md) |

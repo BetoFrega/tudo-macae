@@ -12,7 +12,7 @@
   "dependencies": {
     "@tudomacae/react-primitives": "*",
     "@tudomacae/civil-time": "*",
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@hookform/resolvers": "^5.9.1",
     "react-hook-form": "^7.90.0",
     "@tudomacae/editorial-access": "*"

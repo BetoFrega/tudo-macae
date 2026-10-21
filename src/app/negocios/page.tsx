@@ -83,8 +83,10 @@ async function BusinessCatalogContent({ searchParams }: BusinessCatalogPageProps
             categories={catalogCategories}
             category={selection.category}
           />
-          <CatalogRegistration position="main" visible={visible} />
+          {/* A filtered visit lands on its results, so the phone CTA must not push them below the fold. */}
+          {!selection.category && <CatalogRegistration position="main" visible={visible} />}
           <CatalogResults categories={categories} page={page} selection={selection} />
+          {selection.category && <CatalogRegistration position="main" visible={visible} />}
         </div>
         <CatalogSidebar
           categories={catalogCategories}

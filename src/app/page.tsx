@@ -31,7 +31,7 @@ export default function Home() {
         "
       >
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-          <div>
+          <div className="wrap-anywhere">
             <h1
               id="home-discovery"
               className="

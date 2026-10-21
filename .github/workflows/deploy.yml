@@ -1,12 +1,11 @@
 name: Deploy production
 
 on:
-  workflow_dispatch:
-    inputs:
-      sha:
-        description: SHA completo opcional; vazio usa a main no momento do disparo
-        required: false
-        type: string
+  push:
+    branches: [main]
+  # Retries deliver main as it stands. A caller-chosen ref would run untrusted code with
+  # the default branch's cache scope (CodeQL actions/cache-poisoning).
+  workflow_dispatch: {}
 
 # Serialize production deliveries without replacing pending requests.
 concurrency:
@@ -21,7 +20,7 @@ jobs:
   checks:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 75
     outputs:
       sha: ${{ steps.candidate.outputs.sha }}
     steps:
@@ -29,11 +28,10 @@ jobs:
         id: candidate
         env:
           DEFAULT_SHA: ${{ github.sha }}
-          REQUESTED_SHA: ${{ inputs.sha }}
         run: |
           set -euo pipefail
 
-          candidate="${REQUESTED_SHA:-$DEFAULT_SHA}"
+          candidate="$DEFAULT_SHA"
           if ! [[ "$candidate" =~ ^[0-9a-f]{40}$ ]]; then
             echo "::error::Informe um SHA completo de 40 caracteres."
             exit 1
@@ -42,7 +40,7 @@ jobs:
           echo "sha=$candidate" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v5
         with:
-          ref: ${{ steps.candidate.outputs.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           lfs: true
           persist-credentials: false
@@ -75,6 +73,14 @@ jobs:
           elif test -f apps/web-workers/package.json; then
             npx turbo run build --filter=web-workers-app
           fi
+      # The PR Checks run turbo only on affected apps; delivery checks every app at this SHA.
+      - name: Type-check, build and test every Worker app
+        env:
+          RELEASE_SHA: ${{ steps.candidate.outputs.sha }}
+          XDG_CONFIG_HOME: /tmp/wrangler-config
+        run: npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
+      - name: Check the public images delivery script
+        run: node --test apps/public-images/deploy.test.mjs
       - run: npm run lint
         env:
           DOMAIN_SEAMS_BASE: ${{ steps.candidate.outputs.sha }}^
@@ -84,6 +90,9 @@ jobs:
         run: npm test -- --tier=unit --bail=1
       - name: Check Vitest integration tier and application build before production mutation
         run: npm test -- --tier=integration --bail=1 && npm run build:check
+      - run: npm exec --workspace=@tudomacae/e2e -- playwright install --with-deps chromium
+      - name: Check E2E journeys and harness on a disposable local stack
+        run: npm run test:e2e:full -- --max-failures=1
       - name: Retain sanitized test diagnostics
         uses: actions/upload-artifact@v6
         if: always()
@@ -92,10 +101,20 @@ jobs:
           path: test-results/vitest-logs/
           retention-days: 7
           if-no-files-found: ignore
+      - name: Retain Playwright report and traces
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            tests/e2e/playwright-report/
+            tests/e2e/test-results/
+          retention-days: 7
+          if-no-files-found: ignore
 
   production:
     needs: [checks]
-    environment: cloud-run-production
+    environment: production
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -106,7 +125,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ needs.checks.outputs.sha }}
+          ref: ${{ github.sha }}
           lfs: true
           persist-credentials: false
       - uses: actions/setup-node@v5
@@ -116,8 +135,8 @@ jobs:
       - run: npm ci
       - name: Require production D1 migrations ready
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
+          CLOUDFLARE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
@@ -134,7 +153,7 @@ jobs:
           fi
       - name: Require web Worker and CI access before delivery
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           if ! ./node_modules/.bin/wrangler deployments status --config apps/web-workers/wrangler.jsonc --env production --json >/dev/null 2>&1; then
@@ -144,7 +163,7 @@ jobs:
       # The web Worker reads the API Worker, so the API publishes first.
       - name: Apply migrations, publish and read back the production API Worker
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           AUTHENTICATION_D1_ID: ed48dac0-069a-4889-8da7-71c543fe2722
           CLASSIFIEDS_D1_ID: a76337a4-7cef-4198-9711-f99a8716ea6c
@@ -167,19 +186,19 @@ jobs:
 
   workers:
     needs: [checks, production]
-    environment: cloud-run-production
+    environment: production
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
       contents: read
     env:
       RELEASE_SHA: ${{ needs.checks.outputs.sha }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+      CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
+      CLOUDFLARE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ needs.checks.outputs.sha }}
+          ref: ${{ github.sha }}
           # The web Worker bundles the app's `public/` PNGs, which live in Git LFS.
           lfs: true
           persist-credentials: false

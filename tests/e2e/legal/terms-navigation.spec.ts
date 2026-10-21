@@ -8,7 +8,7 @@ test("reader opens terms from the footer and returns to the site", async ({ page
   await click(visible.getByRole("link", { name: "Termos e Condições", exact: true }));
   await expect(page).toHaveURL(/\/termos-e-condicoes$/u);
   await expect(visible.getByRole("heading", { name: "Termos de Uso e Condições Gerais", exact: true })).toBeVisible();
-  await expect(visible.getByText("A Natureza da Plataforma", { exact: false })).toBeVisible();
+  await expect(visible.getByRole("heading", { name: "1. O que é o Tudo Macaé", exact: true })).toBeVisible();
   await expect(visible.getByRole("main")).toHaveCount(1);
   await expect(visible.getByRole("article")).toHaveCSS("-webkit-font-smoothing", "antialiased");
   await click(visible.getByRole("link", { name: "Tudo Macaé — página inicial", exact: true }));

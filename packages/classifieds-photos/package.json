@@ -13,7 +13,7 @@
     "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/classifieds-photos/tests"
   },
   "dependencies": {
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@tudomacae/ads": "*",
     "@tudomacae/public-image-delivery": "*"
   },

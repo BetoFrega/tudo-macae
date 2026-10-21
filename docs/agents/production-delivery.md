@@ -2,14 +2,17 @@
 
 [ADR 0022](../adr/0022-production-only-with-disposable-e2e.md) owns the decision;
 [deploy.yml](../../.github/workflows/deploy.yml) owns the executable pipeline.
-Delivery is manual (`workflow_dispatch`). E2E is explicit local/manual work, never
-scheduled by a pipeline or a deployment gate.
+Every push to `main` starts delivery of the pushed SHA; `workflow_dispatch` retries
+the current main. It takes no SHA input: a caller-chosen ref would run untrusted code
+in the main branch's cache scope. To restore an older release, use
+[Manual recovery](#manual-recovery).
 
-Dispatch fixes an immutable SHA: the event's main SHA by default, or an explicitly
-selected full SHA already on `origin/main`. Protection lint uses that SHA's first
+Each run fixes the event's immutable main SHA. Protection lint uses that SHA's first
 parent and still rejects protected reductions. Before production mutation, checks
-run typecheck, the web Worker build when present, lint, Worker contracts and
-both Vitest tiers plus `build:check`. Test jobs receive no production secrets or
+run typecheck, the web Worker build when present, typecheck, build and tests of
+every Worker app (PR checks cover only affected apps), lint, Worker contracts,
+both Vitest tiers plus `build:check`, and the complete E2E collection
+(`npm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
 Google identity.
 
 Delivery builds and promotes no Cloud Run revision, and the `www-origin` router
@@ -103,8 +106,7 @@ Resume that PR/head; never cancel or redispatch to clear pending work.
 Production runs share `production-delivery` with
 `queue: max` (up to 100 waiting runs). Preserve queued requests and environment waits.
 
-Before dispatch, record workflow (`deploy.yml`), ref,
-explicit `sha` input if any, UTC start (`date -u +%FT%TZ`) and active actor
+Before dispatch, record workflow (`deploy.yml`), ref, UTC start (`date -u +%FT%TZ`) and active actor
 (`gh api user --jq .login`). Retain the returned run ID/URL. If dispatch succeeds
 without details, use workflow/event/ref/actor filters with `gh run list --limit 100`
 and compare `createdAt` with the recorded start; avoid date-only filters across UTC
@@ -117,9 +119,8 @@ gh run view "$RUN_ID" --json attempt,status,conclusion,headSha,url,jobs
 ```
 
 Retain run/job/step status and conclusion, attempt, URL and full valid `headSha` as
-the **workflow-ref SHA**. The authorized candidate is the explicit input, otherwise
-that workflow-ref SHA; validate it as full lowercase 40-hex. Explicit input does not
-change `headSha`.
+the **workflow-ref SHA**, which is the authorized candidate; validate it as full
+lowercase 40-hex.
 
 Print initial state once, then run/job/step status or conclusion changes, comparing
 without volatile fields/timestamps. Use the same 30-to-60-second backoff. After
@@ -186,8 +187,8 @@ incident.
 
 ## Setup and manual retry
 
-`cloud-run-production` allows main only. For Worker delivery, it supplies variables `CLOUDFLARE_ACCOUNT_ID`
-and `CLOUDFLARE_ZONE_ID`, plus secret `CLOUDFLARE_API_TOKEN`. Scope the account-owned
+The `production` environment allows main only and supplies secret `CLOUDFLARE_API_TOKEN`.
+`deploy.yml` sets the non-secret account and `tudomacae.com.br` zone IDs. Scope the account-owned
 token to Workers Editor on the four published Workers and `tudo-macae-api-production`,
 account D1 Write and zone
 Workers Routes Read on `tudomacae.com.br`. Terms needs
@@ -202,12 +203,10 @@ Before activation, read back provider trust, environment variable/secret names,
 IAM/token permissions and routes without secret values. Trust/IAM changes require
 explicit operator authorization.
 
-After merging a correction, dispatch a fresh main run; an explicit older selection
-must be a full main SHA:
+Merging a correction starts a fresh main run. To retry without a merge, dispatch:
 
 ```sh
 gh workflow run deploy.yml --ref main
-gh workflow run deploy.yml --ref main -f sha='<full-main-sha>'
 ```
 
 Before retrying an interruption, inspect the failed run and the serving Worker
@@ -231,9 +230,10 @@ Rollback leaves D1 migrations applied.
 
 ## Verification and limits
 
-Use run steps/recovery artifacts for delivery failures and
-[Test Harness Operation](test-harness-operation.md#e2e-stack-and-preflight) for
-explicit local/manual E2E. Verify provider configuration; emulators do not prove IAM.
+Use run steps, the `playwright-<run-id>-<attempt>` report and recovery artifacts
+for delivery failures, and
+[Test Harness Operation](test-harness-operation.md#e2e-stack-and-preflight) to
+reproduce E2E locally. Verify provider configuration; emulators do not prove IAM.
 `npm run probe:edge` verifies the outer delivery contract.
 
 Reference: [GitHub concurrency](https://docs.github.com/en/actions/concepts/workflows-and-actions/concurrency).

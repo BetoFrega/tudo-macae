@@ -31,11 +31,12 @@ export default function Home() {
         "
       >
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
+            {/* At 320px and 200% text, wide fallback fonts make "Encontre" wider than the column. */}
             <h1
               id="home-discovery"
               className="
-                text-3xl font-bold tracking-tight
+                text-3xl font-bold tracking-tight wrap-anywhere
                 sm:text-4xl
               "
             >

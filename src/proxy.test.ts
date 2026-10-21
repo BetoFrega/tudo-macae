@@ -40,6 +40,10 @@ describe("authenticated document cache isolation", () => {
     }
   });
 
+  test("recognizes the machine host regardless of case and port", () => {
+    expect(proxyRuns("http://localhost/api/resource", { host: "MCP.tudomacae.com.br:443" })).toBe(true);
+  });
+
   test("keeps the API-like page slug within the document matcher", () => {
     expect(proxyRuns("http://localhost/api-guide", { host: "www.tudomacae.com.br" })).toBe(true);
   });

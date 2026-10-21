@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { CanonicalLookup } from "@tudomacae/classifieds-client/canonical";
 import { edgeRequestIdHeader, requestCorrelationId, requestCorrelationIdHeader } from "@tudomacae/www-origin-routing/contract";
 import { canonicalPageResponse, type NotFoundCopy } from "./proxyCanonicalPages";
+import { isMcpHost } from "./proxyScope";
 
 /**
  * Loaders for the canonical page lookup and the site search boundary.
@@ -14,14 +15,6 @@ export interface ProxyDependencies {
     siteSearchEnabled: (identity: string | undefined) => Promise<boolean>;
     siteSearchIdentityCookieName: () => string | undefined;
   }>;
-}
-
-const MCP_HOSTNAME = "mcp.tudomacae.com.br";
-
-function requestHostname(request: NextRequest): string {
-  return (request.headers.get("host") ?? request.nextUrl.hostname)
-    .split(":", 1)[0]
-    .toLowerCase();
 }
 
 const genericNotFound: NotFoundCopy = { heading: "Página não encontrada", message: "A página que você está procurando não existe." };
@@ -106,7 +99,7 @@ function forwardedResponse(request: NextRequest, home: boolean): NextResponse {
 
 export function createProxy(dependencies: ProxyDependencies) {
   return async function proxy(request: NextRequest): Promise<Response> {
-    if (requestHostname(request) === MCP_HOSTNAME) return mcpNotFound();
+    if (isMcpHost(request.headers.get("host") ?? request.nextUrl.hostname)) return mcpNotFound();
 
     const unavailableSearch = await siteSearchGate(request, dependencies);
     if (unavailableSearch) return unavailableSearch;

@@ -1,0 +1,31 @@
+name: E2E probe (temporary)
+
+# Temporary: reproduces the deploy's mobile-menu-navigation failure on the GitHub runner. Remove before merge.
+on:
+  pull_request:
+    paths:
+      - .github/workflows/e2e-probe.yml
+      - tests/e2e/navigation/mobile-menu-navigation.spec.ts
+      - src/**
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm exec --workspace=@tudomacae/e2e -- playwright install --with-deps chromium
+      - name: Record the runner's fonts
+        run: "fc-list : family | sort -u | head -60"
+      - run: npm run test:e2e:full -- navigation/mobile-menu-navigation.spec.ts --max-failures=1

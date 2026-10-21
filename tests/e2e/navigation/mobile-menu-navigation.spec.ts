@@ -214,6 +214,8 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
                   return {
                     zone: element.closest("header") ? "header" : element.closest("main") ? "main" : "other",
                     tag: element.tagName,
+                    className: String(element.className).slice(0, 160),
+                    text: element.textContent?.trim().slice(0, 60),
                     left: rect.left, right: rect.right, width: rect.width,
                     minWidth: style.minWidth, display: style.display,
                     flexWrap: style.flexWrap, whiteSpace: style.whiteSpace,
@@ -222,10 +224,11 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
             };
           });
           await testInfo.attach("header-overflow-geometry.json", {
-            body: JSON.stringify({ state: label, geometry }), contentType: "application/json",
+            body: JSON.stringify({ state: label, width, geometry }), contentType: "application/json",
           });
           await page.screenshot({ path: testInfo.outputPath(`header-${label}-${width}-overflow.png`) });
-          throw error;
+          // The geometry goes into the message too: the job log is readable when the report artifact is not.
+          throw new Error(`Horizontal overflow at ${width}px, font 200%, ${label}: ${JSON.stringify(geometry)}`, { cause: error });
         }
         await checkHeaderState(page, authenticated, searchEnabled);
         await recordHeaderGeometry(`${label}-${width}-zoom-200`);

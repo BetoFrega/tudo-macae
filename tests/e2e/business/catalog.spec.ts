@@ -173,7 +173,7 @@ test("visitante encontra Negócios por categoria em páginas limitadas", async (
       name: `${categoryFixture.category.name}: ${categoryFixture.subcategory.name}`,
       exact: true,
     }));
-    await expect(page).toHaveURL(new RegExp(`/negocios\?.*subcategoria=${categoryFixture.subcategory.id}`));
+    await expect(page).toHaveURL(new RegExp(`/negocios\\?.*subcategoria=${categoryFixture.subcategory.id}`));
     await expect(pageObject(page).getByRole("heading", { name: `Negócios de ${categoryFixture.subcategory.name}` })).toBeVisible();
     await expect(pageObject(page).locator("article")).toHaveCount(21);
     await expect(pageObject(page).getByRole("button", { name: "Carregar mais negócios" }))

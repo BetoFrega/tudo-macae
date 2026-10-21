@@ -1,3 +1,3 @@
 export function makeRandomString() {
-  return Math.random().toString(36).substring(2, 8);
+  return Array.from(crypto.getRandomValues(new Uint8Array(6)), byte => (byte % 36).toString(36)).join("");
 }

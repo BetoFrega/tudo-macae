@@ -19,7 +19,7 @@ const keepsState = new RegExp([
 ].join("|"));
 // Paths become include globs, and Next.js route folders such as `[id]` would
 // otherwise read as character classes.
-const literal = (file: string) => file.replace(/[[\]{}()*?!+@]/g, "\\$&");
+const literal = (file: string) => file.replace(/[\\[\]{}()*?!+@]/g, "\\$&");
 const stateful = globSync(unit.test.include, { exclude: unit.test.exclude })
   .filter((file) => keepsState.test(readFileSync(file, "utf8")))
   .map(literal);

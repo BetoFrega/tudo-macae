@@ -14,7 +14,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v5
         with:
@@ -28,4 +28,4 @@ jobs:
       - run: npm exec --workspace=@tudomacae/e2e -- playwright install --with-deps chromium
       - name: Record the runner's fonts
         run: "fc-list : family | sort -u | head -60"
-      - run: npm run test:e2e:full -- navigation/mobile-menu-navigation.spec.ts --max-failures=1
+      - run: npm run test:e2e:full -- --max-failures=1

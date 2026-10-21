@@ -26,7 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.7.0",
-    "lucide-react": "^1.48.0",
+    "lucide-react": "^1.59.0",
     "@tudomacae/design-foundations": "*",
     "@radix-ui/react-checkbox": "^1.3.12",
     "@radix-ui/react-label": "^2.1.17",

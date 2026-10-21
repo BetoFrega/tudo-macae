@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@tudomacae/text-normalization": "*",
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@tudomacae/public-image-delivery": "*"
   },
   "devDependencies": {

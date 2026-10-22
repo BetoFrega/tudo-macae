@@ -11,8 +11,18 @@ test("exposes route-aware TypeScript validation without starting the application
 });
 
 test("keeps pre-push limited to the fast typecheck", () => {
-  const prePush = readFileSync(".husky/pre-push", "utf8").trim();
+  const commands = readFileSync(".husky/pre-push", "utf8")
+    .split("\n")
+    .map(line => line.trim())
+    .filter(line => line && !line.startsWith("#"));
 
-  expect(prePush).toBe("npm run typecheck");
-  expect(prePush).not.toMatch(/build|emulator|playwright|test:e2e/);
+  expect(commands.filter(line => line.startsWith("npm "))).toEqual(["npm run typecheck"]);
+  expect(commands.join("\n")).not.toMatch(/build|emulator|playwright|test:e2e/);
+});
+
+test("uploads Git LFS objects before the typecheck consumes pre-push stdin", () => {
+  const prePush = readFileSync(".husky/pre-push", "utf8");
+
+  expect(prePush.indexOf("git lfs pre-push \"$@\"")).toBeGreaterThan(-1);
+  expect(prePush.indexOf("git lfs pre-push \"$@\"")).toBeLessThan(prePush.indexOf("npm run typecheck"));
 });

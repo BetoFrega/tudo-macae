@@ -145,7 +145,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "@vitejs/plugin-rsc": "^0.5.38",
     "babel-plugin-react-compiler": "1.0.0",
-    "dependency-cruiser": "^18.5.0",
+    "dependency-cruiser": "^18.6.0",
     "eslint": "^10.13.0",
     "eslint-config-next": "^16.4.2",
     "eslint-plugin-better-tailwindcss": "^4.9.1",

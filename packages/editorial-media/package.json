@@ -21,5 +21,5 @@
     "@tudomacae/media": "*",
     "zod": "^4.6.7"
   },
-  "devDependencies": { "typescript": "^6", "vitest": "^5.0.3", "@types/node": "^26" }
+  "devDependencies": { "typescript": "^6", "vitest": "^5.0.5", "@types/node": "^26" }
 }

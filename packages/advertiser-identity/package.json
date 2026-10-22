@@ -36,7 +36,7 @@
     "@tudomacae/text-normalization": "*",
     "@tudomacae/public-image-delivery": "*",
     "@tudomacae/media": "*",
-    "lucide-react": "^1.48.0"
+    "lucide-react": "^1.59.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

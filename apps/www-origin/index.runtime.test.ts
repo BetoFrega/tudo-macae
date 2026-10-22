@@ -61,7 +61,6 @@ beforeAll(() => {
           modulesRoot: temporaryDirectory,
         },
         name: "www-origin-runtime-test",
-        type: "worker",
       },
       dev: {
         outboundService: {

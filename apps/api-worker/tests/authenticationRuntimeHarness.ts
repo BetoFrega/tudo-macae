@@ -118,7 +118,6 @@ export async function start(activate = true, classifiedsQualification = false, h
       {
         config: {
           name: "authentication-test",
-          type: "worker",
           compatibilityDate: "2026-09-25",
           compatibilityFlags: ["nodejs_compat"],
           env: {

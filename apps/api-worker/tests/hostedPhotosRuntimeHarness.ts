@@ -32,7 +32,7 @@ beforeEach(async () => {
   now = 1_800_000_000_000;
   directory = await mkdtemp(join(tmpdir(), "hosted-photos-"));
   options = { resourcePersistencePath: directory, workers: [{ config: {
-    name: "hosted", type: "worker", compatibilityDate: "2026-09-25",
+    name: "hosted", compatibilityDate: "2026-09-25",
     env: { CLASSIFIEDS_DB: { type: "d1", id: "hosted" }, IMAGES: { type: "images" } },
     manifest: { mainModule: "worker.js", modules: { "worker.js": { type: "esm", contents: "export default { fetch() { return new Response('ok'); } };" } }, modulesRoot: directory },
   } }] };

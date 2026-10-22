@@ -85,7 +85,6 @@ export function startRuntime(): void {
         },
         manifest: bundleManifest(),
         name: "public-images-runtime-test",
-        type: "worker",
       },
       dev: {
         outboundService: {
@@ -129,7 +128,6 @@ export function startProductionRuntime(
         },
         manifest: bundleManifest(),
         name: "public-images-production-runtime-test",
-        type: "worker",
       },
       dev: { outboundService: { type: "fetcher", handler: async request => outbound(request) } },
     }],

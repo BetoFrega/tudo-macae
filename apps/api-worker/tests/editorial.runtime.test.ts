@@ -49,7 +49,7 @@ beforeEach(async () => {
   const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;
   runtime = new Miniflare({
     workers: [{ config: {
-      name: "editorial-test", type: "worker", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
+      name: "editorial-test", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
       env: { EDITORIAL_DB: { type: "d1", id: "editorial-test" }, GATE: { type: "fetcher", handler: async (request) => {
         const gate = gates.get(new URL(request.url).pathname.slice(1));
         gate?.entered();

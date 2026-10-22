@@ -16,7 +16,7 @@
     "@tudomacae/editorial-access": "*",
     "@tudomacae/editorial-sourcing": "*",
     "@tudomacae/text-normalization": "*",
-    "lucide-react": "^1.48.0"
+    "lucide-react": "^1.59.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json"

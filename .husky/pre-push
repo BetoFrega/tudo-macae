@@ -1,1 +1,8 @@
+# Husky owns core.hooksPath, so `git lfs install` cannot add its own pre-push.
+# Without this call, a pushed PNG reaches the remote as a pointer with no LFS
+# object and CI checkouts with `lfs: true` fail. It must run first: it reads the
+# refs Git sends on stdin. Without git-lfs installed, no local LFS objects exist.
+if command -v git-lfs >/dev/null 2>&1; then
+  git lfs pre-push "$@"
+fi
 npm run typecheck

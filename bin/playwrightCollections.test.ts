@@ -1,5 +1,6 @@
 import { execFile } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
@@ -9,6 +10,8 @@ import { expect, test } from "vitest";
 const inWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
 
 const execute = promisify(execFile);
+// The e2e workspace owns @playwright/test; npm may nest it there instead of hoisting it to the root.
+const playwrightCli = createRequire(resolve("tests/e2e/package.json")).resolve("@playwright/test/cli");
 type Suite = { suites?: Suite[]; specs?: { file: string; title: string }[] };
 
 function identities(suite: Suite): string[] {
@@ -20,7 +23,7 @@ function identities(suite: Suite): string[] {
 
 async function collect(config: string, env = process.env) {
   const { stdout } = await execute(process.execPath, [
-    resolve("node_modules/@playwright/test/cli.js"), "test", `--config=${config}`,
+    playwrightCli, "test", `--config=${config}`,
     "--list", "--reporter=json",
   ], { env, maxBuffer: 8 * 1024 * 1024 });
   return identities(JSON.parse(stdout));

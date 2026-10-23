@@ -54,7 +54,7 @@ module.exports = {
       name: "workspace-package-to-app",
       severity: "error",
       from: { path: "^packages/" },
-      to: { path: "^(?:apps/|workers/|src/(?!packages/))" },
+      to: { path: "^(?:apps/|src/(?!packages/))" },
     },
     {
       name: "app-to-app",
@@ -66,7 +66,7 @@ module.exports = {
       name: "workspace-app-to-legacy-app",
       severity: "error",
       from: { path: "^apps/" },
-      to: { path: "^(?:workers/|src/(?!packages/))" },
+      to: { path: "^src/(?!packages/)" },
     },
     {
       name: "workspace-dependencies-declared",

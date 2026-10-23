@@ -21,7 +21,7 @@ test's location.
 
 - **Worker runtime (Vitest):** Worker behaviour that depends on its real
   bindings (D1, R2, Images) under the local Workers runtime. Name it
-  `*.runtime.test.ts` under `apps/`, `workers/` or `bin/`, the only paths
+  `*.runtime.test.ts` under `apps/` or `bin/`, the only paths
   `vitest.worker.config.mts` collects, and run it with
   `npm run test:worker -- <paths>`; it binds local ports.
 

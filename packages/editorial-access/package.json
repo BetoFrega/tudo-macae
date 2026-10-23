@@ -4,7 +4,6 @@
   "type": "module",
   "exports": {
     "./editorAuthorization": "./editorAuthorization.ts",
-    "./errors": "./errors.ts",
     "./activity": "./activity.ts",
     "./caller": "./caller.ts"
   },

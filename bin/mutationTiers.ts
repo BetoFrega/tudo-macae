@@ -32,7 +32,6 @@ export const unitMutationTierByName = {
       "packages/editorial-access/activity.ts",
       "packages/editorial-media/mediaCorrectionPolicy.ts",
       "packages/editorial-media/mediaCorrection.ts",
-      "packages/editorial-planning/lib/storyPriority.ts",
       "packages/editorial-sourcing/sourcePermissionCapabilities.ts",
       "packages/editorial-sourcing/sourcePermissionPolicy.ts",
       "packages/ads/lib/adListingTags.ts",

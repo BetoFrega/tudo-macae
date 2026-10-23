@@ -3,9 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./eligibility": "./eligibility.ts",
-    "./priority": "./priority.ts",
-    "./types": "./types.ts"
+    "./eligibility": "./eligibility.ts"
   },
   "dependencies": {
     "@tudomacae/react-primitives": "*",

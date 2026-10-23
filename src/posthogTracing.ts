@@ -1,10 +1,11 @@
 import { RequestCorrelationPropagator } from "@tudomacae/www-origin-routing/correlation";
+import { context, propagation, trace } from "@opentelemetry/api";
+import { AsyncLocalStorageContextManager } from "@opentelemetry/context-async-hooks";
 import { CompositePropagator, ExportResultCode, W3CTraceContextPropagator } from "@opentelemetry/core";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
-import { AlwaysOffSampler, BatchSpanProcessor, TraceIdRatioBasedSampler } from "@opentelemetry/sdk-trace-base";
-import type { ReadableSpan, SpanExporter } from "@opentelemetry/sdk-trace-base";
-import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+import { AlwaysOffSampler, BatchSpanProcessor, TraceIdRatioBasedSampler, TracerProvider } from "@opentelemetry/sdk-trace";
+import type { ReadableSpan, SpanExporter } from "@opentelemetry/sdk-trace";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 export const posthogTracingFlagKey = "server-tracing";
@@ -20,7 +21,7 @@ const operationNames = new Set([
   "NextNodeServer.createComponentTree",
   "ResolveMetadata.generateMetadata",
 ]);
-let tracerProvider: NodeTracerProvider | undefined;
+let tracerProvider: TracerProvider | undefined;
 
 export type TracingEnvironment = "production" | "development" | "test" | "build" | "qualification";
 
@@ -146,13 +147,21 @@ export function createSafeTraceExporter(
   };
 }
 
+// Next.js spans run across async boundaries, so parent/child links need the
+// AsyncLocalStorage context manager besides the provider and the propagator.
+function registerGlobally(provider: TracerProvider, propagator: CompositePropagator) {
+  trace.setGlobalTracerProvider(provider);
+  context.setGlobalContextManager(new AsyncLocalStorageContextManager().enable());
+  propagation.setGlobalPropagator(propagator);
+}
+
 export async function registerPosthogTracing() {
   const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
   if (tracerProvider) return;
   const propagator = new CompositePropagator({ propagators: [new W3CTraceContextPropagator(), new RequestCorrelationPropagator()] });
   if (!projectToken?.startsWith("phc_")) {
-    tracerProvider = new NodeTracerProvider({ sampler: new AlwaysOffSampler() });
-    tracerProvider.register({ propagator });
+    tracerProvider = new TracerProvider({ sampler: new AlwaysOffSampler() });
+    registerGlobally(tracerProvider, propagator);
     return;
   }
   const environment = tracingEnvironment(process.env);
@@ -162,16 +171,17 @@ export async function registerPosthogTracing() {
     headers: { Authorization: `Bearer ${projectToken}` },
     timeoutMillis: 5000,
   }), enabled, environment, process.env.SOURCE_SHA ?? process.env.K_REVISION ?? "local");
-  tracerProvider = new NodeTracerProvider({
+  tracerProvider = new TracerProvider({
     sampler: new TraceIdRatioBasedSampler(0.1),
-    spanProcessors: [new BatchSpanProcessor(exporter, {
+    spanProcessors: [new BatchSpanProcessor({
+      exporter,
       maxQueueSize: 512,
       maxExportBatchSize: 128,
       scheduledDelayMillis: 1000,
       exportTimeoutMillis: 8000,
     })],
   });
-  tracerProvider.register({ propagator });
+  registerGlobally(tracerProvider, propagator);
 }
 
 // Route handlers with explicit spans can await this inside next/server's after()

@@ -1,7 +1,7 @@
 import { requestCorrelationContextKey } from "@tudomacae/www-origin-routing/correlation";
 import { context, createTraceState, propagation, ROOT_CONTEXT, SpanStatusCode, trace } from "@opentelemetry/api";
 import { resourceFromAttributes } from "@opentelemetry/resources";
-import { BasicTracerProvider, InMemorySpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { InMemorySpanExporter, SimpleSpanProcessor, TracerProvider } from "@opentelemetry/sdk-trace";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { createSafeTraceExporter, createTracingFlagDecision, registerPosthogTracing, tracingEnvironment } from "./posthogTracing";
 
@@ -92,20 +92,29 @@ describe("tracing release state", () => {
 
 test("registers the provider without a startup flag decision and only once", async () => {
   vi.resetModules();
-  const { NodeTracerProvider } = await import("@opentelemetry/sdk-trace-node");
+  const api = await import("@opentelemetry/api");
   const { registerPosthogTracing: registerFresh } = await import("./posthogTracing");
   vi.stubEnv("NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN", "phc_test");
-  const register = vi.spyOn(NodeTracerProvider.prototype, "register").mockImplementation(() => {});
+  const register = vi.spyOn(api.trace, "setGlobalTracerProvider");
   const fetchFlag = vi.spyOn(globalThis, "fetch");
   try {
     await registerFresh();
     await registerFresh();
     expect(register).toHaveBeenCalledOnce();
     expect(fetchFlag).not.toHaveBeenCalled();
+    const key = api.createContextKey("async-boundary");
+    const active = api.ROOT_CONTEXT.setValue(key, "kept");
+    expect(await api.context.with(active, async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      return api.context.active().getValue(key);
+    })).toBe("kept");
   }
   finally {
     register.mockRestore();
     fetchFlag.mockRestore();
+    api.context.disable();
+    api.trace.disable();
+    api.propagation.disable();
   }
 });
 
@@ -113,8 +122,8 @@ describe("trace ingestion boundary", () => {
   test("changes ingestion on a running provider when the flag changes", async () => {
     let enabled = false;
     const sink = new InMemorySpanExporter();
-    const provider = new BasicTracerProvider({
-      spanProcessors: [new SimpleSpanProcessor(createSafeTraceExporter(sink, async () => enabled, "test", "release-1"))],
+    const provider = new TracerProvider({
+      spanProcessors: [new SimpleSpanProcessor({ exporter: createSafeTraceExporter(sink, async () => enabled, "test", "release-1") })],
     });
     const tracer = provider.getTracer("test");
     try {
@@ -137,9 +146,9 @@ describe("trace ingestion boundary", () => {
 
   test.each([true, false])("sanitizes real SDK spans and respects the release decision (%s)", async (enabled) => {
     const sink = new InMemorySpanExporter();
-    const provider = new BasicTracerProvider({
+    const provider = new TracerProvider({
       resource: resourceFromAttributes({ "host.name": "secret" }),
-      spanProcessors: [new SimpleSpanProcessor(createSafeTraceExporter(sink, async () => enabled, "test", "release-1"))],
+      spanProcessors: [new SimpleSpanProcessor({ exporter: createSafeTraceExporter(sink, async () => enabled, "test", "release-1") })],
     });
     const parent = { traceId: "a".repeat(32), spanId: "b".repeat(16), traceFlags: 1, traceState: createTraceState("private=secret") };
     const span = provider.getTracer("secret").startSpan("GET /secret?token=secret", {

@@ -165,7 +165,7 @@
     "typescript": "^6",
     "vinext": "^1.0.1",
     "vitest": "^5.0.5",
-    "wrangler": "^4.149.0",
+    "wrangler": "^4.151.2",
     "yaml": "^2.9.1"
   },
   "type": "module",

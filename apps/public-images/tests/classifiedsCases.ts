@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, test, vi } from "vitest";
-import { startProductionRuntime } from "./runtimeFixture";
+import { cacheWriteSettled, startProductionRuntime } from "./runtimeFixture";
 
 const classifiedsOrigin = "https://classifieds.test";
 const image = () => new Response(readFileSync(new URL("../../../public/favicon-32x32.png", import.meta.url)), { headers: { "content-type": "image/png" } });
@@ -22,6 +22,7 @@ export function registerClassifiedsCases(): void {
       expect(source.origin).toBe(classifiedsOrigin);
       expect(source.pathname).toBe("/api/classifieds/photos/public/ad-images%2Fad-1%2Fproduction.webp");
 
+      await cacheWriteSettled(runtime, url, "image/webp");
       const warm = await runtime.dispatchFetch(url, { headers: { accept: "image/webp" } });
       expect(warm.status).toBe(200);
       expect(warm.headers.get("x-image-cache")).toBe("hit");

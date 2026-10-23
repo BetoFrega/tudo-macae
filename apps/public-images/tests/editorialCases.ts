@@ -4,6 +4,7 @@ import { publicImageCacheGeneration, publicImageCacheTag } from "@tudomacae/publ
 import { expect, test } from "vitest";
 import {
   boundOriginRequests,
+  cacheWriteSettled,
   editorialRequestIds,
   flagRequests,
   retiredImageSuffixes,
@@ -131,6 +132,7 @@ export function registerEditorialCases(): void {
     expect(cold.headers.get("cache-control")).toBe("private, no-store");
     expect((await cold.arrayBuffer()).byteLength).toBeGreaterThan(0);
     expect(boundOriginRequests).toBe(before + 2);
+    await cacheWriteSettled(runtime, url);
     const warm = await runtime.dispatchFetch(url, {
       headers: { cookie: "unrelated=visitor", authorization: "Bearer preview" },
     });

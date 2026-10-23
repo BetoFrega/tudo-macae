@@ -2,7 +2,9 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { expect } from "vitest";
+import { publicImageCacheGeneration } from "@tudomacae/public-image-delivery/cacheTag";
+import { negotiatedImageFormat } from "@tudomacae/public-image-delivery/contract";
+import { expect, vi } from "vitest";
 import { Miniflare, type Request as MiniflareRequest } from "miniflare";
 
 const temporaryDirectory = mkdtempSync(join(tmpdir(), "public-image-worker-"));
@@ -103,6 +105,19 @@ export function startRuntime(): void {
       },
     }],
   });
+}
+
+/**
+ * Waits for the cache write a miss on `url` deferred through `waitUntil`; `dispatchFetch` resolves
+ * before deferred work, so a warm read issued right away races it. `accept` defaults to the
+ * any-type range undici sends when the request names none.
+ */
+export async function cacheWriteSettled(worker: Miniflare, url: string, accept = "*/*"): Promise<void> {
+  const key = new URL(url.replace("/v1/remaining/", "/v1/"));
+  key.searchParams.set("generation", publicImageCacheGeneration);
+  key.searchParams.set("format", negotiatedImageFormat(accept));
+  const cache = (await worker.getCaches()).default;
+  await vi.waitFor(async () => expect(await cache.match(key.href)).toBeDefined());
 }
 
 function bundleManifest() {

@@ -17,7 +17,8 @@ const { overrides } = require('./package.json');
 const { packages } = require('./package-lock.json');
 const parents = {
   'typed-rest-client': ['qs'], nx: ['axios', 'brace-expansion', 'smol-toml'],
-  miniflare: ['undici'], satori: ['fflate'],
+  satori: ['fflate'], '@tailwindcss/typography': ['postcss-selector-parser'],
+  'micromark-extension-math': ['katex'],
 };
 console.log({ overrides });
 for (const [name, children] of Object.entries(parents)) {
@@ -50,8 +51,9 @@ Esses manifestos históricos foram conferidos em 2026-10-04.
 | `nx` → `axios@1.20.0` | [Axios 1.20.0](#advisories-de-axios-1200) | `nx@23.2.1` pina `axios@1.18.1` | `nx` aceitar `axios@>=1.20.0` e resolver uma versão sem advisories após remover o override |
 | `nx` → `brace-expansion@5.0.12` | GHSA-q2hr-2g5m-vwhr, GHSA-qhr7-859c-m2p7, GHSA-6j4f-fj2g-mc7p | `nx@23.2.1` pina `brace-expansion@5.0.9` | `nx` aceitar `brace-expansion@>=5.0.12` e resolver uma versão sem advisories após remover o override |
 | `nx` → `smol-toml@1.7.1` | GHSA-7w5x-hrqm-74c2 | `nx@23.2.1` pina `smol-toml@1.6.1` | `nx` aceitar `smol-toml@>=1.7.1` e resolver uma versão sem advisories após remover o override |
-| `miniflare` → `undici@7.29.1` | [Undici 7.29.1](#advisories-de-undici-7291) | As cópias `5.20260918.0-alpha` e `5.20260926.0-alpha` pinam `undici@7.29.0` | Todas as cópias de `miniflare`, inclusive via Vite e Wrangler, aceitarem e resolverem Undici corrigido sem o override; na versão principal 7, o mínimo é `7.29.1` |
 | `satori` → `fflate@0.7.5` | GHSA-px8p-9vwx-vf98 | `satori@0.33.5` pina `fflate@0.7.3` | `satori` aceitar `fflate@>=0.7.5` e resolver uma versão sem advisories após remover o override |
+| `@tailwindcss/typography` → `postcss-selector-parser@7.1.7` | GHSA-rj75-hqrm-r3gf | `@tailwindcss/typography@0.5.20` pina `postcss-selector-parser@6.0.10` | `@tailwindcss/typography` aceitar `postcss-selector-parser@>=7.1.6` e resolver uma versão sem advisories após remover o override |
+| `micromark-extension-math` → `katex@0.19.0` | GHSA-238p-pmpm-9mq7 | `micromark-extension-math@3.1.0` pede `katex@^0.16.0` | `micromark-extension-math` aceitar `katex@>=0.18.2` e resolver uma versão sem advisories após remover o override |
 
 ### Advisories de Axios 1.20.0
 
@@ -60,18 +62,16 @@ GHSA-mghh-pgcx-3jjj, GHSA-x97p-jq2g-jp4f, GHSA-3pq3-5fj3-cg6v,
 GHSA-542g-h47m-68v8, GHSA-j8rh-479h-cp32, GHSA-4hqw-qxg8-jxx2,
 GHSA-m8m8-qj5v-23w3, GHSA-44g4-m2mj-wpvx, GHSA-r4gj-5m52-g5wh.
 
-### Advisories de Undici 7.29.1
-
-GHSA-3wwx-pv8p-q78v, GHSA-pmjh-fq2x-6v4x, GHSA-r53p-7pc4-xj5r,
-GHSA-rfgv-xxqx-mfg5, GHSA-3xpg-4rpp-hhhm, GHSA-2jfj-6hjv-fm6j,
-GHSA-2gqq-gqf2-x968, GHSA-w293-vg96-wgc3, GHSA-8436-99hf-9mmv,
-GHSA-rx4f-c7p8-82vq.
-
 ### Compatibilidade dos consumidores
 
 Os consumidores de `qs` com ranges compatíveis resolvem pelo lockfile, sem
 override. `express@4.22.3` e `body-parser@1.20.8` aceitam `qs@~6.16.0`;
 confira os ranges com `npm view express@4.22.3 dependencies.qs` e
-`npm view body-parser@1.20.8 dependencies.qs`. O override de `miniflare`
-preserva as outras versões principais de Undici; o de `satori` preserva os
-outros consumidores de `fflate`.
+`npm view body-parser@1.20.8 dependencies.qs`. O override de `satori` preserva
+os outros consumidores de `fflate`.
+
+Os dois overrides de major cruzado usam só APIs que sobreviveram ao bump, conferido
+em 2026-10-23: `@tailwindcss/typography` chama `astSync`, `selector()` e `remove()`
+(`grep -n "parser" node_modules/@tailwindcss/typography/src/utils.js`), e
+`micromark-extension-math` chama `katex.renderToString`
+(`grep -n katex node_modules/micromark-extension-math/lib/html.js`).

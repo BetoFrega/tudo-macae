@@ -2,6 +2,7 @@ import { createPublicImagePurger } from "@tudomacae/public-image-delivery/purge"
 import { publicImageCacheGeneration, publicImageCacheTag } from "@tudomacae/public-image-delivery/cacheTag";
 import { expect, test, vi } from "vitest";
 import {
+  cacheWriteSettled,
   flagRequests,
   retiredImageSuffixes,
   runtime,
@@ -17,6 +18,7 @@ export function registerProfileCases(): void {
     const keys = [];
     for (const format of ["avif", "webp", "jpeg"]) {
       expect((await runtime.dispatchFetch(alias, { headers: { accept: `image/${format}` } })).status).toBe(200);
+      await cacheWriteSettled(runtime, alias, `image/${format}`);
       expect((await runtime.dispatchFetch(definitive, { headers: { accept: `image/${format}` } })).headers.get("x-image-cache")).toBe("hit");
       const cached = new URL(definitive);
       cached.searchParams.set("generation", publicImageCacheGeneration);
@@ -43,6 +45,7 @@ export function registerProfileCases(): void {
     expect(layers).toEqual(["worker", "resizing"]);
     for (const path of keys) expect(await cache.match(path)).toBeUndefined();
     expect((await runtime.dispatchFetch(alias, { headers: { accept: "image/avif" } })).headers.get("x-image-cache")).toBe("miss");
+    await cacheWriteSettled(runtime, alias, "image/avif");
     expect((await runtime.dispatchFetch(definitive, { headers: { accept: "image/avif" } })).headers.get("x-image-cache")).toBe("hit");
   });
 
@@ -60,6 +63,7 @@ export function registerProfileCases(): void {
       const bytes = (await response.arrayBuffer()).byteLength;
       if (method === "HEAD") expect(bytes).toBe(0);
       else expect(bytes).toBeGreaterThan(0);
+      await cacheWriteSettled(runtime, url);
       const adopted = await runtime.dispatchFetch(definitive, { method });
       expect(adopted.headers.get("x-image-cache")).toBe("hit");
       expect(adopted.headers.get("cache-control")).toBe("public, max-age=30");
@@ -114,6 +118,7 @@ export function registerProfileCases(): void {
         const bytes = (await response.arrayBuffer()).byteLength;
         if (method === "HEAD") expect(bytes).toBe(0);
         else expect(bytes).toBeGreaterThan(0);
+        if (attempt === "miss") await cacheWriteSettled(runtime, url);
       }
     }
   });

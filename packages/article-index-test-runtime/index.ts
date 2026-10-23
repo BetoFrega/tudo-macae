@@ -38,7 +38,7 @@ export async function createArticleIndexTestRuntime(
     const bundle = (await readdir(directory)).find(name => name.endsWith(".js"));
     if (!bundle) throw new Error("Article index Worker bundle missing");
     runtime = new Miniflare({ workers: [{ config: {
-      name: "article-index-test", type: "worker", compatibilityDate: "2026-09-22",
+      name: "article-index-test", compatibilityDate: "2026-09-22",
       env: { DB: { type: "d1", id: "article-index-test" },
         OIDC_AUDIENCE: { type: "json", value: TEST_ARTICLE_INDEX_ORIGIN },
         OIDC_SERVICE_ACCOUNT: { type: "json", value: serviceAccount } },
@@ -48,7 +48,7 @@ export async function createArticleIndexTestRuntime(
       return MiniflareResponse.json(testIdentity.jwks);
     } } } }, { config: {
       // A bound caller reaches the writer entrypoint the way the API Worker's service binding does.
-      name: "article-index-caller", type: "worker", compatibilityDate: "2026-09-22",
+      name: "article-index-caller", compatibilityDate: "2026-09-22",
       env: { INDEX: { type: "worker", worker: "article-index-test", exportName: "ArticleIndexWriter" },
         READER: { type: "worker", worker: "article-index-test", exportName: "ArticleIndexReader" } },
       manifest: { mainModule: "caller.js", modulesRoot: directory, modules: { "caller.js": { type: "esm", contents: callerScript } } },

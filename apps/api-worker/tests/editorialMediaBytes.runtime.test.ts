@@ -45,7 +45,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;
   runtime = new Miniflare({ workers: [{ config: {
-    name: "editorial-media-bytes", type: "worker", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
+    name: "editorial-media-bytes", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
     env: { EDITORIAL_DB: { type: "d1", id: "editorial-media-bytes" }, IMAGES: { type: "images" }, HOSTED: { type: "r2", name: "hosted" } },
     manifest: { mainModule: bundle, modules: { [bundle]: { type: "esm", contents: await readFile(join(directory, bundle), "utf8") } }, modulesRoot: directory },
   } }] });

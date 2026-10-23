@@ -1,5 +1,6 @@
 import { expect, test, vi } from "vitest";
 import {
+  cacheWriteSettled,
   flagRequests,
   originRequests,
   retiredImageSuffixes,
@@ -15,6 +16,7 @@ export function registerDeliveryCases(): void {
     });
     expect(cold.status).toBe(200);
     expect(cold.headers.get("x-image-cache")).toBe("miss");
+    await cacheWriteSettled(runtime, url, "image/avif,image/webp");
 
     const warm = await runtime.dispatchFetch(url, {
       headers: { accept: "image/avif,image/webp" },

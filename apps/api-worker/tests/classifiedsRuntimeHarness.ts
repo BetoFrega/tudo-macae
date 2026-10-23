@@ -57,7 +57,7 @@ beforeEach(async () => {
   options = {
     resourcePersistencePath: join(directory, crypto.randomUUID()),
     workers: [{ config: {
-      name: "classifieds-test", type: "worker", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
+      name: "classifieds-test", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
       env: { CLASSIFIEDS_DB: { type: "d1", id: "classifieds-test" }, GATE: { type: "fetcher", handler: async (request) => {
         const gate = gates.get(new URL(request.url).pathname.slice(1));
         gate?.entered();

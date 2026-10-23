@@ -11,7 +11,7 @@ let db: D1Database;
 let directory: string;
 beforeEach(async () => {
   directory = await mkdtemp(join(tmpdir(), "classifieds-authority-"));
-  runtime = new Miniflare({ resourcePersistencePath: directory, workers: [{ config: { name: "authority", type: "worker", compatibilityDate: "2026-09-25", env: { CLASSIFIEDS_DB: { type: "d1", id: "authority" } },
+  runtime = new Miniflare({ resourcePersistencePath: directory, workers: [{ config: { name: "authority", compatibilityDate: "2026-09-25", env: { CLASSIFIEDS_DB: { type: "d1", id: "authority" } },
     manifest: { mainModule: "worker.js", modules: { "worker.js": { type: "esm", contents: "export default { fetch() { return new Response('ok'); } };" } }, modulesRoot: directory } } }] });
   await runtime.ready;
   db = await runtime.getD1Database("CLASSIFIEDS_DB");

@@ -22,7 +22,7 @@ beforeAll(() => {
   if (!bundle) throw new Error("Search Worker bundle missing");
   runtime = new Miniflare({ workers: [{
     config: {
-      name: "site-search-runtime-test", type: "worker", compatibilityDate: "2026-09-22",
+      name: "site-search-runtime-test", compatibilityDate: "2026-09-22",
       env: {
         OIDC_AUDIENCE: { type: "json", value: "https://search.test" },
         OIDC_SERVICE_ACCOUNT: { type: "json", value: account },

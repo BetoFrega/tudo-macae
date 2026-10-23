@@ -62,7 +62,6 @@ export async function startAuthenticationFixture({
         {
           config: {
             name: "authentication-e2e",
-            type: "worker",
             compatibilityDate: "2026-09-25",
             compatibilityFlags: ["nodejs_compat"],
             env: {

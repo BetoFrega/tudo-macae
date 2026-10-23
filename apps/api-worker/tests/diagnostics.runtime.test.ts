@@ -30,7 +30,7 @@ beforeAll(async () => {
   if (!bundle) throw new Error("Diagnostic fixture bundle missing");
   runtime = new Miniflare({
     workers: [{ config: {
-      name: "diagnostics-test", type: "worker", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
+      name: "diagnostics-test", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
       manifest: { mainModule: bundle, modules: { [bundle]: { type: "esm", contents: await readFile(join(directory, bundle), "utf8") } }, modulesRoot: directory },
       env: { AUTHENTICATION_DB: { type: "d1", id: "diagnostics-authentication" }, CLASSIFIEDS_DB: { type: "d1", id: "diagnostics-classifieds" },
         WORKERS_ENVIRONMENT: { type: "json", value: "qualification" },

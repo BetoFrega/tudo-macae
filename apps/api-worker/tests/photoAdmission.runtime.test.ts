@@ -46,7 +46,7 @@ beforeEach(async () => {
   writes = 0;
   directory = await mkdtemp(join(tmpdir(), "photo-admission-"));
   options = { resourcePersistencePath: directory, workers: [{ config: {
-    name: "admission", type: "worker", compatibilityDate: "2026-09-25", env: { CLASSIFIEDS_DB: { type: "d1", id: "admission" } },
+    name: "admission", compatibilityDate: "2026-09-25", env: { CLASSIFIEDS_DB: { type: "d1", id: "admission" } },
     manifest: { mainModule: "worker.js", modules: { "worker.js": { type: "esm", contents: "export default { fetch() { return new Response('ok'); } };" } }, modulesRoot: directory },
   } }] };
   runtime = new Miniflare(options);

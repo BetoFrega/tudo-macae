@@ -1,3 +1,4 @@
+// Structural copies of the persistence packages' contracts, kept local so neither domain depends on the other; each adapter must stay assignable to them.
 type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 type OperationIntent = { actorId: string; key: string; operation: string; input: Json };
 type RecordShape<K extends string> = { kind: K; id: string; body: { [key: string]: Json }; namespace?: string; sourceVersion?: string };
@@ -35,7 +36,7 @@ export interface D1TransactionDomain<K extends string, I extends RecordShape<K>,
   receipt(intent: OperationIntent, result: Json): D1PreparedStatement;
 }
 
-export function createD1Transactions<K extends string, I extends RecordShape<K>, S extends I, Q, P extends { scope: string; version: number }>(
+export function createD1TransactionRunner<K extends string, I extends RecordShape<K>, S extends I, Q, P extends { scope: string; version: number }>(
   domain: D1TransactionDomain<K, I, S, Q, P>,
 ) {
   const { Conflict, Limit, limits, stableJson, byteLength, codec, pointScope, readPoint } = domain;

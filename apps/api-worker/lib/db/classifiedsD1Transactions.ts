@@ -2,7 +2,7 @@ import { PersistenceConflict, PersistenceLimit, type RecordInput } from "@tudoma
 import { byteLength, createClassifiedsArtifactIndex, persistenceLimits, stableJson } from "@tudomacae/classifieds-persistence/records";
 import { isAdImagePath } from "@tudomacae/ads/imagePath";
 import { adImageCleanupJobId } from "@tudomacae/ads/imageCleanupJob";
-import { createD1Transactions as createSharedD1Transactions } from "./d1Transactions";
+import { createD1TransactionRunner } from "./d1Transactions";
 import { codec, isGuardConflict, pointScope, type D1Statements, type Epoch } from "./classifiedsD1Statements";
 import type { createD1Reads } from "./classifiedsD1Reads";
 import type { createD1Receipts } from "./classifiedsD1Receipts";
@@ -42,7 +42,7 @@ export function createD1Transactions(
     }
     return statements;
   }
-  return createSharedD1Transactions({
+  return createD1TransactionRunner({
     Conflict: PersistenceConflict, Limit: PersistenceLimit, limits: { ...persistenceLimits, reads: 32 }, stableJson, byteLength,
     codec, pointScope, readPoint, page, guard, isGuardConflict, replay, receipt, write,
     epochs: async scopes => (await batch(scopes.map(epochSql), "read")).map(result => (result.results[0] as Epoch).version),

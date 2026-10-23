@@ -6,7 +6,7 @@ import { unauthorized } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/features/authentication/actions/getCurrentUser";
 import { getCategoriesLive } from "@/features/categories/actions/getCategories";
-import { listUserAds } from "../actions/listUserAds";
+import { listAdsByUserUseCase } from "@/integrations/ads/use-cases/listAdsByUserUseCase";
 import { UserAdListClient } from "./UserAdListClient";
 import { removeUndefinedFields } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ export default async function UserAdList() {
   if (!user) unauthorized();
 
   const [ads, categories, publications, profiles] = await Promise.all([
-    listUserAds({ userId: user.uid }),
+    listAdsByUserUseCase({ userId: user.uid }),
     getCategoriesLive(),
     listPublications(user.uid),
     getUserAdvertiserProfiles(),

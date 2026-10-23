@@ -61,8 +61,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!apps/**",
-        "!packages/**",
-        "!workers/**"
+        "!packages/**"
       ]
     },
     "//#typecheck": {
@@ -73,8 +72,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!apps/**",
-        "!packages/**",
-        "!workers/**"
+        "!packages/**"
       ]
     },
     "//#test": {
@@ -86,8 +84,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!apps/**",
-        "!packages/**",
-        "!workers/**"
+        "!packages/**"
       ]
     },
     "deploy": {

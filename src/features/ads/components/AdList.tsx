@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { getCategories } from "@/features/categories/actions/getCategories";
-import { listAds } from "../actions/listAds";
+import { listAdsUseCase } from "@/integrations/ads/use-cases/listAdsUseCase";
 import { AdGrid } from "./AdGrid";
 import { HOMEPAGE_AD_LIMIT, selectHomepageAds } from "./selectHomepageAds";
 
@@ -9,7 +9,7 @@ export default async function AdList() {
   cacheLife("minutes");
   cacheTag("ads");
   const [ads, categories] = await Promise.all([
-    listAds({ maximumResults: HOMEPAGE_AD_LIMIT }),
+    listAdsUseCase({ maximumResults: HOMEPAGE_AD_LIMIT }),
     getCategories(),
   ]);
 

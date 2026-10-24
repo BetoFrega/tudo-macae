@@ -32,5 +32,16 @@ describe("business analytics privacy", () => {
         subcategory_id: "snacks",
       },
     });
+    expect(businessContactEvent({
+      source: "ad",
+      businessId: "business-1",
+      kind: "phone",
+      adId: "ad-1",
+    }).properties).toEqual({
+      source_surface: "ad",
+      business_id: "business-1",
+      contact_kind: "phone",
+      ad_id: "ad-1",
+    });
   });
 });

@@ -208,6 +208,7 @@ async function CachedContent({ adId }: { adId: string }) {
         <div className="space-y-6">
           <AdvertiserProfileAside
             profileId={ad.advertiserProfileId}
+            adId={ad.id}
             sourcePath={`/anuncio/${ad.id}/${ad.slug}`}
           />
         </div>

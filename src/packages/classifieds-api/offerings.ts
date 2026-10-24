@@ -32,10 +32,10 @@ export function observeOfferingCatalogAction<T>(businessId: string, correlationI
 const observeInput = <T>(operation: string) => (execute: () => Promise<T>, [input]: [{ businessId: string }], requestId: string) => observeOfferingCatalogOperation(operation, execute, requestId, input.businessId, requestId);
 const observeReference = <T>(operation: string) => (execute: () => Promise<T>, [businessId]: [string], requestId: string) => observeOfferingCatalogOperation(operation, execute, requestId, businessId, requestId);
 export const offeringCatalog = {
-  readManagement: route<Catalog["readManagement"]>("offerings.management", input => ({ businessId: input.businessId }), false, undefined, observeInput("management_read")),
-  readPublic: route<Catalog["readPublic"]>("offerings.public", businessId => ({ businessId }), false, undefined, observeReference("public_read")),
-  saveItem: route<Catalog["saveItem"]>("offerings.save", input => ({ businessId: input.businessId, expectedRevision: input.expectedRevision, item: input.item, operationId: crypto.randomUUID() }), true, undefined, observeInput("save")),
-  setVisibility: route<Catalog["setVisibility"]>("offerings.visibility", input => ({ businessId: input.businessId, expectedRevision: input.expectedRevision, itemId: input.itemId, visible: input.visible, operationId: crypto.randomUUID() }), true, undefined, observeInput("visibility")),
-  setEnablement: route<Catalog["setEnablement"]>("offerings.enablement", input => ({ businessId: input.businessId, expectedRevision: input.expectedRevision, enabled: input.enabled, operationId: input.operationId }), true, undefined, observeInput("enablement")),
+  readManagement: route<Catalog["readManagement"]>("offerings.management", input => ({ businessId: input.businessId }), false, observeInput("management_read")),
+  readPublic: route<Catalog["readPublic"]>("offerings.public", businessId => ({ businessId }), false, observeReference("public_read")),
+  saveItem: route<Catalog["saveItem"]>("offerings.save", input => ({ businessId: input.businessId, expectedRevision: input.expectedRevision, item: input.item, operationId: crypto.randomUUID() }), true, observeInput("save")),
+  setVisibility: route<Catalog["setVisibility"]>("offerings.visibility", input => ({ businessId: input.businessId, expectedRevision: input.expectedRevision, itemId: input.itemId, visible: input.visible, operationId: crypto.randomUUID() }), true, observeInput("visibility")),
+  setEnablement: route<Catalog["setEnablement"]>("offerings.enablement", input => ({ businessId: input.businessId, expectedRevision: input.expectedRevision, enabled: input.enabled, operationId: input.operationId }), true, observeInput("enablement")),
 };
-export const offeringCatalogAvailable = route<(businessId: string) => Promise<CatalogFlagDecision>>("offerings.available", businessId => ({ businessId }), false, undefined, observeReference("flag_entry"));
+export const offeringCatalogAvailable = route<(businessId: string) => Promise<CatalogFlagDecision>>("offerings.available", businessId => ({ businessId }), false, observeReference("flag_entry"));

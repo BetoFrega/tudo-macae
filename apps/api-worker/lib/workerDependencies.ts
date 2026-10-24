@@ -3,7 +3,6 @@ import type { createAuthenticationDiagnostics, AuthenticationDiagnosticEvent } f
 import type { ClassifiedsPhotos, ClassifiedsPhotoRenderer } from "./classifiedsPhotoHttp";
 import type { CatalogFlagDecision } from "@tudomacae/advertiser-identity/offeringCatalog";
 import type { HumanChallengeUnavailable, HumanChallengeVerifier } from "./humanChallenge";
-import type { ClassifiedsAuthority } from "@tudomacae/classifieds-client/authority";
 import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
 import type { EditorialMediaService } from "./mediaHttp";
 import type { EditorialImagePurge } from "@tudomacae/public-image-delivery/editorialPurge";
@@ -16,7 +15,6 @@ export type AuthenticationMail = {
   html: string;
 };
 export type WorkerDependencies = {
-  classifiedsAuthority?: () => Promise<ClassifiedsAuthority>;
   diagnostics?: ReturnType<typeof createAuthenticationDiagnostics>;
   writeDiagnostic?: (event: AuthenticationDiagnosticEvent) => void;
   sampleDiagnosticSuccess?: () => boolean;

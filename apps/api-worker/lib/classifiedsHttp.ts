@@ -1,4 +1,3 @@
-import type { ClassifiedsAuthority } from "@tudomacae/classifieds-client/authority";
 import { OfferingCatalogError, type CatalogFlagDecision } from "@tudomacae/advertiser-identity/offeringCatalog";
 import { BusinessCatalogCursorError } from "@tudomacae/advertiser-identity/business";
 import { AdOperationError } from "@tudomacae/ads/operationError";
@@ -82,19 +81,13 @@ export async function classifiedsProcedure<T>(operation: () => Promise<T>) {
   }
 }
 export async function classifiedsContext(dependencies: {
-  request: Request; env: Env; accounts: D1Database; persistence?: ClassifiedsPersistence; verifyRuntimeIdentity(): Promise<boolean>; qualification?: () => Promise<boolean>; authority?: () => Promise<ClassifiedsAuthority>;
+  request: Request; env: Env; accounts: D1Database; persistence?: ClassifiedsPersistence; verifyRuntimeIdentity(): Promise<boolean>; qualification?: () => Promise<boolean>;
   session(): Promise<{ user: { id: string } } | null>;
   photoUrl?: (path: string) => string; photos?: ClassifiedsPhotos;
   offeringFlag?: (id: string) => Promise<CatalogFlagDecision>;
   canonicalCache?: Cache;
 }) {
-  let qualified = false;
-  try {
-    qualified = dependencies.authority ? await dependencies.authority() === "worker" : (await dependencies.qualification?.()) === true;
-  }
-  catch (error) {
-    if (dependencies.authority) throw error;
-  }
+  const qualified = await dependencies.qualification?.().catch(() => false) === true;
   if (!qualified || !dependencies.persistence) throw new TRPCError({ code: "NOT_FOUND" });
   const actor = await classifiedsActor(dependencies);
   const { request, env } = dependencies;

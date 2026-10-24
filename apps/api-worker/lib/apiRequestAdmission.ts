@@ -35,9 +35,8 @@ async function photoServiceQualified(dependencies: WorkerDependencies) {
   try {
     return !!dependencies.classifiedsPhotos && (await dependencies.classifiedsQualification?.()) === true;
   }
-  catch (error) {
-    // Unavailable controls keep the prepared service closed; an unreadable authority fails the request.
-    if (dependencies.classifiedsAuthority) throw error;
+  catch {
+    // Unavailable controls keep the prepared service closed.
     return false;
   }
 }

@@ -8,13 +8,12 @@ function maintenanceEvent(env: Env, event: string, operationId: string) {
   };
 }
 
-async function isQualified(dependencies: WorkerDependencies, env: Env, operationId: string) {
+async function isQualified(dependencies: WorkerDependencies) {
   try {
     return (await dependencies.classifiedsQualification?.()) === true;
   }
   catch {
     // An unavailable preparation control keeps maintenance closed.
-    if (dependencies.classifiedsAuthority) console.error(JSON.stringify({ ...maintenanceEvent(env, "classifieds.maintenance", operationId), outcome: "failed", causeCode: "authority_unavailable" }));
     return false;
   }
 }
@@ -53,7 +52,7 @@ function expireAudits(dependencies: WorkerDependencies, env: Env, operationId: s
 /** One hourly trigger qualifies once and runs every task under one operation id; a failure in one never skips the others. */
 export async function runClassifiedsMaintenance(dependencies: WorkerDependencies, env: Env, now: number) {
   const operationId = crypto.randomUUID();
-  if (!(await isQualified(dependencies, env, operationId))) return;
+  if (!(await isQualified(dependencies))) return;
   const failure = (await Promise.allSettled([sweepPhotos(dependencies, env, operationId), expireAudits(dependencies, env, operationId, now)]))
     .find(result => result.status === "rejected");
   if (failure) throw failure.reason;

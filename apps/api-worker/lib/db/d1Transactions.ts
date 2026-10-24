@@ -41,6 +41,12 @@ export function createD1TransactionRunner<K extends string, I extends RecordShap
 ) {
   const { Conflict, Limit, limits, stableJson, byteLength, codec, pointScope, readPoint } = domain;
   type Tx = Transaction<K, I, S, Q, P>;
+  /**
+   * Bytes one attempt may hold, counted separately for retained read results and for buffered
+   * write bodies. It must stay well under the 12 MB bound-bytes ceiling in each adapter's `batch`;
+   * past that ceiling an oversized write fails at commit, after `decide` ran, instead of at `put`.
+   */
+  const attemptBytes = 4 * limits.pageBytes;
   async function unchanged(guards: Map<string, number>) {
     if (!guards.size) return true;
     const versions = await domain.epochs([...guards.keys()]);
@@ -59,7 +65,7 @@ export function createD1TransactionRunner<K extends string, I extends RecordShap
       try {
         const result = await operation();
         retainedBytes += byteLength(JSON.stringify(result));
-        if (retainedBytes > 4 * limits.pageBytes) throw new Limit();
+        if (retainedBytes > attemptBytes) throw new Limit();
         return result;
       }
       catch (error) {
@@ -78,7 +84,7 @@ export function createD1TransactionRunner<K extends string, I extends RecordShap
       const prospective = new Map(commands).set(key, value);
       if (prospective.size > limits.commands) throw new Limit();
       const bytes = [...prospective.values()].reduce((total, item) => total + (item.kind === "put" ? byteLength(stableJson(item.record.body)) : 0), 0);
-      if (bytes > 4 * limits.pageBytes) throw new Limit();
+      if (bytes > attemptBytes) throw new Limit();
       commands.set(key, value);
     }
     const tx: Tx = {

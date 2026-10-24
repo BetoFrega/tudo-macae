@@ -5,16 +5,11 @@ import { canonicalPageResponse, type NotFoundCopy } from "./proxyCanonicalPages"
 import { isMcpHost } from "./proxyScope";
 
 /**
- * Loaders for the canonical page lookup and the site search boundary.
- * Production imports them on demand, so other routes never load the API Worker
- * client or the search providers; tests pass in-memory replacements.
+ * Loader for the canonical page lookup. Production imports it on demand, so
+ * other routes never load the API Worker client; tests pass an in-memory replacement.
  */
 export interface ProxyDependencies {
   canonicalLookup: () => Promise<CanonicalLookup>;
-  siteSearch: () => Promise<{
-    siteSearchEnabled: (identity: string | undefined) => Promise<boolean>;
-    siteSearchIdentityCookieName: () => string | undefined;
-  }>;
 }
 
 const genericNotFound: NotFoundCopy = { heading: "Página não encontrada", message: "A página que você está procurando não existe." };
@@ -29,20 +24,6 @@ function notFoundPage({ heading, message }: NotFoundCopy) {
 <p><a href="/">Ir para a página inicial do Tudo Macaé</a></p>
 </body>
 </html>`;
-}
-
-/**
- * The release decision for the site search is resolved before rendering, so a
- * visitor outside the flag receives a 404 instead of a streamed not-found page
- * with status 200. The proxy answers it directly: behind Cloud Run its request
- * origin differs from the router's, so a rewrite would be proxied externally.
- */
-async function siteSearchGate(request: NextRequest, dependencies: ProxyDependencies): Promise<Response | null> {
-  if (request.nextUrl.pathname !== "/busca") return null;
-  const { siteSearchEnabled, siteSearchIdentityCookieName } = await dependencies.siteSearch();
-  const cookieName = siteSearchIdentityCookieName();
-  if (await siteSearchEnabled(cookieName ? request.cookies.get(cookieName)?.value : undefined)) return null;
-  return notFoundResponse();
 }
 
 /** The copy is fixed text from this module or the canonical page rules, never request input. */
@@ -101,8 +82,6 @@ export function createProxy(dependencies: ProxyDependencies) {
   return async function proxy(request: NextRequest): Promise<Response> {
     if (isMcpHost(request.headers.get("host") ?? request.nextUrl.hostname)) return mcpNotFound();
 
-    const unavailableSearch = await siteSearchGate(request, dependencies);
-    if (unavailableSearch) return unavailableSearch;
     // The same root the request-error log records, so a Worker failure joins the page request.
     const correlationId = requestCorrelationId(request.headers.get(edgeRequestIdHeader)) ?? requestCorrelationId(request.headers.get(requestCorrelationIdHeader));
     const canonical = await canonicalPageResponse(request, dependencies.canonicalLookup, notFoundResponse, correlationId);

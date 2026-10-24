@@ -1,5 +1,4 @@
 import type { SiteSearchChunk, SiteSearchProvider, SiteSearchProviderReply } from "./siteSearch";
-import { siteSearchFlagKey } from "./siteSearchFlag";
 
 type Fetch = typeof globalThis.fetch;
 
@@ -123,27 +122,5 @@ export function createSiteSearchWorkerProvider(dependencies: {
       }
       return replyFromResponse(response);
     },
-  };
-}
-
-export function createPostHogSiteSearchFlagEvaluation(configuration: {
-  origin: string | undefined;
-  projectToken: string | undefined;
-  fetch: Fetch;
-}) {
-  return async (distinctId: string): Promise<unknown> => {
-    const target = endpoint(configuration.origin, "/flags?v=2");
-    if (!target || !configuration.projectToken) throw new Error("Flag evaluation is not configured");
-    const response = await configuration.fetch(target.url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ api_key: configuration.projectToken, distinct_id: distinctId }),
-      cache: "no-store",
-      redirect,
-      signal: AbortSignal.timeout(1_500),
-    });
-    if (!response.ok) throw new Error("Flag evaluation was rejected");
-    const payload = await response.json() as { flags?: Record<string, { enabled?: unknown } | undefined> };
-    return payload.flags?.[siteSearchFlagKey]?.enabled;
   };
 }

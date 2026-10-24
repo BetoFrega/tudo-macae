@@ -62,7 +62,7 @@ async function credentialEmail(request: Request, path: string) {
 function servePhoto(request: Request, env: Env, dependencies: RequestDependencies, auth: Authentication) {
   return serveClassifiedsPhoto({ request, photos: dependencies.classifiedsPhotos!(env),
     render: dependencies.classifiedsPhotoRenderer?.(env),
-    actor: () => classifiedsActor({ request, env, accounts: dependencies.authenticationDatabase, session: () => auth.api.getSession({ headers: request.headers }) }),
+    actor: () => classifiedsActor({ accounts: dependencies.authenticationDatabase, session: () => auth.api.getSession({ headers: request.headers }) }),
     report: (error, operation) => dependencies.reportClassifiedsFailure?.(error, operation) });
 }
 

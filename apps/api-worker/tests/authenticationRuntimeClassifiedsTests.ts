@@ -5,6 +5,8 @@ import { AdvertiserProfileRevisionConflict } from "@tudomacae/advertiser-identit
 import { createClassifiedsPersistence } from "../classifieds";
 import { start, serviceToken, authenticationDatabase, classifiedsDatabase } from "./authenticationRuntimeHarness";
 
+const sessionCookie = (response: { headers: { getSetCookie(): string[] } }) => response.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!;
+
 test("public authentication accepts parent correlation only from the verified runtime service", async () => {
   const worker = await start();
   const parent = "8f1e2d3c4b5a6978-GRU";
@@ -63,7 +65,7 @@ test("Classifieds HTTP binds actor and roles to the session identity and preserv
   expect(created.status).toBe(200);
   const account = z.object({ user: z.object({ id: z.string() }) }).parse(await created.json());
   const uid = account.user.id;
-  const cookie = created.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!.slice("session=".length);
+  const cookie = sessionCookie(created).slice("session=".length);
   const client = createClassifiedsClient({ origin: "http://authentication.test", publicOrigin: "http://authentication.test", allowLocal: true, request: async (input, options) => {
     const result = await worker.dispatchFetch(String(input), { method: options?.method, headers: Object.fromEntries(new Headers(options?.headers).entries()), ...(typeof options?.body === "string" ? { body: options.body } : {}) });
     return new Response(await result.text(), { status: result.status, headers: Object.fromEntries(result.headers.entries()) });
@@ -92,7 +94,7 @@ test("Classifieds HTTP binds actor and roles to the session identity and preserv
   const otherSignup = await worker.dispatchFetch("http://authentication.test/api/auth/sign-up/email", { method: "POST", headers: { "content-type": "application/json", "origin": "http://authentication.test" }, body: JSON.stringify({ email: "other-classifieds@example.com", password: "abc123" }) });
   expect(otherSignup.status).toBe(200);
   const otherUid = z.object({ user: z.object({ id: z.string() }) }).parse(await otherSignup.json()).user.id;
-  const otherSession = otherSignup.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!.slice("session=".length);
+  const otherSession = sessionCookie(otherSignup).slice("session=".length);
   const otherProfileId = await client.write<string>("profiles.create", { title: "Outro", contacts: [], activityAreas: [], operationId: "other-owned" }, { session: decodeURIComponent(otherSession) });
   expect(await client.read("profiles.forOwner", { userId: otherUid }, credential)).toMatchObject([{ id: otherProfileId }]);
   expect(await client.read("profiles.public", { id: profileId })).not.toHaveProperty("userId");
@@ -170,10 +172,10 @@ test("a service credential header never stands in for the session", async () => 
   const read = (headers: Record<string, string>) => worker.dispatchFetch(`http://authentication.test/api/trpc/classifiedsRead?input=${encodeURIComponent(JSON.stringify({ operation: "profiles.identity.preview", input: { id: "absent" } }))}`, { headers });
   const service = { "authorization": `Bearer ${await serviceToken()}`, "x-classifieds-actor": uid };
   expect((await read(service)).status).toBe(403);
-  const session = signup.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!;
-  expect((await read({ cookie: session })).status).not.toBe(403);
+  const session = sessionCookie(signup);
+  expect((await read({ cookie: session })).status).toBe(400);
   const other = await worker.dispatchFetch("http://authentication.test/api/auth/sign-up/email", { method: "POST", headers: { "content-type": "application/json", "origin": "http://authentication.test" }, body: JSON.stringify({ email: "header-bystander@example.com", password: "abc123" }) });
-  expect((await read({ ...service, cookie: other.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]! })).status).toBe(403);
+  expect((await read({ ...service, cookie: sessionCookie(other) })).status).toBe(403);
 });
 
 test("malformed stored identity claims remain a correlated server failure", async () => {
@@ -187,7 +189,7 @@ test("malformed stored identity claims remain a correlated server failure", asyn
   // Malformed claims cannot be created through an account operation.
   await database.prepare("UPDATE user SET claims='[]' WHERE id=?").bind(uid).run();
   const requestId = "1234567890abcdef-GRU";
-  const session = signup.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!;
+  const session = sessionCookie(signup);
   const headers = { "cookie": session, "x-request-id": requestId };
   const read = (input: unknown) => worker.dispatchFetch(`http://authentication.test/api/trpc/classifiedsRead?input=${encodeURIComponent(JSON.stringify({ operation: "categories.list", input }))}`, { headers });
   const result = await read({});

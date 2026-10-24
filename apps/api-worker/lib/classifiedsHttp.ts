@@ -109,7 +109,7 @@ export async function classifiedsContext(dependencies: {
 }
 
 type ActorDependencies = {
-  request: Request; env: Env; accounts: D1Database;
+  accounts: D1Database;
   session(): Promise<{ user: { id: string } } | null>;
 };
 

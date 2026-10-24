@@ -121,7 +121,7 @@ function serveTrpc(request: Request, env: Env, dependencies: RequestDependencies
         ...(env.ARTICLE_INDEX ? { index: env.ARTICLE_INDEX as unknown as ArticleIndexWriter } : {}),
         ...(dependencies.editorialImagePurge ? { purge: dependencies.editorialImagePurge(env) } : {}),
         context: { environment: env.WORKERS_ENVIRONMENT, release: env.CF_VERSION_METADATA?.id ?? "unknown" } }),
-      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), verifyRuntimeIdentity: dependencies.verifyRuntimeIdentity, qualification: dependencies.classifiedsQualification, authority: dependencies.classifiedsAuthority, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
+      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), verifyRuntimeIdentity: dependencies.verifyRuntimeIdentity, qualification: dependencies.classifiedsQualification, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
       sendMail: mail =>
         dependencies.sendMail
           ? dependencies.sendMail(mail, env)
@@ -185,19 +185,13 @@ async function routeResponse(request: Request, env: Env, path: string, dependenc
   return new Response(null, { status: 404 });
 }
 
-async function serveAuthority(request: Request, readAuthority: NonNullable<RequestDependencies["classifiedsAuthority"]>) {
-  if (request.method !== "GET") return new Response(null, { status: 405 });
-  return Response.json({ authority: await readAuthority() }, { headers: { "cache-control": "no-store" } });
-}
-
 /** This tsconfig loads the DOM lib, whose `CacheStorage` lacks the Workers runtime `default` colo cache. */
 const colocationCache = () => (globalThis.caches as (CacheStorage & { readonly default?: Cache }) | undefined)?.default;
 
-/** Authority and canonical lookups answer before admission: they carry no session and change nothing. */
-function serveAuthorityRead(request: Request, env: Env, path: string, dependencies: RequestDependencies) {
-  if (path === "/api/classifieds/authority" && dependencies.classifiedsAuthority) return serveAuthority(request, dependencies.classifiedsAuthority);
+/** Canonical lookups answer before admission: they carry no session and change nothing. */
+function serveCanonicalRead(request: Request, env: Env, path: string, dependencies: RequestDependencies) {
   if (isClassifiedsCanonicalRoute(path))
-    return serveClassifiedsCanonical(request, path, { persistence: dependencies.classifiedsPersistence?.(env), authority: dependencies.classifiedsAuthority, qualification: dependencies.classifiedsQualification, cache: colocationCache() });
+    return serveClassifiedsCanonical(request, path, { persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, cache: colocationCache() });
   return undefined;
 }
 
@@ -209,8 +203,8 @@ export async function serveApiRequest(
   const requestDependencies: RequestDependencies = { ...workerDependencies, authenticationDatabase: env.AUTHENTICATION_DB };
   const path = new URL(request.url).pathname;
   const photoRequest = isClassifiedsPhotoRoute(path);
-  const authority = serveAuthorityRead(request, env, path, requestDependencies);
-  if (authority) return authority;
+  const canonical = serveCanonicalRead(request, env, path, requestDependencies);
+  if (canonical) return canonical;
   const rejection = await rejectRequest(request, env, path, photoRequest, requestDependencies);
   if (rejection) return rejection;
   const buffered = await readBoundedBody(request, requestBodyLimit(path, photoRequest));

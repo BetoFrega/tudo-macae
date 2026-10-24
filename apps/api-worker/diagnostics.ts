@@ -1,10 +1,8 @@
-import { ClassifiedsAuthorityUnavailable } from "@tudomacae/classifieds-client/authority";
 import { PhotoObjectUnavailable } from "@tudomacae/classifieds-photos";
 import { StoredClassifiedsDataError } from "./lib/db/classifiedsSupport";
 import { ClassifiedsPhotoDecodeUnavailable } from "./lib/storage/classifiedsPhotoDecoder";
 
 function providerCause(error: Error) {
-  if (error instanceof ClassifiedsAuthorityUnavailable) return "classifieds_authority_unavailable";
   if (error instanceof PhotoObjectUnavailable) return `hosted_photo_${error.phase}`;
   if (error instanceof StoredClassifiedsDataError) return "persisted_data_invalid";
   if (error instanceof ClassifiedsPhotoDecodeUnavailable) return error.causeCode;

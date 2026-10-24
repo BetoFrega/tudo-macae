@@ -23,7 +23,6 @@ test.each([
   `/api/classifieds/canonical/ads/${"x".repeat(213)}`,
   "/api/classifieds/canonical/categories/a/other/b",
   "/api/classifieds/canonical/unknown/a",
-  "/api/classifieds/authority",
 ])("rejects the lookup path %s", (path) => {
   expect(parseCanonicalLookupPath(path)).toBeNull();
 });

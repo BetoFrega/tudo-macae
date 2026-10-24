@@ -4,7 +4,6 @@ import type { BusinessPublicData } from "@tudomacae/advertiser-identity/business
 import type { PublicAdvertiserProfileData } from "@tudomacae/advertiser-identity/model";
 import { CategoryManagementError, type CategoryPage } from "@tudomacae/categories/categoryManagement";
 import type { IdentityDeletionPreview } from "@tudomacae/advertiser-identity/identityDeletion";
-import type { ClassifiedsAuthority } from "@tudomacae/classifieds-client/authority";
 import { canonicalLookupFreshHeader, canonicalLookupMaxAge, canonicalLookupPath, canonicalLookupPrefix, parseCanonicalLookupPath, type CanonicalLookupResult, type CanonicalTarget } from "@tudomacae/classifieds-client/canonical";
 import type { ClassifiedsWriteOperation } from "@tudomacae/classifieds-client/protocol";
 import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
@@ -68,11 +67,11 @@ function answer(target: CanonicalTarget, capabilities: Capabilities): Promise<An
 }
 
 type CanonicalDependencies = {
-  persistence?: ClassifiedsPersistence; authority?: () => Promise<ClassifiedsAuthority>; qualification?: () => Promise<boolean>; cache?: Cache;
+  persistence?: ClassifiedsPersistence; qualification?: () => Promise<boolean>; cache?: Cache;
 };
 
 async function qualified(dependencies: CanonicalDependencies) {
-  return dependencies.authority ? await dependencies.authority() === "worker" : await dependencies.qualification?.() === true;
+  return await dependencies.qualification?.() === true;
 }
 
 async function storedAnswer(request: Request, key: Request, cache: Cache | undefined) {

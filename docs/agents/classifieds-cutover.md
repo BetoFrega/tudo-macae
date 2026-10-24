@@ -4,7 +4,7 @@ Classifieds authority moved from Firebase to the API Worker (D1 records, Hosted 
 
 ## Current state
 
-- `classifieds_authority` in the Classifieds D1 reads `worker`; a SQL trigger rejects returning to `legacy`. The API Worker's `/api/classifieds/authority` returns `{"authority":"worker"}`.
+- `classifieds_authority` in the Classifieds D1 reads `worker`; a SQL trigger rejects returning to `legacy`. The API Worker no longer reads the table: production always serves Classifieds (`git grep -n classifiedsQualification -- apps/api-worker/production.ts`).
 - `www` is served by the web Worker, which has no Firebase writer. The Cloud Run revisions of `tudo-macae-www` built from `main` carry `CLASSIFIEDS_FIREBASE_WRITES=suspended` in their environment; no router version allowed in [recovery](www-origin-runbook.md#deploy-and-recovery) reaches them.
 
 ## Recovery

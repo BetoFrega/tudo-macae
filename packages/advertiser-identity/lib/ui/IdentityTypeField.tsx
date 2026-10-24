@@ -64,7 +64,7 @@ export function IdentityTypeField({ value, onChange, personalAvailable, invalid,
   );
 }
 
-export function focusIdentityTypeChoice() {
+function focusIdentityTypeChoice() {
   const choices = ["identity-type-personal", "identity-type-business"].map(id => document.getElementById(id));
   choices.find(choice => choice instanceof HTMLInputElement && !choice.disabled)?.focus();
 }

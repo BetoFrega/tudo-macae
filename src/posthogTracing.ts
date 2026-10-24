@@ -8,7 +8,7 @@ import { AlwaysOffSampler, BatchSpanProcessor, TraceIdRatioBasedSampler, TracerP
 import type { ReadableSpan, SpanExporter } from "@opentelemetry/sdk-trace";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
-export const posthogTracingFlagKey = "server-tracing";
+const posthogTracingFlagKey = "server-tracing";
 const ingestionHost = "https://eu.i.posthog.com";
 const serviceName = "tudo-macae-nextjs";
 const operationNames = new Set([
@@ -182,10 +182,4 @@ export async function registerPosthogTracing() {
     })],
   });
   registerGlobally(tracerProvider, propagator);
-}
-
-// Route handlers with explicit spans can await this inside next/server's after()
-// when their hosting environment suspends CPU immediately after a response.
-export async function flushPosthogTracing() {
-  await tracerProvider?.forceFlush();
 }

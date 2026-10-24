@@ -14,7 +14,8 @@ test("delivers every main push or a manual dispatch and preserves active deliver
   expect(workflow.on.pull_request).toBeUndefined();
   // A dispatch input would let a caller check out an arbitrary ref in the main context.
   expect(workflow.on.workflow_dispatch?.inputs).toBeUndefined();
-  expect(workflow.concurrency).toEqual({ "group": "production-delivery", "queue": "max", "cancel-in-progress": false });
+  // A workflow-level group would cancel or queue the whole run, mutation jobs included.
+  expect(workflow.concurrency).toBeUndefined();
   expect(workflow.jobs.checks.permissions).toBeUndefined();
   expect(workflow.permissions).toEqual({ contents: "read" });
   expect(JSON.stringify(workflow.jobs.checks)).not.toMatch(/secrets\.|id-token|google-github-actions/);
@@ -232,4 +233,15 @@ test("the Checks workflow keeps the lint and typecheck caches between runs", () 
   expect(scripts.lint).toContain("eslint . --cache --cache-strategy content --cache-location node_modules/.cache/eslint/");
   expect(cached("lint")).toBe("node_modules/.cache/eslint");
   expect(cached("typecheck")).toBe("tsconfig.tsbuildinfo");
+});
+
+test("a newer push cancels superseded checks but never a production mutation in progress", () => {
+  expect(workflow.jobs.checks.concurrency).toEqual({ "group": "production-delivery-checks", "cancel-in-progress": true });
+  expect(workflow.jobs.production.concurrency).toEqual({ "group": "production-delivery-api", "cancel-in-progress": false });
+  expect(workflow.jobs.workers.concurrency).toEqual({ "group": "production-delivery-workers", "cancel-in-progress": false });
+  // A shared group would let this run's pending Workers job replace a newer run's API job.
+  expect(new Set(["checks", "production", "workers"].map(job => workflow.jobs[job].concurrency.group)).size).toBe(3);
+  expect(JSON.stringify(workflow.jobs.checks)).not.toMatch(/secrets\./);
+  // `queue: max` cannot combine with `cancel-in-progress: true`, and the newest pending run should win.
+  expect(JSON.stringify(workflow.jobs)).not.toContain("\"queue\"");
 });

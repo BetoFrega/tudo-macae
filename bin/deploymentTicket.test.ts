@@ -7,16 +7,19 @@ import { expect, test } from "vitest";
 // These tests run real processes, which the Workers runtime (quality-flare's Tests check) lacks.
 const inWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
 
-function run(checks: string, production: string, existing = false, workers = "success") {
+const releaseSha = "a".repeat(40);
+
+function run(checks: string, production: string, existing = false, workers = "success", mainSha = releaseSha) {
   const directory = mkdtempSync(join(tmpdir(), "deployment-ticket-"));
   try {
     const shim = join(directory, "gh");
     const calls = join(directory, "calls.jsonl");
-    writeFileSync(shim, `#!${process.execPath}\nconst fs=require('node:fs');fs.appendFileSync(process.env.TICKET_CALLS,JSON.stringify(process.argv.slice(2))+'\\n');console.log(process.argv.includes('--paginate')?JSON.stringify([[${existing ? JSON.stringify({ number: 42, user: { login: "github-actions[bot]" }, body: "<!-- production-delivery-blocked -->" }) : ""}]]):'{}');`);
+    const issues = JSON.stringify([[...(existing ? [{ number: 42, user: { login: "github-actions[bot]" }, body: "<!-- production-delivery-blocked -->" }] : [])]]);
+    writeFileSync(shim, `#!${process.execPath}\nconst fs=require('node:fs');const args=process.argv.slice(2);fs.appendFileSync(process.env.TICKET_CALLS,JSON.stringify(args)+'\\n');console.log(args.includes('--paginate')?${JSON.stringify(issues)}:args.some(arg=>arg.endsWith('/commits/main'))?${JSON.stringify(JSON.stringify({ sha: mainSha }))}:'{}');`);
     chmodSync(shim, 0o755);
     execFileSync(process.execPath, [resolve("bin/deployment-ticket.mjs")], {
       env: { ...process.env, PATH: `${directory}:${process.env.PATH}`, TICKET_CALLS: calls,
-        GITHUB_REPOSITORY: "BetoFrega/tudo-macae", GITHUB_RUN_ID: "123", RELEASE_SHA: "a".repeat(40), CHECKS_RESULT: checks, PRODUCTION_RESULT: production, WORKERS_RESULT: workers },
+        GITHUB_REPOSITORY: "BetoFrega/tudo-macae", GITHUB_RUN_ID: "123", RELEASE_SHA: releaseSha, CHECKS_RESULT: checks, PRODUCTION_RESULT: production, WORKERS_RESULT: workers },
     });
     return readFileSync(calls, "utf8").trim().split("\n").map(line => JSON.parse(line) as string[]);
   }
@@ -71,4 +74,19 @@ test.skipIf(inWorkers)("closes a blocker only when checks, the API Worker and Wo
   expect(calls.flat()).toContain("state=closed");
   expect(calls.flat().join(" ")).not.toContain("no-issue");
   expect(run("success", "success")).toHaveLength(1);
+});
+
+test.skipIf(inWorkers)("leaves the blocker untouched when a newer main push superseded the run", () => {
+  const newer = "b".repeat(40);
+  for (const [checks, production, workers] of [["cancelled", "skipped", "skipped"], ["success", "cancelled", "skipped"], ["success", "success", "cancelled"]]) {
+    const calls = run(checks, production, true, workers, newer);
+    expect(calls).toEqual([["api", "repos/BetoFrega/tudo-macae/commits/main"]]);
+  }
+});
+
+test.skipIf(inWorkers)("reports a cancelled run whose SHA is still main's head", () => {
+  const calls = run("cancelled", "skipped");
+  expect(calls[0]).toEqual(["api", "repos/BetoFrega/tudo-macae/commits/main"]);
+  expect(calls.at(-1)).toContain("labels[]=needs-triage");
+  expect(calls.at(-1)?.join(" ")).toContain("Checks: cancelled");
 });

@@ -16,7 +16,7 @@ export async function getAd(id: string): Promise<Ad | null> {
   return getAdLive(id);
 }
 
-export async function getAdLive(id: string): Promise<Ad | null> {
+async function getAdLive(id: string): Promise<Ad | null> {
   const adData = await getAdUseCase({ id });
 
   if (!adData) return null;

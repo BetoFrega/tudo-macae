@@ -8,7 +8,7 @@ import { publicImageRuntimeContext } from "@/integrations/public-images/runtimeC
 import type { BusinessPublicData } from "@tudomacae/advertiser-identity/business";
 import { businessCatalogTaxonomyTag } from "@/features/advertiser-profile/actions/activityAreas";
 
-export async function getCategoryBusinessPreview(
+async function getCategoryBusinessPreview(
   categoryId: string,
 ): Promise<BusinessPublicData[]> {
   return getCachedCategoryBusinessPreview({

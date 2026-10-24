@@ -6,8 +6,8 @@ import { getCategoriesLive } from "@/features/categories/actions/getCategories";
 import { SeedCategoriesButton } from "@tudomacae/categories/ui";
 
 export default async function AdminCategoriesPage() {
-  // The admin panel must always reflect live data, so it reads Firestore
-  // uncached. That requires opting out of prerendering.
+  // The admin panel must always reflect live data, so it reads the
+  // persistence uncached. That requires opting out of prerendering.
   await connection();
   const categories = await getCategoriesLive();
 

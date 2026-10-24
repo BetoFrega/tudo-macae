@@ -4,8 +4,8 @@ import { AdminAdList } from "@/features/ads/components/AdminAdList";
 import { getCategoriesLive } from "@/features/categories/actions/getCategories";
 
 export default async function AdminAdsPage() {
-  // The admin panel must always reflect live data, so it reads Firestore
-  // uncached. That requires opting out of prerendering.
+  // The admin panel must always reflect live data, so it reads the
+  // persistence uncached. That requires opting out of prerendering.
   await connection();
   const [ads, categories] = await Promise.all([listAllAds(), getCategoriesLive()]);
 

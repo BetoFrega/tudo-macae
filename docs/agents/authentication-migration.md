@@ -19,10 +19,11 @@ migration set and public/API origins in the execution receipt. The Worker return
 its provider version ID in `x-authentication-release` when available. Before any
 recovery, qualify the candidate pair against this same protocol and schema.
 
-The durable D1 `authentication_authority.phase` alone admits requests: `active`
-opens access and any other value or a failed read closes it. The Worker reads no
-remote flag on the request path, and no remote switch closes access; close it by
-fixing forward and redeploying the API Worker. API Worker versions released before
+The Worker admits requests without reading `authentication_authority`. Production's
+phase is `active`, and the D1 trigger `reject_authority_regression` keeps it there;
+the phase only gates the account import in `apps/api-worker/migration.ts`. The Worker
+reads no remote flag on the request path, and no remote switch closes access; close it
+by fixing forward and redeploying the API Worker. API Worker versions released before
 the Worker stopped reading the PostHog boolean flag `authentication-api`
 ([#2046](https://github.com/BetoFrega/macae-classificados/issues/2046)) fail closed
 when it is off or deleted; keep it enabled in

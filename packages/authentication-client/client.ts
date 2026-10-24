@@ -85,7 +85,7 @@ export function createAuthenticationClient(configuration: {
       write: event => configuration.diagnostics?.write(event),
     });
     applyRequestCredentials(headers, options);
-    const attempt: ExchangeAttempt = { closed: false, refused: false };
+    const attempt: ExchangeAttempt = { refused: false };
     try {
       const value = await diagnostics.run("transport", async () => {
         const signal = AbortSignal.timeout(5000);

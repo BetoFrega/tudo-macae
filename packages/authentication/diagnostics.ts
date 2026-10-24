@@ -1,5 +1,5 @@
 import { requestCorrelationId } from "@tudomacae/www-origin-routing/contract";
-export type AuthenticationStage = "transport" | "runtime_identity" | "authority" | "handler";
+export type AuthenticationStage = "transport" | "runtime_identity" | "handler";
 export type AuthenticationFailure = "timeout" | "network" | "http_5xx" | "protocol" | "dependency" | "email_delivery";
 export type AuthenticationDiagnosticEvent = {
   event: "authentication.client.completed" | "authentication.client.failed" | "authentication.client.correlation_failed" | "authentication.worker.completed" | "authentication.worker.failed";
@@ -11,8 +11,8 @@ export type AuthenticationDiagnosticEvent = {
   traceId?: string;
   parentSpanId?: string;
   route: string;
-  outcome: "completed" | "failed" | "closed" | "degraded";
-  authenticationOutcome?: "completed" | "closed";
+  outcome: "completed" | "failed" | "degraded";
+  authenticationOutcome?: "completed";
   correlationFailure?: "identity_unavailable" | "parent_not_retained";
   remoteCorrelationId?: string;
   durationMs: number;
@@ -44,7 +44,7 @@ export function authenticationRoute(path: string) {
       : path.startsWith("/api/auth/") ? "/api/auth/:operation" : "other";
 }
 
-type AuthenticationOutcome = "completed" | "failed" | "closed";
+type AuthenticationOutcome = "completed" | "failed";
 type EmitDetails = { failureCategory?: AuthenticationFailure; status?: number; remoteRelease?: string; dependencyFailure?: NonNullable<AuthenticationDiagnosticEvent["dependencyFailure"]>; dependencyStatus?: number };
 
 function eventName(service: AuthenticationDiagnosticEvent["service"], outcome: AuthenticationOutcome, degraded: boolean): AuthenticationDiagnosticEvent["event"] {
@@ -162,9 +162,9 @@ export function createAuthenticationDiagnostics(configuration: {
         pending.splice(pending.indexOf(timing), 1);
       }
     },
-    complete(status: number, closed = false, remoteRelease?: string) {
+    complete(status: number, remoteRelease?: string) {
       close("completed");
-      emit(closed ? "closed" : "completed", { status, ...(remoteRelease ? { remoteRelease } : {}) });
+      emit("completed", { status, ...(remoteRelease ? { remoteRelease } : {}) });
     },
     fail(failureCategory: AuthenticationFailure, status?: number, remoteRelease?: string, dependency?: { category: NonNullable<AuthenticationDiagnosticEvent["dependencyFailure"]>; status?: number | undefined }) {
       close("failed");

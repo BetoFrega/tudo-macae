@@ -1,5 +1,4 @@
 import z from "zod";
-import type { AuthenticationStage } from "@tudomacae/authentication/diagnostics";
 import { isEditorialImageRoute } from "./editorialImageHttp";
 import { isMediaRoute, mediaUploadBodyLimit } from "./mediaHttp";
 import type { WorkerDependencies } from "./workerDependencies";
@@ -97,29 +96,6 @@ export async function readBoundedBody(request: Request, bodyLimit: number) {
   const body = await readChunks(request.body, bodyLimit);
   return body && new Request(request, { body });
 }
-
-function diagnosed<T>(dependencies: WorkerDependencies, name: AuthenticationStage, run: () => Promise<T>) {
-  return dependencies.diagnostics ? dependencies.diagnostics.run(name, run) : run();
-}
-
-/** The durable D1 phase alone admits requests; no remote flag is read on the request path. */
-export async function authorityOpen(dependencies: WorkerDependencies & { authenticationDatabase: D1Database }) {
-  const phase = await diagnosed(dependencies, "authority", () => dependencies.authenticationDatabase.prepare(
-    "SELECT phase FROM authentication_authority WHERE singleton=1",
-  ).first<{ phase: string }>());
-  return phase?.phase === "active";
-}
-
-export const authorityClosedResponse = () => Response.json(
-  { error: "Authentication authority unavailable" },
-  {
-    status: 503,
-    headers: {
-      "cache-control": "private, no-store",
-      "x-authentication-outcome": "closed",
-    },
-  },
-);
 
 /** Returns the request carrying the verified forwarded client address, or null when it cannot be trusted. */
 export async function trustForwardedAddress(request: Request, verifyRuntimeIdentity: () => Promise<boolean>) {

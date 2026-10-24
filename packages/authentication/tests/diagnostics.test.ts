@@ -10,7 +10,7 @@ test("a pending failure records bounded stage times once, without retaining URL 
     environment: "private-environment@sentinel", release: "https://private-release-sentinel",
     now: () => clock, write: event => events.push(event),
   });
-  await recorder.run("authority", async () => {
+  await recorder.run("runtime_identity", async () => {
     clock = 12;
   });
   recorder.start("handler");
@@ -21,7 +21,7 @@ test("a pending failure records bounded stage times once, without retaining URL 
   expect(events).toHaveLength(1);
   expect(events[0]).toMatchObject({ environment: "unknown", release: "unknown", durationMs: 5000, stage: "handler", outcome: "failed" });
   expect(events[0].stages).toEqual([
-    { stage: "authority", durationMs: 12, outcome: "completed" },
+    { stage: "runtime_identity", durationMs: 12, outcome: "completed" },
     { stage: "handler", durationMs: 4988, outcome: "pending" },
   ]);
   expect(JSON.stringify(events)).not.toContain("sentinel");
@@ -36,7 +36,7 @@ test.each([
   expect(authenticationTraceParent(parent)).toBeUndefined();
 });
 
-test("parallel identity proof preserves pending authority evidence and freezes an emitted root", async () => {
+test("parallel identity proof preserves pending handler evidence and freezes an emitted root", async () => {
   let clock = 0;
   const events: AuthenticationDiagnosticEvent[] = [];
   const root = "aaaaaaaaaaaaaaaa-GRU";
@@ -45,9 +45,9 @@ test("parallel identity proof preserves pending authority evidence and freezes a
   const proof = recorder.run("runtime_identity", () => new Promise<void>((resolve) => {
     finishProof = resolve;
   }));
-  let finishAuthority!: () => void;
-  const authority = recorder.run("authority", () => new Promise<void>((resolve) => {
-    finishAuthority = resolve;
+  let finishHandler!: () => void;
+  const handler = recorder.run("handler", () => new Promise<void>((resolve) => {
+    finishHandler = resolve;
   }));
   clock = 100;
   finishProof();
@@ -55,13 +55,13 @@ test("parallel identity proof preserves pending authority evidence and freezes a
   clock = 5000;
   recorder.deadline();
   expect(recorder.correlate("bbbbbbbbbbbbbbbb-GRU")).toBe(false);
-  finishAuthority();
-  await authority;
+  finishHandler();
+  await handler;
   recorder.complete(200);
   expect(events).toHaveLength(1);
-  expect(events[0]).toMatchObject({ correlationId: root, stage: "authority", stages: [
+  expect(events[0]).toMatchObject({ correlationId: root, stage: "handler", stages: [
     { stage: "runtime_identity", durationMs: 100, outcome: "completed" },
-    { stage: "authority", durationMs: 5000, outcome: "pending" },
+    { stage: "handler", durationMs: 5000, outcome: "pending" },
   ] });
 });
 

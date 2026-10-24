@@ -156,12 +156,10 @@ function ownReportHeader(pathname: string) {
   return blogFailureRoute(pathname) ? blogErrorReportedHeader : undefined;
 }
 
-function setProtocolHeaders(response: Response, closed: boolean, { env, state, classifiedsRequest, requestId, pathname }: RequestContext) {
-  if (classifiedsRequest && response.status >= 500 && !closed) response.headers.set("x-classifieds-error-reported", "1");
+function setProtocolHeaders(response: Response, { env, state, classifiedsRequest, requestId, pathname }: RequestContext) {
+  if (classifiedsRequest && response.status >= 500) response.headers.set("x-classifieds-error-reported", "1");
   const reportedHeader = ownReportHeader(pathname);
-  if (reportedHeader && response.status >= 500 && !closed) response.headers.set(reportedHeader, "1");
-  response.headers.delete("x-authentication-outcome");
-  if (closed) response.headers.set("x-authentication-failure-category", "authority_closed");
+  if (reportedHeader && response.status >= 500) response.headers.set(reportedHeader, "1");
   setCacheControl(response, pathname);
   response.headers.set("x-request-id", requestId);
   response.headers.set(requestCorrelationIdHeader, state.correlationId);
@@ -176,13 +174,12 @@ function setProtocolHeaders(response: Response, closed: boolean, { env, state, c
 
 function finalizeResponse(response: Response, context: RequestContext) {
   const { diagnostics, state } = context;
-  const closed = response.headers.get("x-authentication-outcome") === "closed";
-  const failed = !!state.failureCategory || (response.status >= 500 && !closed);
+  const failed = !!state.failureCategory || response.status >= 500;
   if (failed)
     diagnostics.fail(state.failureCategory === "email_delivery" ? "email_delivery" : "dependency", response.status, undefined, state.dependencyFailure);
-  else diagnostics.complete(response.status, closed);
+  else diagnostics.complete(response.status);
   if (context.silenced && failed) logUnobservedFailure(context, response.status);
-  setProtocolHeaders(response, closed, context);
+  setProtocolHeaders(response, context);
   return response;
 }
 

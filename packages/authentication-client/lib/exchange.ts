@@ -12,7 +12,7 @@ export type ExchangeOptions = {
 export type DiagnosticContext = { requestId?: string; traceparent?: string; correlationId?: string };
 type ExchangeDiagnostics = ReturnType<typeof createAuthenticationDiagnostics>;
 /** What the transport learned before it finished or threw; the failure report reads it. */
-export type ExchangeAttempt = { response?: Response; remoteRelease?: string | undefined; closed: boolean; refused: boolean };
+export type ExchangeAttempt = { response?: Response; remoteRelease?: string | undefined; refused: boolean };
 
 /** Forwards only the session cookie: any other caller cookie stays out of the authority request. */
 export function authorityHeaders(source: Headers | undefined, publicOrigin: URL): Headers {
@@ -77,7 +77,6 @@ export async function receiveAuthorityResponse<T>(
   receive: (response: Response) => Promise<T>,
 ): Promise<T> {
   attempt.remoteRelease = response.headers.get("x-authentication-release") ?? undefined;
-  attempt.closed = response.status === 503 && response.headers.get("x-authentication-failure-category") === "authority_closed";
   if (response.status >= 500 && !options.forwardUnavailable)
     throw new Error("Authentication authority unavailable");
   if (response.headers.get("x-authentication-protocol") !== "1")
@@ -88,8 +87,8 @@ export async function receiveAuthorityResponse<T>(
 
 export function reportExchangeSuccess(diagnostics: ExchangeDiagnostics, attempt: ExchangeAttempt): void {
   const response = attempt.response!;
-  if (response.status >= 500 && !attempt.closed) diagnostics.fail("http_5xx", response.status, attempt.remoteRelease);
-  else diagnostics.complete(response.status, attempt.closed, attempt.remoteRelease);
+  if (response.status >= 500) diagnostics.fail("http_5xx", response.status, attempt.remoteRelease);
+  else diagnostics.complete(response.status, attempt.remoteRelease);
 }
 
 function isTimeout(error: unknown): boolean {
@@ -107,10 +106,10 @@ function failureMessage(error: unknown, response: Response | undefined): string 
   return error instanceof Error ? error.message : "Authentication response invalid";
 }
 
-/** Reports the failure and returns the error to throw; a closed or refused authority still completes. */
+/** Reports the failure and returns the error to throw; a refused request still completes. */
 export function exchangeFailure(error: unknown, diagnostics: ExchangeDiagnostics, attempt: ExchangeAttempt): Error {
   const timeout = isTimeout(error);
-  if (attempt.closed || attempt.refused) diagnostics.complete(attempt.response!.status, attempt.closed, attempt.remoteRelease);
+  if (attempt.refused) diagnostics.complete(attempt.response!.status, attempt.remoteRelease);
   else diagnostics.fail(failureCategory(timeout, attempt.response), attempt.response?.status, attempt.remoteRelease);
   // Preserve the original in-memory cause without exporting its private message.
   const message = failureMessage(error, attempt.response);

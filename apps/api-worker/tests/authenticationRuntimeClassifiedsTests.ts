@@ -57,7 +57,7 @@ test("a call through the web renderer binding is the runtime service without a G
   expect(response.headers.get("x-correlation-id")).toBe(parent);
 });
 
-test("Classifieds HTTP binds actor and roles to session/service identity and preserves typed conflicts", async () => {
+test("Classifieds HTTP binds actor and roles to the session identity and preserves typed conflicts", async () => {
   const worker = await start(true, true);
   const created = await worker.dispatchFetch("http://authentication.test/api/auth/sign-up/email", { method: "POST", headers: { "content-type": "application/json", "origin": "http://authentication.test" }, body: JSON.stringify({ email: "classifieds@example.com", password: "abc123" }) });
   expect(created.status).toBe(200);
@@ -102,40 +102,25 @@ test("Classifieds HTTP binds actor and roles to session/service identity and pre
   expect(await client.read("profiles.private", { id: profileId }, credential)).toMatchObject({ revision: 3, contacts: [] });
   expect(await client.write("profiles.classify", { id: profileId, identityType: "personal" }, credential)).toBeNull();
   await expect(client.write("profiles.create", { title: "Segundo", contacts: [], activityAreas: [], identityType: "personal", operationId: "second-personal" }, credential)).rejects.toMatchObject({ name: "AdvertiserIdentityTypeConflict", reason: "personal-exists" });
-  const machine = { service: { token: await serviceToken(), actorId: uid } };
-  await expect(client.read("profiles.identity.preview", { id: otherProfileId, actorId: "admin" }, machine)).rejects.toMatchObject({ reason: "forbidden" });
   await expect(client.read("profiles.identity.preview", { id: otherProfileId, actorId: "admin" }, { session: decodeURIComponent(otherSession) })).rejects.toMatchObject({ reason: "forbidden" });
-  await expect(client.read("categories.list", {}, machine)).rejects.toMatchObject({ reason: "forbidden" });
-  const catalogWrites = ["offerings.save", "offerings.visibility", "offerings.enablement"] as const;
-  for (const [actorId, businessId] of [[uid, profileId], [otherUid, otherProfileId]]) {
-    for (const operation of catalogWrites) {
-      await expect(client.write(operation, { businessId, expectedRevision: 0, operationId: "denied-catalog", actor: { id: uid, admin: true, editor: true } }, { service: { token: await serviceToken(), actorId } })).rejects.toMatchObject({ reason: "forbidden" });
-    }
-  }
   await (await authenticationDatabase()).prepare("UPDATE user SET claims=? WHERE id=?").bind(JSON.stringify({ admin: true, editor: true }), uid).run();
-  expect(await client.read("categories.list", {}, machine)).toMatchObject({ items: [{ id: category.record.id }] });
-  const preview = z.object({ title: z.string(), confirmationToken: z.string() }).parse(await client.read("profiles.identity.preview", { id: otherProfileId }, machine));
+  expect(await client.read("categories.list", {}, credential)).toMatchObject({ items: [{ id: category.record.id }] });
+  const preview = z.object({ title: z.string(), confirmationToken: z.string() }).parse(await client.read("profiles.identity.preview", { id: otherProfileId }, credential));
   const deletion = { id: otherProfileId, confirmationToken: preview.confirmationToken, confirmedTitle: preview.title, reason: "Solicitado", idempotencyKey: "http-delete" };
-  expect(await client.write("profiles.identity.delete", deletion, machine)).toMatchObject({ outcome: "deleted", deletedAds: 0 });
-  expect(await client.write("profiles.identity.delete", deletion, machine)).toMatchObject({ outcome: "deleted", replayed: true });
+  expect(await client.write("profiles.identity.delete", deletion, credential)).toMatchObject({ outcome: "deleted", deletedAds: 0 });
   expect(await client.write("profiles.identity.delete", deletion, credential)).toMatchObject({ outcome: "deleted", replayed: true });
-  await expect(client.write("profiles.identity.delete", { ...deletion, reason: "Outro motivo" }, machine)).rejects.toMatchObject({ code: "idempotencyConflict" });
+  await expect(client.write("profiles.identity.delete", { ...deletion, reason: "Outro motivo" }, credential)).rejects.toMatchObject({ code: "idempotencyConflict" });
   expect(await client.read("profiles.forOwner", { userId: otherUid }, credential)).toEqual([]);
   expect((await worker.dispatchFetch("http://authentication.test/api/trpc/session", { headers: { cookie: `session=${otherSession}` } })).status).toBe(200);
   const edgeRequestId = "1234567890abcdef-GRU";
-  await client.write("profiles.admin.create", { title: "Reivindicável", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [{ categoryId: category.record.id, subcategoryId: subcategory.record.id }], sourceUrl: "https://example.com/fonte", idempotencyKey: "edge" }, machine, edgeRequestId);
+  await client.write("profiles.admin.create", { title: "Reivindicável", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [{ categoryId: category.record.id, subcategoryId: subcategory.record.id }], sourceUrl: "https://example.com/fonte", idempotencyKey: "edge" }, credential, edgeRequestId);
   expect((await store.page({ kind: "audit" })).items).toEqual(expect.arrayContaining([expect.objectContaining({ body: expect.objectContaining({ correlationId: edgeRequestId }) })]));
   await (await authenticationDatabase()).prepare("UPDATE user SET claims=? WHERE id=?").bind(JSON.stringify({ admin: true, editor: false }), uid).run();
-  for (const operation of catalogWrites) {
-    await expect(client.write(operation, { businessId: profileId, expectedRevision: 0, operationId: "revoked-catalog" }, machine)).rejects.toMatchObject({ reason: "forbidden" });
-  }
-  await expect(client.write("profiles.update", { id: profileId, title: "Máquina" }, machine)).rejects.toMatchObject({ reason: "forbidden" });
-  await expect(client.read("categories.list", {}, { service: { token: "forged", actorId: uid } })).rejects.toMatchObject({ code: "forbidden" });
   // Corrupt receipt precondition cannot be produced by a domain command.
   await (await classifiedsDatabase()).prepare("UPDATE classifieds_receipts SET result='{}' WHERE actor_id=? AND operation_key='category'").bind(uid).run();
   await expect(client.write("categories.create", { name: "Categoria", isActive: true, idempotencyKey: "category" }, credential)).rejects.toMatchObject({ code: "unavailable", serverReportedFailure: true });
   await (await authenticationDatabase()).prepare("UPDATE user SET disabled=1 WHERE id=?").bind(uid).run();
-  await expect(client.read("categories.list", {}, machine)).rejects.toMatchObject({ code: "forbidden" });
+  await expect(client.read("categories.list", {}, credential)).rejects.toMatchObject({ code: "forbidden" });
 }, 20_000);
 
 test("an invalid Business catalog cursor keeps its public message across HTTP", async () => {
@@ -177,6 +162,20 @@ test.each(["category", "profile"])("malformed persisted %s is a correlated serve
   expect((await read(kind === "category" ? { limit: 0 } : { id: "" })).status).toBe(400);
 });
 
+test("a service credential header never stands in for the session", async () => {
+  const worker = await start(true, true);
+  const signup = await worker.dispatchFetch("http://authentication.test/api/auth/sign-up/email", { method: "POST", headers: { "content-type": "application/json", "origin": "http://authentication.test" }, body: JSON.stringify({ email: "header-actor@example.com", password: "abc123" }) });
+  const uid = z.object({ user: z.object({ id: z.string() }) }).parse(await signup.json()).user.id;
+  await (await authenticationDatabase()).prepare("UPDATE user SET claims=? WHERE id=?").bind(JSON.stringify({ admin: true, editor: true }), uid).run();
+  const read = (headers: Record<string, string>) => worker.dispatchFetch(`http://authentication.test/api/trpc/classifiedsRead?input=${encodeURIComponent(JSON.stringify({ operation: "profiles.identity.preview", input: { id: "absent" } }))}`, { headers });
+  const service = { "authorization": `Bearer ${await serviceToken()}`, "x-classifieds-actor": uid };
+  expect((await read(service)).status).toBe(403);
+  const session = signup.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!;
+  expect((await read({ cookie: session })).status).not.toBe(403);
+  const other = await worker.dispatchFetch("http://authentication.test/api/auth/sign-up/email", { method: "POST", headers: { "content-type": "application/json", "origin": "http://authentication.test" }, body: JSON.stringify({ email: "header-bystander@example.com", password: "abc123" }) });
+  expect((await read({ ...service, cookie: other.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]! })).status).toBe(403);
+});
+
 test("malformed stored identity claims remain a correlated server failure", async () => {
   const messages: string[] = [];
   vi.spyOn(console, "error").mockImplementation(value => messages.push(String(value)));
@@ -188,7 +187,8 @@ test("malformed stored identity claims remain a correlated server failure", asyn
   // Malformed claims cannot be created through an account operation.
   await database.prepare("UPDATE user SET claims='[]' WHERE id=?").bind(uid).run();
   const requestId = "1234567890abcdef-GRU";
-  const headers = { "authorization": `Bearer ${await serviceToken()}`, "x-classifieds-actor": uid, "x-request-id": requestId };
+  const session = signup.headers.getSetCookie().find(item => item.startsWith("session="))!.split(";")[0]!;
+  const headers = { "cookie": session, "x-request-id": requestId };
   const read = (input: unknown) => worker.dispatchFetch(`http://authentication.test/api/trpc/classifiedsRead?input=${encodeURIComponent(JSON.stringify({ operation: "categories.list", input }))}`, { headers });
   const result = await read({});
   expect(result.status).toBe(500);

@@ -62,7 +62,7 @@ async function credentialEmail(request: Request, path: string) {
 function servePhoto(request: Request, env: Env, dependencies: RequestDependencies, auth: Authentication) {
   return serveClassifiedsPhoto({ request, photos: dependencies.classifiedsPhotos!(env),
     render: dependencies.classifiedsPhotoRenderer?.(env),
-    actor: () => classifiedsActor({ request, env, accounts: dependencies.authenticationDatabase, verifyRuntimeIdentity: dependencies.verifyRuntimeIdentity, session: () => auth.api.getSession({ headers: request.headers }) }),
+    actor: () => classifiedsActor({ request, env, accounts: dependencies.authenticationDatabase, session: () => auth.api.getSession({ headers: request.headers }) }),
     report: (error, operation) => dependencies.reportClassifiedsFailure?.(error, operation) });
 }
 
@@ -121,7 +121,7 @@ function serveTrpc(request: Request, env: Env, dependencies: RequestDependencies
         ...(env.ARTICLE_INDEX ? { index: env.ARTICLE_INDEX as unknown as ArticleIndexWriter } : {}),
         ...(dependencies.editorialImagePurge ? { purge: dependencies.editorialImagePurge(env) } : {}),
         context: { environment: env.WORKERS_ENVIRONMENT, release: env.CF_VERSION_METADATA?.id ?? "unknown" } }),
-      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), verifyRuntimeIdentity: dependencies.verifyRuntimeIdentity, qualification: dependencies.classifiedsQualification, authority: dependencies.classifiedsAuthority, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
+      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, authority: dependencies.classifiedsAuthority, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
       sendMail: mail =>
         dependencies.sendMail
           ? dependencies.sendMail(mail, env)

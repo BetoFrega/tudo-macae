@@ -82,7 +82,7 @@ export async function classifiedsProcedure<T>(operation: () => Promise<T>) {
   }
 }
 export async function classifiedsContext(dependencies: {
-  request: Request; env: Env; accounts: D1Database; persistence?: ClassifiedsPersistence; verifyRuntimeIdentity(): Promise<boolean>; qualification?: () => Promise<boolean>; authority?: () => Promise<ClassifiedsAuthority>;
+  request: Request; env: Env; accounts: D1Database; persistence?: ClassifiedsPersistence; qualification?: () => Promise<boolean>; authority?: () => Promise<ClassifiedsAuthority>;
   session(): Promise<{ user: { id: string } } | null>;
   photoUrl?: (path: string) => string; photos?: ClassifiedsPhotos;
   offeringFlag?: (id: string) => Promise<CatalogFlagDecision>;
@@ -109,21 +109,13 @@ export async function classifiedsContext(dependencies: {
 }
 
 type ActorDependencies = {
-  request: Request; env: Env; accounts: D1Database; verifyRuntimeIdentity(): Promise<boolean>;
+  request: Request; env: Env; accounts: D1Database;
   session(): Promise<{ user: { id: string } } | null>;
 };
 
-/** A service actor header must name a valid uid and come from a verified identity reader; otherwise the session decides. */
-async function actorUid(dependencies: ActorDependencies, serviceActor: string | null) {
-  if (serviceActor === null) return (await dependencies.session())?.user.id;
-  if (!z.string().min(1).max(128).safeParse(serviceActor).success || !(await dependencies.verifyRuntimeIdentity())) throw new TRPCError({ code: "FORBIDDEN" });
-  return serviceActor;
-}
-
+/** The actor is the session's account; no request header may name another, because that would substitute for the session. */
 export async function classifiedsActor(dependencies: ActorDependencies) {
-  const { request } = dependencies;
-  const serviceActor = request.headers.get("x-classifieds-actor");
-  const uid = await actorUid(dependencies, serviceActor);
+  const uid = (await dependencies.session())?.user.id;
   const account = uid
     ? await readIdentityAccount(dependencies.accounts, uid).catch((cause: unknown) => {
         if (cause instanceof z.ZodError) throw new StoredClassifiedsDataError(cause);
@@ -133,6 +125,6 @@ export async function classifiedsActor(dependencies: ActorDependencies) {
   if (uid && (!account || account.disabled)) throw new TRPCError({ code: "FORBIDDEN" });
   return account
     ? { uid: account.uid, admin: account.claims.admin === true, editor: account.claims.editor === true, emailVerified: account.emailVerified,
-        channel: serviceActor === null ? "administration" as const : "mcp" as const }
+        channel: "administration" as const }
     : undefined;
 }

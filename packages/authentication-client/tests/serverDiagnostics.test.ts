@@ -1,9 +1,22 @@
 import { RequestCorrelationPropagator, requestCorrelationContextKey } from "@tudomacae/www-origin-routing/correlation";
 import { createWwwOriginRouter } from "@tudomacae/www-origin-routing/router";
 import { afterEach, expect, test, vi } from "vitest";
-import { context, propagation, ROOT_CONTEXT, trace } from "@opentelemetry/api";
-import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+import { context, propagation, ROOT_CONTEXT, trace, type TextMapPropagator } from "@opentelemetry/api";
+import { AsyncLocalStorageContextManager } from "@opentelemetry/context-async-hooks";
+import { CompositePropagator, W3CBaggagePropagator, W3CTraceContextPropagator } from "@opentelemetry/core";
+import { TracerProvider } from "@opentelemetry/sdk-trace";
 import { configuredAuthenticationClient } from "../server";
+
+/** Registers tracing the way the Next.js host does: provider, async context and propagation. */
+function registerTracing(propagator: TextMapPropagator = new CompositePropagator({
+  propagators: [new W3CTraceContextPropagator(), new W3CBaggagePropagator()],
+})): TracerProvider {
+  const provider = new TracerProvider();
+  trace.setGlobalTracerProvider(provider);
+  context.setGlobalContextManager(new AsyncLocalStorageContextManager().enable());
+  propagation.setGlobalPropagator(propagator);
+  return provider;
+}
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
@@ -18,8 +31,7 @@ test("SSR calls join the active Next trace even when that trace is unsampled", a
   vi.stubEnv("AUTHENTICATION_DIAGNOSTICS_ENABLED", "true");
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
   const request = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status: 503 }));
-  const provider = new NodeTracerProvider();
-  provider.register();
+  const provider = registerTracing();
   const traceId = "a".repeat(32);
   const spanId = "b".repeat(16);
   try {
@@ -82,8 +94,7 @@ test("Cloud Run SSR fails open while identity warms, then attaches cached identi
     requests.push({ url, headers: new Headers(options?.headers) });
     return new Response(null, { status: 401, headers: { "x-authentication-protocol": "1" } });
   });
-  const provider = new NodeTracerProvider();
-  provider.register();
+  const provider = registerTracing();
   try {
     const publicCall = () => context.with(context.active().setValue(requestCorrelationContextKey, correlationId), async () => {
       await expect(configuredAuthenticationClient().session("session-fixture"))
@@ -124,8 +135,7 @@ test("concurrent edge requests retain their roots across multiple SSR API calls 
     await Promise.resolve();
     return new Response(null, { status: 503 });
   });
-  const provider = new NodeTracerProvider();
-  provider.register({ propagator: new RequestCorrelationPropagator() });
+  const provider = registerTracing(new RequestCorrelationPropagator());
   const router = createWwwOriginRouter({
     log() {},
     async fetchWebWorker(incoming) {

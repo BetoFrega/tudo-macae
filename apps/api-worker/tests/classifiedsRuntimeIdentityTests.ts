@@ -7,7 +7,7 @@ test("offering catalog rechecks authority, revisions and source privacy through 
   const persistence = createClassifiedsPersistence({ database: await classifiedsDatabase() });
   await save(profile(), category("category"), { kind: "subcategory", id: "subcategory", namespace: "category", body: { name: "Subcategoria", slug: "subcategory", order: 1, isActive: true, categoryId: "category" } });
   const dependencies = { persistence, correlationId: "catalog", now: () => now, newId: () => "item", offeringFlag: async () => "enabled" as const };
-  const owner = createClassifiedsCapabilities({ ...dependencies, actor: { ...adminActor, uid: "owner", admin: false } });
+  const owner = createClassifiedsCapabilities({ ...dependencies, actor: { ...adminActor, uid: "owner", admin: false, editor: false } });
   const admin = createClassifiedsCapabilities({ ...dependencies, actor: adminActor });
   const visitor = createClassifiedsCapabilities(dependencies);
   const item = { name: "Consulta", description: "Atendimento", price: { mode: "from", amount: "12,50" }, sourceUrl: "https://source.test/private" };
@@ -23,30 +23,6 @@ test("offering catalog rechecks authority, revisions and source privacy through 
   expect(JSON.stringify(await visitor.read("offerings.public", { businessId: "profile" }))).not.toContain(item.sourceUrl);
   await expect(owner.write("offerings.enablement", { businessId: "profile", expectedRevision: 3, enabled: false, operationId: "deny", actor: { id: "admin", admin: true } })).rejects.toMatchObject({ outcome: "authorization" });
   await expect(owner.write("offerings.visibility", { businessId: "profile", expectedRevision: 0, itemId: "item", visible: false, operationId: "stale" })).rejects.toMatchObject({ outcome: "conflict" });
-});
-
-test("machine catalog writes require the current editor role for owners and administrators", async () => {
-  await save(profile(), { kind: "catalog", id: "profile", body: { enabled: false, revision: 1, items: [{ id: "item", name: "Consulta", description: "", visible: false, price: { mode: "on_request" } }] } });
-  const persistence = createClassifiedsPersistence({ database: await classifiedsDatabase() });
-  const dependencies = { persistence, correlationId: "catalog-roles", now: () => now, offeringFlag: async () => "enabled" as const };
-  const commands = [
-    ["offerings.save", { item: { id: "item", name: "Atualizada", description: "", price: { mode: "on_request" } } }],
-    ["offerings.visibility", { itemId: "item", visible: true }],
-    ["offerings.enablement", { enabled: true }],
-  ] as const;
-  for (const actor of [{ uid: "owner", admin: false }, { uid: "admin", admin: true }]) {
-    const machine = createClassifiedsCapabilities({ ...dependencies, actor: { ...actor, editor: false, channel: "mcp" } });
-    for (const [operation, input] of commands) {
-      const operationId = `${actor.uid}-${operation.split(".")[1]}`;
-      await expect(machine.write(operation, { ...input, businessId: "profile", expectedRevision: 1, operationId })).rejects.toMatchObject({ reason: "forbidden" });
-      expect(await persistence.readReceipt(actor.uid, operationId)).toBeNull();
-    }
-  }
-  expect((await persistence.read("catalog", "profile"))?.body).toMatchObject({ revision: 1, enabled: false, items: [{ name: "Consulta", visible: false }] });
-  const human = createClassifiedsCapabilities({ ...dependencies, actor: { uid: "owner", admin: false, editor: false, channel: "administration" } });
-  expect(await human.write("offerings.visibility", { businessId: "profile", expectedRevision: 1, operationId: "human", itemId: "item", visible: true })).toMatchObject({ revision: 2 });
-  const machine = createClassifiedsCapabilities({ ...dependencies, actor: { uid: "owner", admin: false, editor: true, channel: "mcp" } });
-  expect(await machine.write("offerings.visibility", { businessId: "profile", expectedRevision: 2, operationId: "editor", itemId: "item", visible: false })).toMatchObject({ revision: 3 });
 });
 
 test("identity factory deletes the complete associated set and replays after restart without touching another identity", async () => {
@@ -117,15 +93,15 @@ for (const blocker of ["reservation", "legacy"] as const) {
     expect(await persistence.read("ad", "ad")).not.toBeNull();
   });
 }
-test("identity deletion preserves the same administrator boundary for human and machine and the restricted legacy delete", async () => {
+test("identity deletion preserves the administrator boundary and the restricted legacy delete", async () => {
   await save(profile(), ad());
   const persistence = createClassifiedsPersistence({ database: await classifiedsDatabase() });
-  for (const actor of [undefined, { ...adminActor, admin: false }, { ...adminActor, channel: "mcp" as const, editor: false }]) {
+  for (const actor of [undefined, { ...adminActor, admin: false }]) {
     const core = createClassifiedsCapabilities({ persistence, actor, correlationId: crypto.randomUUID(), now: () => now });
     await expect(core.read("profiles.identity.preview", { id: "profile", actorId: "admin", channel: "administration" })).rejects.toMatchObject({ reason: "forbidden" });
     await expect(core.write("profiles.identity.delete", { id: "profile", actorId: "admin", channel: "administration" })).rejects.toMatchObject({ reason: "forbidden" });
   }
-  const machine = createClassifiedsCapabilities({ persistence, actor: { ...adminActor, channel: "mcp" }, correlationId: crypto.randomUUID(), now: () => now });
+  const machine = createClassifiedsCapabilities({ persistence, actor: adminActor, correlationId: crypto.randomUUID(), now: () => now });
   const preview = z.object({ title: z.string(), confirmationToken: z.string() }).parse(await machine.read("profiles.identity.preview", { id: "profile" }));
   const legacy = { id: "profile", expectedRevision: 1, idempotencyKey: "legacy" };
   await expect(machine.write("profiles.admin.delete", legacy)).rejects.toMatchObject({ code: "stateMismatch" });

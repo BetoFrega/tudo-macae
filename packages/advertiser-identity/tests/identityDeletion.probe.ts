@@ -14,7 +14,7 @@ export async function run(module: { createAdvertiserIdentityDeletion: typeof cre
     digest: value => value, ownsImagePath: () => false, now: () => 1,
     reportImageCleanupSkipped: () => {},
   });
-  const preview = await deletion.preview({ id: "profile", actorId: "admin" });
-  const result = await deletion.delete({ id: "profile", actorId: "admin", reason: "Duplicado", confirmedTitle: "Perfil", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" });
+  const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
+  const result = await deletion.delete({ id: "profile", actorId: "admin", channel: "administration", reason: "Duplicado", confirmedTitle: "Perfil", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" });
   assert.equal(result.outcome, "deleted");
 }

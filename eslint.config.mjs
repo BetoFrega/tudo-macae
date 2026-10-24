@@ -11,6 +11,7 @@ import { tailwind4 } from "tailwind-csstree";
 import json from "@eslint/json";
 import stylistic from "@stylistic/eslint-plugin";
 import local from "./eslint-rules/index.js";
+import { playwrightConventions } from "./eslint.playwright.mjs";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
@@ -253,48 +254,23 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ["tests/**/*"],
+    // The vinext build swaps `@/components/ui/image` for `web-worker/image.tsx`, which
+    // builds the srcset vinext omits. A direct `next/image` import skips that swap.
+    files: ["src/**/*.{ts,tsx}", "web-worker/**/*.{ts,tsx}"],
+    ignores: ["src/components/ui/image.tsx", "web-worker/image.tsx"],
     rules: {
-      "react-hooks/rules-of-hooks": "off",
-      "no-restricted-syntax": ["error", {
-        // `this.click(...)` is BasePage's delegate to the same helper.
-        selector:
-          "CallExpression[callee.property.name='click']"
-          + ":not([callee.object.type='ThisExpression'])",
-        message:
-          "Use click(locator) from tests/e2e/_helpers/click.ts — or this.click(...) "
-          + "inside a POM — instead of Playwright's .click(). "
-          + "It detects at runtime whether the target is an in-app link and waits "
-          + "for the navigation to land — a click that arrives before hydration is "
-          + "swallowed without navigating, and the failure surfaces much later.",
+      "no-restricted-imports": ["error", {
+        paths: [{
+          name: "next/image",
+          message:
+            "Import Image from \"@/components/ui/image\". Under vinext a direct "
+            + "next/image import calls the loader once, without a srcset, and "
+            + "ignores images.loaderFile.",
+        }],
       }],
     },
   },
-  {
-    files: ["tests/e2e/_helpers/**/POMs/**/*.ts"],
-    plugins: { local },
-    rules: {
-      "local/no-raw-playwright-page-selectors": [
-        "error",
-        { mode: "page-object" },
-      ],
-    },
-  },
-  {
-    files: ["tests/**/*.spec.ts"],
-    plugins: { local },
-    rules: {
-      "local/no-positional-playwright-locators": "error",
-      "local/no-raw-playwright-page-selectors": ["error", { mode: "spec" }],
-    },
-  },
-  {
-    // The helper is the one place allowed to call Playwright's .click().
-    files: ["tests/e2e/_helpers/click.ts"],
-    rules: {
-      "no-restricted-syntax": "off",
-    },
-  },
+  ...playwrightConventions,
 ]);
 
 export default eslintConfig;

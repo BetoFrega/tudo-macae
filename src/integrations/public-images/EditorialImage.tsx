@@ -1,6 +1,6 @@
 "use client";
 
-import Image, { type ImageProps } from "next/image";
+import Image, { type ImageProps } from "@/components/ui/image";
 import { publicImagePresetWidths } from "@tudomacae/public-image-delivery/contract";
 import { editorialImageTransformOrigin } from "./editorial";
 

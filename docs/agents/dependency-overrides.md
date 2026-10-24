@@ -18,7 +18,7 @@ const { packages } = require('./package-lock.json');
 const parents = {
   'typed-rest-client': ['qs'], nx: ['axios', 'brace-expansion', 'smol-toml'],
   satori: ['fflate'], '@tailwindcss/typography': ['postcss-selector-parser'],
-  'micromark-extension-math': ['katex'],
+  'micromark-extension-math': ['katex'], miniflare: ['undici'],
 };
 console.log({ overrides });
 for (const [name, children] of Object.entries(parents)) {
@@ -54,6 +54,7 @@ Esses manifestos históricos foram conferidos em 2026-10-04.
 | `satori` → `fflate@0.7.5` | GHSA-px8p-9vwx-vf98 | `satori@0.33.5` pina `fflate@0.7.3` | `satori` aceitar `fflate@>=0.7.5` e resolver uma versão sem advisories após remover o override |
 | `@tailwindcss/typography` → `postcss-selector-parser@7.1.7` | GHSA-rj75-hqrm-r3gf | `@tailwindcss/typography@0.5.20` pina `postcss-selector-parser@6.0.10` | `@tailwindcss/typography` aceitar `postcss-selector-parser@>=7.1.6` e resolver uma versão sem advisories após remover o override |
 | `micromark-extension-math` → `katex@0.19.0` | GHSA-238p-pmpm-9mq7 | `micromark-extension-math@3.1.0` pede `katex@^0.16.0` | `micromark-extension-math` aceitar `katex@>=0.18.2` e resolver uma versão sem advisories após remover o override |
+| `miniflare` → `undici@7.30.1` | GHSA-4qv8-2p9j-2685, GHSA-f72v-6w45-q472, GHSA-xjj6-f33q-929c | As cópias `5.20261019.2-beta` e `5.20261012.0-beta` pinam `undici@7.29.1` | Todas as cópias de `miniflare`, inclusive via Vite e Wrangler, aceitarem e resolverem `undici@>=7.30.1` sem o override |
 
 ### Advisories de Axios 1.20.0
 
@@ -75,3 +76,9 @@ em 2026-10-23: `@tailwindcss/typography` chama `astSync`, `selector()` e `remove
 (`grep -n "parser" node_modules/@tailwindcss/typography/src/utils.js`), e
 `micromark-extension-math` chama `katex.renderToString`
 (`grep -n katex node_modules/micromark-extension-math/lib/html.js`).
+
+O override de `miniflare` fica na versão principal 7 que ele pina e preserva a
+cópia 8 do `jsdom`. A 7.30.1 exporta tudo o que o `miniflare` usa, conferido em
+2026-10-24: `fetch`, `Headers`, `Request`, `Response`, `FormData`, `Pool` e
+`getGlobalDispatcher`
+(`grep -oE "import_undici[0-9]*\.[A-Za-z]+" node_modules/miniflare/dist/src/index.js | sort -u`).

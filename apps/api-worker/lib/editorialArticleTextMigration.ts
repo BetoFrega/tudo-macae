@@ -47,7 +47,7 @@ function migrationEvent(env: Env) {
 }
 
 /**
- * Runs hourly under the `worker` authority until no article keeps a top-level `body`.
+ * Runs hourly until no article keeps a top-level `body`.
  * @expires 2026-11-16 remove with the legacy article reader once production logs `remaining: 0`
  */
 export async function runArticleTextMigration(dependencies: WorkerDependencies, env: Env) {
@@ -55,7 +55,6 @@ export async function runArticleTextMigration(dependencies: WorkerDependencies, 
   if (!service) return;
   const base = migrationEvent(env);
   try {
-    if (await service.authority() !== "worker") return;
     const result = await migrateArticleText(service.persistence);
     // Counts only; article IDs and text stay out of the log.
     if (result.migrated || result.remaining) console.info(JSON.stringify({ ...base, outcome: "completed", ...result }));

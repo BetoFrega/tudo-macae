@@ -20,5 +20,3 @@ export const mediaUploadPath = (reservationId: string) => `/api/media/uploads/${
 export const mediaContentPath = (mediaId: string) => `/api/media/content/${encodeURIComponent(mediaId)}`;
 /** Set by the Worker on a Media 5xx it logged itself, so the app does not log the same failure again. */
 export const mediaErrorReportedHeader = "x-media-error-reported";
-/** The Worker path that answers which runtime owns editorial writes: `legacy` or `worker`. */
-export const editorialAuthorityPath = "/api/editorial/authority";

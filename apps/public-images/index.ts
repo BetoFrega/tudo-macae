@@ -18,8 +18,8 @@ function logMissingClassifiedsOrigin(env: Env, ad: boolean, requestId: string) {
 }
 
 /**
- * Classifieds images always use the Worker origin, in every environment, without reading the authority. This holds once
- * the authority is `worker`, while the D1 trigger `classifieds_authority_no_rollback` keeps it from returning to `legacy`.
+ * Classifieds images always use the Worker origin, in every environment: the D1 trigger
+ * `classifieds_authority_no_rollback` keeps Classifieds from returning to `legacy`.
  */
 function resolveClassifiedsOrigin(env: Env, { ad, profile }: { ad: boolean; profile: boolean }, requestId: string) {
   if (!(ad || profile)) return undefined;

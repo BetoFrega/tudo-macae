@@ -29,7 +29,7 @@ function cleanup(persistence: EditorialPersistence, dependencies: Pick<BlogConte
   return async (articleId: string, correlationId?: string) => (await media.synchronize(articleId, correlationId)).status;
 }
 
-/** The Blog for a live administrator or editor of an open editorial authority, acting as that account. */
+/** The Blog for a live administrator or editor, acting as that account. */
 export async function blogContext(dependencies: BlogContextDependencies) {
   const { service, account } = await manager(dependencies);
   const { persistence } = service;

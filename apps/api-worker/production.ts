@@ -5,11 +5,9 @@ import { createHostedPhotoVisibilityVerifier } from "./lib/hostedPhotoVisibility
 import { createHostedClassifiedsPhotos } from "./hostedPhotos";
 import { createClassifiedsPersistence } from "./classifieds";
 import { createD1PhotoStore, createClassifiedsPhotoPurge } from "./classifiedsPhotos";
-import { readClassifiedsAuthority } from "./lib/db/classifiedsAuthority";
 import type { WorkerDependencies } from "./lib/workerDependencies";
 import { createSiteverify } from "./lib/siteverify";
 import { createEditorialPersistence } from "./editorial";
-import { readEditorialAuthority } from "./lib/db/editorialAuthority";
 import { createEditorialMedia } from "./lib/editorialMedia";
 import type { EditorialMediaService } from "./lib/mediaHttp";
 import { createHostedMediaBytes } from "./lib/storage/editorialMediaBytes";
@@ -26,21 +24,20 @@ export function createProductionEditorialMedia(env: Env, send: typeof fetch = fe
     // The browser sends bytes to the app, which forwards them with the editor's session to `mediaUploadPath`.
     signUpload: async reservation => ({ url: new URL(`/midia/envios/${reservation.id}`, env.PUBLIC_APP_ORIGIN).href, headers: { "content-type": reservation.input.contentType } }),
   });
-  return { authority: () => readEditorialAuthority(database), persistence, bytes, media: createEditorialMedia({ persistence, bytes }) };
+  return { persistence, bytes, media: createEditorialMedia({ persistence, bytes }) };
 }
 
 /** `sendOrigin` must reach this Worker without its public host: a Worker cannot fetch its own workers.dev URL. */
 export function createProductionClassifiedsDependencies(env: Env & { PUBLIC_IMAGE_PURGE_TOKEN?: string }, send: typeof fetch = fetch, sendOrigin: typeof fetch = send): WorkerDependencies {
   const database = env.CLASSIFIEDS_DB;
-  const authority = () => readClassifiedsAuthority(database);
   return {
     verifyHumanChallenge: createSiteverify(send),
     expireAuthentication: (_, now) => runAuthenticationMaintenance(env.AUTHENTICATION_DB, env.WORKERS_ENVIRONMENT, now),
     editorialMedia: () => createProductionEditorialMedia(env, send),
     editorialImagePurge: () => createEditorialImagePurge({ send, token: env.PUBLIC_IMAGE_PURGE_TOKEN, zoneId: env.PUBLIC_IMAGE_PURGE_ZONE_ID,
       origins: { editorial: env.PUBLIC_APP_ORIGIN, images: env.PUBLIC_IMAGE_ORIGIN } }),
-    classifiedsAuthority: authority,
-    classifiedsQualification: async () => await authority() === "worker",
+    // Production is past the cutover: the D1 trigger classifieds_authority_no_rollback keeps it from returning to `legacy`.
+    classifiedsQualification: async () => true,
     classifiedsPersistence: () => createClassifiedsPersistence({ database }),
     classifiedsPhotoUrl: path => `/api/classifieds/photos/public/${encodeURIComponent(path)}`,
     classifiedsPhotos: (_environment, context) => {

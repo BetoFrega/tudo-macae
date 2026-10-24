@@ -96,7 +96,7 @@ function proveParentCorrelation(context: RequestContext, parentCorrelationId: st
 }
 
 function isClassifiedsPath(pathname: string) {
-  return pathname.startsWith("/api/trpc/classifieds") || pathname === "/api/classifieds/authority" || isClassifiedsCanonicalRoute(pathname) || isClassifiedsPhotoRoute(pathname);
+  return pathname.startsWith("/api/trpc/classifieds") || isClassifiedsCanonicalRoute(pathname) || isClassifiedsPhotoRoute(pathname);
 }
 
 /** Canonical lookups are public and the same for every caller; every other answer is private. */
@@ -125,7 +125,6 @@ const hasOwnFailureSignal = (pathname: string, classifiedsRequest: boolean) => c
 function failureRoute(pathname: string) {
   const mediaRoute = mediaFailureRoute(pathname) ?? blogFailureRoute(pathname) ?? blogPublicFailureRoute(pathname);
   if (mediaRoute) return mediaRoute;
-  if (pathname === "/api/classifieds/authority") return pathname;
   if (isClassifiedsCanonicalRoute(pathname)) return "/api/classifieds/canonical/:target";
   if (isClassifiedsPhotoRoute(pathname)) return "/api/classifieds/photos/:operation";
   if (pathname.startsWith("/internal/")) return "/internal/identities/:uid";

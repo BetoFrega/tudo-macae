@@ -12,7 +12,6 @@ import type { AuthenticationDiagnosticEvent } from "@tudomacae/authentication/di
 const capturedDiagnostics: AuthenticationDiagnosticEvent[] = [];
 import { createHostedImagesFake, createHostedPhotoFixture, offlineImagesProcessing } from "./hostedPhotoFixture";
 import { createEditorialPersistence } from "../editorial";
-import { readEditorialAuthority } from "../lib/db/editorialAuthority";
 import { createEditorialMedia } from "../lib/editorialMedia";
 import { createHostedMediaBytes } from "../lib/storage/editorialMediaBytes";
 type FixtureEnv = Env & {
@@ -36,7 +35,7 @@ function editorialMedia(env: FixtureEnv) {
     persistence, processing: offlineImagesProcessing(env.IMAGES),
     signUpload: async reservation => ({ url: `${env.MEDIA_UPLOAD_ORIGIN ?? env.PUBLIC_APP_ORIGIN}/midia/envios/${reservation.id}`, headers: { "content-type": reservation.input.contentType } }),
   });
-  return { authority: () => readEditorialAuthority(env.EDITORIAL_DB), persistence, bytes, media: createEditorialMedia({ persistence, bytes }) };
+  return { persistence, bytes, media: createEditorialMedia({ persistence, bytes }) };
 }
 const fixtureWorker = {
   async fetch(request: Request, env: FixtureEnv) {

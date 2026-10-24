@@ -4,7 +4,7 @@ import { readIdentityAccount } from "./db/identityAccounts";
 import z from "zod";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { classifiedsReadInput, classifiedsWriteInput } from "@tudomacae/classifieds-client/protocol";
-import { editorialAuthorityPath, mediaReadInput, mediaWriteInput } from "@tudomacae/editorial-media/protocol";
+import { mediaReadInput, mediaWriteInput } from "@tudomacae/editorial-media/protocol";
 import { blogReadInput, blogWriteInput } from "@tudomacae/editorial-blog/protocol";
 import { MediaIngestionError } from "@tudomacae/media/ingestionPolicy";
 import { classifiedsActor, classifiedsContext } from "./classifiedsHttp";
@@ -121,7 +121,7 @@ function serveTrpc(request: Request, env: Env, dependencies: RequestDependencies
         ...(env.ARTICLE_INDEX ? { index: env.ARTICLE_INDEX as unknown as ArticleIndexWriter } : {}),
         ...(dependencies.editorialImagePurge ? { purge: dependencies.editorialImagePurge(env) } : {}),
         context: { environment: env.WORKERS_ENVIRONMENT, release: env.CF_VERSION_METADATA?.id ?? "unknown" } }),
-      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, authority: dependencies.classifiedsAuthority, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
+      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
       sendMail: mail =>
         dependencies.sendMail
           ? dependencies.sendMail(mail, env)
@@ -185,27 +185,13 @@ async function routeResponse(request: Request, env: Env, path: string, dependenc
   return new Response(null, { status: 404 });
 }
 
-async function serveAuthority(request: Request, readAuthority: NonNullable<RequestDependencies["classifiedsAuthority"]>) {
-  if (request.method !== "GET") return new Response(null, { status: 405 });
-  return Response.json({ authority: await readAuthority() }, { headers: { "cache-control": "no-store" } });
-}
-
-/** Without an editorial D1 the Worker owns nothing, so the app keeps the legacy Media source. */
-async function serveEditorialAuthority(request: Request, env: Env, dependencies: RequestDependencies) {
-  if (request.method !== "GET") return new Response(null, { status: 405 });
-  const service = dependencies.editorialMedia?.(env);
-  return Response.json({ authority: service ? await service.authority() : "legacy" }, { headers: { "cache-control": "no-store" } });
-}
-
 /** This tsconfig loads the DOM lib, whose `CacheStorage` lacks the Workers runtime `default` colo cache. */
 const colocationCache = () => (globalThis.caches as (CacheStorage & { readonly default?: Cache }) | undefined)?.default;
 
-/** Authority and canonical lookups answer before admission: they carry no session and change nothing. */
-function serveAuthorityRead(request: Request, env: Env, path: string, dependencies: RequestDependencies) {
-  if (path === "/api/classifieds/authority" && dependencies.classifiedsAuthority) return serveAuthority(request, dependencies.classifiedsAuthority);
+/** Canonical lookups answer before admission: they carry no session and change nothing. */
+function serveCanonicalRead(request: Request, env: Env, path: string, dependencies: RequestDependencies) {
   if (isClassifiedsCanonicalRoute(path))
-    return serveClassifiedsCanonical(request, path, { persistence: dependencies.classifiedsPersistence?.(env), authority: dependencies.classifiedsAuthority, qualification: dependencies.classifiedsQualification, cache: colocationCache() });
-  if (path === editorialAuthorityPath) return serveEditorialAuthority(request, env, dependencies);
+    return serveClassifiedsCanonical(request, path, { persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, cache: colocationCache() });
   return undefined;
 }
 
@@ -217,8 +203,8 @@ export async function serveApiRequest(
   const requestDependencies: RequestDependencies = { ...workerDependencies, authenticationDatabase: env.AUTHENTICATION_DB };
   const path = new URL(request.url).pathname;
   const photoRequest = isClassifiedsPhotoRoute(path);
-  const authority = serveAuthorityRead(request, env, path, requestDependencies);
-  if (authority) return authority;
+  const canonical = serveCanonicalRead(request, env, path, requestDependencies);
+  if (canonical) return canonical;
   const rejection = await rejectRequest(request, env, path, photoRequest, requestDependencies);
   if (rejection) return rejection;
   const buffered = await readBoundedBody(request, requestBodyLimit(path, photoRequest));

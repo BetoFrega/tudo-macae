@@ -50,9 +50,13 @@ updates:
       #
       # The bound mirrors the parser's own peer range rather than naming 7.x:
       # TypeScript 6.0 is still installable and worth taking as a stepping
-      # stone. Drop this entry once typescript-eslint supports TypeScript 7.
+      # stone. Drop this entry once typescript-eslint supports TypeScript 7
+      # (`npm view @typescript-eslint/parser peerDependencies.typescript`).
+      # `lint:boundaries` blocks it too: dependency-cruiser transpiles `.ts`
+      # through `typescript` only inside its supported range
+      # (`supportedTranspilers.typescript` in its `src/meta.cjs`).
       #
-      # @expires 2026-11-03 TypeScript 7.1 is due in autumn 2026; re-check
-      # whether typescript-eslint can build on it and lift this hold (#256).
+      # @expires 2026-12-15 re-check both ranges after TypeScript 7.1 leaves
+      # beta and lift this hold once each admits it.
       - dependency-name: "typescript"
         versions: [">= 6.1"]

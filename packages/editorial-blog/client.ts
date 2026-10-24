@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { BlogError, type BlogPost, type BlogPostSummary, type SavePostInput } from "./blog";
 import { blogErrorReportedHeader, blogErrorSchema, type BlogErrorShape, type BlogReadOperation, type BlogWriteOperation } from "./protocol";
+import { serviceOrigin } from "./lib/serviceOrigin";
 
 /** The Worker could not answer, or answered outside the Blog protocol; never a domain decision. */
 export class BlogRequestError extends Error {
@@ -19,7 +20,6 @@ export class BlogInputError extends Error {
   }
 }
 
-const localHostnames = ["localhost", "127.0.0.1", "authentication.test"];
 const resultSchema = z.object({ result: z.object({ data: z.unknown() }) });
 const failureSchema = z.object({ error: z.object({ message: z.string(), data: z.object({ code: z.string().optional(), blog: blogErrorSchema.optional() }).passthrough() }) });
 const contentSchema = z.object({
@@ -41,13 +41,6 @@ function domainError(error: BlogErrorShape, message: string) {
   if (error.name === "ValidationError") return new BlogInputError(message, error.field);
   // A BlogError always carries its code; one without it is not an answer the editor can act on.
   return error.code ? new BlogError(error.code, message, fields.parse(error.field)) : new BlogRequestError("incompatible");
-}
-
-function serviceOrigin(configuration: { origin: string; allowLocal?: boolean }) {
-  const origin = new URL(configuration.origin);
-  const local = configuration.allowLocal && localHostnames.includes(origin.hostname) && origin.protocol === "http:";
-  if ((!local && origin.protocol !== "https:") || origin.username || origin.password || origin.pathname !== "/" || origin.search || origin.hash) throw new TypeError("Destino do Blog inválido.");
-  return origin;
 }
 
 type Saved = { post: BlogPost; synchronization: "confirmed" | "unconfirmed" };

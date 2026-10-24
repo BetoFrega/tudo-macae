@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./normalizedWords": "./normalizedWords.ts",
     "./slugify": "./slugify.ts"
   },
   "scripts": {

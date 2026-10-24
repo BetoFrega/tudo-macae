@@ -1,13 +1,9 @@
 import { defineConfig, mergeConfig } from "vitest/config";
-import path from "path";
-import { fileURLToPath } from "url";
-import { sharedTestConfig } from "./vitest.shared.mts";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { sourceTestConfig } from "./vitest.shared.mts";
 
 /** Integration mutation runs the `*.integration.test.ts` files one at a time. */
 export default mergeConfig(
-  sharedTestConfig,
+  sourceTestConfig,
   defineConfig({
     test: {
       environment: "node",
@@ -15,14 +11,8 @@ export default mergeConfig(
         "src/**/*.integration.test.ts",
         "packages/**/*.integration.test.ts",
       ],
-      globals: true,
       setupFiles: ["./vitest.setup.ts"],
       fileParallelism: false,
-    },
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
     },
   }),
 );

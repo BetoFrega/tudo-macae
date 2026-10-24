@@ -10,7 +10,6 @@ import type { createCategoryMaintenance } from "@tudomacae/categories/maintenanc
 import type { createCategoryLifecycle } from "@tudomacae/categories/categoryLifecycle";
 import type { createSubcategoryLifecycle } from "@tudomacae/categories/subcategoryLifecycle";
 import { route } from "./route";
-type Machine = { actorId: string; correlationId: string };
 type Business = ReturnType<typeof createBusinessCatalog>;
 type Profiles = ReturnType<typeof createAdvertiserProfiles>;
 type Administration = ReturnType<typeof createAdvertiserProfileAdministration>;
@@ -39,8 +38,6 @@ export async function assessBusinessUseCase(profile: Parameters<Business["assess
   return readiness;
 }
 export const getCategoriesUseCase = route<ReturnType<typeof createCategoryCatalog>["list"]>("categories.catalog", () => null);
-export const listCategoriesUseCase = route<Categories["listCategories"]>("categories.list", first);
-export const listSubcategoriesUseCase = route<Categories["listSubcategories"]>("subcategories.list", first);
 export const createManagedCategoryUseCase = route<Categories["createCategory"]>("categories.create", first, true);
 export const createManagedSubcategoryUseCase = route<Categories["createSubcategory"]>("subcategories.create", first, true);
 export const updateManagedCategoryUseCase = route<Categories["updateCategory"]>("categories.update", first, true);
@@ -48,7 +45,6 @@ export const updateSubcategoryUseCase = route<Maintenance["updateSubcategory"]>(
 export const deleteCategoryUseCase = route<ReturnType<typeof createCategoryLifecycle>["delete"]>("categories.delete", first, true);
 export const deleteSubcategoryUseCase = route<ReturnType<typeof createSubcategoryLifecycle>["delete"]>("subcategories.delete", first, true);
 export const seedCategoriesUseCase = route<() => Promise<void>>("categories.seed", () => null, true);
-export const resolveSubcategoryBySlugsUseCase = route<Maintenance["resolveSubcategoryBySlugs"]>("subcategories.resolve", (categorySlug, subcategorySlug) => ({ categorySlug, subcategorySlug }));
 export const createAdvertiserProfileUseCase = route<Profiles["create"]>("profiles.create", input => ({ ...input, operationId: input.operationId ?? crypto.randomUUID() }), true);
 export const updateAdvertiserProfileUseCase = route<Profiles["update"]>("profiles.update", first, true);
 export const classifyAdvertiserProfileUseCase = route<Profiles["classify"]>("profiles.classify", input => ({ id: input.id, identityType: input.identityType }), true);
@@ -57,34 +53,13 @@ export const getPublicAdvertiserProfileUseCase = route<Profiles["readPublic"]>("
 export const verifyAdvertiserProfileOwnershipUseCase = route<Profiles["verifyOwnership"]>("profiles.owned", input => ({ id: input.id }));
 export const getUserAdvertiserProfilesUseCase = route<Profiles["listForUser"]>("profiles.forOwner", userId => ({ userId }));
 export const getAllAdvertiserProfilesUseCase = route<Profiles["listAll"]>("profiles.all", () => null);
-export const getActivityAreaAdvertiserProfilesUseCase = route<Profiles["listForActivityArea"]>("profiles.area", first);
+const getActivityAreaAdvertiserProfilesUseCase = route<Profiles["listForActivityArea"]>("profiles.area", first);
 export async function listActivityAreaBusinessPreviewUseCase(input: ActivityArea & { civilDate?: string }): Promise<BusinessPublicData[]> {
   return (await getActivityAreaAdvertiserProfilesUseCase(input)).map(profile => ({ ...profile, activityAreas: profile.activityAreas ?? [input] }));
 }
-export const listAdvertiserProfilesAdministrationUseCase = route<Administration["list"]>("profiles.admin.list", first);
-export const getAdvertiserProfileAdministrationUseCase = route<Administration["get"]>("profiles.admin.get", first);
-export const findAdvertiserProfileDuplicatesAdministrationUseCase = route<Administration["findDuplicates"]>("profiles.admin.duplicates", first);
 export const createAdvertiserProfileAdministrationUseCase = route<Administration["create"]>("profiles.admin.create", first, true);
 export const updateAdvertiserProfileAdministrationUseCase = route<Administration["update"]>("profiles.admin.update", first, true);
 export const deleteAdvertiserProfileAdministrationUseCase = route<Administration["delete"]>("profiles.admin.delete", first, true);
 
 export const previewAdvertiserIdentityDeletionUseCase = route<IdentityDeletion["preview"]>("profiles.identity.preview", first);
 export const deleteAdvertiserIdentityUseCase = route<IdentityDeletion["delete"]>("profiles.identity.delete", first, true);
-
-/** MCP keeps PAT checks at its entry; the API rechecks current roles using authenticated server identity. */
-export function createClassifiedsMachineOperations(machine: Machine) {
-  return {
-    previewAdvertiserIdentityDeletionUseCase: route<IdentityDeletion["preview"]>("profiles.identity.preview", first, false, machine),
-    deleteAdvertiserIdentityUseCase: route<IdentityDeletion["delete"]>("profiles.identity.delete", first, true, machine),
-    listCategoriesUseCase: route<Categories["listCategories"]>("categories.list", first, false, machine),
-    listSubcategoriesUseCase: route<Categories["listSubcategories"]>("subcategories.list", first, false, machine),
-    createManagedCategoryUseCase: route<Categories["createCategory"]>("categories.create", first, true, machine),
-    createManagedSubcategoryUseCase: route<Categories["createSubcategory"]>("subcategories.create", first, true, machine),
-    listAdvertiserProfilesAdministrationUseCase: route<Administration["list"]>("profiles.admin.list", first, false, machine),
-    getAdvertiserProfileAdministrationUseCase: route<Administration["get"]>("profiles.admin.get", first, false, machine),
-    findAdvertiserProfileDuplicatesAdministrationUseCase: route<Administration["findDuplicates"]>("profiles.admin.duplicates", first, false, machine),
-    createAdvertiserProfileAdministrationUseCase: route<Administration["create"]>("profiles.admin.create", first, true, machine),
-    updateAdvertiserProfileAdministrationUseCase: route<Administration["update"]>("profiles.admin.update", first, true, machine),
-    deleteAdvertiserProfileAdministrationUseCase: route<Administration["delete"]>("profiles.admin.delete", first, true, machine),
-  };
-}

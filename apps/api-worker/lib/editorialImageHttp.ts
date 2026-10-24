@@ -84,14 +84,14 @@ async function read(path: string, service: EditorialMediaService, head: boolean)
 
 /**
  * Bytes of Media granted to a published post, read from Hosted Images on every request: the images Worker calls this
- * only on a cache miss. Closed, like every public Blog read, until the Worker owns editorial writes.
+ * only on a cache miss.
  */
 export async function serveEditorialImage(request: Request, path: string, dependencies: { service?: EditorialMediaService | undefined; report(stage: string): void }) {
   if (request.method !== "GET" && request.method !== "HEAD") return new Response(null, { status: 405, headers: { ...headers, allow: "GET, HEAD" } });
   const { service } = dependencies;
   let content;
   try {
-    if (!service || await service.authority() !== "worker") return new Response(null, { status: 404, headers });
+    if (!service) return new Response(null, { status: 404, headers });
     content = await read(path, service, request.method === "HEAD");
   }
   catch (error) {

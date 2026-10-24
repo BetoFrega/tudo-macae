@@ -3,12 +3,11 @@ import { firstPartyEditorialCaller } from "@tudomacae/editorial-access/caller";
 import type { EditorialPersistence } from "@tudomacae/editorial-persistence";
 import { administrativeMediaCaller } from "@tudomacae/editorial-media/caller";
 import { mediaOwnerId } from "@tudomacae/editorial-media/owner";
-import { editorialAuthorityPath, mediaErrorSchema, type MediaErrorShape, type MediaReadOperation, type MediaWriteOperation } from "@tudomacae/editorial-media/protocol";
+import { mediaErrorSchema, type MediaErrorShape, type MediaReadOperation, type MediaWriteOperation } from "@tudomacae/editorial-media/protocol";
 import { MediaNotFoundError, MediaRevisionConflictError } from "@tudomacae/media/errors";
 import { MediaIngestionError, mediaUploadLimits } from "@tudomacae/media/ingestionPolicy";
 import { sanitizedMediaPath } from "@tudomacae/media/sanitizedContent";
 import { z } from "zod";
-import type { EditorialAuthority } from "./db/editorialAuthority";
 import { StoredMediaDataError, toReservation } from "./db/editorialMedia";
 import { createLegacySourcePermissions } from "./db/editorialSourcePermissions";
 import { readIdentityAccount } from "./db/identityAccounts";
@@ -16,7 +15,6 @@ import { createEditorialMediaOperations, type createEditorialMedia, type Editori
 import type { createHostedMediaBytes } from "./storage/editorialMediaBytes";
 
 export type EditorialMediaService = {
-  authority(): Promise<EditorialAuthority>;
   persistence: EditorialPersistence;
   media: ReturnType<typeof createEditorialMedia>;
   bytes: ReturnType<typeof createHostedMediaBytes>;
@@ -52,11 +50,11 @@ function liveAccess(accounts: D1Database, persistence: EditorialPersistence): Ed
 
 async function openService(dependencies: Pick<ContextDependencies, "service">) {
   const { service } = dependencies;
-  if (!service || await service.authority() !== "worker") throw new TRPCError({ code: "NOT_FOUND" });
+  if (!service) throw new TRPCError({ code: "NOT_FOUND" });
   return service;
 }
 
-/** A live administrator or editor of an open editorial authority; the session is the only accepted caller. */
+/** A live administrator or editor; the session is the only accepted caller. */
 export async function manager(dependencies: ContextDependencies) {
   const service = await openService(dependencies);
   const uid = (await dependencies.session())?.user.id;
@@ -164,7 +162,6 @@ export const mediaUnavailableMessage = "Não foi possível acessar o acervo de m
 export function mediaFailureRoute(path: string) {
   if (uploadRoute.test(path)) return "/api/media/uploads/:reservationId";
   if (contentRoute.test(path)) return "/api/media/content/:mediaId";
-  if (path === editorialAuthorityPath) return path;
   return /^\/api\/trpc\/media(Read|Write)$/.test(path) ? `/api/trpc/media${path.endsWith("Read") ? "Read" : "Write"}` : undefined;
 }
 export const mediaUploadBodyLimit = mediaUploadLimits.maxBytes;
@@ -202,7 +199,7 @@ async function deliverContent(request: Request, dependencies: ContextDependencie
   return new Response(new Uint8Array(bytes), { headers: { ...privateHeaders, "content-type": "image/webp" } });
 }
 
-/** Upload bytes and private previews; both require a live administrator or editor of an open authority. */
+/** Upload bytes and private previews; both require a live administrator or editor. */
 export async function serveMedia(request: Request, path: string, dependencies: ContextDependencies) {
   try {
     const upload = uploadRoute.exec(path);

@@ -12,36 +12,6 @@ function client(respond: (request: Request) => Response | Promise<Response>) {
 }
 const failure = (status: number, message: string, media?: object) => Response.json({ error: { message, data: { code: "X", ...(media ? { media } : {}) } } }, { status });
 
-describe("editorial authority", () => {
-  test("reads the durable authority", async () => {
-    expect(await client(() => Response.json({ authority: "worker" })).media.authority()).toBe("worker");
-    expect(await client(() => Response.json({ authority: "legacy" })).media.authority()).toBe("legacy");
-  });
-
-  test("a Worker without the authority route fails closed instead of choosing Firebase", async () => {
-    await expect(client(() => new Response(null, { status: 404 })).media.authority()).rejects.toMatchObject({ code: "incompatible" });
-  });
-
-  test("carries the caller's request id so the Worker logs the lookup under it", async () => {
-    const requestId = "01234567-89ab-4def-8123-456789abcdef";
-    const seen: (string | null)[] = [];
-    const lookup = client((request) => {
-      seen.push(request.headers.get("x-request-id"));
-      return Response.json({ authority: "worker" });
-    });
-    await lookup.media.authority(requestId);
-    await lookup.media.authority();
-    expect(seen).toEqual([requestId, null]);
-  });
-
-  test("a failed or malformed answer never picks a source", async () => {
-    await expect(client(() => new Response(null, { status: 503 })).media.authority()).rejects.toBeInstanceOf(MediaRequestError);
-    await expect(client(() => Response.json({ authority: "firebase" })).media.authority()).rejects.toBeInstanceOf(MediaRequestError);
-    const offline = () => Promise.reject(new TypeError("offline"));
-    await expect(client(offline).media.authority()).rejects.toMatchObject({ code: "unavailable" });
-  });
-});
-
 describe("Media procedures", () => {
   test("reads travel as a query with the session, writes as a POST from the app origin", async () => {
     const { request, media } = client(() => Response.json({ result: { data: { media: [] } } }));
@@ -78,8 +48,8 @@ describe("Media procedures", () => {
     await expect(plain).rejects.toSatisfy(error => error instanceof MediaRequestError && reportedByWorker(error));
     const domain = client(() => marked(failure(500, "x", { name: "MediaIngestionError", code: "internalFailure", details: {} }))).media.write("ingestion.prepare", {}, "s");
     await expect(domain).rejects.toSatisfy(error => error instanceof MediaIngestionError && reportedByWorker(error));
-    const authority = client(() => marked(new Response(null, { status: 503 }))).media.authority();
-    await expect(authority).rejects.toSatisfy(reportedByWorker);
+    const empty = client(() => marked(new Response(null, { status: 503 }))).media.read("search", {}, "s");
+    await expect(empty).rejects.toSatisfy(reportedByWorker);
     await expect(client(() => Response.json({ data: 1 })).media.read("search", {}, "s")).rejects.toMatchObject({ code: "incompatible" });
   });
 

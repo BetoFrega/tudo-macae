@@ -99,7 +99,7 @@ class ArticleIndexUnbound extends Error {
   }
 }
 
-/** Converges the public index on the editorial D1 hourly, only once the editorial authority belongs to the Worker. */
+/** Converges the public index on the editorial D1 hourly. */
 export async function runBlogIndexReconciliation(dependencies: WorkerDependencies, env: Env) {
   const service = dependencies.editorialMedia?.(env);
   if (!service) return;
@@ -109,8 +109,7 @@ export async function runBlogIndexReconciliation(dependencies: WorkerDependencie
   const correlationId = crypto.randomUUID();
   const base = { ...reconciliationEvent(env), correlationId };
   try {
-    if (await service.authority() !== "worker") return;
-    // Under `worker` this run is the only automatic repair, so an unbound index must not pass silently.
+    // This run is the only automatic repair, so an unbound index must not pass silently.
     if (!index) throw new ArticleIndexUnbound();
     const { found, remaining } = await reconcileArticleIndex(service.persistence, index, correlationId);
     if (!found.length) return;

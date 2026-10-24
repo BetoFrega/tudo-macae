@@ -7,11 +7,11 @@ editorial D1 database. Construct the D1 adapter through
 [migrations](../../apps/api-worker/migrations-editorial/) own the schema.
 
 The [production composition](../../apps/api-worker/production.ts) serves Blog and Media
-from this adapter only when the deployment binds `EDITORIAL_DB` through `EDITORIAL_D1_ID`
-and the `editorial_authority` row reads `worker`; otherwise every Media route answers
-404 (`rg -n 'EDITORIAL_DB|EDITORIAL_D1_ID|editorial_authority' apps/api-worker/production.ts apps/api-worker/deploy.mjs apps/api-worker/lib/db/editorialAuthority.ts`).
-Production reads `worker` since 2026-10-16 ([cutover](../../docs/agents/editorial-cutover.md)),
-and this D1 is the only source of Blog and Media.
+from this adapter only when the deployment binds `EDITORIAL_DB` through `EDITORIAL_D1_ID`;
+otherwise every Media route answers 404
+(`rg -n 'EDITORIAL_DB|EDITORIAL_D1_ID' apps/api-worker/production.ts apps/api-worker/deploy.mjs`).
+This D1 is the only source of Blog and Media since the 2026-10-16
+[cutover](../../docs/agents/editorial-cutover.md).
 
 ## Records
 

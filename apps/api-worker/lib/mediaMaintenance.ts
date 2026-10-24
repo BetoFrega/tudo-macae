@@ -71,18 +71,11 @@ async function expireActivity(service: EditorialMediaService, env: Env, now: num
   if (expired) console.info(JSON.stringify({ ...base, outcome: "completed", expired, hasMore }));
 }
 
-/** Hourly editorial upkeep, only once the editorial authority belongs to the Worker; a failure in one task never skips the other. */
+/** Hourly editorial upkeep; a failure in one task never skips the other. */
 export async function runMediaMaintenance(dependencies: WorkerDependencies, env: Env, now: number) {
   const service = dependencies.editorialMedia?.(env);
   if (!service) return;
   const operationId = crypto.randomUUID();
-  try {
-    if (await service.authority() !== "worker") return;
-  }
-  catch (error) {
-    console.error(JSON.stringify({ ...sweepEvent(env, operationId), event: "editorial.maintenance", outcome: "failed", errorName: error instanceof Error ? error.name : "unknown" }));
-    throw error;
-  }
   const failure = (await Promise.allSettled([sweepQuarantine(service, env, operationId), expireActivity(service, env, now, operationId)]))
     .find(result => result.status === "rejected");
   if (failure) throw failure.reason;

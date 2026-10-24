@@ -9,7 +9,6 @@ import { readClassifiedsAuthority } from "./lib/db/classifiedsAuthority";
 import type { WorkerDependencies } from "./lib/workerDependencies";
 import { createSiteverify } from "./lib/siteverify";
 import { createEditorialPersistence } from "./editorial";
-import { readEditorialAuthority } from "./lib/db/editorialAuthority";
 import { createEditorialMedia } from "./lib/editorialMedia";
 import type { EditorialMediaService } from "./lib/mediaHttp";
 import { createHostedMediaBytes } from "./lib/storage/editorialMediaBytes";
@@ -26,7 +25,7 @@ export function createProductionEditorialMedia(env: Env, send: typeof fetch = fe
     // The browser sends bytes to the app, which forwards them with the editor's session to `mediaUploadPath`.
     signUpload: async reservation => ({ url: new URL(`/midia/envios/${reservation.id}`, env.PUBLIC_APP_ORIGIN).href, headers: { "content-type": reservation.input.contentType } }),
   });
-  return { authority: () => readEditorialAuthority(database), persistence, bytes, media: createEditorialMedia({ persistence, bytes }) };
+  return { persistence, bytes, media: createEditorialMedia({ persistence, bytes }) };
 }
 
 /** `sendOrigin` must reach this Worker without its public host: a Worker cannot fetch its own workers.dev URL. */

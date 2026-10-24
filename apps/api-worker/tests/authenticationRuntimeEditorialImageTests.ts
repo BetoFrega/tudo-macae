@@ -7,7 +7,6 @@ import { authenticationDatabase, editorialDatabase, start } from "./authenticati
 
 const origin = "http://authentication.test";
 const provenance = { origin: "own-production", creator: "Maria Souza", credit: "Foto: Maria Souza/Tudo Macaé", displayBasis: "own-production", acquiredAt: 1_700_000_000_000 };
-const openAuthority = async () => (await editorialDatabase()).prepare("UPDATE editorial_authority SET authority='worker' WHERE id=1").run();
 const requestId = "01234567-89ab-4def-8123-456789abcdef";
 
 /** Sanitized Media stored through the editor's upload, so Hosted Images holds its bytes. */
@@ -46,7 +45,6 @@ function expectOriginHeaders(response: { headers: { get(name: string): string | 
 
 test("the public image origin serves only Media granted to a published post, once the Worker owns editorial writes", async () => {
   const worker = await start();
-  await openAuthority();
   const { mediaId, digest } = await uploadedMedia(worker);
   const originPath = `/api/imagens/editorial/${mediaId}/${digest}`;
   const articlePath = `/api/noticia/post/midias/${mediaId}`;
@@ -85,24 +83,10 @@ test("the public image origin serves only Media granted to a published post, onc
   for (const path of [originPath, articlePath]) expect((await get(worker, path)).status).toBe(404);
 });
 
-test("the public image origin stays closed under the legacy authority", async () => {
-  const worker = await start();
-  await openAuthority();
-  const { mediaId, digest } = await uploadedMedia(worker);
-  await publish("post", mediaId, digest, Date.now() - 1000);
-  // Dropping the no-rollback trigger stands in for a runtime that never left `legacy`; nothing in production can.
-  await (await editorialDatabase()).prepare("DROP TRIGGER editorial_authority_no_rollback").run();
-  await (await editorialDatabase()).prepare("UPDATE editorial_authority SET authority='legacy' WHERE id=1").run();
-  const closed = await get(worker, `/api/imagens/editorial/${mediaId}/${digest}`);
-  expect(closed.status).toBe(404);
-  expectOriginHeaders(closed);
-});
-
 test("an image read failure answers 502 and is a Blog signal naming its stage", async () => {
   const messages: string[] = [];
   vi.spyOn(console, "error").mockImplementation(value => messages.push(String(value)));
   const worker = await start();
-  await openAuthority();
   const { mediaId, digest } = await uploadedMedia(worker);
   await publish("post", mediaId, digest, Date.now() - 1000);
   // A lost digest journal stands in for unreadable storage; no Media operation removes the bytes of granted Media.
@@ -121,7 +105,6 @@ test("published Media whose bytes are gone is a storage failure, not a missing i
   const messages: string[] = [];
   vi.spyOn(console, "error").mockImplementation(value => messages.push(String(value)));
   const worker = await start();
-  await openAuthority();
   const { mediaId, digest } = await uploadedMedia(worker);
   await publish("post", mediaId, digest, Date.now() - 1000);
   await (await editorialDatabase()).prepare("DELETE FROM editorial_records WHERE kind='mediaDigest' AND id=?").bind(digest).run();

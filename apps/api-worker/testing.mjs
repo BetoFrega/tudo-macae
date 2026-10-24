@@ -22,10 +22,6 @@ function editorialBindings(mediaUploadOrigin, publicOrigin) {
     MEDIA_UPLOAD_ORIGIN: { type: "json", value: mediaUploadOrigin ?? publicOrigin },
   };
 }
-/** The migrations start the editorial authority at `legacy`; the Worker owns Blog and Media, as in production. */
-async function promoteEditorialAuthority(runtime) {
-  await (await runtime.getD1Database("EDITORIAL_DB")).prepare("UPDATE editorial_authority SET authority='worker' WHERE id=1").run();
-}
 export async function startAuthenticationFixture({
   publicOrigin,
   configurationFile,
@@ -138,7 +134,6 @@ export async function startAuthenticationFixture({
         "UPDATE authentication_authority SET phase='active' WHERE singleton=1",
       )
       .run();
-    await promoteEditorialAuthority(runtime);
     const serviceToken = await new SignJWT({
       email: "fixture@test.iam.gserviceaccount.com",
       email_verified: true,

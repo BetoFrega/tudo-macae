@@ -4,9 +4,9 @@ import { runMediaMaintenance } from "../lib/mediaMaintenance";
 import type { EditorialMediaService } from "../lib/mediaHttp";
 
 const now = 1_800_000_000_000;
-function maintain(pages: (() => Promise<{ removedReservationIds: string[]; hasMore: boolean }>)[], expireActivity = vi.fn(async (_now: number) => 0), authority = "worker") {
+function maintain(pages: (() => Promise<{ removedReservationIds: string[]; hasMore: boolean }>)[], expireActivity = vi.fn(async (_now: number) => 0)) {
   const sweep = vi.fn(() => pages.shift()!());
-  const service = { authority: async () => authority, media: { quarantine: { sweep } }, persistence: { expireActivity } } as unknown as EditorialMediaService;
+  const service = { media: { quarantine: { sweep } }, persistence: { expireActivity } } as unknown as EditorialMediaService;
   return runMediaMaintenance({ editorialMedia: () => service }, {} as Env, now);
 }
 afterEach(() => {
@@ -46,12 +46,6 @@ test("Activity expiry stops after 8 full batches and reports the backlog under t
   const [sweep, expiry] = ["media.quarantine.sweep", "editorial.activity.expiry"].map(event => info.mock.calls.map(call => JSON.parse(String(call[0]))).find(entry => entry.event === event));
   expect(expiry).toMatchObject({ expired: 512, hasMore: true });
   expect(expiry.operationId).toBe(sweep.operationId);
-});
-
-test("Activity stays while the legacy runtime owns editorial writes", async () => {
-  const expireActivity = vi.fn(async (_now: number) => 0);
-  await maintain([done], expireActivity, "legacy");
-  expect(expireActivity).not.toHaveBeenCalled();
 });
 
 test("a failed quarantine sweep still expires Activity and then fails the run", async () => {

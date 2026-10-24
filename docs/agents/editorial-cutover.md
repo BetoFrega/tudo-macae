@@ -22,7 +22,7 @@ Writes made after promotion exist only in D1. Fix forward on the API Worker.
 
 ## After the cut
 
-The application no longer contains the Firebase Admin SDK, the Firebase editorial adapters, the `legacy` branches, the editorial Firestore indexes, the demo seed's editorial Firestore modules or the transfer tool. The D1 `editorial_authority` table and the Worker's `/api/editorial/authority` route remain, and the Worker's routes still require `worker`.
+The application no longer contains the Firebase Admin SDK, the Firebase editorial adapters, the `legacy` branches, the editorial Firestore indexes, the demo seed's editorial Firestore modules or the transfer tool. The Worker no longer reads the D1 `editorial_authority` table: its no-rollback trigger keeps production at `worker`, so Blog and Media open whenever `EDITORIAL_DB` is bound (`git grep -n editorial_authority -- apps/api-worker/lib`). The table stays in the migrations.
 
 What remains, each its own change:
 

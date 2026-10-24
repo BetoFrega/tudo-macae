@@ -121,7 +121,7 @@ function serveTrpc(request: Request, env: Env, dependencies: RequestDependencies
         ...(env.ARTICLE_INDEX ? { index: env.ARTICLE_INDEX as unknown as ArticleIndexWriter } : {}),
         ...(dependencies.editorialImagePurge ? { purge: dependencies.editorialImagePurge(env) } : {}),
         context: { environment: env.WORKERS_ENVIRONMENT, release: env.CF_VERSION_METADATA?.id ?? "unknown" } }),
-      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
+      classifieds: () => classifiedsContext({ request, env, accounts: dependencies.authenticationDatabase, persistence: dependencies.classifiedsPersistence?.(env), qualification: dependencies.classifiedsQualification, photoUrl: dependencies.classifiedsPhotoUrl, offeringFlag: dependencies.classifiedsOfferingFlag?.(env), photos: dependencies.classifiedsPhotos?.(env), recordOfferEvent: dependencies.offerEvents?.(env), canonicalCache: colocationCache(), session: () => auth.api.getSession({ headers: request.headers }) }),
       sendMail: mail =>
         dependencies.sendMail
           ? dependencies.sendMail(mail, env)

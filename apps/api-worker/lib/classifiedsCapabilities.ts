@@ -7,6 +7,7 @@ import type { CatalogFlagDecision } from "@tudomacae/advertiser-identity/offerin
 import { createHash, randomUUID } from "node:crypto";
 import { z } from "zod";
 import { createClassifiedsAds } from "./classifiedsAds";
+import type { OfferEvent } from "./offerEvents";
 import type { ClassifiedsPhotos } from "./classifiedsPhotoHttp";
 import supportedIcons from "./supportedIcons.json";
 import { slugify } from "@tudomacae/text-normalization/slugify";
@@ -45,6 +46,7 @@ export function createClassifiedsCapabilities(dependencies: {
   observeOffering?: Parameters<typeof createClassifiedsOfferings>[0]["observe"];
   environment?: string; release?: string;
   offeringFlag?: (id: string) => Promise<CatalogFlagDecision>;
+  recordOfferEvent?: (event: OfferEvent) => void;
 }) {
   const { actor, persistence } = dependencies;
   const now = dependencies.now ?? Date.now;
@@ -60,6 +62,9 @@ export function createClassifiedsCapabilities(dependencies: {
     activityAreaCatalog: { isActive: value => activityAreaActive(persistence, value) },
     now, digest, ownsAdImagePath: () => false, newCorrelationId: newId,
     reportImageCleanupSkipped: () => { throw new Error("Identity deletion requires its aggregate composition."); },
+    recordIdentityCreated: ({ actorId, identityId, identityType }) => dependencies.recordOfferEvent?.({
+      name: "advertiser_identity_created", actorId, identityId, ...(identityType ? { identityType } : {}),
+    }),
   });
   const identityDeletion = createAdvertiserIdentityDeletion({
     store: createClassifiedsIdentityDeletionStore({ persistence, now }), digest, ownsImagePath: isAdImagePath, now,

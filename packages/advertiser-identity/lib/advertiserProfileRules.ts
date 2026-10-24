@@ -78,6 +78,22 @@ export function profileCreationReplay(
   };
 }
 
+/** The store retries its transaction on conflict, so only the committed attempt's decision counts as the outcome. */
+export function trackedCreationReplay(replay: ProfileCreationReplay | undefined) {
+  let replayed = false;
+  return {
+    replay: replay && {
+      ...replay,
+      decide(existing: Parameters<ProfileCreationReplay["decide"]>[0]) {
+        const decision = replay.decide(existing);
+        replayed = decision === "replay";
+        return decision;
+      },
+    },
+    replayed: () => replayed,
+  };
+}
+
 export function withoutActivityArea(
   activityAreas: ActivityArea[],
   removed: ActivityArea,

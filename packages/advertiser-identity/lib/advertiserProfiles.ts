@@ -30,6 +30,7 @@ import {
   normalizedName,
   profileCreationReplay,
   toPublicProfile,
+  trackedCreationReplay,
   withoutActivityArea,
   type ActivityAreaCatalog,
   type ProfileCreationReplay,
@@ -94,6 +95,8 @@ export function createAdvertiserProfiles(dependencies: {
   newCorrelationId(): string;
   reportImageCleanupSkipped(input: { correlationId: string; count: number }): void;
   activityAreaCatalog: ActivityAreaCatalog;
+  /** Runs after the write commits, once per identity an account creates; a replayed creation does not call it. */
+  recordIdentityCreated?(input: { actorId: string; identityId: string; identityType?: AdvertiserIdentityType }): void;
 }) {
   const validateActivityAreas = (areas: ActivityArea[]): ValidateProfileWrite => async (catalog) => {
     for (const area of areas) {
@@ -133,14 +136,14 @@ export function createAdvertiserProfiles(dependencies: {
         createdAt: now,
         updatedAt: now,
       };
-      const replay = input.operationId
-        ? profileCreationReplay(input.userId, input.operationId, record, dependencies.digest)
-        : undefined;
+      const creation = trackedCreationReplay(input.operationId ? profileCreationReplay(input.userId, input.operationId, record, dependencies.digest) : undefined);
       const validateAreas = validateActivityAreas(activityAreas);
-      return dependencies.store.create(record, async (context) => {
+      const id = await dependencies.store.create(record, async (context) => {
         await assertIdentityTypeAvailable(context, input.userId, fields.identityType);
         await validateAreas(context);
-      }, replay);
+      }, creation.replay);
+      if (!creation.replayed()) dependencies.recordIdentityCreated?.({ actorId: input.userId, identityId: id, ...(fields.identityType ? { identityType: fields.identityType } : {}) });
+      return id;
     },
     async classify(input: ClassifyAdvertiserProfileInput) {
       const value = classifyAdvertiserProfileSchema.parse(input);

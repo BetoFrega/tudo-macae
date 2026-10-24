@@ -28,11 +28,15 @@
     "TURNSTILE_ENFORCEMENT": "off",
     "PUBLIC_IMAGE_PURGE_ZONE_ID": "",
     "PUBLIC_IMAGE_ORIGIN": "https://images.tudomacae.com.br",
+    // Empty sends no product events; qualification shares production's PostHog project.
+    "POSTHOG_PROJECT_TOKEN": "",
   },
   "env": {
     "production": {
       "vars": {
         "AUTHENTICATION_DIAGNOSTICS_ENABLED": "true",
+        // Public project key, the same one the web Worker ships to browsers.
+        "POSTHOG_PROJECT_TOKEN": "phc_hsJ53t7erFJXLbu8InsQxr85MWzQtkGksfmQMR27mDi",
       },
     },
   },

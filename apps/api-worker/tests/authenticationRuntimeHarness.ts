@@ -150,6 +150,8 @@ export async function start(activate = true, classifiedsQualification = false, h
             CLASSIFIEDS_DB: { type: "d1", id: "authentication-classifieds-test" },
             PHOTOS: { type: "r2", name: "classifieds-photos" },
             EDITORIAL_DB: { type: "d1", id: "authentication-editorial-test" },
+            // Production binds the index whenever it binds EDITORIAL_DB, and the hourly reconciliation fails without it.
+            ARTICLE_INDEX: { type: "worker", worker: "article-index-test", exportName: "ArticleIndexWriter" },
             MEDIA_HOSTED: { type: "r2", name: "media-hosted" },
             IMAGES: { type: "images" },
             PUBLIC_APP_ORIGIN: {
@@ -183,6 +185,27 @@ export async function start(activate = true, classifiedsQualification = false, h
                 return siteverify(new URLSearchParams(await request.text()));
               unexpectedOutboundRequests.push(request.url);
               return new RuntimeResponse(null, { status: 503 });
+            },
+          },
+        },
+      },
+      {
+        config: {
+          name: "article-index-test",
+          compatibilityDate: "2026-09-25",
+          manifest: {
+            mainModule: "index.js",
+            modules: {
+              "index.js": {
+                type: "esm",
+                contents: `import { WorkerEntrypoint } from "cloudflare:workers";
+export class ArticleIndexWriter extends WorkerEntrypoint {
+  async summaries() { return []; }
+  async publish() { return "confirmed"; }
+  async retire() { return "confirmed"; }
+}
+export default { fetch: () => new Response(null, { status: 404 }) };`,
+              },
             },
           },
         },

@@ -1,9 +1,7 @@
 import { MediaNotFoundError, MediaRevisionConflictError } from "@tudomacae/media/errors";
 import { MediaIngestionError } from "@tudomacae/media/ingestionPolicy";
 import { z } from "zod";
-import { editorialAuthorityPath, mediaContentPath, mediaErrorReportedHeader, mediaErrorSchema, mediaUploadPath, type MediaErrorShape, type MediaReadOperation, type MediaWriteOperation } from "./protocol";
-
-export type EditorialAuthority = "legacy" | "worker";
+import { mediaContentPath, mediaErrorReportedHeader, mediaErrorSchema, mediaUploadPath, type MediaErrorShape, type MediaReadOperation, type MediaWriteOperation } from "./protocol";
 
 /** The Worker could not answer, or answered outside the Media protocol; never a domain decision. */
 export class MediaRequestError extends Error {
@@ -85,22 +83,6 @@ export function createEditorialMediaClient(configuration: { origin: string; publ
     return result.data.result.data as T;
   }
   return {
-    /** Which runtime owns editorial writes; a failed read never defaults to either. `requestId` correlates the Worker's log. */
-    async authority(requestId?: string): Promise<EditorialAuthority> {
-      const response = await fetchWorker(editorialAuthorityPath, { method: "GET", ...(requestId ? { headers: { "x-request-id": requestId } } : {}) });
-      // A Worker without this route predates the editorial authority; choosing Firebase there would reopen writes after a rollback.
-      if (response.status === 404) {
-        await response.body?.cancel();
-        throw withProvenance(new MediaRequestError("incompatible"), response);
-      }
-      if (!response.ok) {
-        await response.body?.cancel();
-        throw responseFailure(response);
-      }
-      const value = z.object({ authority: z.enum(["legacy", "worker"]) }).safeParse(await response.json().catch(() => null));
-      if (!value.success) throw new MediaRequestError("incompatible");
-      return value.data.authority;
-    },
     read<T>(operation: MediaReadOperation, input: unknown, session: string | undefined, requestId?: string) {
       const body = JSON.stringify({ operation, input: input ?? null, ...(requestId ? { requestId } : {}) });
       return procedure<T>(`/api/trpc/mediaRead?input=${encodeURIComponent(body)}`, { method: "GET", headers: headers(session) });

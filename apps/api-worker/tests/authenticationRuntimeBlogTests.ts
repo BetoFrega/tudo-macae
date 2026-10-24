@@ -17,14 +17,11 @@ async function account(worker: Miniflare, email: string, claims: Record<string, 
 /** The production client, reaching the Worker through Miniflare instead of the network. */
 const client = (worker: Miniflare) => createEditorialBlogClient({ origin, publicOrigin: origin, allowLocal: true,
   request: (async (url: URL, init: RequestInit) => worker.dispatchFetch(url.href, init as never)) as unknown as typeof fetch });
-const openAuthority = async () => (await editorialDatabase()).prepare("UPDATE editorial_authority SET authority='worker' WHERE id=1").run();
 
-test("Blog procedures stay closed until the editorial authority belongs to the Worker and refuse non-editors", async () => {
+test("Blog procedures open to editors and refuse non-editors", async () => {
   const worker = await start();
   const blog = client(worker);
   const editor = await account(worker, "blog-closed@example.com", { editor: true });
-  await expect(blog.list(undefined, editor)).rejects.toBeInstanceOf(BlogRequestError);
-  await openAuthority();
   expect(await blog.list(undefined, editor)).toEqual({ items: [] });
   const visitor = await account(worker, "blog-visitor@example.com", {});
   await expect(blog.list(undefined, visitor)).rejects.toMatchObject({ code: "forbidden" });
@@ -33,14 +30,13 @@ test("Blog procedures stay closed until the editorial authority belongs to the W
 
 test("an editor saves, publishes and takes a post offline; refusals keep the message and field the panel shows", async () => {
   const worker = await start();
-  await openAuthority();
   const blog = client(worker);
   const editor = await account(worker, "blog-editor@example.com", { editor: true });
   // The longest accepted body, escaped by JSON well beyond the default request limit.
   const body = "\"".repeat(200_000);
   const draft = await blog.save({ title: "Orla", body }, editor, "save-correlation");
-  // The harness binds no public index, so distribution stays unconfirmed while the save commits.
-  expect(draft).toMatchObject({ post: { status: "draft", revision: 1 }, synchronization: "unconfirmed" });
+  // The harness binds a public index that confirms every write.
+  expect(draft).toMatchObject({ post: { status: "draft", revision: 1 }, synchronization: "confirmed" });
   expect((await blog.read(draft.post.id, editor))?.revision).toBe(1);
   const published = await blog.save({ id: draft.post.id, expectedRevision: 1, title: "Orla", body: "Texto", publish: true }, editor);
   expect(published.post).toMatchObject({ status: "published", revision: 2 });
@@ -64,7 +60,6 @@ test("an unexpected Blog failure is a Blog signal naming its operation, outside 
   const messages: string[] = [];
   vi.spyOn(console, "error").mockImplementation(value => messages.push(String(value)));
   const worker = await start();
-  await openAuthority();
   const blog = client(worker);
   const editor = await account(worker, "blog-failing@example.com", { editor: true });
   // A malformed row stands in for incompatible persisted data; no Blog operation writes one.

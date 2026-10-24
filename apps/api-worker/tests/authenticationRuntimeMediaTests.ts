@@ -28,22 +28,11 @@ function media(worker: Miniflare, cookie: string) {
   };
 }
 
-const openAuthority = async () => (await editorialDatabase()).prepare("UPDATE editorial_authority SET authority='worker' WHERE id=1").run();
 const image = async () => new Uint8Array(await sharp({ create: { width: 64, height: 32, channels: 3, background: "red" } }).png().toBuffer());
 
-test("Media routes stay closed until the editorial authority belongs to the Worker", async () => {
+test("Media routes open to editors and refuse other accounts", async () => {
   const worker = await start();
-  const authority = async () => {
-    const response = await worker.dispatchFetch(`${origin}/api/editorial/authority`);
-    expect(response.headers.get("cache-control")).toContain("no-store");
-    return response.json();
-  };
-  const editor = media(worker, (await account(worker, "closed-editor@example.com", { editor: true })).cookie);
-  expect(await authority()).toEqual({ authority: "legacy" });
-  expect((await editor.read("search", {})).error?.data.code).toBe("NOT_FOUND");
-  expect((await editor.put(`/api/media/uploads/${"a".repeat(64)}`, new Uint8Array([1]))).status).toBe(404);
-  await openAuthority();
-  expect(await authority()).toEqual({ authority: "worker" });
+  const editor = media(worker, (await account(worker, "media-editor@example.com", { editor: true })).cookie);
   expect((await editor.read("search", {})).result?.data).toEqual({ media: [] });
   const visitor = media(worker, (await account(worker, "visitor@example.com", {})).cookie);
   expect((await visitor.read("search", {})).error?.data.code).toBe("FORBIDDEN");
@@ -51,7 +40,6 @@ test("Media routes stay closed until the editorial authority belongs to the Work
 
 test("an editor uploads through the reservation it owns and previews the sanitized Media", async () => {
   const worker = await start();
-  await openAuthority();
   const editor = media(worker, (await account(worker, "editor@example.com", { editor: true })).cookie);
   const other = media(worker, (await account(worker, "other-editor@example.com", { editor: true })).cookie);
   const bytes = await image();
@@ -91,7 +79,6 @@ test("an editor uploads through the reservation it owns and previews the sanitiz
 
 test("administrative operations refuse editors and Media use needs an imported Source Permission", async () => {
   const worker = await start();
-  await openAuthority();
   const editor = media(worker, (await account(worker, "limited-editor@example.com", { editor: true })).cookie);
   expect((await editor.read("unreferenced", {})).error?.data.code).toBe("FORBIDDEN");
   expect((await editor.write("update", { id: "media", expectedRevision: 1, metadata })).error?.data.code).toBe("FORBIDDEN");
@@ -109,7 +96,7 @@ test("administrative operations refuse editors and Media use needs an imported S
   expect((await dualRole.write("update", { id: "media", expectedRevision: 1, metadata })).error?.data.code).toBe("FORBIDDEN");
 });
 
-test("the hourly cron sweeps due quarantine reservations only under the Worker authority", async () => {
+test("the hourly cron sweeps due quarantine reservations", async () => {
   const worker = await start();
   const persistence = createEditorialPersistence({ database: await editorialDatabase() });
   // One more than a sweep page, so one run must drain two.
@@ -121,11 +108,7 @@ test("the hourly cron sweeps due quarantine reservations only under the Worker a
     }
     return null;
   });
-  const sweep = async () => (await worker.getWorker()).scheduled({ scheduledTime: new Date() });
-  await sweep();
-  expect((await persistence.read("uploadReservation", "due"))?.body.cleanupPending).toBe(true);
-  await openAuthority();
-  await sweep();
+  await (await worker.getWorker()).scheduled({ scheduledTime: new Date() });
   for (const id of ids) expect((await persistence.read("uploadReservation", id))?.body).toMatchObject({ cleanupPending: false, status: "expired" });
 });
 
@@ -133,7 +116,6 @@ test("an unexpected Media failure is a Media signal with its normalized route, o
   const messages: string[] = [];
   vi.spyOn(console, "error").mockImplementation(value => messages.push(String(value)));
   const worker = await start();
-  await openAuthority();
   const failing = await account(worker, "failing-editor@example.com", { editor: true });
   const editor = media(worker, failing.cookie);
   // An intent without its caller, input or timestamp stands in for an incompatible import.
@@ -169,7 +151,6 @@ test("an unexpected Media failure is a Media signal with its normalized route, o
 
 test("a correction that writes nothing is an error, and an account row that no longer parses is a server failure", async () => {
   const worker = await start();
-  await openAuthority();
   const editing = await account(worker, "correcting-editor@example.com", { editor: true });
   const editor = media(worker, editing.cookie);
   const correction = { mediaId: "missing", expectedRevision: 1, metadata: { alt: "Orla", caption: "", provenance }, reason: "Descrição mais precisa" };

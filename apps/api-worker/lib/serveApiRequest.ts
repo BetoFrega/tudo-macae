@@ -4,7 +4,7 @@ import { readIdentityAccount } from "./db/identityAccounts";
 import z from "zod";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { classifiedsReadInput, classifiedsWriteInput } from "@tudomacae/classifieds-client/protocol";
-import { editorialAuthorityPath, mediaReadInput, mediaWriteInput } from "@tudomacae/editorial-media/protocol";
+import { mediaReadInput, mediaWriteInput } from "@tudomacae/editorial-media/protocol";
 import { blogReadInput, blogWriteInput } from "@tudomacae/editorial-blog/protocol";
 import { MediaIngestionError } from "@tudomacae/media/ingestionPolicy";
 import { classifiedsActor, classifiedsContext } from "./classifiedsHttp";
@@ -190,13 +190,6 @@ async function serveAuthority(request: Request, readAuthority: NonNullable<Reque
   return Response.json({ authority: await readAuthority() }, { headers: { "cache-control": "no-store" } });
 }
 
-/** Without an editorial D1 the Worker owns nothing, so the app keeps the legacy Media source. */
-async function serveEditorialAuthority(request: Request, env: Env, dependencies: RequestDependencies) {
-  if (request.method !== "GET") return new Response(null, { status: 405 });
-  const service = dependencies.editorialMedia?.(env);
-  return Response.json({ authority: service ? await service.authority() : "legacy" }, { headers: { "cache-control": "no-store" } });
-}
-
 /** This tsconfig loads the DOM lib, whose `CacheStorage` lacks the Workers runtime `default` colo cache. */
 const colocationCache = () => (globalThis.caches as (CacheStorage & { readonly default?: Cache }) | undefined)?.default;
 
@@ -205,7 +198,6 @@ function serveAuthorityRead(request: Request, env: Env, path: string, dependenci
   if (path === "/api/classifieds/authority" && dependencies.classifiedsAuthority) return serveAuthority(request, dependencies.classifiedsAuthority);
   if (isClassifiedsCanonicalRoute(path))
     return serveClassifiedsCanonical(request, path, { persistence: dependencies.classifiedsPersistence?.(env), authority: dependencies.classifiedsAuthority, qualification: dependencies.classifiedsQualification, cache: colocationCache() });
-  if (path === editorialAuthorityPath) return serveEditorialAuthority(request, env, dependencies);
   return undefined;
 }
 

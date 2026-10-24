@@ -21,7 +21,10 @@ function run(checks: string, production: string, existing = false, workers = "su
       env: { ...process.env, PATH: `${directory}:${process.env.PATH}`, TICKET_CALLS: calls,
         GITHUB_REPOSITORY: "BetoFrega/tudo-macae", GITHUB_RUN_ID: "123", RELEASE_SHA: releaseSha, CHECKS_RESULT: checks, PRODUCTION_RESULT: production, WORKERS_RESULT: workers },
     });
-    return readFileSync(calls, "utf8").trim().split("\n").map(line => JSON.parse(line) as string[]);
+    const [headLookup, ...ticketCalls] = readFileSync(calls, "utf8").trim().split("\n").map(line => JSON.parse(line) as string[]);
+    // Every run first asks whether it still delivers main's head.
+    expect(headLookup).toEqual(["api", "repos/BetoFrega/tudo-macae/commits/main"]);
+    return ticketCalls;
   }
   finally { rmSync(directory, { recursive: true, force: true }); }
 }
@@ -78,15 +81,14 @@ test.skipIf(inWorkers)("closes a blocker only when checks, the API Worker and Wo
 
 test.skipIf(inWorkers)("leaves the blocker untouched when a newer main push superseded the run", () => {
   const newer = "b".repeat(40);
-  for (const [checks, production, workers] of [["cancelled", "skipped", "skipped"], ["success", "cancelled", "skipped"], ["success", "success", "cancelled"]]) {
-    const calls = run(checks, production, true, workers, newer);
-    expect(calls).toEqual([["api", "repos/BetoFrega/tudo-macae/commits/main"]]);
+  // A superseded success must not close a blocker that the newer run's failed checks opened.
+  for (const [checks, production, workers] of [["cancelled", "skipped", "skipped"], ["success", "cancelled", "skipped"], ["success", "success", "cancelled"], ["success", "success", "success"], ["success", "failure", "skipped"]]) {
+    expect(run(checks, production, true, workers, newer)).toEqual([]);
   }
 });
 
 test.skipIf(inWorkers)("reports a cancelled run whose SHA is still main's head", () => {
   const calls = run("cancelled", "skipped");
-  expect(calls[0]).toEqual(["api", "repos/BetoFrega/tudo-macae/commits/main"]);
   expect(calls.at(-1)).toContain("labels[]=needs-triage");
   expect(calls.at(-1)?.join(" ")).toContain("Checks: cancelled");
 });

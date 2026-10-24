@@ -139,9 +139,10 @@ mid-publish; a newer run's pending job replaces an older pending one in its grou
 The groups differ so an older run's pending `workers` job cannot replace a newer
 run's `production` job; the newer API Worker may publish while an older `workers`
 job runs, which the API's compatibility with the serving web Worker allows.
-`bin/deployment-ticket.mjs` leaves the correction ticket untouched when a cancelled
-run's SHA is no longer main's head; a cancelled run still at the head opens or
-updates it. Never cancel a running `production` or `workers` job by hand; wait for
+Only the run for main's head updates the correction ticket: `bin/deployment-ticket.mjs`
+leaves it untouched for any older run, whatever its result, because an older run's
+mutation can succeed after a newer run's checks already failed. A run still at the
+head reports every result, a cancellation by hand or a timeout included. Never cancel a running `production` or `workers` job by hand; wait for
 the newer run instead. Preserve environment waits.
 
 Before dispatch, record workflow (`deploy.yml`), ref, UTC start (`date -u +%FT%TZ`) and active actor

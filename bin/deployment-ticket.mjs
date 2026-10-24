@@ -3,10 +3,11 @@ const repository = process.env.GITHUB_REPOSITORY;
 if (repository !== "BetoFrega/tudo-macae") throw new Error("Unexpected repository.");
 const api = (path, args = []) => JSON.parse(execFileSync("gh", ["api", `repos/${repository}/${path}`, ...args], { encoding: "utf8" }));
 const results = [process.env.CHECKS_RESULT, process.env.PRODUCTION_RESULT, process.env.WORKERS_RESULT];
-// A newer push cancels this run's checks or replaces its pending mutation job, and that
-// newer run reports the delivery. A cancelled run whose SHA is still main's head was
-// stopped by hand or timed out, which the ticket must report.
-if (results.includes("cancelled") && api("commits/main").sha !== process.env.RELEASE_SHA) {
+// Only the run for main's head reports. An older run's mutation jobs can finish after a
+// newer run's checks already failed, so its success must not close that blocker, and its
+// cancellation or failure is superseded by the newer run's own outcome. A run still at
+// the head reports every result, including a cancellation by hand or a timeout.
+if (api("commits/main").sha !== process.env.RELEASE_SHA) {
   console.log("A newer main delivery superseded this run; the correction ticket is unchanged.");
   process.exit(0);
 }

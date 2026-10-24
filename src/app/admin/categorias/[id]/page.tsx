@@ -14,8 +14,8 @@ export default async function EditCategoryPage({
   params,
 }: EditCategoryPageProps) {
   const { id } = await params;
-  // The admin panel must always reflect live data, so it reads Firestore
-  // uncached. That requires opting out of prerendering.
+  // The admin panel must always reflect live data, so it reads the
+  // persistence uncached. That requires opting out of prerendering.
   await connection();
   const categories = await getCategoriesLive();
   const category = categories.find(c => c.id === id);

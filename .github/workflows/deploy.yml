@@ -86,7 +86,7 @@ jobs:
           DOMAIN_SEAMS_BASE: ${{ steps.candidate.outputs.sha }}^
       - name: Check Worker HTTP, authorization and persistence contracts
         run: npm run test:worker
-      - name: Check Vitest unit tier without Firebase
+      - name: Check Vitest unit tier
         run: npm test -- --tier=unit --bail=1
       - name: Check Vitest integration tier and application build before production mutation
         run: npm test -- --tier=integration --bail=1 && npm run build:check

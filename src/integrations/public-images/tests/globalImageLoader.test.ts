@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
+// Asserts how Next itself applies `images.loaderFile`, which the app module passes through unchanged.
+// eslint-disable-next-line no-restricted-imports
 import { getImageProps } from "next/image";
 import loader from "../../../../image-loader";
 

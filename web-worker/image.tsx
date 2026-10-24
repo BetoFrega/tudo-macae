@@ -1,10 +1,16 @@
 "use client";
 import { forwardRef, type ComponentProps } from "react";
-import VinextImage from "vinext/shims/image";
+// In the vinext build `next/image` resolves to vinext's shim; importing it by that specifier, never
+// `@/components/ui/image`, keeps this module from replacing its own dependency. Aliasing `next/image`
+// itself to this module makes vinext resolve its shim back here, so `<Image>` renders itself until the
+// Worker exceeds its limits (cloudflare/vinext#4262).
+import VinextImage from "next/image";
 import { publicImageDeviceSizes, publicImageSizes } from "@tudomacae/public-image-delivery/contract";
 import directImageLoader from "../image-loader.js";
 
-export * from "vinext/shims/image";
+// Named, not `export *`: in the RSC environment `next/image` is vinext's virtual module, which
+// @vitejs/plugin-rsc cannot read from disk to expand a "use client" star export.
+export type { ImageProps } from "next/image";
 
 type VinextImageProps = ComponentProps<typeof VinextImage>;
 type Loader = NonNullable<VinextImageProps["loader"]>;
@@ -38,6 +44,9 @@ function intrinsicWidth(src: VinextImageProps["src"], width: VinextImageProps["w
 
 // vinext ignores `images.loaderFile` and calls a loader once with `width: imgWidth ?? 0` and no srcset,
 // so this resolves src and srcset the way Next.js does and hands vinext a loader that returns them.
+// The vinext build swaps `src/components/ui/image.tsx` for this module; `next build` never loads it.
+// @expires 2026-12-24 delete this module and its alias once vinext honours `images.loaderFile` and
+// builds a custom loader's srcset (cloudflare/vinext#3686).
 const Image = forwardRef<HTMLImageElement, VinextImageProps>(function Image({ loader, ...props }, ref) {
   if (props.unoptimized) return <VinextImage ref={ref} {...props} />;
   const appLoader: Loader = loader ?? directImageLoader;

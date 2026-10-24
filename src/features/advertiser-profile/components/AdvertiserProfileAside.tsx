@@ -5,9 +5,9 @@ import { IdentityPublicImage as PublicImage } from "@/integrations/advertiser-id
 import { IdentityIntegration } from "@/integrations/advertiser-identity/IdentityIntegration";
 import { getPublicAdvertiserProfile } from "../actions/getPublicAdvertiserProfile";
 
-export async function AdvertiserProfileAside({ profileId, sourcePath }: { profileId: string; sourcePath: string }) {
+export async function AdvertiserProfileAside({ profileId, adId, sourcePath }: { profileId: string; adId: string; sourcePath: string }) {
   const [profile, business] = await Promise.all([
     getPublicAdvertiserProfile(profileId), getBusinessUseCase({ id: profileId }),
   ]);
-  return <IdentityIntegration><View profile={profile} business={business} sourcePath={sourcePath} Link={Link} Image={PublicImage} /></IdentityIntegration>;
+  return <IdentityIntegration><View profile={profile} business={business} adId={adId} sourcePath={sourcePath} Link={Link} Image={PublicImage} /></IdentityIntegration>;
 }

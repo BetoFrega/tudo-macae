@@ -50,7 +50,7 @@ beforeEach(async () => {
   const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;
   options = { resourcePersistencePath: join(directory, crypto.randomUUID()), workers: [{ config: {
     name: "photos", compatibilityDate: "2026-09-25", compatibilityFlags: ["nodejs_compat"],
-    env: { IMAGES: { type: "images" }, CLASSIFIEDS_DB: { type: "d1", id: "photos" }, AUTHENTICATION_DB: { type: "d1", id: "photos-authentication" }, PHOTOS: { type: "r2", name: "photos" }, GATE: { type: "fetcher", handler: async (request) => {
+    env: { IMAGES: { type: "images" }, CLASSIFIEDS_DB: { type: "d1", id: "photos" }, AUTHENTICATION_DB: { type: "d1", id: "photos-authentication" }, PHOTOS: { type: "r2", name: "photos" }, PDM_EXPORTS: { type: "r2", name: "pdm-exports" }, GATE: { type: "fetcher", handler: async (request) => {
       const gate = gates.get(new URL(request.url).pathname.slice(1));
       gate?.entered();
       await gate?.wait;

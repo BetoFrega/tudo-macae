@@ -49,11 +49,21 @@ function expireAudits(dependencies: WorkerDependencies, env: Env, operationId: s
   });
 }
 
+/** Writes the day's sanitized supply snapshot on the first hourly run of each Macaé day. */
+function exportSupplySnapshot(dependencies: WorkerDependencies, env: Env, operationId: string, now: number) {
+  const snapshot = dependencies.classifiedsSupplySnapshot;
+  if (!snapshot) return;
+  return runTask(env, "classifieds.supply.snapshot", operationId, async () => {
+    const result = await snapshot(env)?.run(now);
+    return result?.written ? result : undefined;
+  });
+}
+
 /** One hourly trigger qualifies once and runs every task under one operation id; a failure in one never skips the others. */
 export async function runClassifiedsMaintenance(dependencies: WorkerDependencies, env: Env, now: number) {
   const operationId = crypto.randomUUID();
   if (!(await isQualified(dependencies))) return;
-  const failure = (await Promise.allSettled([sweepPhotos(dependencies, env, operationId), expireAudits(dependencies, env, operationId, now)]))
+  const failure = (await Promise.allSettled([sweepPhotos(dependencies, env, operationId), expireAudits(dependencies, env, operationId, now), exportSupplySnapshot(dependencies, env, operationId, now)]))
     .find(result => result.status === "rejected");
   if (failure) throw failure.reason;
 }

@@ -183,6 +183,8 @@ jobs:
           AUTHENTICATION_API_ORIGIN: https://tudo-macae-api-production.frega.workers.dev
           AUTHENTICATION_RUNTIME_ACCOUNT: ${{ env.RUNTIME_ACCOUNT }}
           PUBLIC_IMAGE_PURGE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
+          # Empty deploys without the daily Classifieds supply snapshot; set it once the EU bucket exists.
+          PDM_EXPORTS_BUCKET: ${{ vars.PDM_EXPORTS_BUCKET }}
           # Empty enforces Turnstile; set the variable to off only while the serving Next sends no token.
           TURNSTILE_ENFORCEMENT: ${{ vars.TURNSTILE_ENFORCEMENT }}
         run: node bin/deploy-api-worker-production.mjs

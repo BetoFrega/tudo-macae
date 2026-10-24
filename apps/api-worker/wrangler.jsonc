@@ -57,6 +57,8 @@
       "migrations_dir": "migrations-editorial",
     },
   ],
+  // Deployments bind it only when PDM_EXPORTS_BUCKET is configured; the daily supply snapshot stays off without it.
+  "r2_buckets": [{ "binding": "PDM_EXPORTS", "bucket_name": "tudo-macae-pdm-exports", "jurisdiction": "eu" }],
   "triggers": { "crons": ["23 * * * *"] },
   "images": { "binding": "IMAGES" },
   // The Blog distributes to the public article index through its bound writer entrypoint.

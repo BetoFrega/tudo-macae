@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { PublicBlogArticle, PublicBlogPage } from "./publicBlog";
 import { articleMediaId, articleMediaPath, articleMediaRoute, blogPublicErrorReportedHeader, blogPublicReadPath, editorialImageOriginPath, editorialImageOriginRoute, publicArticleIdPattern, publicBlogArticleSchema, publicBlogPageSchema, type BlogPublicReadInput } from "./publicProtocol";
+import { serviceOrigin } from "./lib/serviceOrigin";
 
 /** The Worker could not answer, or answered outside the Blog protocol; never a public decision. */
 export class PublicBlogRequestError extends Error {
@@ -12,15 +13,7 @@ export class PublicBlogRequestError extends Error {
 }
 
 const reported = (response: Response) => response.status >= 500 && response.headers.get(blogPublicErrorReportedHeader) === "1";
-const localHostnames = ["localhost", "127.0.0.1", "authentication.test"];
 const resultSchema = z.object({ result: z.object({ data: z.unknown() }) });
-
-function serviceOrigin(configuration: { origin: string; allowLocal?: boolean }) {
-  const origin = new URL(configuration.origin);
-  const local = configuration.allowLocal && localHostnames.includes(origin.hostname) && origin.protocol === "http:";
-  if ((!local && origin.protocol !== "https:") || origin.username || origin.password || origin.pathname !== "/" || origin.search || origin.hash) throw new TypeError("Destino do Blog inválido.");
-  return origin;
-}
 
 /** The API Worker's public Blog reads; they carry no credential, only the app origin and the request id. */
 export function createPublicBlogClient(configuration: { origin: string; publicOrigin: string; allowLocal?: boolean; request?: typeof fetch }) {

@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
-    "@cloudflare/vite-plugin": "1.64.0",
+    "@cloudflare/vite-plugin": "1.65.0",
     "@vitejs/plugin-rsc": "^0.5.34",
     "@vinext/cloudflare": "1.2.0",
     "react-server-dom-webpack": "^19.2.6",

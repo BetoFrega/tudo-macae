@@ -13,7 +13,6 @@
     "./offeringCatalog": "./offeringCatalog.ts",
     "./offeringDiagnostics": "./offeringDiagnostics.ts",
     "./offeringFlag": "./offeringFlag.ts",
-    "./offeringPresentation": "./offeringPresentation.ts",
     "./photo": "./photo.ts",
     "./profiles": "./profiles.ts",
     "./ui": "./ui.ts",

@@ -68,6 +68,14 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - name: Type-check and build the affected Workers
         run: npx turbo run typecheck build --affected --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
+      # Only this build and smoke serve the vinext bundle that production runs; no secrets are
+      # needed (`WEB_ASSET_RELEASE` only has to be 40 hex digits, the vars come from wrangler.web.jsonc).
+      - name: Build and smoke the production web Worker bundle
+        run: |
+          CLOUDFLARE_ENV=production WEB_ASSET_RELEASE="$RELEASE_SHA" npx vite build --config vite.vinext.config.ts --logLevel warn
+          node bin/web-bundle-smoke.mjs
+          # The build's Wrangler redirect makes later Wrangler runs in apps/* refuse their own config.
+          rm -rf .wrangler/deploy
       # Worker runtime tests and the unit tier already run every other Worker test.
       - name: Test the web-workers app pages
         run: npm test --workspace=web-workers-app

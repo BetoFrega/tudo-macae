@@ -73,6 +73,16 @@ jobs:
           elif test -f apps/web-workers/package.json; then
             npx turbo run build --filter=web-workers-app
           fi
+      # The bundle that production will serve must answer pages before anything is published.
+      - name: Smoke the web Worker bundle before production mutation
+        env:
+          XDG_CONFIG_HOME: /tmp/wrangler-config
+        run: |
+          if test -f wrangler.web.jsonc && test -f bin/web-bundle-smoke.mjs; then
+            node bin/web-bundle-smoke.mjs
+          else
+            echo "::notice::The selected SHA predates the web Worker bundle smoke."
+          fi
       # The PR Checks run turbo only on affected apps; delivery checks every app at this SHA.
       - name: Type-check, build and test every Worker app
         env:

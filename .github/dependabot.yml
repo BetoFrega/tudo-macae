@@ -60,3 +60,16 @@ updates:
       # beta and lift this hold once each admits it.
       - dependency-name: "typescript"
         versions: [">= 6.1"]
+      # The production web Worker built with vinext 1.3.0 and
+      # @vinext/cloudflare 1.2.0 exceeds the Workers memory and CPU limits on
+      # every dynamic request, so `www` answers 502. Reproduce with
+      # `CLOUDFLARE_ENV=production WEB_ASSET_RELEASE=$(git rev-parse HEAD) npx vite build --config vite.vinext.config.ts`
+      # then `npx wrangler dev -c dist/server/wrangler.json --local` and
+      # `curl localhost:8787/`: a healthy bundle answers 200.
+      #
+      # @expires 2026-11-24 re-run that reproduction on the latest vinext and
+      # lift this hold once a release answers 200.
+      - dependency-name: "vinext"
+        versions: ["> 1.0.1"]
+      - dependency-name: "@vinext/cloudflare"
+        versions: ["> 1.0.1"]

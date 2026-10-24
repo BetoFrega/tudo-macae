@@ -110,6 +110,23 @@ test("builds the web Worker candidate before any production mutation", () => {
   expect(steps[webBuild].run).toContain("rm -rf .wrangler/deploy");
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
 });
+test("serves the built web Worker bundle right after building it, before any production mutation", () => {
+  const steps = workflow.jobs.checks.steps as Array<{ name?: string; run?: string }>;
+  const webBuild = steps.findIndex(step => step.name === "Build web Worker before production mutation");
+  expect(steps[webBuild + 1].name).toBe("Smoke the web Worker bundle before production mutation");
+  expect(steps[webBuild + 1].run).toContain("node bin/web-bundle-smoke.mjs");
+  expect(workflow.jobs.production.needs).toEqual(["checks"]);
+});
+test("the Checks workflow serves the production web Worker bundle on every pull request without secrets", () => {
+  const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
+  const steps = jobs.workers.steps as Array<{ name?: string; run?: string }>;
+  const smoke = steps.find(step => step.name === "Build and smoke the production web Worker bundle");
+  expect(smoke?.run).toContain("CLOUDFLARE_ENV=production WEB_ASSET_RELEASE=\"$RELEASE_SHA\" npx vite build --config vite.vinext.config.ts");
+  expect(smoke?.run).toContain("node bin/web-bundle-smoke.mjs");
+  expect(smoke?.run).toContain("rm -rf .wrangler/deploy");
+  expect(jobs.workers.env.RELEASE_SHA).toBe("${{ github.sha }}");
+  expect(JSON.stringify(jobs.workers)).not.toMatch(/secrets\./);
+});
 test("requires checks and pins production checkout to their SHA", () => {
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
   expect(workflow.jobs.production.steps[0].with.ref).toBe("${{ github.sha }}");

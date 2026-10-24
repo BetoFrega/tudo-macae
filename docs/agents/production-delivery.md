@@ -9,11 +9,20 @@ in the main branch's cache scope. To restore an older release, use
 
 Each run fixes the event's immutable main SHA. Protection lint uses that SHA's first
 parent and still rejects protected reductions. Before production mutation, checks
-run typecheck, the web Worker build when present, typecheck, build and tests of
+run typecheck, the web Worker build when present and its bundle smoke
+(`node bin/web-bundle-smoke.mjs`, below), typecheck, build and tests of
 every Worker app (PR checks cover only affected apps), lint, Worker contracts,
 both Vitest tiers plus `build:check`, and the complete E2E collection
 (`npm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
 Google identity.
+
+The bundle smoke serves `dist/server` with `wrangler dev --local` and requires `/` and
+`/termos-e-condicoes` to answer 200 with a closed document (`/` also an `<img`) within 20 s.
+Neither `next build` nor the Next-renderer E2E runs the vinext bundle, so a renderer
+regression that hangs every page (a recursive `<Image>` did) reaches no other gate. The
+`Web Workers` PR job runs the same production-env build and smoke without secrets; Wrangler
+vars and a 40-hex `WEB_ASSET_RELEASE` are all the build needs. The smoke reports a bounded
+log tail on failure and always stops Wrangler.
 
 Delivery builds and promotes no Cloud Run revision, and the `www-origin` router
 reaches none.

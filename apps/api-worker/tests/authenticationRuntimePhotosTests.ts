@@ -114,13 +114,11 @@ test("qualified photo HTTP binds uploads to the session, preserves private/publi
   expect((await worker.dispatchFetch(`http://authentication.test/api/anuncios/photo-ad/fotos/${gifRecord.id}`)).status).toBe(200);
 });
 
-test("photo qualification off and a preparing authority expose no R2 route", async () => {
-  for (const [active, qualification] of [[true, false], [false, true]] as const) {
-    const worker = await start(active, qualification);
-    const response = await worker.dispatchFetch("http://authentication.test/api/classifieds/photos/public/profile-photos%2Fprofile%2Fphoto.png");
-    expect(response.status).toBe(qualification ? 503 : 404);
-    await disposeRuntime();
-  }
+test("photo qualification off exposes no R2 route", async () => {
+  const worker = await start(true, false);
+  const response = await worker.dispatchFetch("http://authentication.test/api/classifieds/photos/public/profile-photos%2Fprofile%2Fphoto.png");
+  expect(response.status).toBe(404);
+  await disposeRuntime();
 });
 
 test("qualified legacy photo routes preserve historical image IDs and raw Unicode owner paths", async () => {

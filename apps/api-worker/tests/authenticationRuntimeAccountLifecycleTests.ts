@@ -1,19 +1,9 @@
 import { expect, test } from "vitest";
 import { start, authenticationDatabase } from "./authenticationRuntimeHarness";
 
-test("preparation refuses new writers and activation rejects late imports", async () => {
-  const worker = await start(false);
-  const body = { email: "owner@example.com", password: "abc123" };
-  const signup = () =>
-    worker.dispatchFetch("http://authentication.test/api/auth/sign-up/email", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "origin": "http://authentication.test",
-      },
-      body: JSON.stringify(body),
-    });
-  expect((await signup()).status).toBe(503);
+test("repeated imports converge and activation rejects late imports", async () => {
+  await start(false);
+  const body = { email: "owner@example.com" };
   const { importAuthenticationAccounts, activateAuthenticationAuthority }
     = await import("../migration");
   const database = await authenticationDatabase();

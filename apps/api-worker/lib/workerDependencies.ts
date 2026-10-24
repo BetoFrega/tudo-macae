@@ -6,6 +6,7 @@ import type { HumanChallengeUnavailable, HumanChallengeVerifier } from "./humanC
 import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
 import type { EditorialMediaService } from "./mediaHttp";
 import type { EditorialImagePurge } from "@tudomacae/public-image-delivery/editorialPurge";
+import type { createSupplySnapshotExport } from "@tudomacae/advertiser-identity/supplySnapshot";
 
 export type AuthenticationMail = {
   to: string;
@@ -28,6 +29,8 @@ export type WorkerDependencies = {
   classifiedsPhotoRenderer?: (env: Env) => ClassifiedsPhotoRenderer;
   classifiedsOfferingFlag?: (env: Env) => (id: string) => Promise<CatalogFlagDecision>;
   classifiedsPhotoUrl?: (path: string) => string;
+  /** Absent while the Worker has no PDM_EXPORTS bucket; the daily supply snapshot then never runs. */
+  classifiedsSupplySnapshot?: (env: Env) => ReturnType<typeof createSupplySnapshotExport> | undefined;
   /** Absent while the Worker has no EDITORIAL_DB; Media routes then answer 404. */
   editorialMedia?: (env: Env) => EditorialMediaService | undefined;
   /** Purges retired editorial images; absent keeps them pending, so Blog saves that retire Media stay `unconfirmed`. */

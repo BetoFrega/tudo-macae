@@ -140,6 +140,7 @@ test("publishes the API Worker after D1 readiness", () => {
     AUTHENTICATION_RUNTIME_ACCOUNT: "${{ env.RUNTIME_ACCOUNT }}",
     TURNSTILE_ENFORCEMENT: "${{ vars.TURNSTILE_ENFORCEMENT }}",
     PUBLIC_ARTICLE_INDEX_SERVICE: "tudo-macae-public-article-index",
+    PDM_EXPORTS_BUCKET: "${{ vars.PDM_EXPORTS_BUCKET }}",
   });
   const ids = ["AUTHENTICATION_D1_ID", "CLASSIFIEDS_D1_ID", "EDITORIAL_D1_ID"].map(name => steps[publish].env?.[name]);
   expect(new Set(ids).size).toBe(3);

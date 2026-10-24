@@ -1005,5 +1005,15 @@
     ],
     "probe": "packages/ads/tests/visibility.probe.ts",
     "remainingOperations": []
+  },
+  {
+    "id": "advertiser-identity-supply-snapshot",
+    "entry": "packages/advertiser-identity/supplySnapshot.ts",
+    "factory": "createSupplySnapshotExport",
+    "operations": [
+      "run"
+    ],
+    "probe": "packages/advertiser-identity/tests/supplySnapshot.probe.ts",
+    "remainingOperations": []
   }
 ]

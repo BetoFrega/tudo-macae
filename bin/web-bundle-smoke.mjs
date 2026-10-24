@@ -45,7 +45,6 @@ function freePort() {
 
 function tail(logPath) {
   const lines = readFileSync(logPath, "utf8")
-
     .replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, "")
     .split("\n")
     .map(line => line.trim())

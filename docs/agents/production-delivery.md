@@ -131,8 +131,19 @@ Resume that PR/head; never cancel or redispatch to clear pending work.
 
 ### Dispatched runs
 
-Production runs share `production-delivery` with
-`queue: max` (up to 100 waiting runs). Preserve queued requests and environment waits.
+Each run delivers main up to its SHA, so a newer push or dispatch supersedes older
+runs. `checks` runs in `production-delivery-checks` with `cancel-in-progress`: a
+newer run cancels it. `production` and `workers` each run one at a time in
+`production-delivery-api` and `production-delivery-workers` and are never cancelled
+mid-publish; a newer run's pending job replaces an older pending one in its group.
+The groups differ so an older run's pending `workers` job cannot replace a newer
+run's `production` job; the newer API Worker may publish while an older `workers`
+job runs, which the API's compatibility with the serving web Worker allows.
+Only the run for main's head updates the correction ticket: `bin/deployment-ticket.mjs`
+leaves it untouched for any older run, whatever its result, because an older run's
+mutation can succeed after a newer run's checks already failed. A run still at the
+head reports every result, a cancellation by hand or a timeout included. Never cancel a running `production` or `workers` job by hand; wait for
+the newer run instead. Preserve environment waits.
 
 Before dispatch, record workflow (`deploy.yml`), ref, UTC start (`date -u +%FT%TZ`) and active actor
 (`gh api user --jq .login`). Retain the returned run ID/URL. If dispatch succeeds

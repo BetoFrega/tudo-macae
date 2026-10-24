@@ -7,18 +7,19 @@ on:
   # the default branch's cache scope (CodeQL actions/cache-poisoning).
   workflow_dispatch: {}
 
-# Serialize production deliveries without replacing pending requests.
-concurrency:
-  group: production-delivery
-  queue: max
-  cancel-in-progress: false
-
+# Each run delivers main up to its SHA, so a newer push supersedes older runs. Checks
+# yield to the newer run; each mutation job runs one at a time and is never cancelled
+# mid-publish, while a newer pending run replaces an older one in its group.
 permissions:
   contents: read
 
 jobs:
   checks:
     if: github.ref == 'refs/heads/main'
+    # Nothing here mutates production, so a newer run cancels it.
+    concurrency:
+      group: production-delivery-checks
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 75
     outputs:
@@ -125,6 +126,10 @@ jobs:
   production:
     needs: [checks]
     environment: production
+    # Cancelling mid-migration or mid-publish would leave production half-delivered.
+    concurrency:
+      group: production-delivery-api
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -199,6 +204,13 @@ jobs:
   workers:
     needs: [checks, production]
     environment: production
+    # Its own group: a newer run's API Worker may publish while this job runs, which the
+    # API's compatibility with the serving web Worker allows; sharing the API's group would
+    # let this job's pending entry replace the newer run's API job. Cancelling mid-publish
+    # would also skip the web Worker page gate and its rollback.
+    concurrency:
+      group: production-delivery-workers
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

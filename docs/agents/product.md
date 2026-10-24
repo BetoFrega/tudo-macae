@@ -53,6 +53,16 @@ holds operating limits;
 [Critérios de investimento e decisões abertas](https://app.notion.com/p/3f684301eab381af86d2eb0b218aba59?pvs=204)
 owns acceptance criteria, selection states and D-row choices.
 
+## Historical records
+
+Beto Frega decided on 2026-10-24 that every product record written before that
+date is historical until he reconfirms it, whether or not its Page carries the
+"Registro histórico" callout. Citing one, label it historical and verify it
+against code or with Beto. Reconfirm only when new work touches it: route the
+choice through the decision queue of
+[Gerente de Produto](https://app.notion.com/p/40384301eab3811194ecd9611d2132dd?pvs=204)
+and remove the callout after the recorded decision.
+
 ## Native record mapping
 
 Write Notion content in Brazilian Portuguese. Use Notion-flavored Markdown and

@@ -1,6 +1,6 @@
 "use client";
 
-import Image, { type ImageProps } from "next/image";
+import Image, { type ImageProps } from "@/components/ui/image";
 
 type PublicImageProps = Omit<ImageProps, "loader">;
 

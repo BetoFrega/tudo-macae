@@ -26,6 +26,13 @@ test("D1 drafts resume without duplication, profile association commits together
   await runtime.ready;
   expect((await capability("publications.publish", { id: draft.id })).value).toEqual(first.value);
 });
+test("offer events from an administrator account are marked internal", async () => {
+  const admin = { actor: account("owner", true, true) };
+  const internalDraft = { ...draft, id: "rascunho-interno" };
+  expect((await capability("publications.save", internalDraft, true, admin)).error).toBeUndefined();
+  const created = await capability("publications.profile", { publicationId: internalDraft.id, title: "Equipe", identityType: "business", contacts: [{ number: "22999998888", isWhatsapp: true }] }, true, admin);
+  expect(offerEvents(created)).toEqual([expect.objectContaining({ name: "advertiser_identity_created", actorId: "owner", internalActor: true })]);
+});
 test("API distrusts caller ownership, email and roles; saving a draft does not publish", async () => {
   expect((await capability("publications.profile", { publicationId: "ad", profileId: "profile", title: "Invasão", contacts: [{ number: "22999998888", isWhatsapp: false }] }, true, { actor: account("intruder") })).error).toBe("AdOperationError");
   expect((await capability("publications.publish", { id: "ad", emailVerified: true }, true, { actor: account("owner", false) })).error).toBe("PublicationRequirementError");

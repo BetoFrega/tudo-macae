@@ -39,6 +39,13 @@ test("sends the event as the acting account, with identifiers only and no person
   expect(logs).toEqual([]);
 });
 
+test("marks events from admin or editor accounts for the internal-user filter", async () => {
+  const { record, requests, settled } = harness();
+  record({ ...published, internalActor: true });
+  await settled();
+  expect(requests[0]!.body).toMatchObject({ properties: { ad_id: "ad-1", internal_actor: true } });
+});
+
 test("sends nothing without a PostHog project token", async () => {
   for (const projectToken of [undefined, ""]) {
     const { record, requests, settled } = harness({ projectToken });

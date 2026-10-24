@@ -39,6 +39,12 @@ const ownedIds = z.object({ ids: z.array(z.string().min(1).max(128)).max(100) })
 const fields = z.record(z.string(), z.unknown());
 const icons = new Set(supportedIcons);
 
+/** Marks the events of admin and editor accounts, which PostHog's internal-user filter excludes. */
+function actorOfferEvents(actor: ClassifiedsActor | undefined, record: ((event: OfferEvent) => void) | undefined) {
+  const internal = actor?.admin === true || actor?.editor === true ? { internalActor: true } : {};
+  return (event: OfferEvent) => record?.({ ...event, ...internal });
+}
+
 /** Only verified actors enter this composition; HTTP authentication owns their construction. */
 export function createClassifiedsCapabilities(dependencies: {
   persistence: ClassifiedsPersistence; actor?: ClassifiedsActor; correlationId: string;
@@ -51,7 +57,8 @@ export function createClassifiedsCapabilities(dependencies: {
   const { actor, persistence } = dependencies;
   const now = dependencies.now ?? Date.now;
   const newId = dependencies.newId ?? randomUUID;
-  const ads = createClassifiedsAds({ ...dependencies, now, newId });
+  const recordOfferEvent = actorOfferEvents(actor, dependencies.recordOfferEvent);
+  const ads = createClassifiedsAds({ ...dependencies, now, newId, recordOfferEvent });
   const digest = (value: string) => createHash("sha256").update(value).digest("hex");
   const taxonomy = createClassifiedsCategoryStores({ persistence, actorId: actor?.uid ?? "", now, newId });
   const management = createCategoryManagement({ store: taxonomy.management, slugify, isSupportedIcon: name => icons.has(name) });
@@ -62,7 +69,7 @@ export function createClassifiedsCapabilities(dependencies: {
     activityAreaCatalog: { isActive: value => activityAreaActive(persistence, value) },
     now, digest, ownsAdImagePath: () => false, newCorrelationId: newId,
     reportImageCleanupSkipped: () => { throw new Error("Identity deletion requires its aggregate composition."); },
-    recordIdentityCreated: ({ actorId, identityId, identityType }) => dependencies.recordOfferEvent?.({
+    recordIdentityCreated: ({ actorId, identityId, identityType }) => recordOfferEvent({
       name: "advertiser_identity_created", actorId, identityId, ...(identityType ? { identityType } : {}),
     }),
   });

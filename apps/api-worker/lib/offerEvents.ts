@@ -1,17 +1,22 @@
 import type { AdvertiserIdentityType } from "@tudomacae/advertiser-identity/model";
 
-/** New Classifieds supply, recorded after its write commits; `actorId` is the account `uid` that acted. */
-export type OfferEvent
-  = | { name: "ad_published"; actorId: string; adId: string; categoryId: string; subcategoryId: string; identityType?: AdvertiserIdentityType }
-    | { name: "advertiser_identity_created"; actorId: string; identityId: string; identityType?: AdvertiserIdentityType };
+/**
+ * New Classifieds supply, recorded after its write commits; `actorId` is the account `uid` that acted.
+ * `internalActor` marks an admin or editor account: the events carry no person profile, so
+ * PostHog's internal-user filter can only exclude them through this event property.
+ */
+export type OfferEvent = { actorId: string; identityType?: AdvertiserIdentityType; internalActor?: boolean } & (
+  | { name: "ad_published"; adId: string; categoryId: string; subcategoryId: string }
+  | { name: "advertiser_identity_created"; identityId: string }
+);
 
 const captureUrl = "https://eu.i.posthog.com/i/v0/e/";
 
 function eventProperties(event: OfferEvent) {
-  const identityType = event.identityType ? { identity_type: event.identityType } : {};
+  const common = { ...(event.identityType ? { identity_type: event.identityType } : {}), ...(event.internalActor ? { internal_actor: true } : {}) };
   return event.name === "ad_published"
-    ? { ad_id: event.adId, category_id: event.categoryId, subcategory_id: event.subcategoryId, ...identityType }
-    : { identity_id: event.identityId, ...identityType };
+    ? { ad_id: event.adId, category_id: event.categoryId, subcategory_id: event.subcategoryId, ...common }
+    : { identity_id: event.identityId, ...common };
 }
 
 /**

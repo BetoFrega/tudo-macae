@@ -32,7 +32,7 @@ export function createClassifiedsAds(dependencies: {
     correlationId: dependencies.newId, jobId: path => path, report: () => {},
   });
   function human() {
-    if (!actor || actor.channel !== "administration") throw new AdvertiserProfileAccessError("forbidden");
+    if (!actor) throw new AdvertiserProfileAccessError("forbidden");
     return actor;
   }
   async function create(owner: ClassifiedsActor, input: unknown) {

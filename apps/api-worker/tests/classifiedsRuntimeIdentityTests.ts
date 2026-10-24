@@ -7,7 +7,7 @@ test("offering catalog rechecks authority, revisions and source privacy through 
   const persistence = createClassifiedsPersistence({ database: await classifiedsDatabase() });
   await save(profile(), category("category"), { kind: "subcategory", id: "subcategory", namespace: "category", body: { name: "Subcategoria", slug: "subcategory", order: 1, isActive: true, categoryId: "category" } });
   const dependencies = { persistence, correlationId: "catalog", now: () => now, newId: () => "item", offeringFlag: async () => "enabled" as const };
-  const owner = createClassifiedsCapabilities({ ...dependencies, actor: { ...adminActor, uid: "owner", admin: false } });
+  const owner = createClassifiedsCapabilities({ ...dependencies, actor: { ...adminActor, uid: "owner", admin: false, editor: false } });
   const admin = createClassifiedsCapabilities({ ...dependencies, actor: adminActor });
   const visitor = createClassifiedsCapabilities(dependencies);
   const item = { name: "Consulta", description: "Atendimento", price: { mode: "from", amount: "12,50" }, sourceUrl: "https://source.test/private" };

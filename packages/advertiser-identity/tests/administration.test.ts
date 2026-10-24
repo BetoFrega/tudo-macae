@@ -2,10 +2,12 @@ import { describe, expect, test } from "vitest";
 import {
   createAdvertiserProfileAdministration,
   matchAdvertiserProfileDuplicate,
+  createAdvertiserProfileAdministrationInputSchema,
   deleteAdvertiserProfileAdministrationInputSchema,
+  updateAdvertiserProfileAdministrationInputSchema,
   type AdvertiserProfileAdministrationStore,
 } from "../administration";
-import { deleteAdvertiserIdentityAdministrationSchema } from "../identityDeletion";
+import { deleteAdvertiserIdentityAdministrationSchema, previewAdvertiserIdentityDeletionAdministrationSchema } from "../identityDeletion";
 
 function claimableProfile(overrides: Record<string, unknown> = {}) {
   return {
@@ -179,9 +181,13 @@ describe("advertiser profile administration", () => {
 describe("administration write channel", () => {
   const profile = { id: "profile", expectedRevision: 1, idempotencyKey: "key", actorId: "admin" };
   const identity = { id: "profile", confirmationToken: "token", confirmedTitle: "Perfil", reason: "Motivo", idempotencyKey: "key", actorId: "admin" };
+  const created = { title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }], sourceUrl: "https://example.com/fonte", idempotencyKey: "key", actorId: "admin" };
   test.each([
-    ["profile", deleteAdvertiserProfileAdministrationInputSchema, profile],
-    ["identity", deleteAdvertiserIdentityAdministrationSchema, identity],
+    ["profile create", createAdvertiserProfileAdministrationInputSchema, created],
+    ["profile update", updateAdvertiserProfileAdministrationInputSchema, { ...profile, patch: { title: "Novo" } }],
+    ["profile delete", deleteAdvertiserProfileAdministrationInputSchema, profile],
+    ["identity preview", previewAdvertiserIdentityDeletionAdministrationSchema, { id: "profile", actorId: "admin" }],
+    ["identity delete", deleteAdvertiserIdentityAdministrationSchema, identity],
   ] as const)("%s write rejects a missing or retired channel instead of defaulting", (_name, schema, input) => {
     expect(schema.safeParse(input).success).toBe(false);
     expect(schema.safeParse({ ...input, channel: "mcp" }).success).toBe(false);

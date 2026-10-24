@@ -47,6 +47,7 @@ if (!["on", "off"].includes(challengeEnforcement))
 configuration.vars.TURNSTILE_ENFORCEMENT = challengeEnforcement;
 // Enforcing without the secret refuses every login, registration and reset; Wrangler refuses the deploy instead.
 if (challengeEnforcement === "on") configuration.secrets.required.push("TURNSTILE_SECRET");
+configuration.vars.POSTHOG_PROJECT_TOKEN = configuration.env?.[environment]?.vars.POSTHOG_PROJECT_TOKEN || configuration.vars.POSTHOG_PROJECT_TOKEN;
 delete configuration.env;
 const diagnosticsEnabled = diagnosticsSetting === "true";
 configuration.vars.AUTHENTICATION_DIAGNOSTICS_ENABLED = String(diagnosticsEnabled);

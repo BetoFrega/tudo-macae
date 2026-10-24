@@ -93,6 +93,24 @@ function assertImagesSettled(record: PublicationRecord) {
 }
 
 export function buildPublicationDrafts({ store, now, authorityMode = "legacy" }: PublicationDraftDependencies) {
+  /** `created` is true only for the call whose transaction wrote a profile that did not exist. */
+  async function saveProfileOutcome(userId: string, input: PublicationProfileInput) {
+    const ownerId = publicationIdentifier.parse(userId);
+    const parsed = publicationProfileInput.parse(input);
+    return store.transact(parsed.publicationId, async (transaction) => {
+      const record = await transaction.read();
+      if (!record) throw new AdOperationError("conflict", "Publicação não encontrada nesta conta.");
+      const publication = owned(record, ownerId, authorityMode);
+      if (publication.published) throw new AdOperationError("conflict", "Este anúncio já foi publicado.");
+      assertNotDeleting(publication);
+      const profileId = parsed.profileId ?? publication.advertiserProfileId ?? `publication-${parsed.publicationId}`;
+      const profile = await transaction.readProfile(profileId);
+      assertSelectableProfile(profile, parsed.profileId, ownerId);
+      await assertIdentityTypeAvailable(transaction, parsed, ownerId, profile);
+      transaction.saveProfile(profileId, profileWrite(parsed, ownerId, profile, now()));
+      return { profileId, created: !profile };
+    });
+  }
   return {
     async save(userId: string, input: PendingPublicationInput) {
       const ownerId = publicationIdentifier.parse(userId);
@@ -112,22 +130,9 @@ export function buildPublicationDrafts({ store, now, authorityMode = "legacy" }:
       });
     },
     async saveProfile(userId: string, input: PublicationProfileInput) {
-      const ownerId = publicationIdentifier.parse(userId);
-      const parsed = publicationProfileInput.parse(input);
-      return store.transact(parsed.publicationId, async (transaction) => {
-        const record = await transaction.read();
-        if (!record) throw new AdOperationError("conflict", "Publicação não encontrada nesta conta.");
-        const publication = owned(record, ownerId, authorityMode);
-        if (publication.published) throw new AdOperationError("conflict", "Este anúncio já foi publicado.");
-        assertNotDeleting(publication);
-        const profileId = parsed.profileId ?? publication.advertiserProfileId ?? `publication-${parsed.publicationId}`;
-        const profile = await transaction.readProfile(profileId);
-        assertSelectableProfile(profile, parsed.profileId, ownerId);
-        await assertIdentityTypeAvailable(transaction, parsed, ownerId, profile);
-        transaction.saveProfile(profileId, profileWrite(parsed, ownerId, profile, now()));
-        return profileId;
-      });
+      return (await saveProfileOutcome(userId, input)).profileId;
     },
+    saveProfileOutcome,
     async publish(userId: string, id: string, reviewed?: PublicationReview) {
       const ownerId = publicationIdentifier.parse(userId);
       return store.transact(publicationIdentifier.parse(id), async (transaction) => {
@@ -147,14 +152,15 @@ export function buildPublicationDrafts({ store, now, authorityMode = "legacy" }:
         return { adId: id, slug, categoryId: publication.categoryId, subcategoryId: publication.subcategoryId, advertiserProfileId: publication.advertiserProfileId };
       });
     },
+    /** Resolves true only for the call that moved the publication to `published`; a repeated completion resolves false. */
     async complete(userId: string, id: string, reviewed?: PublicationReview) {
       const ownerId = publicationIdentifier.parse(userId);
-      await store.transact(publicationIdentifier.parse(id), async (transaction) => {
+      return store.transact(publicationIdentifier.parse(id), async (transaction) => {
         const record = await transaction.read();
         if (!record) throw new AdOperationError("conflict", "Publicação não encontrada nesta conta.");
         const publication = owned(record, ownerId, authorityMode);
         if (!publication.published) throw new AdOperationError("conflict", "A publicação ainda não foi concluída.");
-        if (record.publicationState === "published") return;
+        if (record.publicationState === "published") return false;
         if (publication.advertiserProfileId) {
           const profile = await transaction.readProfile(publication.advertiserProfileId);
           if (profile?.userId !== ownerId) throw new AdOperationError("conflict", "Perfil não encontrado nesta conta.");
@@ -162,6 +168,7 @@ export function buildPublicationDrafts({ store, now, authorityMode = "legacy" }:
           assertProfileReviewed(profile, reviewed);
         }
         transaction.updatePublication({ publicationState: "published", status: "active" });
+        return true;
       });
     },
     async returnToPending(userId: string, id: string) {

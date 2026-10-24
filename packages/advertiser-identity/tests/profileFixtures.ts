@@ -11,6 +11,7 @@ export function profileFixture(options: { identityTypes?: boolean } = {}) {
   const profilesWithAds = new Set<string>();
   const associatedAds = new Map<string, AssociatedAdImageRecord[]>();
   const cleanupSkipped: { correlationId: string; count: number }[] = [];
+  const identitiesCreated: { actorId: string; identityId: string; identityType?: string }[] = [];
   const creationRequests = new Map<string, { userId?: string | undefined; requestDigest: string }>();
   const context = () => ({
     isActive: async () => activityAreasAreActive,
@@ -27,6 +28,7 @@ export function profileFixture(options: { identityTypes?: boolean } = {}) {
     ownsAdImagePath: (adId, path) => path.startsWith(`ad-images/${adId}/`),
     newCorrelationId: () => "profile-delete-test",
     reportImageCleanupSkipped: input => cleanupSkipped.push(input),
+    recordIdentityCreated: input => identitiesCreated.push(input),
     activityAreaCatalog: { isActive: async () => activityAreasAreActive },
     store: {
       async create(record, validate, replay) {
@@ -102,6 +104,7 @@ export function profileFixture(options: { identityTypes?: boolean } = {}) {
     setHasAds: (id: string) => profilesWithAds.add(id),
     setAssociatedAds: (id: string, ads: AssociatedAdImageRecord[]) => associatedAds.set(id, ads),
     cleanupSkipped,
+    identitiesCreated,
     afterNextRead: (callback: () => Promise<void>) => { afterNextRead = callback; },
     setTime: (time: number) => {
       clock = time;

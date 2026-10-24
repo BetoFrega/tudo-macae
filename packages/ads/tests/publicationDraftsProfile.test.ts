@@ -6,7 +6,8 @@ test("saving a profile explicitly associates it without publishing the pending a
   const drafts = setup();
   await drafts.save("owner", input);
   const profileInput = { publicationId: input.id, title: "Ana", contacts: [{ number: "22999999999", isWhatsapp: true }] };
-  expect(await drafts.saveProfile("owner", profileInput)).toBe("publication-draft");
+  expect(await drafts.saveProfileOutcome("owner", profileInput)).toEqual({ profileId: "publication-draft", created: true });
+  expect(await drafts.saveProfileOutcome("owner", profileInput)).toEqual({ profileId: "publication-draft", created: false });
   expect(await drafts.saveProfile("owner", profileInput)).toBe("publication-draft");
   expect(await drafts.read("owner", input.id)).toMatchObject({ advertiserProfileId: "publication-draft", published: false, completed: false });
 });

@@ -3,6 +3,7 @@ import { createPublicationDrafts, type PublicationDraftStore } from "@tudomacae/
 import { discardedPublicationPhoto, stagedPublicationPhoto, type publicationPhotosInput } from "@tudomacae/ads/publicationPhotos";
 import { photoRecordSchema, type PhotoRecord } from "@tudomacae/classifieds-photos";
 import type { PublicationReview } from "@tudomacae/ads/client";
+import type { PublishedAd } from "@tudomacae/ads/pendingPublicationTransitions";
 import { PersistenceConflict, type Transaction } from "@tudomacae/classifieds-persistence";
 import { jsonValue, parseStored } from "./classifiedsSupport";
 import { adSchema, body, forbidden, type StoredAd } from "./classifiedsAdsRecords";
@@ -98,10 +99,13 @@ export function createPublicationWrites(context: ClassifiedsAdContext, drafts: P
         const adapter = draftTransaction(context, tx, id);
         const scoped = createPublicationDrafts({ now, authorityMode: "identity", store: { ...drafts, transact: async (_id, decide) => decide(adapter.port) } });
         const result = await scoped.publish(actorId, id, reviewed);
-        await scoped.complete(actorId, id, reviewed);
+        const firstPublication = await scoped.complete(actorId, id, reviewed);
         await adapter.flush();
-        return jsonValue(result);
-      })).value;
+        const profile = firstPublication ? await tx.read("profile", result.advertiserProfileId) : null;
+        // Telemetry context only: an unreadable value must not abort the publication.
+        const identityType = z.enum(["personal", "business"]).safeParse(profile?.body.identityType).data;
+        return jsonValue({ ...result, firstPublication, ...(identityType ? { identityType } : {}) });
+      })).value as unknown as PublishedAd & { firstPublication: boolean; identityType?: "personal" | "business" };
     },
     async deleteDraft(id: string) {
       await persistence.transact(null, async (tx) => {

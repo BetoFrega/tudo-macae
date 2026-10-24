@@ -48,6 +48,8 @@ test.each([
   const configuration = JSON.parse(result.output!);
   expect(configuration.env).toBeUndefined();
   expect(configuration.vars.AUTHENTICATION_DIAGNOSTICS_ENABLED).toBe(enabled);
+  // Qualification shares production's PostHog project, so only production sends offer events.
+  expect(configuration.vars.POSTHOG_PROJECT_TOKEN).toEqual(environment === "production" ? expect.stringMatching(/^phc_/) : "");
   expect(configuration.observability.head_sampling_rate).toBe(enabled === "true" ? 1 : 0.1);
   // Production enforces Turnstile by default, so its secret must exist before Wrangler deploys.
   expect(configuration.secrets.required).toEqual(environment === "production" ? ["BETTER_AUTH_SECRET", "TURNSTILE_SECRET"] : ["BETTER_AUTH_SECRET"]);

@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import ts from "typescript";
 import { retainWebAssets, webAssetManifestPath } from "./retain-web-assets.mjs";
+import { gateWebRelease } from "./web-worker-page-gate.mjs";
 
 import { webAssetPathPattern } from "@tudomacae/www-origin-routing/webAssets";
 
@@ -159,8 +160,8 @@ export async function probeWorkerContracts(request = fetch) {
   await probeAuthenticationGuards(request);
 }
 
-function deliveryDependencies({ command = wrangler, build = (file, args, options) => execFileSync(file, args, options), generatedConfig = () => JSON.parse(readFileSync(webGeneratedConfig, "utf8")), retainAssets = retainWebAssets, routes: getRoutes = readRoutes, exists = webWorkerExists, probe = probeWorkerContracts } = {}) {
-  return { command, build, generatedConfig, retainAssets, getRoutes, exists, probe };
+function deliveryDependencies({ command = wrangler, build = (file, args, options) => execFileSync(file, args, options), generatedConfig = () => JSON.parse(readFileSync(webGeneratedConfig, "utf8")), retainAssets = retainWebAssets, routes: getRoutes = readRoutes, exists = webWorkerExists, probe = probeWorkerContracts, pageProbe } = {}) {
+  return { command, build, generatedConfig, retainAssets, getRoutes, exists, probe, pageProbe };
 }
 
 function appendStepSummary(line) {
@@ -249,7 +250,11 @@ async function deployWorker(delivery, worker) {
     throw new Error(`Worker routes changed during deployment: ${worker.name}`);
   }
   appendStepSummary(`- ${worker.name}: ${actual} (main ${sha})\n`);
+  return actual;
 }
+
+const writeRecovery = record => process.env.RUNNER_TEMP
+  && writeFileSync(path.join(process.env.RUNNER_TEMP, "workers-recovery.json"), `${JSON.stringify(record, null, 2)}\n`);
 
 export async function deployWorkers(overrides) {
   const dependencies = deliveryDependencies(overrides);
@@ -263,14 +268,20 @@ export async function deployWorkers(overrides) {
     "deployments", "status", "--config", worker.config, "--env", "production", "--json",
   ]));
   const { firstWebDeployment, previous, reuseWebBootstrap } = await readPreviousVersions(dependencies, sha, readStatus);
-  if (process.env.RUNNER_TEMP) {
-    writeFileSync(path.join(process.env.RUNNER_TEMP, "workers-recovery.json"), `${JSON.stringify({ sha, previous, routes }, null, 2)}\n`);
-  }
+  const recovery = { sha, previous, routes };
+  writeRecovery(recovery);
 
   const directory = mkdtempSync(path.join(tmpdir(), "workers-delivery-"));
   const delivery = { dependencies, sha, firstWebDeployment, previous, reuseWebBootstrap, routes, readStatus, directory };
   try {
-    for (const worker of workers) await deployWorker(delivery, worker);
+    for (const worker of workers) {
+      const version = await deployWorker(delivery, worker);
+      // Gating before the next publish keeps a broken web Worker from pairing with new Workers.
+      if (worker.build) await gateWebRelease({ workerName: worker.name, version, previousVersion: previous[worker.name], sha,
+        pageProbe: dependencies.pageProbe, command: dependencies.command, summary: appendStepSummary,
+        readActiveVersion: () => activeVersion(readStatus(worker), worker.name),
+        record: webRollback => writeRecovery({ ...recovery, webRollback }) });
+    }
     await dependencies.probe();
     appendStepSummary("- Worker probes: public sitemap and both identity guards passed.\n");
   }

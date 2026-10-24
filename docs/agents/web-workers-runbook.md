@@ -82,8 +82,9 @@ both versions without an application route. Run `npm run probe:edge`.
 
 The router has no fallback: an application `5xx` or binding failure reaches the
 visitor (`terms-worker-unavailable` in the
-[router signals](www-origin-runbook.md#observability)). Recover by redeploying a
-fixed `main` or by `wrangler rollback` of the application to a version no older than
-its `DataCache` Durable Object, as [Production delivery](production-delivery.md#manual-recovery)
-describes. Run the bundled router regression with
+[router signals](www-origin-runbook.md#observability)). Delivery's
+[page gate](production-delivery.md) rolls back a release that breaks pages when it
+can; otherwise recover by redeploying a
+fixed `main` or by `wrangler rollback`, as
+[Production delivery](production-delivery.md#manual-recovery) describes. Run the bundled router regression with
 `npm run test:worker -- apps/www-origin/index.runtime.test.ts`.

@@ -30,9 +30,9 @@ Normal requests resolve the session and then re-evaluate its PAT parent, current
 and Administrator roles, credential profile and global mode. The session copies no
 capability. Session expiry is checked before physical cleanup, issuance has its own
 per-client rate limit, and each successful issuance makes a bounded best-effort cleanup
-pass over expired session records. Direct PAT authentication on normal MCP and HTTP resources is a
-bounded deployment bridge only: @expires 2026-10-24 remove it after both local
-clients and the edge resource have completed the coordinated cutover.
+pass over expired session records. Direct PAT authentication on normal MCP and HTTP resources was a
+bounded deployment bridge only, to be removed once both local clients and the edge
+resource completed the coordinated cutover.
 
 CLI and MCP use one local session provider partitioned by canonical endpoint origin and
 a digest of the local 1Password configuration. It persists only the short session in a
@@ -70,3 +70,9 @@ The [pre-reorganization record](https://github.com/BetoFrega/macae-classificados
 ## Scope and amendments
 
 Amended on 2026-09-18; the decision date in metadata remains 2026-09-17.
+
+Amended on 2026-10-24: the editorial CLI and MCP were retired
+([Retired editorial workflow](../agents/mcp-edge-runbook.md)), so the PAT bridge left
+with them instead of through the cutover. The machine hostname answers `/mcp` and
+`/sessions/v1` with an uncached 404, verified by the `mcp.retired` check of
+`npm run probe:edge`.

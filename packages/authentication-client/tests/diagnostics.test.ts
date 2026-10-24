@@ -135,19 +135,6 @@ test("successes are sampled after the outcome while telemetry failure cannot bre
   expect(events[0]).toMatchObject({ outcome: "completed" });
 });
 
-test("expected authority closure fails closed without an operational error event", async () => {
-  vi.spyOn(Math, "random").mockReturnValue(0.01);
-  const events: unknown[] = [];
-  const client = createAuthenticationClient({
-    origin: "https://api.test", publicOrigin: "https://www.test",
-    diagnostics: { context: () => ({ requestId: "00000000-0000-4000-8000-000000000001" }), write: event => events.push(event) },
-    request: async () => new Response(null, { status: 503, headers: { "x-authentication-protocol": "1", "x-authentication-failure-category": "authority_closed" } }),
-  });
-  await expect(client.session("cookie")).rejects.toThrow("Authentication authority unavailable");
-  expect(events).toHaveLength(1);
-  expect(events[0]).toMatchObject({ outcome: "closed" });
-});
-
 test.each(["invalid-json", "invalid-schema"])("a decoded response failure retains correlation instead of reporting success (%s)", async (kind) => {
   const events: unknown[] = [];
   const client = createAuthenticationClient({

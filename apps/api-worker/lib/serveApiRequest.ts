@@ -9,7 +9,7 @@ import { blogReadInput, blogWriteInput } from "@tudomacae/editorial-blog/protoco
 import { MediaIngestionError } from "@tudomacae/media/ingestionPolicy";
 import { classifiedsActor, classifiedsContext } from "./classifiedsHttp";
 import { authentication } from "./authentication";
-import { authorityClosedResponse, authorityOpen, readBoundedBody, rejectRequest, requestBodyLimit, trustForwardedAddress } from "./apiRequestAdmission";
+import { readBoundedBody, rejectRequest, requestBodyLimit, trustForwardedAddress } from "./apiRequestAdmission";
 import { isMediaRoute, mediaContext, serveMedia } from "./mediaHttp";
 import { blogContext } from "./blogHttp";
 import { isClassifiedsCanonicalRoute, serveClassifiedsCanonical } from "./classifiedsCanonical";
@@ -209,7 +209,6 @@ export async function serveApiRequest(
   if (rejection) return rejection;
   const buffered = await readBoundedBody(request, requestBodyLimit(path, photoRequest));
   if (!buffered) return new Response(null, { status: 413 });
-  if (!(await authorityOpen(requestDependencies))) return authorityClosedResponse();
   requestDependencies.diagnostics?.start("handler");
   if (path.startsWith("/internal/identities/")) return serveIdentityLookup(buffered, path, requestDependencies);
   const trusted = await trustForwardedAddress(buffered, () => requestDependencies.verifyRuntimeIdentity());

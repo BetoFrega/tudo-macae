@@ -26,25 +26,24 @@ const fixture = {
         return typeof value === "function" ? value.bind(target) : value;
       },
     });
+    const faulty = (statement: D1PreparedStatement): D1PreparedStatement => new Proxy(statement, {
+      get(target, operation) {
+        const value = Reflect.get(target, operation);
+        if (typeof value !== "function") return value;
+        if (operation === "bind") return (...values: unknown[]) => faulty(target.bind(...values));
+        if (fault === "database") return async () => {
+          throw new Error("private-database-sentinel");
+        };
+        return async (...args: unknown[]) => {
+          await new Promise(resolve => setTimeout(resolve, 5500));
+          return await value.apply(target, args);
+        };
+      },
+    });
     const database = new Proxy(env.AUTHENTICATION_DB, {
       get(target, key) {
-        if (key === "prepare") return (sql: string) => {
-          const statement = target.prepare(sql);
-          if (!sql.includes("authentication_authority")) return statement;
-          return new Proxy(statement, {
-            get(statementTarget, operation) {
-              if (operation === "first" && fault === "authority") return async () => {
-                throw new Error("private-authority-sentinel");
-              };
-              if (operation === "first" && fault === "closed") return async () => ({ phase: "preparing" });
-              if (operation === "first" && fault === "timeout") return async () => {
-                await new Promise(resolve => setTimeout(resolve, 5500));
-                return await statementTarget.first();
-              };
-              return Reflect.get(statementTarget, operation).bind(statementTarget);
-            },
-          });
-        };
+        if (key === "prepare" && (fault === "database" || fault === "database_timeout"))
+          return (sql: string) => faulty(target.prepare(sql));
         const value = Reflect.get(target, key);
         return typeof value === "function" ? value.bind(target) : value;
       },

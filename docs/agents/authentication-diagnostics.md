@@ -11,8 +11,7 @@ an incident.
 `authentication.client.failed` and `authentication.worker.failed` retain each
 unexpected failure at their respective HTTP boundary. The matching `.completed`
 events randomly select 10% of non-failing outcomes after the result is known,
-independently at each boundary. Caller-supplied IDs cannot choose the success cohort. A deliberately
-closed authority uses `outcome=closed`, not an operational error. Existing Next
+independently at each boundary. Caller-supplied IDs cannot choose the success cohort. Existing Next
 request-error logs and PostHog traces remain available; trace sampling stays at 10%.
 Classifieds routes retain their separate events, identifiers and operation budgets;
 this mode does not impose the authentication deadline on that chain.
@@ -56,12 +55,9 @@ attempt, and sharing it cannot replace trusted correlation propagation.
 Events also contain normalized route, service/environment/release, status when
 available, duration and the 5,000 ms client deadline. Failed flag evaluations
 preserve a bounded category and provider HTTP status where available. Worker stage
-timings distinguish `runtime_identity`, `authority` (D1 phase lookup), `release` (cached or remote flag
-evaluation) and `handler`; the client measures `transport`, including runtime
-body
-consumption and schema validation for operations it decodes. A raw HTTP proxy
-returns the response at the headers boundary. Stage durations alone do not
-distinguish a cached flag decision from a remote PostHog call.
+timings distinguish `runtime_identity` and `handler`; the client measures `transport`,
+including runtime body consumption and schema validation for operations it decodes.
+A raw HTTP proxy returns the response at the headers boundary.
 
 At the deadline, the Worker records the pending stage without aborting the operation,
 retrying it or changing its response. `waitUntil` keeps this bounded diagnostic task

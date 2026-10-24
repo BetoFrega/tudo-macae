@@ -51,7 +51,6 @@ beforeAll(async () => {
   for (const file of (await readdir(join(directory, "migrations-classifieds"))).filter(file => file.endsWith(".sql")).sort()) {
     await classifieds.exec(await readFile(join(directory, "migrations-classifieds", file), "utf8"));
   }
-  await database.prepare("UPDATE authentication_authority SET phase='active' WHERE singleton=1").run();
 });
 afterAll(async () => {
   await runtime?.dispose();
@@ -61,22 +60,22 @@ async function readEvents() {
   const response = await runtime.dispatchFetch("https://authentication.test/__diagnostics");
   return await response.json() as AuthenticationDiagnosticEvent[];
 }
-function request(fault: string, correlation = requestId) {
-  return runtime.dispatchFetch("https://authentication.test/api/trpc/diagnosticUnknownProcedure?input=private-query-sentinel", {
-    headers: { "x-fixture-fault": fault, "x-request-id": correlation, "x-correlation-id": "8f1e2d3c4b5a6978-GRU", "cf-ray": "0123456789abcdef-GRU", "authorization": `Bearer ${serviceToken}`, traceparent, "x-authentication-protocol": "1" },
+function signIn(fault: string) {
+  return runtime.dispatchFetch("https://authentication.test/api/auth/sign-in/email", {
+    method: "POST",
+    headers: { "content-type": "application/json", "origin": "https://www.test", "x-fixture-fault": fault, "x-request-id": requestId, "x-correlation-id": "8f1e2d3c4b5a6978-GRU", "cf-ray": "0123456789abcdef-GRU", "authorization": `Bearer ${serviceToken}`, traceparent, "x-authentication-protocol": "1" },
+    body: JSON.stringify({ email: "private-email-sentinel@example.com", password: "private-password-sentinel" }),
   });
 }
 
-test("an unsampled authority failure identifies its dependency and returned correlation", async () => {
-  const fault = "authority";
-  const response = await request(fault);
-  expect(response.status).toBe(503);
+test("an unsampled database failure identifies its dependency and returned correlation", async () => {
+  const response = await signIn("database");
+  expect(response.status).toBeGreaterThanOrEqual(500);
   expect(response.headers.get("x-request-id")).toBe(requestId);
   const events = await readEvents();
   expect(events).toHaveLength(1);
-  expect(events[0]).toMatchObject({ requestId, traceId, correlationId: response.headers.get("x-correlation-id"), stage: fault, outcome: "failed", failureCategory: "dependency" });
+  expect(events[0]).toMatchObject({ requestId, traceId, correlationId: response.headers.get("x-correlation-id"), stage: "handler", outcome: "failed", failureCategory: "dependency" });
   expect(events[0].stages).toEqual(expect.arrayContaining([
-    expect.objectContaining({ stage: fault, outcome: "failed" }),
     expect.objectContaining({ stage: "runtime_identity" }),
   ]));
   expect(JSON.stringify(events)).not.toContain("sentinel");
@@ -118,15 +117,6 @@ test.each(["on", "off"])("public sessions return immediately with diagnostics %s
   }
 }, 10000);
 
-test("a sampled expected authority closure is not an operational failure", async () => {
-  const response = await request("closed", "00000000-0000-4000-8000-000000000001");
-  expect(response.status).toBe(503);
-  const events = await readEvents();
-  expect(events).toHaveLength(1);
-  expect(events[0]).toMatchObject({ outcome: "closed", stage: "authority" });
-  expect(events[0].failureCategory).toBeUndefined();
-});
-
 test("a mandatory identity check keeps pending stages and freezes the root once its watchdog emits", async () => {
   const pending = runtime.dispatchFetch("https://authentication.test/internal/identities/missing", {
     method: "POST",
@@ -139,7 +129,6 @@ test("a mandatory identity check keeps pending stages and freezes the root once 
   expect(events).toHaveLength(1);
   expect(events[0]).toMatchObject({ outcome: "failed", failureCategory: "timeout", stage: "handler", correlationId: "0123456789abcdef-GRU" });
   expect(events[0].stages).toEqual(expect.arrayContaining([
-    expect.objectContaining({ stage: "authority", outcome: "completed" }),
     expect.objectContaining({ stage: "runtime_identity", outcome: "pending" }),
     expect.objectContaining({ stage: "handler", outcome: "pending" }),
   ]));
@@ -181,13 +170,13 @@ test("parent correlation and privileged identity/IP checks share one JWT verific
   }
 });
 
-test("Worker deadline evidence survives a caller timeout and identifies the still-pending authority read", async () => {
+test("Worker deadline evidence survives a caller timeout and identifies the still-pending handler", async () => {
   const clientEvents: AuthenticationDiagnosticEvent[] = [];
   const client = createAuthenticationClient({
     origin: "https://authentication.test", publicOrigin: "https://www.test",
     diagnostics: { context: () => ({ requestId, traceparent, correlationId: "8f1e2d3c4b5a6978-GRU" }), write: event => clientEvents.push(event) },
     request: async (_url, options) => {
-      const pending = request("timeout");
+      const pending = signIn("database_timeout");
       // Miniflare dispatch does not implement Fetch's signal cancellation.
       return await new Promise<Response>((resolve, reject) => {
         options?.signal?.addEventListener("abort", () => reject(options.signal?.reason), { once: true });
@@ -195,14 +184,14 @@ test("Worker deadline evidence survives a caller timeout and identifies the stil
       });
     },
   });
-  await expect(client.request("/api/trpc/diagnosticUnknownProcedure")).rejects.toMatchObject({ name: "TimeoutError" });
+  await expect(client.request("/api/auth/sign-in/email")).rejects.toMatchObject({ name: "TimeoutError" });
   expect(clientEvents).toHaveLength(1);
   await new Promise(resolve => setTimeout(resolve, 100));
   const events = await readEvents();
   expect(events).toHaveLength(1);
-  expect(events[0]).toMatchObject({ outcome: "failed", stage: "authority", failureCategory: "timeout", requestId, traceId, correlationId: "8f1e2d3c4b5a6978-GRU" });
+  expect(events[0]).toMatchObject({ outcome: "failed", stage: "handler", failureCategory: "timeout", requestId, traceId, correlationId: "8f1e2d3c4b5a6978-GRU" });
   expect(events[0].stages).toEqual(expect.arrayContaining([
-    expect.objectContaining({ stage: "authority", outcome: "pending" }),
+    expect.objectContaining({ stage: "handler", outcome: "pending" }),
   ]));
   await new Promise(resolve => setTimeout(resolve, 600));
   expect(await readEvents()).toHaveLength(0);

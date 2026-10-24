@@ -73,6 +73,16 @@ jobs:
           elif test -f apps/web-workers/package.json; then
             npx turbo run build --filter=web-workers-app
           fi
+      # The bundle that production will serve must answer pages before anything is published.
+      - name: Smoke the web Worker bundle before production mutation
+        env:
+          XDG_CONFIG_HOME: /tmp/wrangler-config
+        run: |
+          if test -f wrangler.web.jsonc && test -f bin/web-bundle-smoke.mjs; then
+            node bin/web-bundle-smoke.mjs
+          else
+            echo "::notice::The selected SHA predates the web Worker bundle smoke."
+          fi
       # The PR Checks run turbo only on affected apps; delivery checks every app at this SHA.
       - name: Type-check, build and test every Worker app
         env:
@@ -173,6 +183,8 @@ jobs:
           AUTHENTICATION_API_ORIGIN: https://tudo-macae-api-production.frega.workers.dev
           AUTHENTICATION_RUNTIME_ACCOUNT: ${{ env.RUNTIME_ACCOUNT }}
           PUBLIC_IMAGE_PURGE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
+          # Empty deploys without the daily Classifieds supply snapshot; set it once the EU bucket exists.
+          PDM_EXPORTS_BUCKET: ${{ vars.PDM_EXPORTS_BUCKET }}
           # Empty enforces Turnstile; set the variable to off only while the serving Next sends no token.
           TURNSTILE_ENFORCEMENT: ${{ vars.TURNSTILE_ENFORCEMENT }}
         run: node bin/deploy-api-worker-production.mjs

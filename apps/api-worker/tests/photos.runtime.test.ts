@@ -6,3 +6,4 @@ import "./photosRuntimeCleanupTests";
 import "./photosRuntimeAdsTests";
 import "./photosRuntimeStagedTests";
 import "./photosRuntimeMaintenanceTests";
+import "./photosRuntimeSupplySnapshotTests";

@@ -83,6 +83,13 @@ if (articleIndexService !== undefined && !/^[a-z0-9-]{1,63}$/.test(articleIndexS
 configuration.services = configuration.services.flatMap(service => service.binding !== "ARTICLE_INDEX"
   ? [service]
   : articleIndexService ? [{ ...service, service: articleIndexService }] : []);
+const exportsBucket = process.env.PDM_EXPORTS_BUCKET || undefined;
+if (exportsBucket !== undefined && !/^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/.test(exportsBucket))
+  throw new Error("PDM_EXPORTS_BUCKET must name an R2 bucket");
+// Without PDM_EXPORTS_BUCKET the Worker deploys without the daily supply snapshot; Wrangler refuses a bucket that does not exist.
+configuration.r2_buckets = configuration.r2_buckets.flatMap(bucket => bucket.binding !== "PDM_EXPORTS"
+  ? [bucket]
+  : exportsBucket ? [{ ...bucket, bucket_name: exportsBucket }] : []);
 const directory = await mkdtemp(join(tmpdir(), "authentication-deployment-"));
 try {
   const path = join(directory, "wrangler.json");

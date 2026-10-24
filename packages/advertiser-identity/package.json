@@ -23,7 +23,8 @@
     "./resolveBusinessActivities": "./resolveBusinessActivities.ts",
     "./filterBusinessCatalogCategories": "./filterBusinessCatalogCategories.ts",
     "./phonePresentation": "./phonePresentation.ts",
-    "./identityDeletion": "./identityDeletion.ts"
+    "./identityDeletion": "./identityDeletion.ts",
+    "./supplySnapshot": "./supplySnapshot.ts"
   },
   "dependencies": {
     "zod": "^4.6.7",

@@ -6,6 +6,12 @@ import { activeVersion, assertRouteSafeConfig, deployedVersion, deployWorkers, p
 
 const version = "12345678-1234-1234-1234-123456789abc";
 
+/** `www` renders every page from whichever web Worker version is active. */
+const renders = (active: Map<string, string>) => ({
+  wait: async () => {},
+  request: async () => new Response("<html></html>", { headers: { "x-terms-worker-version": active.get(workers[0].name)! } }),
+});
+
 test("production configs preserve dashboard-managed routes", () => {
   for (const worker of workers) {
     const source = readFileSync(worker.config, "utf8");
@@ -82,7 +88,7 @@ test("builds Terms before publishing the edge and reads all active versions with
     await deployWorkers({ command, build,
       generatedConfig: () => ({ name: workers[0].name, targetEnvironment: "production", workers_dev: false, assets: { directory: "../client" } }),
       retainAssets: async () => ({ count: 1, retained: 1 }),
-      routes: async () => routes, exists: async () => true, probe: async () => {} });
+      routes: async () => routes, exists: async () => true, probe: async () => {}, pageProbe: renders(active) });
     expect(deployed).toEqual(workers.map(worker => worker.name));
     expect(JSON.parse(readFileSync(path.join(directory, "workers-recovery.json"), "utf8")).previous)
       .toEqual(Object.fromEntries(workers.map(worker => [worker.name, version])));
@@ -123,7 +129,7 @@ test("records an absent Terms Worker as a first deployment", async () => {
         expect(previousExists).toBe(false);
         return { count: 1, retained: 0 };
       },
-      routes: async () => routes, exists: async () => false, probe: async () => {} });
+      routes: async () => routes, exists: async () => false, probe: async () => {}, pageProbe: renders(active) });
     expect(JSON.parse(readFileSync(path.join(directory, "workers-recovery.json"), "utf8")).previous[workers[0].name]).toBeNull();
   }
   finally {
@@ -155,7 +161,7 @@ test("reuses a tagged route-free Terms bootstrap on its first CI delivery", asyn
     await deployWorkers({ command,
       build: () => { throw new Error("Terms bootstrap should not rebuild"); },
       retainAssets: async () => { throw new Error("Terms bootstrap should not copy assets"); },
-      routes: async () => routes, exists: async () => true, probe: async () => {} });
+      routes: async () => routes, exists: async () => true, probe: async () => {}, pageProbe: renders(active) });
     expect(deployed).toEqual(workers.slice(1).map(worker => worker.name));
   }
   finally {

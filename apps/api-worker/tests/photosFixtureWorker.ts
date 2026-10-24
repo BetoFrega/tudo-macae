@@ -149,6 +149,10 @@ const fixtureWorker = {
         return createClassifiedsPhotos({ database: env.CLASSIFIEDS_DB, bucket: env.PHOTOS, images: env.IMAGES,
           now: () => controller.scheduledTime, purge: { prepare: async () => {}, verify: async () => ({ success: true }) }, observe: () => {} });
       },
+      classifiedsSupplySnapshot: () => {
+        if (env.MAINTENANCE_FAULT === "supply") throw new Error("Fixture supply snapshot unavailable");
+        return undefined;
+      },
     }).scheduled(controller, env);
   },
   async fetch(request: Request, env: FixtureEnv) {

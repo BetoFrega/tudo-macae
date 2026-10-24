@@ -12,9 +12,10 @@ import type { IdentityImage } from "./rendering";
 import type { PublicAdvertiserProfileData } from "../../model";
 import type { BusinessPublicData } from "../../business";
 
-export function AdvertiserProfileAside({ profile, business, sourcePath, Link, Image }: {
+export function AdvertiserProfileAside({ profile, business, adId, sourcePath, Link, Image }: {
   profile: PublicAdvertiserProfileData | null;
   business: BusinessPublicData | null;
+  adId: string;
   sourcePath: string;
   Link: IdentityLink;
   Image: IdentityImage;
@@ -58,6 +59,7 @@ export function AdvertiserProfileAside({ profile, business, sourcePath, Link, Im
           <AdvertiserContactList
             contacts={profile.contacts ?? []}
             sourcePath={sourcePath}
+            analytics={{ source: "ad", businessId: profile.id, adId }}
           />
         </div>
 

@@ -1,7 +1,10 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { AdvertiserProfileHeader } from "./AdvertiserProfileHeader";
+
+const capture = vi.hoisted(() => vi.fn());
+vi.mock("posthog-js", () => ({ default: { capture } }));
 
 // Keep the primitive wrapper lightweight; IdentityAvatar owns load readiness.
 vi.mock("@tudomacae/react-primitives/avatar", () => ({
@@ -16,6 +19,24 @@ describe("AdvertiserProfileHeader", () => {
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    capture.mockReset();
+  });
+
+  it("records a phone contact click with the advertiser page as its origin", () => {
+    render(
+      <AdvertiserProfileHeader
+        profile={{ id: "profile-1", title: "Loja", contacts: [{ number: "22888888888", isWhatsapp: false }] }}
+        sourcePath={sourcePath}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("link", { name: /88888-8888/ }));
+
+    expect(capture).toHaveBeenCalledWith("business_contact_clicked", {
+      source_surface: "advertiser_profile",
+      business_id: "profile-1",
+      contact_kind: "phone",
+    });
   });
 
   it("renders the profile title when it is filled in", () => {

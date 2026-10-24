@@ -11,6 +11,9 @@ import { createEditorialPersistence } from "./editorial";
 import { createEditorialMedia } from "./lib/editorialMedia";
 import type { EditorialMediaService } from "./lib/mediaHttp";
 import { createHostedMediaBytes } from "./lib/storage/editorialMediaBytes";
+import { createSupplySnapshotExport } from "@tudomacae/advertiser-identity/supplySnapshot";
+import { createClassifiedsSupplySnapshotStore } from "./lib/db/classifiedsSupplySnapshot";
+import { createR2SupplySnapshotDestination } from "./lib/storage/classifiedsSupplySnapshots";
 
 /** Media over the editorial D1 and Hosted Images; absent until the deployment binds EDITORIAL_DB. */
 export function createProductionEditorialMedia(env: Env, send: typeof fetch = fetch): EditorialMediaService | undefined {
@@ -39,6 +42,11 @@ export function createProductionClassifiedsDependencies(env: Env & { PUBLIC_IMAG
     // Production is past the cutover: the D1 trigger classifieds_authority_no_rollback keeps it from returning to `legacy`.
     classifiedsQualification: async () => true,
     classifiedsPersistence: () => createClassifiedsPersistence({ database }),
+    classifiedsSupplySnapshot: () => {
+      // Deployments without PDM_EXPORTS_BUCKET drop the binding, so the declared type overstates its presence.
+      const bucket = env.PDM_EXPORTS as R2Bucket | undefined;
+      return bucket && createSupplySnapshotExport({ store: createClassifiedsSupplySnapshotStore(createClassifiedsPersistence({ database })), destination: createR2SupplySnapshotDestination(bucket) });
+    },
     classifiedsPhotoUrl: path => `/api/classifieds/photos/public/${encodeURIComponent(path)}`,
     classifiedsPhotos: (_environment, context) => {
       const store = createD1PhotoStore(database, createClassifiedsPersistence({ database }));

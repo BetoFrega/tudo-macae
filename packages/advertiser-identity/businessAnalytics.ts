@@ -39,12 +39,14 @@ export function businessOpenedEvent(input: BusinessInput) {
 
 export function businessContactEvent(input: BusinessInput & {
   kind: "phone" | "whatsapp";
+  adId?: string;
 }) {
   return {
     name: "business_contact_clicked",
     properties: {
       ...identifiers(input),
       contact_kind: input.kind,
+      ...(input.adId ? { ad_id: input.adId } : {}),
     },
   } as const;
 }

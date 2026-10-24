@@ -114,14 +114,28 @@ test("refuses an editorial database id that names another context's D1 in other 
   expect(result.output).toBeUndefined();
 });
 
+test("binds the supply snapshot bucket in the EU jurisdiction only when one is configured", () => {
+  const bound = deploy(["production", "--dry-run"], recordConfiguration, { PDM_EXPORTS_BUCKET: "tudo-macae-pdm-exports" });
+  expect(bound.status, bound.stderr).toBe(0);
+  expect(JSON.parse(bound.output!).r2_buckets).toEqual([{ binding: "PDM_EXPORTS", bucket_name: "tudo-macae-pdm-exports", jurisdiction: "eu" }]);
+  const unbound = deploy(["production", "--dry-run"], recordConfiguration, { PDM_EXPORTS_BUCKET: undefined });
+  expect(unbound.status, unbound.stderr).toBe(0);
+  expect(JSON.parse(unbound.output!).r2_buckets).toEqual([]);
+  const refused = deploy(["production", "--dry-run"], recordInvocation, { PDM_EXPORTS_BUCKET: "Exports_Bucket" });
+  expect(refused.status).toBe(1);
+  expect(refused.stderr).toContain("PDM_EXPORTS_BUCKET must name an R2 bucket");
+  expect(refused.output).toBeUndefined();
+});
+
 test("treats empty settings, as Actions passes unset variables, as absent", () => {
   const result = deploy(["production", "--dry-run"], recordConfiguration, {
-    AUTHENTICATION_DIAGNOSTICS_ENABLED: "", TURNSTILE_ENFORCEMENT: "", PUBLIC_IMAGE_PURGE_ZONE_ID: "", PUBLIC_APP_ORIGIN: "", PUBLIC_IMAGE_ORIGIN: "", EDITORIAL_D1_ID: "" });
+    AUTHENTICATION_DIAGNOSTICS_ENABLED: "", TURNSTILE_ENFORCEMENT: "", PUBLIC_IMAGE_PURGE_ZONE_ID: "", PUBLIC_APP_ORIGIN: "", PUBLIC_IMAGE_ORIGIN: "", EDITORIAL_D1_ID: "", PDM_EXPORTS_BUCKET: "" });
   expect(result.status, result.stderr).toBe(0);
   const configuration = JSON.parse(result.output!);
   expect(configuration.vars).toMatchObject({ AUTHENTICATION_DIAGNOSTICS_ENABLED: "true", TURNSTILE_ENFORCEMENT: "on",
     PUBLIC_APP_ORIGIN: "https://www.tudomacae.com.br", PUBLIC_IMAGE_ORIGIN: "https://images.tudomacae.com.br" });
   expect(configuration.d1_databases.map(({ binding }: Record<string, string>) => binding)).toEqual(["AUTHENTICATION_DB", "CLASSIFIEDS_DB"]);
+  expect(configuration.r2_buckets).toEqual([]);
 });
 
 test("tags the published version with the release SHA when one is given", () => {

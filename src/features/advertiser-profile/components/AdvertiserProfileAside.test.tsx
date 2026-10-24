@@ -1,7 +1,10 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { PublicAdvertiserProfileData } from "@tudomacae/advertiser-identity/model";
+
+const capture = vi.hoisted(() => vi.fn());
+vi.mock("posthog-js", () => ({ default: { capture } }));
 
 const getPublicAdvertiserProfile = vi.fn();
 const getBusinessUseCase = vi.fn();
@@ -33,6 +36,7 @@ async function renderAside(profile: PublicAdvertiserProfileData | null) {
   getBusinessUseCase.mockResolvedValue(null);
   return render(await AdvertiserProfileAside({
     profileId: "profile-1",
+    adId: "ad-1",
     sourcePath: "/anuncio/ad-1/bicicleta",
   }));
 }
@@ -41,6 +45,24 @@ describe("AdvertiserProfileAside", () => {
   beforeEach(() => {
     getPublicAdvertiserProfile.mockReset();
     getBusinessUseCase.mockReset();
+    capture.mockReset();
+  });
+
+  it("records a contact click with the ad as its origin and no contact content", async () => {
+    await renderAside({
+      id: "profile-1",
+      title: "Loja do João",
+      contacts: [{ number: "22999999999", isWhatsapp: true }],
+    });
+
+    fireEvent.click(screen.getByRole("link", { name: /WhatsApp/ }));
+
+    expect(capture).toHaveBeenCalledWith("business_contact_clicked", {
+      source_surface: "ad",
+      business_id: "profile-1",
+      contact_kind: "whatsapp",
+      ad_id: "ad-1",
+    });
   });
 
   it("renders the profile title when it is filled in", async () => {
@@ -96,6 +118,7 @@ describe("AdvertiserProfileAside", () => {
     getPublicAdvertiserProfile.mockResolvedValue({ id: "profile-1", title: "Loja do João" });
     render(await AdvertiserProfileAside({
       profileId: "profile-1",
+      adId: "ad-1",
       sourcePath: "/anuncio/ad-1/bicicleta",
     }));
     expect(screen.getByRole("link", { name: "Ver negócio completo" })).toHaveAttribute(

@@ -20,6 +20,7 @@ interface AdvertiserContactListProps {
     businessId: string;
     categoryId?: string;
     subcategoryId?: string;
+    adId?: string;
   };
 }
 
@@ -78,6 +79,7 @@ export function AdvertiserContactList({
                 kind: contact.isWhatsapp ? "whatsapp" : "phone",
                 ...(analytics.categoryId ? { categoryId: analytics.categoryId } : {}),
                 ...(analytics.subcategoryId ? { subcategoryId: analytics.subcategoryId } : {}),
+                ...(analytics.adId ? { adId: analytics.adId } : {}),
               });
               integrations.capture(event.name, event.properties);
             }}

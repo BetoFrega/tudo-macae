@@ -26,7 +26,7 @@ import { createClassifiedsAdministrationStore } from "./db/classifiedsAdministra
 import { activityAreaActive } from "./db/classifiedsSupport";
 import { createClassifiedsBusinessCatalogStore, readBusinessCatalogSnapshot } from "./db/classifiedsBusinessCatalog";
 
-export type ClassifiedsActor = { uid: string; admin: boolean; editor: boolean; emailVerified?: boolean; channel: "administration" | "mcp" };
+export type ClassifiedsActor = { uid: string; admin: boolean; editor: boolean; emailVerified?: boolean; channel: "administration" };
 const reference = z.object({ id: z.string().min(1) });
 const area = z.object({ categoryId: z.string().min(1), subcategoryId: z.string().min(1), civilDate: z.string().optional() });
 const businessList = z.object({
@@ -56,7 +56,7 @@ export function createClassifiedsCapabilities(dependencies: {
   const catalog = createCategoryCatalog(management);
   const maintenance = createCategoryMaintenance({ management, categories: taxonomy.categories, subcategories: taxonomy.subcategories, slugify, newIdempotencyKey: newId });
   const profiles = createAdvertiserProfiles({
-    store: createClassifiedsProfileStore({ persistence, actorId: actor?.uid ?? "", admin: actor?.admin === true && actor.channel === "administration", now, newId, photoUrl: dependencies.photoUrl }),
+    store: createClassifiedsProfileStore({ persistence, actorId: actor?.uid ?? "", admin: actor?.admin === true, now, newId, photoUrl: dependencies.photoUrl }),
     activityAreaCatalog: { isActive: value => activityAreaActive(persistence, value) },
     now, digest, ownsAdImagePath: () => false, newCorrelationId: newId,
     reportImageCleanupSkipped: () => { throw new Error("Identity deletion requires its aggregate composition."); },
@@ -75,16 +75,13 @@ export function createClassifiedsCapabilities(dependencies: {
   const categories = createCategoryLifecycle({ categories: taxonomy.categories, subcategories });
   const administration = createAdvertiserProfileAdministration({ store: createClassifiedsAdministrationStore({ persistence, now, newId, digest, photoUrl: dependencies.photoUrl }), now, digestConfirmationEvidence: digest });
   function authenticated() {
-    if (!actor || (actor.channel === "mcp" && !actor.editor)) throw new AdvertiserProfileAccessError("forbidden");
+    if (!actor) throw new AdvertiserProfileAccessError("forbidden");
     return actor;
   }
   function administrator() {
     const value = authenticated();
-    if (!value.admin || (value.channel === "mcp" && !value.editor)) throw new AdvertiserProfileAccessError("forbidden");
+    if (!value.admin) throw new AdvertiserProfileAccessError("forbidden");
     return value;
-  }
-  function human() {
-    if (authenticated().channel !== "administration") throw new AdvertiserProfileAccessError("forbidden");
   }
   function adminInput(input: unknown) {
     const value = administrator();
@@ -111,7 +108,7 @@ export function createClassifiedsCapabilities(dependencies: {
     },
     "business.areas": () => snapshot(read => read.listRepresentedActivityAreas()),
     "business.assessOwned": async (input) => {
-      human();
+      authenticated();
       const { ids } = ownedIds.parse(input);
       // Readiness is assessed only over the session owner's stored Profiles, never over caller-supplied data.
       const owned = new Map((await profiles.listForUser(authenticated().uid)).map(profile => [profile.id, profile]));
@@ -124,26 +121,26 @@ export function createClassifiedsCapabilities(dependencies: {
     "profiles.public": input => profiles.readPublic(reference.parse(input)),
     "profiles.area": input => profiles.listForActivityArea(area.parse(input)),
     "profiles.owned": (input) => {
-      human();
+      authenticated();
       return profiles.verifyOwnership({ ...reference.parse(input), userId: authenticated().uid });
     },
     "profiles.mine": () => {
-      human();
+      authenticated();
       return profiles.listForUser(authenticated().uid);
     },
     "profiles.forOwner": (input) => {
-      human();
+      authenticated();
       const { userId } = z.object({ userId: z.string().min(1).max(128) }).parse(input);
       if (userId !== authenticated().uid) administrator();
       return profiles.listForUser(userId);
     },
     "profiles.all": () => {
-      human();
+      authenticated();
       administrator();
       return profiles.listAll();
     },
     "profiles.private": (input) => {
-      human();
+      authenticated();
       const value = reference.parse(input);
       return authenticated().admin ? profiles.read(value) : profiles.verifyOwnership({ ...value, userId: authenticated().uid });
     },
@@ -163,17 +160,17 @@ export function createClassifiedsCapabilities(dependencies: {
   };
   const writeHandlers: Partial<Record<ClassifiedsWriteOperation, (input: unknown) => unknown>> = {
     "profiles.create": (input) => {
-      human();
+      authenticated();
       const value = fields.parse(input);
       const operationId = z.string().min(1).parse(value.operationId);
       return profiles.create({ ...value, userId: authenticated().uid, operationId } as Parameters<typeof profiles.create>[0]);
     },
     "profiles.update": (input) => {
-      human();
+      authenticated();
       return profiles.update(fields.parse(input) as Parameters<typeof profiles.update>[0]);
     },
     "profiles.classify": (input) => {
-      human();
+      authenticated();
       return profiles.classify({ ...fields.parse(input), userId: authenticated().uid } as Parameters<typeof profiles.classify>[0]);
     },
     "profiles.identity.delete": input => identityDeletion.delete(adminInput(input)),
@@ -199,7 +196,6 @@ export function createClassifiedsCapabilities(dependencies: {
   };
   return {
     async read(operation: ClassifiedsReadOperation, input: unknown) {
-      if (actor?.channel === "mcp" && !actor.editor) throw new AdvertiserProfileAccessError("forbidden");
       if (isAdOperation(operation)) return ads.read(operation, input);
       if (operation.startsWith("offerings.")) {
         if (operation === "offerings.management") authenticated();
@@ -213,7 +209,7 @@ export function createClassifiedsCapabilities(dependencies: {
       if (operation.startsWith("offerings.")) return offerings.write(operation, input, authenticated());
       const handler = writeHandlers[operation];
       if (handler) return handler(input);
-      human();
+      authenticated();
       administrator();
       return maintenanceHandlers[operation]?.(input);
     },

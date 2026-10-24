@@ -29,7 +29,7 @@ export async function run(module: { createAdvertiserProfileAdministration: typeo
   assert.deepEqual(await administration.list({}), { items: [] });
   assert.equal((await administration.get({ id: "profile" })).id, "profile");
   assert.deepEqual(await administration.findDuplicates({ title: "Perfil", contacts: [{ number: "22999999999", isWhatsapp: true }] }), { items: [] });
-  const common = { idempotencyKey: "operation", actorId: "admin", channel: "mcp" as const };
+  const common = { idempotencyKey: "operation", actorId: "admin", channel: "administration" as const };
   assert.equal((await administration.create({
     ...common,
     title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }],

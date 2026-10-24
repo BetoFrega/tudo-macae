@@ -1,6 +1,6 @@
 import { ClassifiedsRequestError, isClassifiedsRequestId } from "../protocol";
 
-export type ClassifiedsCredential = { session?: string | undefined; service?: { token: string; actorId: string } };
+export type ClassifiedsCredential = { session?: string | undefined };
 
 const localHostnames = ["localhost", "127.0.0.1", "authentication.test"];
 
@@ -19,10 +19,6 @@ export function classifiedsRequestId(correlationId: string) {
 export function classifiedsHeaders(publicOrigin: string, requestId: string, credential: ClassifiedsCredential) {
   const headers = new Headers({ "origin": publicOrigin, "x-request-id": requestId, "x-classifieds-protocol": "1", "x-authentication-protocol": "1" });
   if (credential.session) headers.set("cookie", `session=${encodeURIComponent(credential.session)}`);
-  if (credential.service) {
-    headers.set("authorization", `Bearer ${credential.service.token}`);
-    headers.set("x-classifieds-actor", credential.service.actorId);
-  }
   return headers;
 }
 

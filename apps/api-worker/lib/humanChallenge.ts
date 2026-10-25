@@ -1,4 +1,4 @@
-export const humanChallengeHeader = "x-turnstile-token";
+const humanChallengeHeader = "x-turnstile-token";
 
 const maximumTokenLength = 2048;
 

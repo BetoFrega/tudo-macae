@@ -16,7 +16,7 @@ import { createClassifiedsSupplySnapshotStore } from "./lib/db/classifiedsSupply
 import { createR2SupplySnapshotDestination } from "./lib/storage/classifiedsSupplySnapshots";
 
 /** Media over the editorial D1 and Hosted Images; absent until the deployment binds EDITORIAL_DB. */
-export function createProductionEditorialMedia(env: Env, send: typeof fetch = fetch): EditorialMediaService | undefined {
+function createProductionEditorialMedia(env: Env, send: typeof fetch = fetch): EditorialMediaService | undefined {
   // Deployments without EDITORIAL_D1_ID drop the binding, so the declared type overstates its presence.
   const database = env.EDITORIAL_DB as D1Database | undefined;
   if (!database) return undefined;

@@ -92,7 +92,7 @@ export function activateAuthenticationAuthority(
   return transfer(database).activate(accounts);
 }
 
-export function identityImportPlan(records: TransferIdentity[], now: number) {
+function identityImportPlan(records: TransferIdentity[], now: number) {
   return records.flatMap(account => [
     {
       sql: `INSERT INTO user (id,name,email,emailVerified,createdAt,updatedAt,claims,disabled,migrated,lastSignIn) SELECT ?,?,?,?,?,?,?,?,1,? WHERE (SELECT phase FROM authentication_authority WHERE singleton=1)='preparing' ON CONFLICT(id) DO UPDATE SET name=excluded.name,email=excluded.email,emailVerified=excluded.emailVerified,updatedAt=excluded.updatedAt,claims=excluded.claims,disabled=excluded.disabled,lastSignIn=excluded.lastSignIn,migrated=excluded.migrated`,

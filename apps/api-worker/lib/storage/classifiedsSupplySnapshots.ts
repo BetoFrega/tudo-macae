@@ -1,7 +1,7 @@
 import type { SupplySnapshotDestination } from "@tudomacae/advertiser-identity/supplySnapshot";
 
 /** Hive-style `date=` partitions let the PostHog R2 source read each day's file as a new append-only batch. */
-export const supplySnapshotKey = (snapshotDate: string) => `classifieds-supply/date=${snapshotDate}/supply.csv`;
+const supplySnapshotKey = (snapshotDate: string) => `classifieds-supply/date=${snapshotDate}/supply.csv`;
 
 export function createR2SupplySnapshotDestination(bucket: R2Bucket): SupplySnapshotDestination {
   return {

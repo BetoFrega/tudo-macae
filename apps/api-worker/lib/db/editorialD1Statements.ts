@@ -10,7 +10,7 @@ export const kindScope = (kind: RecordKind) => JSON.stringify(["kind", kind]);
 export const articleScope = (id: string) => JSON.stringify(["article", id]);
 export const mediaScope = (id: string) => JSON.stringify(["media", id]);
 
-export class StoredEditorialDataError extends Error {
+class StoredEditorialDataError extends Error {
   constructor(cause: unknown) {
     super("Registro editorial armazenado é inválido.", { cause });
     this.name = "StoredEditorialDataError";

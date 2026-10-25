@@ -183,3 +183,9 @@ export async function registerPosthogTracing() {
   });
   registerGlobally(tracerProvider, propagator);
 }
+
+// Route handlers with explicit spans can await this inside next/server's after()
+// when their hosting environment suspends CPU immediately after a response.
+export async function flushPosthogTracing() {
+  await tracerProvider?.forceFlush();
+}

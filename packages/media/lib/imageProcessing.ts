@@ -7,8 +7,8 @@
  * have exactly one copy.
  */
 
-export const MAX_INPUT_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB limit for input
-export const MAX_OUTPUT_IMAGE_SIZE = 1 * 1024 * 1024; // 1MB limit for output
+const MAX_INPUT_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB limit for input
+const MAX_OUTPUT_IMAGE_SIZE = 1 * 1024 * 1024; // 1MB limit for output
 export const VALID_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",

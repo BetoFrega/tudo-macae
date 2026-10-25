@@ -17,8 +17,6 @@ export interface Article {
   updatedAt: number;
 }
 
-export { articleIsVisible } from "@tudomacae/editorial-planning/eligibility";
-
 export interface ArticleCatalogDependencies {
   now(): number;
   read(id: string): Promise<Article | null>;

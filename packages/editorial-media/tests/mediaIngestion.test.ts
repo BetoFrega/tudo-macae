@@ -4,7 +4,7 @@ import {
   type EditorialMediaIngestionDependencies,
   type MediaIngestionIntent,
 } from "../mediaIngestion";
-import { firstPartyEditorialCaller, mcpEditorialReadCaller } from "@tudomacae/editorial-access/caller";
+import { firstPartyEditorialCaller, mcpEditorialCaller } from "@tudomacae/editorial-access/caller";
 import { MediaIngestionError } from "@tudomacae/media/ingestionPolicy";
 
 const operationId = "a".repeat(64);
@@ -173,7 +173,7 @@ describe("editorial media ingestion factory", () => {
     await expect(ingestion.prepare(firstPartyEditorialCaller("editor-1"), { ...uploadInput(), size: 0 }))
       .rejects.toMatchObject({ code: "validationFailed" });
 
-    const mcp = mcpEditorialReadCaller({ editorId: "editor-1", editorialClientId: "client-1" });
+    const mcp = mcpEditorialCaller({ editorId: "editor-1", editorialClientId: "client-1" });
     const page = await ingestion.search(mcp, { text: "Imbetiba" }, "request-1");
     expect(page.media[0]).not.toHaveProperty("storagePath");
     expect(controlled.searches).toEqual([{ channel: "mcp", requestId: "request-1" }]);

@@ -25,10 +25,20 @@ test's location.
   `vitest.worker.config.mts` collects, and run it with
   `npm run test:worker -- <paths>`; it binds local ports.
 
-- **E2E (Playwright):** essential user journeys and behaviour whose proof needs
-  a real browser or the integrated application. Keep representative checks of
-  the connection between layers; cover rule variants in unit or integration
-  tests. Follow [E2E Test Authoring](e2e-test-authoring.md).
+- **E2E (Playwright):** essential happy-path user journeys whose proof needs a
+  real browser or the integrated application. Keep representative checks of the
+  connection between layers; cover rule variants in unit or integration tests.
+  - Validation, failure, recovery, unavailable, timeout and race states belong in
+    unit or integration tests, with fake timers for anything time-based. E2E cases
+    never script a provider failure or wait on a real delay (`delayMs`,
+    `waitForTimeout`, a fake that answers after the app's timeout).
+  - Exception: one denied-access case per protected surface, because only the
+    browser proves that the session reaches the server before private data
+    renders. Cover the remaining authorization variants in Worker runtime tests.
+  - Specs that test the E2E harness itself, not a product journey, are outside
+    this rule.
+
+  Follow [E2E Test Authoring](e2e-test-authoring.md).
 
 ## E2E composition
 

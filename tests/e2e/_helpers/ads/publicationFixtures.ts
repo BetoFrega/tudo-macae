@@ -1,6 +1,5 @@
 import type { readPublication } from "@/integrations/ads/publication";
 import type { CreateAdResult } from "@tudomacae/ads/management";
-import type { AdImage } from "@tudomacae/ads/types";
 import type { CreateAdInput, PendingPublicationInput, PublicationProfileInput } from "@tudomacae/ads/validation";
 import { workerFixture } from "../../../_helpers/auth/helpers/workerFixture";
 import type { UserCredentials } from "../auth/auth-test-utils";
@@ -32,11 +31,6 @@ export async function publishPublicationFixture(owner: UserCredentials, id: stri
 export async function createAdRecordFixture(owner: UserCredentials, input: CreateAdInput) {
   const client = await classifiedsFixtureClient(owner);
   return client.write<CreateAdResult>("ads.create", { ...input, id: crypto.randomUUID() });
-}
-
-/** Writes image references directly, for malformed preconditions the app cannot produce. */
-export async function setPublicationImagesFixture(id: string, images: AdImage[]) {
-  await workerFixture("/set-ad-images", { id, images });
 }
 
 /** Whether a deleted publication queued its photo for the API Worker's scheduled removal. */

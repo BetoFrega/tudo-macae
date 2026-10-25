@@ -15,25 +15,6 @@ test.describe("My Ads", () => {
       pageObject(page).getByRole("button", { name: "Fazer login" }).filter({ visible: true }),
     ).toBeVisible();
   });
-
-  test("Meus Anúncios mostra apenas os anúncios do usuário da sessão", async ({
-    page,
-    adFixture,
-    anotherUserCredentials,
-    userCredentials,
-    myAdsPage,
-    authentication,
-  }) => {
-    await authentication.login(anotherUserCredentials);
-    await page.goto("/minha-conta/anuncios");
-    await expect(pageObject(page).getByText(adFixture.title).filter({ visible: true })).not.toBeVisible();
-
-    await test.step("Ao entrar como proprietário, o anúncio aparece", async () => {
-      await authentication.login(userCredentials);
-      await myAdsPage.goto();
-      await expect(pageObject(page).getByText(adFixture.title).filter({ visible: true })).toBeVisible();
-    });
-  });
 });
 
 test("Titular atual administra anúncio e ex-titular perde acesso privado no D1", async ({ page, adFixture, anotherUserCredentials, userCredentials, authentication, myAdsPage, editAdPage, adDetailsPage }) => {

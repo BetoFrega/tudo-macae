@@ -66,9 +66,6 @@ export function mcpEditorialCaller(input: {
   return caller;
 }
 
-/** @deprecated Prefer `mcpEditorialCaller`; kept for existing read callers. */
-export const mcpEditorialReadCaller = mcpEditorialCaller;
-
 export function delegatedEditorialCaller(
   caller: McpEditorialCallerDetails,
   editorialDelegationId: string,

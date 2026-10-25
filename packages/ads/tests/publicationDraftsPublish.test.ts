@@ -38,7 +38,8 @@ test("publishing is repeatable and completion removes work from pending listings
   expect(await drafts.publish("owner", input.id)).toEqual(result);
   expect(await drafts.read("owner", input.id)).toMatchObject({ published: true, completed: false });
   expect(await drafts.list("owner")).toHaveLength(1);
-  await drafts.complete("owner", input.id);
+  expect(await drafts.complete("owner", input.id)).toBe(true);
+  expect(await drafts.complete("owner", input.id)).toBe(false);
   expect(await drafts.list("owner")).toEqual([]);
 });
 

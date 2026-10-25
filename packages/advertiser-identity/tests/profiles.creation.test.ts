@@ -2,6 +2,23 @@ import { describe, expect, test } from "vitest";
 import { profileFixture } from "./profileFixtures";
 
 describe("advertiser profile creation", () => {
+  test("records each created identity once with its actor, and neither a replay nor a rejected creation", async () => {
+    const { profiles, identitiesCreated } = profileFixture();
+    const input = {
+      userId: "owner",
+      operationId: crypto.randomUUID(),
+      title: "Oficina do Bairro",
+      description: "",
+      contacts: [],
+      activityAreas: [],
+      identityType: "business" as const,
+    };
+    const id = await profiles.create(input);
+    await profiles.create(input);
+    await expect(profiles.create({ ...input, title: "Outra oficina" })).rejects.toThrow();
+    expect(identitiesCreated).toEqual([{ actorId: "owner", identityId: id, identityType: "business" }]);
+  });
+
   test("replays a creation by operation ID and rejects changed fields", async () => {
     const { profiles, setTime } = profileFixture();
     const input = {

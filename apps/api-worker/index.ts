@@ -17,6 +17,7 @@ import { blogPublicErrorReportedHeader } from "@tudomacae/editorial-blog/publicP
 import { blogPublicFailureRoute, blogPublicUnavailableMessage } from "./lib/blogPublicHttp";
 import type { AuthenticationMail, WorkerDependencies } from "./lib/workerDependencies";
 import type { HumanChallengeUnavailable } from "./lib/humanChallenge";
+import { createOfferEvents } from "./lib/offerEvents";
 
 type Diagnostics = ReturnType<typeof createAuthenticationDiagnostics>;
 /** Mutable per-request outcome shared by the handler, its dependencies and late runtime proofs. */
@@ -217,6 +218,10 @@ export function createApiWorker(dependencies: WorkerDependencies = {}) {
         ...(dependencies.classifiedsPhotos ? { classifiedsPhotos: (environment: Env) => dependencies.classifiedsPhotos!(environment, { requestId }) } : {}),
         diagnostics,
         verifyRuntimeIdentity,
+        offerEvents: dependencies.offerEvents ?? ((environment: Env) => createOfferEvents({
+          projectToken: environment.POSTHOG_PROJECT_TOKEN, environment: environment.WORKERS_ENVIRONMENT, release: environment.CF_VERSION_METADATA?.id,
+          fetch, waitUntil: promise => execution?.waitUntil(promise), log: line => console.warn(line), now: Date.now,
+        })),
         reportHumanChallengeUnavailable(category: HumanChallengeUnavailable, status?: number) {
           state.failureCategory = "dependency";
           state.dependencyFailure = { category, status };

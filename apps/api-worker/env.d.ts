@@ -17,6 +17,7 @@ interface __BaseEnv_Env {
 	TURNSTILE_ENFORCEMENT: string;
 	PUBLIC_IMAGE_PURGE_ZONE_ID: string;
 	PUBLIC_IMAGE_ORIGIN: string;
+	POSTHOG_PROJECT_TOKEN: string;
 	BETTER_AUTH_SECRET: string;
 	ARTICLE_INDEX: Service /* entrypoint ArticleIndexWriter from tudo-macae-public-article-index */;
 }
@@ -31,5 +32,5 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "PUBLIC_APP_ORIGIN" | "EMAIL_FROM" | "OIDC_AUDIENCE" | "OIDC_SERVICE_ACCOUNT" | "WORKERS_ENVIRONMENT" | "AUTHENTICATION_DIAGNOSTICS_ENABLED" | "TURNSTILE_ENFORCEMENT" | "PUBLIC_IMAGE_PURGE_ZONE_ID" | "PUBLIC_IMAGE_ORIGIN" | "BETTER_AUTH_SECRET">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "PUBLIC_APP_ORIGIN" | "EMAIL_FROM" | "OIDC_AUDIENCE" | "OIDC_SERVICE_ACCOUNT" | "WORKERS_ENVIRONMENT" | "AUTHENTICATION_DIAGNOSTICS_ENABLED" | "TURNSTILE_ENFORCEMENT" | "PUBLIC_IMAGE_PURGE_ZONE_ID" | "PUBLIC_IMAGE_ORIGIN" | "POSTHOG_PROJECT_TOKEN" | "BETTER_AUTH_SECRET">> {}
 }

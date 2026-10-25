@@ -12,9 +12,11 @@ import type { ClassifiedsPhotos } from "./classifiedsPhotoHttp";
 import type { ClassifiedsActor } from "./classifiedsCapabilities";
 import type { ClassifiedsReadOperation, ClassifiedsWriteOperation } from "@tudomacae/classifieds-client/protocol";
 import { createClassifiedsAdStores } from "./db/classifiedsAds";
+import type { OfferEvent } from "./offerEvents";
 const reference = z.object({ id: publicationIdentifier });
 export function createClassifiedsAds(dependencies: {
   persistence: ClassifiedsPersistence; actor?: ClassifiedsActor; now(): number; newId(): string; photos?: ClassifiedsPhotos;
+  recordOfferEvent?(event: OfferEvent): void;
 }) {
   const { actor } = dependencies;
   const stores = createClassifiedsAdStores({ ...dependencies, actorId: actor?.uid ?? "", admin: actor?.admin === true, emailVerified: actor?.emailVerified === true });
@@ -48,7 +50,21 @@ export function createClassifiedsAds(dependencies: {
       if (!dependencies.photos) throw new Error("Photo qualification unavailable");
       revision = (await dependencies.photos.publication({ uid: owner.uid, admin: false }, value.id)).revision;
     }
-    return stores.publish(value.id, value.reviewed, revision);
+    const { firstPublication, identityType, ...published } = await stores.publish(value.id, value.reviewed, revision);
+    if (firstPublication) {
+      dependencies.recordOfferEvent?.({ name: "ad_published", actorId: owner.uid, adId: published.adId,
+        categoryId: published.categoryId, subcategoryId: published.subcategoryId, ...(identityType ? { identityType } : {}) });
+    }
+    return published;
+  }
+  async function saveProfile(owner: ClassifiedsActor, input: unknown) {
+    const value = publicationProfileInput.parse(input);
+    const { profileId, created } = await drafts.saveProfileOutcome(owner.uid, value);
+    if (created) {
+      dependencies.recordOfferEvent?.({ name: "advertiser_identity_created", actorId: owner.uid, identityId: profileId,
+        ...(value.identityType ? { identityType: value.identityType } : {}) });
+    }
+    return profileId;
   }
   return {
     async read(operation: ClassifiedsReadOperation, input: unknown) {
@@ -81,7 +97,7 @@ export function createClassifiedsAds(dependencies: {
           return null;
         case "publications.photos": return metadata.sync(publicationPhotosInput.parse(input));
         case "publications.save": return drafts.save(owner.uid, pendingPublicationInput.parse(input));
-        case "publications.profile": return drafts.saveProfile(owner.uid, publicationProfileInput.parse(input));
+        case "publications.profile": return saveProfile(owner, input);
         case "publications.delete":
           await stores.deleteDraft(reference.parse(input).id);
           return null;

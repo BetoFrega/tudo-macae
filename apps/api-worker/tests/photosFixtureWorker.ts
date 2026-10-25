@@ -30,6 +30,7 @@ type FixtureContext = {
   objects: ReturnType<typeof createR2PhotoObjects>;
   lifecycle: ReturnType<typeof createPhotoLifecycle>;
   now: () => number;
+  events: object[];
 };
 
 const purgeFailures = ["purge", "authorization", "rate_limit", "timeout"];
@@ -46,7 +47,7 @@ function fixturePurge(input: FixtureInput, store: PhotoStore, events: object[]) 
 }
 
 /** Gated or faulty uploads wrap R2 object creation; otherwise the production composition is used. */
-function fixtureLifecycle({ input, env, store, objects }: Omit<FixtureContext, "lifecycle" | "persistence" | "now">, options: PhotoOptions) {
+function fixtureLifecycle({ input, env, store, objects }: Omit<FixtureContext, "lifecycle" | "persistence" | "now" | "events">, options: PhotoOptions) {
   if (!input.gate && input.fault !== "bytes") return createClassifiedsPhotos(options);
   return createPhotoLifecycle({ ...options, store, decode: createClassifiedsPhotoDecoder(env.IMAGES),
     objects: { ...objects, async create(record, bytes) {
@@ -64,9 +65,9 @@ async function readHeads({ input, env }: FixtureContext) {
   }));
 }
 
-async function runCapability({ input, env, persistence, lifecycle, now }: FixtureContext) {
+async function runCapability({ input, env, persistence, lifecycle, now, events }: FixtureContext) {
   const capability = createClassifiedsCapabilities({ persistence, actor: input.actor ?? { ...actor, editor: false, emailVerified: true, channel: "administration" },
-    correlationId: "fixture", now, photos: { ...lifecycle, async publication(who, id) {
+    correlationId: "fixture", now, recordOfferEvent: event => events.push({ operation: "offerEvent", ...event }), photos: { ...lifecycle, async publication(who, id) {
       const proof = await lifecycle.publication(who, id);
       if (input.gate) await env.GATE.fetch(`http://gate/${input.gate}`);
       return proof;
@@ -167,7 +168,7 @@ const fixtureWorker = {
     const objects = createR2PhotoObjects(env.PHOTOS);
     const lifecycle = fixtureLifecycle({ input, env, store, objects }, options);
     try {
-      const value = await photoActions[input.action]({ input, env, persistence, store, objects, lifecycle, now });
+      const value = await photoActions[input.action]({ input, env, persistence, store, objects, lifecycle, now, events });
       return Response.json({ value, events });
     }
     catch (error) {

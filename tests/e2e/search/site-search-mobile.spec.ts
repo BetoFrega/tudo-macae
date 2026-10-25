@@ -3,7 +3,7 @@ import { click } from "../_helpers/click";
 import { pageObject } from "../_helpers/fixtures/POMs/pageObject";
 import { makeRandomString } from "../../_helpers/makeRandomString";
 import { installUserSession } from "../_helpers/auth/helpers/authentication";
-import { clearScriptedReplies, enableSearchAudience, scriptReply } from "../_helpers/siteSearch";
+import { clearScriptedReplies, scriptReply } from "../_helpers/siteSearch";
 
 test.afterEach(clearScriptedReplies);
 
@@ -21,7 +21,6 @@ test("no celular, a busca opera por teclado e separa vazio de indisponibilidade"
     }] },
   });
   await scriptReply(exhausted, { status: 429, delayMs: 1_500, body: { error: "quota" } });
-  await enableSearchAudience(userCredentials.uid);
   await installUserSession(page, userCredentials);
   await page.setViewportSize({ width: 375, height: 812 });
   await page.emulateMedia({ reducedMotion: "reduce" });

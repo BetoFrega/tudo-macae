@@ -45,6 +45,7 @@ export function AdvertiserProfileHeader({
               contacts={profile.contacts ?? []}
               sourcePath={sourcePath}
               fitWithinParent
+              analytics={{ source: "advertiser_profile", businessId: profile.id }}
             />
           </div>
         </div>

@@ -9,11 +9,20 @@ in the main branch's cache scope. To restore an older release, use
 
 Each run fixes the event's immutable main SHA. Protection lint uses that SHA's first
 parent and still rejects protected reductions. Before production mutation, checks
-run typecheck, the web Worker build when present, typecheck, build and tests of
+run typecheck, the web Worker build when present and its bundle smoke
+(`node bin/web-bundle-smoke.mjs`, below), typecheck, build and tests of
 every Worker app (PR checks cover only affected apps), lint, Worker contracts,
 both Vitest tiers plus `build:check`, and the complete E2E collection
 (`npm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
 Google identity.
+
+The bundle smoke serves `dist/server` with `wrangler dev --local` and requires `/` and
+`/termos-e-condicoes` to answer 200 with a closed document (`/` also an `<img`) within 20 s.
+Neither `next build` nor the Next-renderer E2E runs the vinext bundle, so a renderer
+regression that hangs every page (a recursive `<Image>` did) reaches no other gate. The
+`Web Workers` PR job runs the same production-env build and smoke without secrets; Wrangler
+vars and a 40-hex `WEB_ASSET_RELEASE` are all the build needs. The smoke reports a bounded
+log tail on failure and always stops Wrangler.
 
 Delivery builds and promotes no Cloud Run revision, and the `www-origin` router
 reaches none.
@@ -44,9 +53,28 @@ release's), then `www-origin`,
 direct public route; `www-origin` serves it. `bin/deploy-workers-production.mjs` rejects `route`/`routes` config keys,
 records versions/routes in `workers-recovery` (missing first-delivery Terms Worker:
 `null`), requires the existing `www.tudomacae.com.br/*` attachment and verifies each
-new Wrangler version serves 100% with unchanged zone routes. Final probes require
-a public sitemap with a canonical Article URL, answered with `x-www-origin: terms-workers`, and anonymous
-rejection by both machine Workers. Logs contain bounded names/version IDs/status
+new Wrangler version serves 100% with unchanged zone routes.
+
+Before publishing the next Worker, the page gate (`bin/web-worker-page-gate.mjs`)
+requests `/`, `/termos-e-condicoes` and `/noticias` through
+`https://www.tudomacae.com.br` without cookies and with `cache-control: no-cache`.
+Each page needs `200`, a complete body containing `</html>` within 10 s, and
+`x-terms-worker-version` equal to the new version; `x-www-origin` alone does not
+prove that the application answered, because the router's own `502` carries it.
+The pages share five retries 10 s apart for propagation. When the gate fails, the
+script runs `wrangler rollback <previous> --name tudo-macae-terms-workers --message …`
+to the version recorded in `workers-recovery`, reads back that version at 100%,
+re-probes `/` against it, records `webRollback` (`from`, `to`, `reason`, `outcome`:
+`restored`, `restored-unverified`, `rollback-failed` or `not-attempted`) in the
+artifact and fails the job, so the later Workers stay unpublished. There is no
+automatic rollback on a first delivery (previous `null`) or a reused bootstrap,
+and none succeeds where [Manual recovery](#manual-recovery) says Wrangler refuses
+it; the job then fails once with the manual command. Visitors see the broken pages until the rollback lands (about a minute
+plus the rollback).
+
+Final probes require the `/_terms-workers` asset manifest and a public sitemap
+with a canonical Article URL, both answered with `x-www-origin: terms-workers`,
+and anonymous rejection by both machine Workers. Logs contain bounded names/version IDs/status
 codes, not raw Wrangler output. Failed/skipped Worker delivery keeps the correction
 issue open; inspect the recovery artifact and provider state before retrying.
 AI Search retrieval needs the
@@ -103,8 +131,19 @@ Resume that PR/head; never cancel or redispatch to clear pending work.
 
 ### Dispatched runs
 
-Production runs share `production-delivery` with
-`queue: max` (up to 100 waiting runs). Preserve queued requests and environment waits.
+Each run delivers main up to its SHA, so a newer push or dispatch supersedes older
+runs. `checks` runs in `production-delivery-checks` with `cancel-in-progress`: a
+newer run cancels it. `production` and `workers` each run one at a time in
+`production-delivery-api` and `production-delivery-workers` and are never cancelled
+mid-publish; a newer run's pending job replaces an older pending one in its group.
+The groups differ so an older run's pending `workers` job cannot replace a newer
+run's `production` job; the newer API Worker may publish while an older `workers`
+job runs, which the API's compatibility with the serving web Worker allows.
+Only the run for main's head updates the correction ticket: `bin/deployment-ticket.mjs`
+leaves it untouched for any older run, whatever its result, because an older run's
+mutation can succeed after a newer run's checks already failed. A run still at the
+head reports every result, a cancellation by hand or a timeout included. Never cancel a running `production` or `workers` job by hand; wait for
+the newer run instead. Preserve environment waits.
 
 Before dispatch, record workflow (`deploy.yml`), ref, UTC start (`date -u +%FT%TZ`) and active actor
 (`gh api user --jq .login`). Retain the returned run ID/URL. If dispatch succeeds
@@ -219,9 +258,11 @@ Keep the correction issue open until normal delivery succeeds. [Worker recovery]
 compares `workers-recovery-<run-id>-<attempt>` versions/routes with
 Cloudflare and restores only affected versions using
 `npx wrangler rollback '<previous-version>' --config '<worker-config>' --env production --message 'Restore previous production version'`,
-then read back versions/routes. `wrangler rollback` cannot reach a Terms Worker
-version older than its `DataCache` Durable Object; recover such a release by
-redeploying a fixed `main`. Preserve independent deployments; a `www-origin`
+then read back versions/routes. A `webRollback` entry with outcome `restored`
+leaves only the web Worker changed and already restored; any other outcome needs
+the command the job printed. Wrangler refuses a Terms Worker rollback across a
+change to its `DataCache` Durable Object's `exports` or migrations; recover such a
+release by redeploying a fixed `main`. Preserve independent deployments; a `www-origin`
 rollback affects `www` and MCP and never targets a version with `CLOUD_RUN_ORIGIN`
 ([why](www-origin-runbook.md#deploy-and-recovery)).
 `api-worker-recovery-<run-id>-<attempt>` names the API Worker's previous version;

@@ -7,18 +7,19 @@ on:
   # the default branch's cache scope (CodeQL actions/cache-poisoning).
   workflow_dispatch: {}
 
-# Serialize production deliveries without replacing pending requests.
-concurrency:
-  group: production-delivery
-  queue: max
-  cancel-in-progress: false
-
+# Each run delivers main up to its SHA, so a newer push supersedes older runs. Checks
+# yield to the newer run; each mutation job runs one at a time and is never cancelled
+# mid-publish, while a newer pending run replaces an older one in its group.
 permissions:
   contents: read
 
 jobs:
   checks:
     if: github.ref == 'refs/heads/main'
+    # Nothing here mutates production, so a newer run cancels it.
+    concurrency:
+      group: production-delivery-checks
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 75
     outputs:
@@ -73,6 +74,16 @@ jobs:
           elif test -f apps/web-workers/package.json; then
             npx turbo run build --filter=web-workers-app
           fi
+      # The bundle that production will serve must answer pages before anything is published.
+      - name: Smoke the web Worker bundle before production mutation
+        env:
+          XDG_CONFIG_HOME: /tmp/wrangler-config
+        run: |
+          if test -f wrangler.web.jsonc && test -f bin/web-bundle-smoke.mjs; then
+            node bin/web-bundle-smoke.mjs
+          else
+            echo "::notice::The selected SHA predates the web Worker bundle smoke."
+          fi
       # The PR Checks run turbo only on affected apps; delivery checks every app at this SHA.
       - name: Type-check, build and test every Worker app
         env:
@@ -115,6 +126,10 @@ jobs:
   production:
     needs: [checks]
     environment: production
+    # Cancelling mid-migration or mid-publish would leave production half-delivered.
+    concurrency:
+      group: production-delivery-api
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -173,6 +188,8 @@ jobs:
           AUTHENTICATION_API_ORIGIN: https://tudo-macae-api-production.frega.workers.dev
           AUTHENTICATION_RUNTIME_ACCOUNT: ${{ env.RUNTIME_ACCOUNT }}
           PUBLIC_IMAGE_PURGE_ZONE_ID: 7d4facb5dc453abcb1bf72c6508245cc
+          # Empty deploys without the daily Classifieds supply snapshot; set it once the EU bucket exists.
+          PDM_EXPORTS_BUCKET: ${{ vars.PDM_EXPORTS_BUCKET }}
           # Empty enforces Turnstile; set the variable to off only while the serving Next sends no token.
           TURNSTILE_ENFORCEMENT: ${{ vars.TURNSTILE_ENFORCEMENT }}
         run: node bin/deploy-api-worker-production.mjs
@@ -187,6 +204,13 @@ jobs:
   workers:
     needs: [checks, production]
     environment: production
+    # Its own group: a newer run's API Worker may publish while this job runs, which the
+    # API's compatibility with the serving web Worker allows; sharing the API's group would
+    # let this job's pending entry replace the newer run's API job. Cancelling mid-publish
+    # would also skip the web Worker page gate and its rollback.
+    concurrency:
+      group: production-delivery-workers
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

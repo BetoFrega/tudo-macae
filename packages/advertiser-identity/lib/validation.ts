@@ -23,7 +23,7 @@ export const activityAreasSchema = z
     });
   });
 
-export const advertiserProfileContactSchema = z.object({
+const advertiserProfileContactSchema = z.object({
   number: z
     .string()
     .regex(

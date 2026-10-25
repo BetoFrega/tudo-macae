@@ -4,7 +4,6 @@ import { proxyHandles } from "./proxyScope";
 
 const handle = createProxy({
   canonicalLookup: () => import("@/packages/classifieds-api/canonical").then(module => module.canonicalLookup),
-  siteSearch: () => import("@/integrations/site-search/production"),
 });
 
 export function proxy(request: NextRequest): Promise<Response> {

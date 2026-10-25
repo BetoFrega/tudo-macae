@@ -12,7 +12,7 @@ const actor = { uid: "owner", admin: false };
 const inputSchema = z.object({ action: z.enum(["save", "upload", "reserve", "remove", "read", "sweep", "manifest", "delete", "adminDelete", "transfer", "publication", "capability", "record", "records", "heads", "sanitize"]),
   kind: z.enum(recordKinds).optional(), id: z.string().optional(), namespace: z.string().optional(), paths: z.array(z.string()).default([]),
   capability: z.object({ mutation: z.boolean(), operation: z.string(), input: z.json().default(null) }).optional(),
-  actor: z.object({ uid: z.string(), admin: z.boolean(), editor: z.boolean(), emailVerified: z.boolean(), channel: z.enum(["administration", "mcp"]) }).optional(),
+  actor: z.object({ uid: z.string(), admin: z.boolean(), editor: z.boolean(), emailVerified: z.boolean(), channel: z.literal("administration") }).optional(),
   request: z.object({ ownerKind: z.enum(["ad", "profile"]), ownerId: z.string(), operationId: z.string(), expectedRevision: z.number(), pendingPublication: z.literal(true).optional(), mimeType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]), bytes: z.array(z.number()) }).optional(),
   path: z.string().default(""), ownerId: z.string().default("profile"), now: z.number().default(1_800_000_000_000),
   records: z.array(z.unknown()).default([]), gate: z.string().optional(), fault: z.enum(["bytes", "purge", "verify", "authorization", "rate_limit", "timeout", "transport"]).optional(), private: z.boolean().default(false),
@@ -149,6 +149,10 @@ const fixtureWorker = {
         if (env.MAINTENANCE_FAULT === "photos") throw new Error("Fixture photo sweep unavailable");
         return createClassifiedsPhotos({ database: env.CLASSIFIEDS_DB, bucket: env.PHOTOS, images: env.IMAGES,
           now: () => controller.scheduledTime, purge: { prepare: async () => {}, verify: async () => ({ success: true }) }, observe: () => {} });
+      },
+      classifiedsSupplySnapshot: () => {
+        if (env.MAINTENANCE_FAULT === "supply") throw new Error("Fixture supply snapshot unavailable");
+        return undefined;
       },
     }).scheduled(controller, env);
   },

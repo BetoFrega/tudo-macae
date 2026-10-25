@@ -28,8 +28,8 @@ describe("administrative identity deletion", () => {
   test("returns actionable upload preconditions without deleting content", async () => {
     const { deletion, change, reportImageCleanupSkipped } = fixture();
     change({ ads: [{ id: "ad", title: "Reparo", status: "active", categoryId: "services", pendingImageUploadReservations: [{ path: "upload", expiresAt: 100 }] }] });
-    const preview = await deletion.preview({ id: "profile", actorId: "admin" });
-    await expect(deletion.delete({ id: "profile", actorId: "admin", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" })).rejects.toMatchObject({
+    const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
+    await expect(deletion.delete({ id: "profile", actorId: "admin", channel: "administration", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" })).rejects.toMatchObject({
       code: "imageCleanupBlocked", message: "Aguarde o envio das fotos terminar antes de excluir o perfil.",
     });
     expect(reportImageCleanupSkipped).not.toHaveBeenCalled();
@@ -38,8 +38,8 @@ describe("administrative identity deletion", () => {
   test("reports unsafe legacy photos as a remediation precondition", async () => {
     const { deletion, change } = fixture();
     change({ ads: [{ id: "ad", title: "Reparo", status: "active", categoryId: "services", images: [{ path: "ad-images/ad/legacy" }] }] });
-    const preview = await deletion.preview({ id: "profile", actorId: "admin" });
-    await expect(deletion.delete({ id: "profile", actorId: "admin", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" })).rejects.toMatchObject({
+    const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
+    await expect(deletion.delete({ id: "profile", actorId: "admin", channel: "administration", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" })).rejects.toMatchObject({
       code: "imageCleanupBlocked", message: expect.stringContaining("fotos antigas"),
     });
   });
@@ -47,8 +47,8 @@ describe("administrative identity deletion", () => {
   test.each([false, true])("reports retained unowned paths only for a committed mutation, replayed=%s", async (replayed) => {
     const { deletion, change, reportImageCleanupSkipped } = fixture(replayed);
     change({ ads: [{ id: "ad", title: "Reparo", status: "active", categoryId: "services", images: [{ path: "shared/path" }] }] });
-    const preview = await deletion.preview({ id: "profile", actorId: "admin" });
-    const result = await deletion.delete({ id: "profile", actorId: "admin", correlationId: "request", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" });
+    const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
+    const result = await deletion.delete({ id: "profile", actorId: "admin", channel: "administration", correlationId: "request", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" });
     expect(result.imageCleanupSkippedCount).toBe(1);
     if (replayed) expect(reportImageCleanupSkipped).not.toHaveBeenCalled();
     else expect(reportImageCleanupSkipped).toHaveBeenCalledExactlyOnceWith({ correlationId: "request", count: 1 });
@@ -56,9 +56,9 @@ describe("administrative identity deletion", () => {
 
   test("previews owned identities and returns public cache effects for associated content", async () => {
     const { deletion } = fixture();
-    const preview = await deletion.preview({ id: "profile", actorId: "admin" });
+    const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
     expect(preview).toMatchObject({ title: "Oficina", ads: [{ id: "ad", title: "Reparo" }], catalogItems: [{ id: "offering", name: "Consulta" }] });
-    const result = await deletion.delete({ id: "profile", actorId: "admin", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" });
+    const result = await deletion.delete({ id: "profile", actorId: "admin", channel: "administration", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" });
     expect(result).toMatchObject({ outcome: "deleted", deletedAds: 1 });
     expect(result.cacheTags).toContain("ads");
     expect(result.cacheTags).toHaveLength(4);
@@ -66,15 +66,15 @@ describe("administrative identity deletion", () => {
 
   test("refuses changed snapshot evidence", async () => {
     const { deletion, change } = fixture();
-    const preview = await deletion.preview({ id: "profile", actorId: "admin" });
+    const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
     change({ evidence: "version-2" });
-    await expect(deletion.delete({ id: "profile", actorId: "admin", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" })).rejects.toMatchObject({ code: "revisionConflict" });
+    await expect(deletion.delete({ id: "profile", actorId: "admin", channel: "administration", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" })).rejects.toMatchObject({ code: "revisionConflict" });
   });
 
   test("binds preview to the administrator and checks exact typed title", async () => {
     const { deletion } = fixture();
-    const preview = await deletion.preview({ id: "profile", actorId: "admin" });
-    const input = { id: "profile", actorId: "admin", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" };
+    const preview = await deletion.preview({ id: "profile", actorId: "admin", channel: "administration" });
+    const input = { id: "profile", actorId: "admin", channel: "administration", reason: "Duplicado", confirmedTitle: "Oficina", confirmationToken: preview.confirmationToken, idempotencyKey: "delete" };
     await expect(deletion.delete({ ...input, actorId: "another-admin" })).rejects.toMatchObject({ code: "revisionConflict" });
     await expect(deletion.delete({ ...input, confirmedTitle: "Outro perfil" })).rejects.toMatchObject({ code: "revisionConflict" });
     await expect(deletion.delete({ ...input, reason: " " })).rejects.toThrow();
@@ -83,8 +83,8 @@ describe("administrative identity deletion", () => {
   test("refuses missing and incoherent profiles", async () => {
     const { deletion, change } = fixture();
     change({ profile: null });
-    await expect(deletion.preview({ id: "profile", actorId: "admin" })).rejects.toMatchObject({ code: "notFound" });
+    await expect(deletion.preview({ id: "profile", actorId: "admin", channel: "administration" })).rejects.toMatchObject({ code: "notFound" });
     change({ profile: { id: "bad", title: "Perfil", description: "", createdAt: 1, updatedAt: 1 } });
-    await expect(deletion.preview({ id: "bad", actorId: "admin" })).rejects.toMatchObject({ code: "invalidProfileState" });
+    await expect(deletion.preview({ id: "bad", actorId: "admin", channel: "administration" })).rejects.toMatchObject({ code: "invalidProfileState" });
   });
 });

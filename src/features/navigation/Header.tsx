@@ -1,5 +1,4 @@
 import { Search } from "lucide-react";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { connection } from "next/server";
 import { cache, Suspense } from "react";
@@ -7,10 +6,6 @@ import { Button } from "@/components/ui/button";
 import { SheetClose } from "@tudomacae/react-primitives/sheet";
 import { getCategories } from "@/features/categories/actions/getCategories";
 import { SiteSearchForm } from "@/components/site-search/SiteSearchForm";
-import {
-  siteSearchEnabled,
-  siteSearchIdentityCookieName,
-} from "@/integrations/site-search/production";
 import {
   DesktopContextRail,
   DesktopProductNavigation,
@@ -133,15 +128,7 @@ function DesktopRegistrationAction() {
   );
 }
 
-/** Resolved once per request on the server, so the flag never flickers. */
-const isSiteSearchEnabled = cache(async () => {
-  await connection();
-  const cookieName = siteSearchIdentityCookieName();
-  return siteSearchEnabled(cookieName ? (await cookies()).get(cookieName)?.value : undefined);
-});
-
-async function LiveSiteSearchEntry({ layout }: { layout: "compact" | "wide" }) {
-  if (!await isSiteSearchEnabled()) return null;
+function SiteSearchEntry({ layout }: { layout: "compact" | "wide" }) {
   if (layout === "wide") return (
     <SiteSearchForm
       surface="header"
@@ -179,14 +166,14 @@ export default function Header() {
         <>
           {/* Below 1280px the full form collides with the product navigation. */}
           <div className="xl:hidden">
-            <Suspense><LiveSiteSearchEntry layout="compact" /></Suspense>
+            <SiteSearchEntry layout="compact" />
           </div>
           <div className="
             hidden
             xl:block
           "
           >
-            <Suspense><LiveSiteSearchEntry layout="wide" /></Suspense>
+            <SiteSearchEntry layout="wide" />
           </div>
           <Link
             href="/negocios?origem=navigation"

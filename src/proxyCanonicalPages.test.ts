@@ -23,10 +23,7 @@ const lookup = vi.fn(async (target: CanonicalTarget, { fresh }: { fresh: boolean
   return (!fresh && name in stale ? stale[name] : current[name]) ?? { exists: false };
 }) as unknown as ReturnType<typeof vi.fn> & CanonicalLookup;
 const canonicalLookup = vi.fn(() => Promise.resolve(lookup));
-const proxy = createProxy({
-  canonicalLookup,
-  siteSearch: () => Promise.reject(new Error("The site search is outside these pages.")),
-});
+const proxy = createProxy({ canonicalLookup });
 
 describe("business canonical redirects", () => {
   test.each(["__invalid__", "x".repeat(213)])("answers 404 for invalid public profile IDs without a lookup", async (id) => {

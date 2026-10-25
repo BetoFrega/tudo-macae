@@ -1,10 +1,10 @@
 /**
- * Loopback stand-in for the two external dependencies of the site search: the
- * PostHog `/flags` evaluation and the AI Search Worker. The e2e stack serves it
- * so Playwright controls the provider without depending on an external ranking.
+ * Loopback stand-in for the AI Search Worker and the PostHog endpoints the app
+ * reaches. The e2e stack serves it so Playwright controls the provider without
+ * depending on an external ranking.
  *
- * - Search flag: the synthetic maintainer and test-enrolled authenticated UIDs
- *   are enabled; the failure identity gets a 500; the shared public audience is off.
+ * - PostHog: `/flags` enables `business-registration-visibility`; event capture
+ *   is accepted and discarded.
  * - Search: tests script one reply per query through `PUT /__replies`; any other
  *   query returns no chunks.
  */
@@ -15,8 +15,6 @@ import { LOOPBACK, repositoryRoot } from "../../../bin/appPorts.ts";
 
 export const SITE_SEARCH_FAKE_ADDRESS_PATH = `${repositoryRoot}/tests/e2e/test-results/e2e-logs/site-search-fake.json`;
 export const SITE_SEARCH_FAKE_TOKEN = "phc_e2e_site_search";
-export const SITE_SEARCH_FAKE_MAINTAINER = "e2e-site-search-maintainer";
-export const SITE_SEARCH_FAKE_FLAG_FAILURE = "e2e-site-search-flag-failure";
 
 export interface SiteSearchFakeReply {
   status: number;
@@ -52,7 +50,6 @@ interface FakeState {
   replies: Map<string, SiteSearchFakeReply>;
   replyProgress: Map<string, ReplyProgress>;
   heldReplies: Map<string, HeldReply>;
-  searchAudience: Set<string>;
 }
 
 interface FakeRequest {
@@ -78,13 +75,9 @@ function holdReply(state: FakeState, query: string) {
   state.heldReplies.set(query, { wait, release });
 }
 
-function evaluateFlags(state: FakeState, { body, send }: FakeRequest) {
+function evaluateFlags(_state: FakeState, { body, send }: FakeRequest) {
   if (body.api_key !== SITE_SEARCH_FAKE_TOKEN) return send(401, {});
-  if (body.distinct_id === SITE_SEARCH_FAKE_FLAG_FAILURE) return send(500, {});
-  send(200, { flags: {
-    "business-registration-visibility": { enabled: true },
-    "site-search": { enabled: body.distinct_id === SITE_SEARCH_FAKE_MAINTAINER || state.searchAudience.has(String(body.distinct_id)) },
-  } });
+  send(200, { flags: { "business-registration-visibility": { enabled: true } } });
 }
 
 function trackSearchStart(state: FakeState, query: string, types: unknown): ReplyProgress {
@@ -125,19 +118,11 @@ function releaseReply(state: FakeState, { body, send }: FakeRequest) {
   send(204, {});
 }
 
-function enrollSearchAudience(state: FakeState, { body, send }: FakeRequest) {
-  const uid = body.uid;
-  if (typeof uid !== "string" || uid.length === 0 || uid.length > 200) return send(404, {});
-  state.searchAudience.add(uid);
-  send(204, {});
-}
-
 function resetFake(state: FakeState, { send }: FakeRequest) {
   for (const held of state.heldReplies.values()) held.release();
   state.heldReplies.clear();
   state.replies.clear();
   state.replyProgress.clear();
-  state.searchAudience.clear();
   send(204, {});
 }
 
@@ -148,7 +133,6 @@ const routes: Record<string, FakeRoute> = {
   "GET /__replies": readReplyProgress,
   "PUT /__replies": scriptReply,
   "POST /__replies/release": releaseReply,
-  "PUT /__search-audience": enrollSearchAudience,
   "DELETE /__replies": resetFake,
 };
 
@@ -157,7 +141,6 @@ export async function startSiteSearchFake() {
     replies: new Map(),
     replyProgress: new Map(),
     heldReplies: new Map(),
-    searchAudience: new Set(),
   };
   const server = createServer(async (request, response) => {
     const send = (status: number, body: unknown) => {
@@ -189,8 +172,6 @@ export async function startSiteSearchFake() {
     url,
     env: {
       SITE_SEARCH_URL: url,
-      SITE_SEARCH_FLAGS_ORIGIN: url,
-      SITE_SEARCH_FLAGS_TOKEN: SITE_SEARCH_FAKE_TOKEN,
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: SITE_SEARCH_FAKE_TOKEN,
       NEXT_PUBLIC_POSTHOG_HOST: url,
     },

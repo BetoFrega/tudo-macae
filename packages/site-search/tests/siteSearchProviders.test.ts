@@ -1,9 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import {
-  createPostHogSiteSearchFlagEvaluation,
-  createSiteSearchWorkerProvider,
-} from "../providers";
-import { siteSearchFlagKey } from "../flag";
+import { createSiteSearchWorkerProvider } from "../providers";
 
 function workerWith(fetch: typeof globalThis.fetch, origin = "https://search.example.workers.dev") {
   return createSiteSearchWorkerProvider({
@@ -124,40 +120,5 @@ describe("site search Worker provider", () => {
     });
 
     await expect(provider.search("padaria")).resolves.toEqual({ status: "unavailable" });
-  });
-});
-
-describe("PostHog site search flag evaluation", () => {
-  test("asks PostHog for the key's decision for one audience", async () => {
-    const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(Response.json({
-      flags: { [siteSearchFlagKey]: { enabled: true } },
-    }));
-    const evaluate = createPostHogSiteSearchFlagEvaluation({ origin: "https://t.tudomacae.com.br", projectToken: "phc_1", fetch });
-
-    await expect(evaluate("account-uid")).resolves.toBe(true);
-    const [url, init] = fetch.mock.calls[0] ?? [];
-    expect(String(url)).toBe("https://t.tudomacae.com.br/flags?v=2");
-    expect(JSON.parse(String(init?.body))).toEqual({ api_key: "phc_1", distinct_id: "account-uid" });
-  });
-
-  test("returns an absent decision as undefined", async () => {
-    const evaluate = createPostHogSiteSearchFlagEvaluation({
-      origin: "https://t.tudomacae.com.br",
-      projectToken: "phc_1",
-      fetch: vi.fn().mockResolvedValue(Response.json({ flags: {} })),
-    });
-
-    await expect(evaluate("visitor")).resolves.toBeUndefined();
-  });
-
-  test.each([
-    ["configuration is missing", { origin: undefined, projectToken: "phc_1" }, Response.json({})],
-    ["the origin is not HTTPS", { origin: "http://t.tudomacae.com.br", projectToken: "phc_1" }, Response.json({})],
-    ["PostHog rejects the request", { origin: "https://t.tudomacae.com.br", projectToken: "phc_1" }, new Response("", { status: 500 })],
-    ["the payload is not JSON", { origin: "https://t.tudomacae.com.br", projectToken: "phc_1" }, new Response("<html>")],
-  ])("rejects when %s", async (_label, configuration, response) => {
-    const evaluate = createPostHogSiteSearchFlagEvaluation({ ...configuration, fetch: vi.fn().mockResolvedValue(response) });
-
-    await expect(evaluate("visitor")).rejects.toThrow();
   });
 });

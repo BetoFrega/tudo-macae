@@ -13,7 +13,7 @@ const querySchema = z.object({ kind: z.enum(recordKinds), profileId: z.string().
 const inputSchema = z.object({
   action: z.enum(["read", "page", "transaction", "manifest", "delete", "import", "export", "seed", "expireAudits", "capability", "importRecords", "saveMany"]),
   operation: z.enum([...classifiedsReadOperations, ...classifiedsWriteOperations]).optional(), input: z.json().optional(),
-  actor: z.object({ uid: z.string(), admin: z.boolean(), editor: z.boolean(), emailVerified: z.boolean().optional(), channel: z.enum(["administration", "mcp"]) }).optional(),
+  actor: z.object({ uid: z.string(), admin: z.boolean(), editor: z.boolean(), emailVerified: z.boolean().optional(), channel: z.literal("administration") }).optional(),
   kind: z.enum(recordKinds).optional(), id: z.string().optional(), namespace: z.string().optional(), query: querySchema.optional(), version: z.number().optional(),
   now: z.number().default(1_800_000_000_000), records: z.array(z.unknown()).default([]),
   remove: z.array(z.object({ kind: z.enum(recordKinds), id: z.string(), namespace: z.string().optional() })).default([]),

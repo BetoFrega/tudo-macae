@@ -14,7 +14,7 @@ export const deleteAdvertiserIdentitySchema = previewAdvertiserIdentityDeletionS
 });
 const actorShape = {
   actorId: z.string().trim().min(1),
-  channel: z.enum(["administration", "mcp"]).default("mcp"),
+  channel: z.literal("administration"),
   correlationId: z.string().trim().min(1).optional(),
 };
 export const previewAdvertiserIdentityDeletionAdministrationSchema = previewAdvertiserIdentityDeletionSchema.extend(actorShape);

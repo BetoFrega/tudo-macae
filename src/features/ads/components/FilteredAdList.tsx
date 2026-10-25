@@ -1,15 +1,6 @@
 import { ArrowRight, MapPin, Plus } from "lucide-react";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getCategories } from "@/features/categories/actions/getCategories";
-import { getFilteredAds } from "../actions/getFilteredAds";
-import { AdGrid } from "./AdGrid";
-
-interface FilteredAdListProps {
-  categoryId: string;
-  subcategoryId?: string;
-}
 
 interface FilteredAdEmptyStateProps {
   scopeName: string | undefined;
@@ -116,30 +107,4 @@ export function FilteredAdEmptyState({
       </div>
     </section>
   );
-}
-
-export default async function FilteredAdList({
-  categoryId,
-  subcategoryId,
-}: FilteredAdListProps) {
-  "use cache";
-  cacheLife("minutes");
-
-  const [ads, categories] = await Promise.all([
-    getFilteredAds({ categoryId, subcategoryId }),
-    getCategories(),
-  ]);
-
-  if (ads.length === 0) {
-    const category = categories.find(category => category.id === categoryId);
-    const subcategory = category?.subcategories.find(
-      subcategory => subcategory.id === subcategoryId,
-    );
-
-    return (
-      <FilteredAdEmptyState scopeName={subcategory?.name ?? category?.name} />
-    );
-  }
-
-  return <AdGrid ads={ads} categories={categories} />;
 }

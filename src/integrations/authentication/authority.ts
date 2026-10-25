@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { configuredAuthenticationClient } from "@tudomacae/authentication-client/server";
 import { allowsTestAffordances } from "@/lib/appEnv";
-export async function authenticationCredential() {
+async function authenticationCredential() {
   return (await cookies()).get("session")?.value;
 }
 export async function installWorkerSession(credential: string) {

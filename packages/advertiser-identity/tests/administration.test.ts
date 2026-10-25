@@ -2,8 +2,12 @@ import { describe, expect, test } from "vitest";
 import {
   createAdvertiserProfileAdministration,
   matchAdvertiserProfileDuplicate,
+  createAdvertiserProfileAdministrationInputSchema,
+  deleteAdvertiserProfileAdministrationInputSchema,
+  updateAdvertiserProfileAdministrationInputSchema,
   type AdvertiserProfileAdministrationStore,
 } from "../administration";
+import { deleteAdvertiserIdentityAdministrationSchema, previewAdvertiserIdentityDeletionAdministrationSchema } from "../identityDeletion";
 
 function claimableProfile(overrides: Record<string, unknown> = {}) {
   return {
@@ -55,13 +59,13 @@ function fixture(options: {
 describe("advertiser profile administration", () => {
   test.each([undefined, 11, 10, 9])("claimable deletion blocks only active or undated photo reservations (%s)", async (expiresAt) => {
     const { administration } = fixture({ delete: { profile: claimableProfile(), hasAssociatedAds: false, photoCleanupOperationId: "cleanup", photoReservations: [{ expiresAt }] } });
-    const result = administration.delete({ id: "profile", expectedRevision: 2, idempotencyKey: "delete", actorId: "admin" });
+    const result = administration.delete({ id: "profile", expectedRevision: 2, idempotencyKey: "delete", actorId: "admin", channel: "administration" });
     if (expiresAt === undefined || expiresAt > 10) await expect(result).rejects.toMatchObject({ code: "imageCleanupBlocked" });
     else await expect(result).resolves.toMatchObject({ outcome: "deleted" });
   });
   test("source verification time stays fixed when persistence repeats a creation decision", async () => {
     let clock = 100;
-    const inputs = { title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }], sourceUrl: "https://example.com/profile", idempotencyKey: "retry", actorId: "admin" };
+    const inputs = { title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }], sourceUrl: "https://example.com/profile", idempotencyKey: "retry", actorId: "admin", channel: "administration" };
     const store: AdvertiserProfileAdministrationStore = {
       list: async () => ({ items: [] }), get: async () => ({ status: "notFound" }), findDuplicates: async () => ({ items: [] }),
       async create(_input, decide) {
@@ -99,7 +103,7 @@ describe("advertiser profile administration", () => {
         activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }],
         sourceUrl: "https://example.com/profile",
         idempotencyKey: "create",
-        actorId: "admin",
+        actorId: "admin", channel: "administration",
       };
       await expect(administration.create({ ...createInput, [field]: [] })).rejects.toThrow();
       await expect(administration.update({
@@ -107,7 +111,7 @@ describe("advertiser profile administration", () => {
         expectedRevision: 2,
         patch: { [field]: [] },
         idempotencyKey: "update",
-        actorId: "admin",
+        actorId: "admin", channel: "administration",
       })).rejects.toThrow();
     },
   );
@@ -120,7 +124,7 @@ describe("advertiser profile administration", () => {
     const input = {
       title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }],
       activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }], sourceUrl: "https://example.com/profile",
-      idempotencyKey: "create", actorId: "admin",
+      idempotencyKey: "create", actorId: "admin", channel: "administration",
     };
 
     const firstAttempt = administration.create(input);
@@ -143,12 +147,12 @@ describe("advertiser profile administration", () => {
     await expect(administration.create({
       title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }],
       activityAreas: [{ categoryId: "category", subcategoryId: "inactive" }], sourceUrl: "https://example.com/profile",
-      idempotencyKey: "create", actorId: "admin",
+      idempotencyKey: "create", actorId: "admin", channel: "administration",
     })).rejects.toThrow("Categoria ou subcategoria inválida ou inativa");
   });
 
   test("rejects incoherent state and stale revisions through the public update operation", async () => {
-    const input = { id: "profile", expectedRevision: 2, patch: { description: "Nova" }, idempotencyKey: "update", actorId: "admin" };
+    const input = { id: "profile", expectedRevision: 2, patch: { description: "Nova" }, idempotencyKey: "update", actorId: "admin", channel: "administration" };
     await expect(fixture({ update: { profile: claimableProfile({ claimable: undefined, userId: undefined }), activityAreas: [] } }).administration.update(input))
       .rejects.toMatchObject({ code: "invalidProfileState" });
     await expect(fixture({ update: { profile: claimableProfile({ revision: 3 }), activityAreas: [] } }).administration.update(input))
@@ -163,7 +167,7 @@ describe("advertiser profile administration", () => {
     await expect(administration.update({
       id: "profile", expectedRevision: 2,
       patch: { contacts: [{ number: "22999999999", isWhatsapp: true }] },
-      idempotencyKey: "update", actorId: "admin",
+      idempotencyKey: "update", actorId: "admin", channel: "administration",
     })).resolves.toMatchObject({
       outcome: "unchanged", replayed: false, revision: 2,
       effects: {
@@ -171,5 +175,22 @@ describe("advertiser profile administration", () => {
         activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }],
       },
     });
+  });
+});
+
+describe("administration write channel", () => {
+  const profile = { id: "profile", expectedRevision: 1, idempotencyKey: "key", actorId: "admin" };
+  const identity = { id: "profile", confirmationToken: "token", confirmedTitle: "Perfil", reason: "Motivo", idempotencyKey: "key", actorId: "admin" };
+  const created = { title: "Perfil", description: "", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }], sourceUrl: "https://example.com/fonte", idempotencyKey: "key", actorId: "admin" };
+  test.each([
+    ["profile create", createAdvertiserProfileAdministrationInputSchema, created],
+    ["profile update", updateAdvertiserProfileAdministrationInputSchema, { ...profile, patch: { title: "Novo" } }],
+    ["profile delete", deleteAdvertiserProfileAdministrationInputSchema, profile],
+    ["identity preview", previewAdvertiserIdentityDeletionAdministrationSchema, { id: "profile", actorId: "admin" }],
+    ["identity delete", deleteAdvertiserIdentityAdministrationSchema, identity],
+  ] as const)("%s write rejects a missing or retired channel instead of defaulting", (_name, schema, input) => {
+    expect(schema.safeParse(input).success).toBe(false);
+    expect(schema.safeParse({ ...input, channel: "mcp" }).success).toBe(false);
+    expect(schema.safeParse({ ...input, channel: "administration" }).success).toBe(true);
   });
 });

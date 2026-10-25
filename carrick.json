@@ -38,8 +38,7 @@
         "SITE_SEARCH_URL"
       ],
       "externalEnvVars": [
-        "NEXT_PUBLIC_POSTHOG_HOST",
-        "SITE_SEARCH_FLAGS_ORIGIN"
+        "NEXT_PUBLIC_POSTHOG_HOST"
       ],
       "internalDomains": [
         "https://images.tudomacae.com.br"

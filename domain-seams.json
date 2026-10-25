@@ -320,19 +320,6 @@
     ]
   },
   {
-    "id": "workspace-site-search-flag",
-    "entry": "packages/site-search/flag.ts",
-    "factory": "createSiteSearchFlag",
-    "operations": [
-      "enabled"
-    ],
-    "probe": "packages/site-search/tests/siteSearchFlag.probe.ts",
-    "remainingOperations": [],
-    "replaces": [
-      "site-search-flag"
-    ]
-  },
-  {
     "id": "workspace-ad-pending-publication-images",
     "entry": "packages/ads/syncPendingPublicationImages.ts",
     "factory": "createPendingPublicationImageSync",
@@ -1004,6 +991,16 @@
       "visibleAdImages"
     ],
     "probe": "packages/ads/tests/visibility.probe.ts",
+    "remainingOperations": []
+  },
+  {
+    "id": "advertiser-identity-supply-snapshot",
+    "entry": "packages/advertiser-identity/supplySnapshot.ts",
+    "factory": "createSupplySnapshotExport",
+    "operations": [
+      "run"
+    ],
+    "probe": "packages/advertiser-identity/tests/supplySnapshot.probe.ts",
     "remainingOperations": []
   }
 ]

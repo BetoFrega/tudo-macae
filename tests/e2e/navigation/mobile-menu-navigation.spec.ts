@@ -1,19 +1,15 @@
 import { pageObject } from "../_helpers/fixtures/POMs/pageObject";
 import { click } from "../_helpers/click";
 import { expect, test } from "../_helpers/fixtures";
-import { SITE_SEARCH_FAKE_MAINTAINER } from "../bin/siteSearchFake";
 import {
   assertHeaderControlsFit,
   checkHeaderState,
-  clearSearchFakeState,
-  enableSearchAudience,
   headerSearch,
-  setSearchIdentityCookie,
 } from "../_helpers/header-layout";
 import type { HeaderControlGeometry } from "../_helpers/header-layout";
 
 // This journey proves the responsive header, product hierarchy and routed navigation together.
-test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage, userCredentials, userWithClaims }, testInfo) => {
+test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage, userCredentials }, testInfo) => {
   const { category } = categoryFixture;
   await page.setViewportSize({ width: 320, height: 844 });
   await page.goto("/");
@@ -138,7 +134,7 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
   await expect(dialog).not.toBeVisible();
   await expect(menu).toBeFocused();
 
-  await test.step("Search state follows anonymous and authenticated identities", async () => {
+  await test.step("Header with search fits for anonymous and authenticated visitors", async () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => {
       document.documentElement.style.fontSize = "";
@@ -183,10 +179,10 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
       }
       expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.viewportWidth);
     };
-    const qualify = async (label: string, authenticated: boolean, searchEnabled: boolean) => {
+    const qualify = async (label: string, authenticated: boolean) => {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto("/");
-      await checkHeaderState(page, authenticated, searchEnabled);
+      await checkHeaderState(page, authenticated);
       await recordHeaderGeometry(`${label}-390-normal`, true);
       for (const width of [320, 390]) {
         await page.setViewportSize({ width, height: 844 });
@@ -230,7 +226,7 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
           // The geometry goes into the message too: the job log is readable when the report artifact is not.
           throw new Error(`Horizontal overflow at ${width}px, font 200%, ${label}: ${JSON.stringify(geometry)}`, { cause: error });
         }
-        await checkHeaderState(page, authenticated, searchEnabled);
+        await checkHeaderState(page, authenticated);
         await recordHeaderGeometry(`${label}-${width}-zoom-200`);
         await page.screenshot({ path: testInfo.outputPath(`header-${label}-${width}-zoom-200.png`) });
         await page.evaluate(() => {
@@ -243,7 +239,7 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
         document.documentElement.style.fontSize = "";
       });
       await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-      await checkHeaderState(page, authenticated, searchEnabled);
+      await checkHeaderState(page, authenticated);
       await recordHeaderGeometry(`${label}-desktop-normal`);
       await page.screenshot({ path: testInfo.outputPath(`header-${label}-desktop.png`) });
 
@@ -251,7 +247,7 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
         document.documentElement.style.fontSize = "200%";
       });
       await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-      await checkHeaderState(page, authenticated, searchEnabled);
+      await checkHeaderState(page, authenticated);
       await recordHeaderGeometry(`${label}-desktop-zoom-200`);
       await page.screenshot({ path: testInfo.outputPath(`header-${label}-desktop-zoom-200.png`) });
       await page.evaluate(() => {
@@ -259,32 +255,19 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
       });
     };
 
-    await clearSearchFakeState();
     try {
-      await qualify("anonymous-no-search", false, false);
-      await setSearchIdentityCookie(page, SITE_SEARCH_FAKE_MAINTAINER);
-      await qualify("anonymous-search", false, true);
+      await qualify("anonymous", false);
 
-      await enableSearchAudience(userCredentials.uid);
       await page.goto("/");
       await loginPage.login(userCredentials.email, userCredentials.password);
       await expect(pageObject(page).getByRole("button", { name: "Minha conta", exact: true })).toBeVisible();
-      await qualify("authenticated-search", true, true);
-
-      await clearSearchFakeState();
-      await userWithClaims({});
-      await qualify("authenticated-no-search", true, false);
+      await qualify("authenticated", true);
     }
     finally {
-      try {
-        await clearSearchFakeState();
-      }
-      finally {
-        await testInfo.attach("header-layout-geometry.json", {
-          body: JSON.stringify(layoutEvidence, null, 2),
-          contentType: "application/json",
-        });
-      }
+      await testInfo.attach("header-layout-geometry.json", {
+        body: JSON.stringify(layoutEvidence, null, 2),
+        contentType: "application/json",
+      });
     }
   });
 });

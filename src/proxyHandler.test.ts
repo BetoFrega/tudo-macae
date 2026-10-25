@@ -3,15 +3,8 @@ import { NextRequest } from "next/server";
 import { createProxy } from "./proxyHandler";
 
 const canonicalLookup = vi.fn(() => Promise.resolve(async () => undefined));
-const siteSearch = { enabled: vi.fn<(identity: string | undefined) => Promise<boolean>>() };
 
-const proxy = createProxy({
-  canonicalLookup,
-  siteSearch: () => Promise.resolve({
-    siteSearchEnabled: siteSearch.enabled,
-    siteSearchIdentityCookieName: () => "ph_token_posthog",
-  }),
-});
+const proxy = createProxy({ canonicalLookup });
 
 function machineRequest(pathname: string) {
   return new NextRequest(`http://localhost${pathname}`, {
@@ -109,22 +102,21 @@ describe("RSC navigation rendering", () => {
   });
 });
 
-describe("site search release boundary", () => {
-  test("serves the search only when the flag enables it for the browser identity", async () => {
-    siteSearch.enabled.mockResolvedValueOnce(true);
-    const response = await proxy(new NextRequest("http://localhost/busca?q=padaria", {
-      headers: { cookie: "ph_token_posthog=identity" },
-    }));
+describe("site search", () => {
+  test("forwards every visitor to the search page", async () => {
+    const response = await proxy(new NextRequest("http://localhost/busca?q=padaria"));
 
+    expect(response.status).toBe(200);
     expect(response.headers.get("x-middleware-next")).toBe("1");
-    expect(siteSearch.enabled).toHaveBeenCalledWith("identity");
   });
+});
 
-  test("answers not found itself while the flag is off, without a rewrite the origin could proxy", async () => {
-    siteSearch.enabled.mockResolvedValueOnce(false);
+describe("not found pages", () => {
+  test("answers not found itself, without a rewrite the origin could proxy or a Referer carrying the request", async () => {
     // Behind Cloud Run the proxy sees another origin than the router, so a rewrite
     // would be proxied externally and fail; the response must not depend on it.
-    const response = await proxy(new NextRequest("https://localhost:8081/busca?q=padaria", {
+    // An id longer than any Profile id is answered without a lookup.
+    const response = await proxy(new NextRequest(`https://localhost:8081/anunciante/${"x".repeat(213)}?q=padaria`, {
       headers: { "x-forwarded-proto": "https" },
     }));
 

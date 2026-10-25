@@ -47,7 +47,7 @@ export const createAdvertiserProfileAdministrationInputSchema = z.strictObject({
   duplicateConfirmationToken: z.string().trim().min(1).optional(),
   idempotencyKey: z.string().trim().min(1),
   actorId: z.string().trim().min(1),
-  channel: z.enum(["administration", "mcp"]).default("mcp"),
+  channel: z.literal("administration"),
   correlationId: z.string().trim().min(1).optional(),
 });
 const updatePatchSchema = z.strictObject({
@@ -64,7 +64,7 @@ export const updateAdvertiserProfileAdministrationInputSchema = z.strictObject({
   verifySource: z.strictObject({ url: sourceUrlSchema }).optional(),
   idempotencyKey: z.string().trim().min(1),
   actorId: z.string().trim().min(1),
-  channel: z.enum(["administration", "mcp"]).default("mcp"),
+  channel: z.literal("administration"),
   correlationId: z.string().trim().min(1).optional(),
 }).refine(value => value.patch !== undefined || value.verifySource !== undefined, {
   message: "Informe um patch ou uma verificação de fonte.",
@@ -75,7 +75,7 @@ export const deleteAdvertiserProfileAdministrationInputSchema = z.strictObject({
   expectedRevision: z.number().int().min(1),
   idempotencyKey: z.string().trim().min(1),
   actorId: z.string().trim().min(1),
-  channel: z.enum(["administration", "mcp"]).default("mcp"),
+  channel: z.literal("administration"),
   correlationId: z.string().trim().min(1).optional(),
 });
 

@@ -55,7 +55,7 @@ export async function activityAreaActive(store: Pick<ClassifiedsPersistence | Tr
   return child?.body.isActive === true && child.body.deleting !== true;
 }
 
-export function decodeCursor(value: string | undefined, field: "order" | "createdAt", namespace = "") {
+function decodeCursor(value: string | undefined, field: "order" | "createdAt", namespace = "") {
   if (!value) return undefined;
   try {
     const cursor = z.object({ [field]: z.number().finite(), id: z.string().min(1) }).parse(JSON.parse(Buffer.from(value, "base64url").toString("utf8")));
@@ -64,7 +64,7 @@ export function decodeCursor(value: string | undefined, field: "order" | "create
   catch { throw new TypeError("Cursor inválido."); }
 }
 
-export function encodeCursor(record: StoredRecord, field: "order" | "createdAt") {
+function encodeCursor(record: StoredRecord, field: "order" | "createdAt") {
   return Buffer.from(JSON.stringify({ [field]: record.body[field], id: record.id })).toString("base64url");
 }
 

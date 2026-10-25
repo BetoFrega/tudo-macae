@@ -101,7 +101,7 @@ function sanitizeFailure(error: unknown) {
  * Applies the shared admission policy before transforming: frames come from the container, dimensions from the
  * binding, and only a single static frame is re-encoded as WebP, so metadata and trailing bytes never leave quarantine.
  */
-export function createHostedMediaSanitizer(images: MediaImages): MediaBytes["sanitize"] {
+function createHostedMediaSanitizer(images: MediaImages): MediaBytes["sanitize"] {
   const inspection = createStaticMediaFileInspection({ async decode(bytes) {
     const info = await images.info(byteStream(bytes));
     const contentType = mediaUploadContentTypes.find(type => type === info.format);

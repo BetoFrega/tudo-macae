@@ -40,7 +40,8 @@ serving `tudo-macae-api-production` version in `api-worker-recovery`, applies th
 authentication, Classifieds and editorial D1 migrations through
 `apps/api-worker/deploy.mjs`, publishes the API Worker tagged with the SHA, with
 `ARTICLE_INDEX` bound to `tudo-macae-public-article-index`, and
-verifies that version serves 100%. The web Worker reads the API, so the API
+verifies that version serves 100%, re-reading the status for up to
+`apiReadbackTiming` before failing. The web Worker reads the API, so the API
 publishes first and stays compatible with the serving web Worker.
 Repository variable `TURNSTILE_ENFORCEMENT=off` publishes it without Turnstile; leave
 the variable unset once the serving Next sends the token.

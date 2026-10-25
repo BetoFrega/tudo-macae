@@ -19,26 +19,31 @@ afterEach(() => {
   rmSync(directory, { recursive: true, force: true });
 });
 
-// Fakes Wrangler's status read and deploy.mjs; `serving` is what the status read reports after the deploy.
-function delivery(serving = next) {
-  let active = previous;
+// Fakes Wrangler's status read and deploy.mjs; `serving` lists what each status read reports after
+// the deploy, repeating the last entry.
+function delivery(...serving: string[]) {
+  let readbacks = [previous];
   const calls: string[] = [];
+  const waits: number[] = [];
   const command = (args: string[]) => {
     calls.push(args.join(" "));
+    const active = readbacks.length > 1 ? readbacks.shift()! : readbacks[0];
     return JSON.stringify({ versions: [{ version_id: active, percentage: 100 }] });
   };
   const deploy = (args: string[], env?: Record<string, string>) => {
     calls.push(`deploy.mjs ${args.join(" ")}`.trim());
     if (args.length) return;
     writeFileSync(env!.WRANGLER_OUTPUT_FILE_PATH!, JSON.stringify({ type: "deploy", worker_name: apiWorker, version_id: next }));
-    active = serving;
+    readbacks = serving.length ? serving : [next];
   };
-  return { calls, run: () => deployApiWorker({ command, deploy }) };
+  const wait = (ms: number) => waits.push(ms);
+  return { calls, waits, run: () => deployApiWorker({ command, deploy, wait }) };
 }
 
 test("records the serving version, migrates before publishing and reads back the published version", () => {
-  const { calls, run } = delivery();
+  const { calls, waits, run } = delivery();
   run();
+  expect(waits).toEqual([]);
   expect(calls).toEqual([
     `deployments status --name ${apiWorker} --json`,
     "deploy.mjs --migrations-only",
@@ -49,9 +54,19 @@ test("records the serving version, migrates before publishing and reads back the
     .toEqual({ sha: "a".repeat(40), worker: apiWorker, previous });
 });
 
-test("fails when production serves a version other than the one just published", () => {
-  const { run } = delivery(previous);
-  expect(run).toThrow(/Active version differs/);
+test.each([[1], [2]])("waits out a status read that lags the deploy %i time(s)", (lags) => {
+  const { calls, waits, run } = delivery(...Array<string>(lags).fill(previous), next);
+  run();
+  expect(waits).toEqual(Array<number>(lags).fill(5_000));
+  expect(calls.filter(call => call.startsWith("deployments status"))).toHaveLength(lags + 2);
+});
+
+test("fails after six reads when production keeps serving another version", () => {
+  const { calls, waits, run } = delivery(previous);
+  expect(run).toThrow(`Active version differs from the deployed version: ${apiWorker} (last observed ${previous} after 6 attempts)`);
+  expect(waits).toEqual([5_000, 5_000, 5_000, 5_000, 5_000]);
+  expect(calls.filter(call => call === "deploy.mjs")).toHaveLength(1);
+  expect(calls.filter(call => call.startsWith("deployments status"))).toHaveLength(7);
 });
 
 test.each([["RELEASE_SHA", "main"], ["CLOUDFLARE_API_TOKEN", ""], ["CLOUDFLARE_ACCOUNT_ID", ""]])("refuses to touch production when %s is %j", (name, value) => {

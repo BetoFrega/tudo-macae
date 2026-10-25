@@ -46,7 +46,15 @@ function appendStepSummary(line) {
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, line);
 }
 
-export function deployApiWorker({ command = wrangler, deploy = runDeploy } = {}) {
+// The status read can lag the deploy by a few seconds, so the readback retries within
+// about 30 s. A lag longer than the budget, or a real rollback, still fails the delivery.
+export const apiReadbackTiming = { attempts: 6, retryDelayMs: 5_000 };
+
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+export function deployApiWorker({ command = wrangler, deploy = runDeploy, wait = sleep, timing = apiReadbackTiming } = {}) {
   const sha = releaseSha();
   const readActive = () => activeVersion(JSON.parse(command(["deployments", "status", "--name", apiWorker, "--json"])), apiWorker);
   const previous = readActive();
@@ -60,7 +68,14 @@ export function deployApiWorker({ command = wrangler, deploy = runDeploy } = {})
     const outputFile = path.join(directory, "deploy.ndjson");
     deploy([], { WRANGLER_OUTPUT_FILE_PATH: outputFile });
     const expected = deployedApiVersion(readFileSync(outputFile, "utf8"));
-    if (readActive() !== expected) throw new Error(`Active version differs from the deployed version: ${apiWorker}`);
+    let observed = readActive();
+    for (let attempt = 2; observed !== expected && attempt <= timing.attempts; attempt += 1) {
+      wait(timing.retryDelayMs);
+      observed = readActive();
+    }
+    if (observed !== expected) {
+      throw new Error(`Active version differs from the deployed version: ${apiWorker} (last observed ${observed} after ${timing.attempts} attempts)`);
+    }
     appendStepSummary(`- ${apiWorker}: ${expected} (main ${sha}; previous ${previous})\n`);
   }
   finally {

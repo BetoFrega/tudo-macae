@@ -7,10 +7,9 @@ import { createEditorialMediaCleanup } from "../lib/editorialMediaCleanup";
 import { createPublicBlog } from "@tudomacae/editorial-blog/publicBlog";
 import { createPublicBlogStore } from "../lib/db/editorialPublicBlog";
 import { reconcileArticleIndex, type ArticleIndexReconciler } from "../lib/editorialIndexReconciliation";
-import { migrateArticleText } from "../lib/editorialArticleTextMigration";
 
 const inputSchema = z.object({
-  action: z.enum(["import", "read", "list", "save", "takeOffline", "record", "grants", "indexed", "publicArticle", "publicPage", "reconcile", "drift", "migrateText"]),
+  action: z.enum(["import", "read", "list", "save", "takeOffline", "record", "grants", "indexed", "publicArticle", "publicPage", "reconcile", "drift"]),
   input: z.any().optional(),
   actorId: z.string().default("editor"),
   now: z.number().default(1_800_000_000_000),
@@ -166,7 +165,6 @@ async function run(input: FixtureInput, env: FixtureEnv) {
     reconcile: () => reconcileArticleIndex(base, racingIndex(memoryIndex("bound")!, base, value ?? undefined), "reconciliation"),
     /** Writes the index directly, as a lost or foreign write would, bypassing the D1. */
     drift: async () => indexed.set(value.id, value.summary ? { updatedAt: value.summary.updatedAt, summary: value.summary } : { updatedAt: value.updatedAt }),
-    migrateText: () => migrateArticleText(base, value ?? undefined),
     grants: async () => (await base.page({ kind: "publicationGrant", articleId: value })).items.map(item => item.body),
   };
   return actions[input.action]();

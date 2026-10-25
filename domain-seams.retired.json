@@ -78,5 +78,9 @@
   {
     "id": "workspace-public-image-purge-workflow",
     "reason": "The purge workflow recorded Storage revocation receipts for the Firebase Storage photo origin only; Classifieds photos are Hosted Images behind the API Worker, whose photo lifecycle purges them."
+  },
+  {
+    "id": "workspace-site-search-flag",
+    "reason": "The site-search release flag was removed after full adoption on 2026-10-24; search is always on and nothing evaluates it."
   }
 ]

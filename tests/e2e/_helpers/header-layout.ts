@@ -1,20 +1,6 @@
 import { expect } from "./fixtures";
-import { readFile } from "node:fs/promises";
-import {
-  SITE_SEARCH_FAKE_ADDRESS_PATH,
-  SITE_SEARCH_FAKE_TOKEN,
-} from "../bin/siteSearchFake";
 import { pageObject } from "./fixtures/POMs/pageObject";
 import type { Page } from "@playwright/test";
-
-export function setSearchIdentityCookie(page: Page, distinctId: string) {
-  return page.context().addCookies([{
-    name: `ph_${SITE_SEARCH_FAKE_TOKEN}_posthog`,
-    value: encodeURIComponent(JSON.stringify({ distinct_id: distinctId, $user_state: "identified" })),
-    url: new URL(page.url()).origin,
-    sameSite: "Lax",
-  }]);
-}
 
 export function headerSearch(page: Page) {
   return pageObject(page).getByRole("banner").getByRole("link", { name: "Buscar no Tudo Macaé", exact: true }).or(
@@ -22,24 +8,7 @@ export function headerSearch(page: Page) {
   ).filter({ visible: true });
 }
 
-export async function siteSearchFakeUrl() {
-  return (JSON.parse(await readFile(SITE_SEARCH_FAKE_ADDRESS_PATH, "utf8")) as { url: string }).url;
-}
-
-export async function enableSearchAudience(uid: string) {
-  const response = await fetch(`${await siteSearchFakeUrl()}/__search-audience`, {
-    method: "PUT",
-    body: JSON.stringify({ uid }),
-  });
-  expect(response.status).toBe(204);
-}
-
-export async function clearSearchFakeState() {
-  const response = await fetch(`${await siteSearchFakeUrl()}/__replies`, { method: "DELETE" });
-  expect(response.status).toBe(204);
-}
-
-export async function checkHeaderState(page: Page, authenticated: boolean, searchEnabled: boolean) {
+export async function checkHeaderState(page: Page, authenticated: boolean) {
   const surface = pageObject(page);
   const header = surface.getByRole("banner");
   const signIn = header.getByRole("button", { name: "Entrar", exact: true });
@@ -52,8 +21,7 @@ export async function checkHeaderState(page: Page, authenticated: boolean, searc
     await expect(signIn).toBeVisible();
     await expect(account).toHaveCount(0);
   }
-  if (searchEnabled) await expect(headerSearch(page)).toBeVisible();
-  else await expect(headerSearch(page)).toHaveCount(0);
+  await expect(headerSearch(page)).toBeVisible();
 }
 
 export type HeaderControlGeometry = {

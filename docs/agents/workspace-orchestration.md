@@ -124,7 +124,7 @@ dependencies; protected replacements retain every existing operation/probe throu
   [canary recovery](public-image-canary.md) remain required; build/refactor does not qualify production revocation.
 - **Site search:** `apps/site-search` and release use the same production Wrangler
   config. Tests cover HTTP, Google OIDC and bundled Miniflare using local keys without
-  production credentials/AI calls. `/search`, `/flag`, `/providers` remain independent
+  production credentials/AI calls. `/search`, `/providers` remain independent
   of React `/ui`. Provider injects links/bounded capture; document anchors work alone.
   Next/PostHog/environment/Google identity/logs compose in `src/integrations/site-search`;
   retain query/filter, retry, ordering and HTTP contracts. E2E declares module and Worker.

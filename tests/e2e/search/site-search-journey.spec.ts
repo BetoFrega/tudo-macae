@@ -8,7 +8,6 @@ import { E2E_SERVER_LOG_PATH } from "../../../bin/e2eStack";
 import { installUserSession } from "../_helpers/auth/helpers/authentication";
 import {
   clearScriptedReplies,
-  enableSearchAudience,
   fakeUrl,
   headerSearch,
   releaseReply,
@@ -68,7 +67,6 @@ test("mantenedor busca pelo cabeçalho, filtra por tipo e compartilha a busca", 
         ],
       },
     });
-    await enableSearchAudience(userCredentials.uid);
     await installUserSession(page, userCredentials);
 
     await page.goto("/");

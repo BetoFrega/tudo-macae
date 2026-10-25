@@ -1,13 +1,8 @@
 import { readFile } from "node:fs/promises";
-import type { BrowserContext, Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { expect } from "./fixtures";
 import { pageObject } from "./fixtures/POMs/pageObject";
-import { playwrightTarget } from "../../../bin/playwrightTarget";
-import {
-  SITE_SEARCH_FAKE_ADDRESS_PATH,
-  SITE_SEARCH_FAKE_TOKEN,
-  type SiteSearchFakeReply,
-} from "../bin/siteSearchFake";
+import { SITE_SEARCH_FAKE_ADDRESS_PATH, type SiteSearchFakeReply } from "../bin/siteSearchFake";
 
 export async function fakeUrl() {
   return (JSON.parse(await readFile(SITE_SEARCH_FAKE_ADDRESS_PATH, "utf8")) as { url: string }).url;
@@ -26,24 +21,6 @@ export async function releaseReply(query: string) {
     method: "POST", body: JSON.stringify({ query }),
   });
   expect(response.status).toBe(204);
-}
-
-export async function enableSearchAudience(uid: string) {
-  const response = await fetch(`${await fakeUrl()}/__search-audience`, {
-    method: "PUT", body: JSON.stringify({ uid }),
-  });
-  expect(response.status).toBe(204);
-}
-
-/** A stale synthetic identity only exercises the server's disabled/failure states. */
-export async function actAs(context: BrowserContext, distinctId: string) {
-  await context.addCookies([{
-    name: `ph_${SITE_SEARCH_FAKE_TOKEN}_posthog`,
-    value: encodeURIComponent(JSON.stringify({ distinct_id: distinctId, $user_state: "identified" })),
-    domain: new URL(playwrightTarget().origin).hostname,
-    path: "/",
-    sameSite: "Lax",
-  }]);
 }
 
 export function headerSearch(page: Page) {

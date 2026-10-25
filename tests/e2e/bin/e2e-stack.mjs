@@ -177,11 +177,10 @@ try {
   });
   // Classifieds always reads the Worker; only authentication follows the opt-in.
   Object.assign(appEnv, authenticationFixture.env);
-  // The site search reaches a loopback provider and flag evaluation instead of
-  // AI Search and PostHog; see `bin/siteSearchFake.ts`.
+  // The site search and PostHog reach a loopback fake instead of AI Search and
+  // PostHog; see `bin/siteSearchFake.ts`.
   Object.assign(appEnv, (await startSiteSearchFake()).env);
-  // Catalog evaluation requires an HTTPS origin. The search fake token must
-  // still match the browser identity cookie read by search.
+  // Catalog evaluation requires an HTTPS origin.
   if (process.env.NEXT_PUBLIC_POSTHOG_HOST?.startsWith("https://localhost:")) {
     appEnv.NEXT_PUBLIC_POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST;
   }

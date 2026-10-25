@@ -23,12 +23,6 @@ export async function listProfileFixtures(owner: UserCredentials) {
   return client.read<AdvertiserProfileData[]>("profiles.forOwner", { userId: owner.uid });
 }
 
-/** Replaces the owner-editable fields, as the profile form does. */
-export async function updateProfileFixture(owner: UserCredentials, input: ProfileInput & { id: string }) {
-  const client = await classifiedsFixtureClient(owner);
-  await client.write("profiles.update", input);
-}
-
 export type ClaimableProfileFixture = { id: string; revision: number };
 
 /** Creates a claimable Business as an administrator, confirming the expected shared-contact duplicates. */

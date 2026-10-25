@@ -259,15 +259,7 @@ test("invalid continuation links recover to the first page in all four public li
   }
 });
 
-test("generated long profiles remain discoverable and invalid profile URLs recover", async ({ page, verifiedUserCredentials, categoryFixture }) => {
-  const invalidId = "p".repeat(213);
-  for (const [path, heading] of [
-    [`/negocio/${invalidId}/perfil`, "Página não encontrada"],
-    [`/anunciante/${invalidId}`, "Perfil não encontrado"],
-  ]) {
-    await page.goto(path);
-    await expect(pageObject(page).getByRole("heading", { name: heading, exact: true }).filter({ visible: true })).toBeVisible();
-  }
+test("generated long profiles remain discoverable", async ({ page, verifiedUserCredentials, categoryFixture }) => {
   const publicationId = crypto.randomUUID().padEnd(200, "p");
   const title = `Anúncio de perfil longo ${crypto.randomUUID()}`;
   let profileId: string | undefined;

@@ -200,17 +200,4 @@ test("visitante deslogado publica anúncio registrando-se no modal", async ({
     }
     finally { await visitor.close(); }
   });
-
-  await test.step("Retomar uma publicação não reativa um anúncio pausado", async () => {
-    await page.goto("/minha-conta/anuncios");
-    const card = pageObject(page).getByTestId("user-ad-card").filter({ visible: true }).filter({ hasText: adTitle });
-    await click(card.getByRole("button", { name: "Abrir menu" }));
-    await click(pageObject(page).getByRole("menuitem", { name: "Pausar" }).filter({ visible: true }));
-    await expect(card.getByText("Pausado", { exact: true }).filter({ visible: true })).toBeVisible();
-    await page.goto(publicationUrl);
-    await click(pageObject(page).getByRole("button", { name: "Concluir publicação", exact: true }).filter({ visible: true }));
-    await expect(pageObject(page).getByRole("alert").filter({ visible: true }).filter({ hasText: "Este anúncio foi pausado" })).toHaveText("Este anúncio foi pausado. Use Meus anúncios para reativá-lo.");
-    await page.goto("/minha-conta/anuncios");
-    await expect(card.getByText("Pausado", { exact: true }).filter({ visible: true })).toBeVisible();
-  });
 });

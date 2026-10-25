@@ -123,13 +123,6 @@ async function setProfileOwner({ classifiedsDatabase }, input) {
 }
 
 /** Persists malformed photo references that public photo operations cannot create. */
-async function setAdImages({ classifiedsDatabase }, input) {
-  if (!fixtureId.test(input.id) || !Array.isArray(input.images)) throw new Error("Invalid fixture input");
-  await classifiedsDatabase.prepare("UPDATE classifieds_records SET version=?, body=json_set(body, '$.images', json(?)) WHERE kind='ad' AND id=?")
-    .bind(randomUUID(), JSON.stringify(input.images), input.id).run();
-  return { success: true };
-}
-
 /** Photo removal runs on the maintenance schedule, so a deleted ad's durable effect is its queued cleanup job. */
 async function adPhotoCleanup({ classifiedsDatabase }, input) {
   if (typeof input.path !== "string") throw new Error("Invalid fixture input");
@@ -201,7 +194,6 @@ function fixtureRoutes(fixture) {
   if (fixture.editorialDatabase) routes.set("/backdate-post", input => backdatePost(fixture, input));
   if (!fixture.classifiedsQualification) return routes;
   routes.set("/set-profile-owner", input => setProfileOwner(fixture, input));
-  routes.set("/set-ad-images", input => setAdImages(fixture, input));
   routes.set("/ad-photo-cleanup", input => adPhotoCleanup(fixture, input));
   routes.set("/delete-category", input => deleteCategory(fixture, input));
   routes.set("/delete-ad", input => deleteAd(fixture, input));

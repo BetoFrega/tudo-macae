@@ -31,8 +31,8 @@ export const adminTest = base.extend<{
   adminMediaPage: async ({ page }, use) => {
     await use(new AdminMediaPage(page));
   },
-  adminUsersPage: async ({ page, userSidebar, adminDashboardPage }, use) => {
-    await use(new AdminUsersPage(page, userSidebar, adminDashboardPage));
+  adminUsersPage: async ({ page }, use) => {
+    await use(new AdminUsersPage(page));
   },
   adminAdsPage: async ({ page, userSidebar, adminDashboardPage }, use) => {
     await use(new AdminAdsPage(page, userSidebar, adminDashboardPage));

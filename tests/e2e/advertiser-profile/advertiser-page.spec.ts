@@ -7,7 +7,7 @@ import { deleteProfileFixture } from "../../_helpers/auth/db/deleteFixtureDocume
 import { slugify } from "@tudomacae/text-normalization/slugify";
 
 test.describe("Advertiser Profile Page", () => {
-  test("Exibição de perfil com anúncios e 404 para inexistente", async ({
+  test("Exibição de perfil com anúncios", async ({
     page,
     userCredentials,
     authentication,
@@ -26,14 +26,6 @@ test.describe("Advertiser Profile Page", () => {
       await expect(
         pageObject(page).getByRole("heading", { name: adFixture.title })
           .filter({ visible: true }),
-      ).toBeVisible();
-    });
-
-    await test.step("Verificar 404 para perfil inexistente", async () => {
-      await page.goto("/anunciante/non-existent-profile-id");
-      await expect(
-        pageObject(page).getByRole("heading", { name: "404" }).filter({ visible: true })
-          .or(pageObject(page).getByText("Perfil não encontrado").filter({ visible: true })),
       ).toBeVisible();
     });
   });

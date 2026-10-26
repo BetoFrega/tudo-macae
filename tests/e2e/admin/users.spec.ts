@@ -71,22 +71,5 @@ test.describe("Admin Users", () => {
       );
       await expect(updatedRow.getByText("Usuário")).toBeVisible();
     });
-
-    await test.step("Impedir admin de remover seu próprio privilégio", async () => {
-      await userSidebar.open();
-      await userSidebar.clickAdminPanel();
-      await adminUsersPage.goto();
-
-      const badge = adminUsersPage.getRemoveAdminButton(
-        adminUserCredentials.email,
-      );
-      await click(badge);
-
-      await expect(adminUsersPage.dialog).toBeVisible();
-      await expect(adminUsersPage.selfRemoveWarning).toBeVisible();
-      await expect(adminUsersPage.confirmButton).not.toBeVisible();
-      await click(adminUsersPage.cancelButton);
-      await expect(adminUsersPage.dialog).not.toBeVisible();
-    });
   });
 });

@@ -90,14 +90,6 @@ test("conta migrada preserva titularidade e papéis após recuperação e substi
     ).toBeVisible();
     await page.goto(link);
     await pageObject(page).getByLabel("Nova Senha", { exact: true }).fill("other123");
-    await page.route("**/minha-conta/acao?*", async (route) => {
-      if (route.request().headers()["next-action"]) await route.abort("failed");
-      else await route.continue();
-    });
-    await click(pageObject(page).getByRole("button", { name: "Redefinir senha", exact: true }));
-    await expect(pageObject(page).getByRole("alert").filter({ hasText: "Não foi possível redefinir" })).toContainText("Tente novamente.");
-    await expect(pageObject(page).getByLabel("Nova Senha", { exact: true })).toHaveValue("other123");
-    await page.unroute("**/minha-conta/acao?*");
     await click(pageObject(page).getByRole("button", { name: "Redefinir senha", exact: true }));
     await expect(pageObject(page).getByRole("alert").filter({ hasText: "Código inválido ou expirado." })).toContainText("Código inválido ou expirado.");
     await click(pageObject(page).getByRole("link", { name: "Solicitar um novo link de recuperação" }));

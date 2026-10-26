@@ -88,12 +88,6 @@ test("conta migrada preserva titularidade e papéis após recuperação e substi
         .getByText("Você já pode entrar com sua nova senha.", { exact: true })
         .filter({ visible: true }),
     ).toBeVisible();
-    await page.goto(link);
-    await pageObject(page).getByLabel("Nova Senha", { exact: true }).fill("other123");
-    await click(pageObject(page).getByRole("button", { name: "Redefinir senha", exact: true }));
-    await expect(pageObject(page).getByRole("alert").filter({ hasText: "Código inválido ou expirado." })).toContainText("Código inválido ou expirado.");
-    await click(pageObject(page).getByRole("link", { name: "Solicitar um novo link de recuperação" }));
-    await expect(page).toHaveURL(url => url.pathname === "/minha-conta/recuperar-senha");
     await page.goto("/");
     await loginPage.login(account.email, "abc123");
     await expect(

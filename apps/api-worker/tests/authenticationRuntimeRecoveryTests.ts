@@ -63,6 +63,8 @@ test("recovers an imported account without importing its password and confirms t
     },
   );
   expect(reused.status).toBe(400);
+  // The web adapter maps this code to the "Código inválido ou expirado." message.
+  expect(await reused.json()).toMatchObject({ code: "INVALID_TOKEN" });
   const login = await worker.dispatchFetch(
     "http://authentication.test/api/auth/sign-in/email",
     {

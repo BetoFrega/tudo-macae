@@ -30,18 +30,10 @@ export class RegistrationPage extends BasePage {
     await this.click(this.getByRole("button", { name: "Criar conta" }));
   }
 
-  async register(email: string, password: string, acceptTerms = true) {
+  async register(email: string, password: string) {
     await this.fillEmail(email);
     await this.fillPassword(password);
-    if (acceptTerms) {
-      await this.acceptTerms();
-    }
+    await this.acceptTerms();
     await this.submit();
-  }
-
-  get termsValidationError() {
-    return this.getByText(
-      "Você precisa concordar com os Termos de Uso e Política de Privacidade.",
-    );
   }
 }

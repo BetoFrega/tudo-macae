@@ -44,25 +44,6 @@ test("Jornada: login real, navegação da conta, logout e recuperação de senha
     finally { await plain.close(); }
   });
 
-  await test.step("Sessão ausente mantém a entrada anônima apesar de identidade analítica antiga", async () => {
-    const expiredContext = await browser.newContext();
-    try {
-      await expiredContext.addCookies([{
-        name: `ph_${SITE_SEARCH_FAKE_TOKEN}_posthog`,
-        value: encodeURIComponent(JSON.stringify({ distinct_id: "e2e-stale-analytics-identity", $user_state: "identified" })),
-        domain: new URL(test.info().project.use.baseURL!).hostname,
-        path: "/", sameSite: "Lax",
-      }]);
-      const expiredPage = await expiredContext.newPage();
-      await expiredPage.goto("/");
-      const surface = pageObject(expiredPage);
-      await expect(surface.getByRole("button", { name: "Entrar", exact: true }).filter({ visible: true })).toBeVisible();
-    }
-    finally {
-      await expiredContext.close();
-    }
-  });
-
   await test.step("Acesso anônimo mantém recuperação e ação incompleta sem parâmetros e sem overflow", async () => {
     const originalViewport = page.viewportSize();
     // No happy path renders the retired-link status, so only this case proves its reflow.

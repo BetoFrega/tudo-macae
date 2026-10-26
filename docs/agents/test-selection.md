@@ -35,6 +35,10 @@ test's location.
   - Exception: one denied-access case per protected surface, because only the
     browser proves that the session reaches the server before private data
     renders. Cover the remaining authorization variants in Worker runtime tests.
+  - Browser-only accessibility evidence (reflow, zoom, focus, notice placement)
+    for a non-happy state moves into a happy-path case that renders the same
+    component. Keep a focused E2E case only for a component that no happy path
+    renders, and name that reason in the case.
   - Specs that test the E2E harness itself, not a product journey, are outside
     this rule.
 

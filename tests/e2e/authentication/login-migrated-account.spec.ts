@@ -13,7 +13,7 @@ import { readDisposablePasswordResetLink } from "../../_helpers/auth/helpers/ver
 // Native one-use recovery links must stay out of traces and media artifacts.
 test.use({ trace: "off", screenshot: "off", video: "off" });
 
-test("conta migrada preserva titularidade e papéis após recuperação e substitui links antigos", async ({
+test("conta migrada preserva titularidade e papéis após recuperação", async ({
   page,
   loginPage,
 }) => {
@@ -23,26 +23,6 @@ test("conta migrada preserva titularidade e papéis após recuperação e substi
   });
   try {
     await giveProfileTo(account.uid);
-    for (const mode of [
-      "resetPassword",
-      "verifyEmail",
-      "verifyAndChangeEmail",
-    ]) {
-      await page.goto(
-        `/minha-conta/acao?mode=${mode}&oobCode=legacy-disposable-code`,
-      );
-      await expect(
-        pageObject(page).getByText(/Este link anterior à mudança de acesso/),
-      ).toBeVisible();
-      await expect(
-        pageObject(page).getByRole("link", {
-          name:
-            mode === "resetPassword"
-              ? "Solicitar um novo link de recuperação"
-              : "Entrar e solicitar uma nova verificação",
-        }),
-      ).toBeVisible();
-    }
     await page.goto("/");
     await click(
       pageObject(page)

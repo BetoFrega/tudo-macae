@@ -65,6 +65,8 @@ test("Jornada: login real, navegação da conta, logout e recuperação de senha
 
   await test.step("Acesso anônimo mantém recuperação e ação incompleta sem parâmetros e sem overflow", async () => {
     const originalViewport = page.viewportSize();
+    // No happy path renders the retired-link status, so only this case proves its reflow.
+    // Its text and links per mode belong to src/app/minha-conta/acao/page.test.tsx.
     for (const route of ["/minha-conta/recuperar-senha", "/minha-conta/acao"] as const) {
       await page.goto(route);
       expect(new URL(page.url()).search).toBe("");

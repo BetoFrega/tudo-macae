@@ -204,3 +204,24 @@ it("reviews and publishes photo edits, removals and additions while the saved co
     preview.mockRestore();
   }
 });
+
+it("refuses a non-image file with the standard message and keeps accepting photos", async () => {
+  const preview = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:accepted-photo");
+  try {
+    render(<PublicationJourney />);
+    const input = document.getElementById("image-upload")!;
+    fireEvent.change(input, { target: { files: [new File(["not-an-image"], "planilha.pdf", { type: "application/pdf" })] } });
+    expect(await screen.findByRole("alert")).toHaveTextContent("Tipo de arquivo inválido. Use JPEG, PNG, WebP ou GIF.");
+    expect(screen.getByTestId("photo-counter")).toHaveTextContent("0/3");
+    expect(mocks.processPhoto).not.toHaveBeenCalled();
+
+    const photo = new File(["photo"], "bicicleta.png", { type: "image/png" });
+    mocks.processPhoto.mockResolvedValueOnce(photo);
+    fireEvent.change(input, { target: { files: [photo] } });
+    await waitFor(() => expect(screen.getByTestId("photo-counter")).toHaveTextContent("1/3"));
+    expect(screen.queryByText("Tipo de arquivo inválido. Use JPEG, PNG, WebP ou GIF.")).not.toBeInTheDocument();
+  }
+  finally {
+    preview.mockRestore();
+  }
+});

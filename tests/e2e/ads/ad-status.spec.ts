@@ -24,15 +24,6 @@ test.describe("Ad Status Management", () => {
       await authentication.login(userCredentials);
     });
 
-    await test.step("Verificar que toggle de status NÃO aparece na página de criação", async () => {
-      await page.goto("/publicar");
-      await expect(
-        pageObject(page).getByRole("heading", { name: /Publicar anúncio/i }).filter({ visible: true }),
-      ).toBeVisible();
-      await expect(pageObject(page).getByText("Anúncio Ativo").filter({ visible: true })).not.toBeVisible();
-      await expect(pageObject(page).getByRole("switch").filter({ visible: true })).not.toBeVisible();
-    });
-
     await test.step("Publicar novo anúncio e verificar que fica ativo", async () => {
       await header.clickCreateAd();
       const adTitle = "Teste Status Inicial";

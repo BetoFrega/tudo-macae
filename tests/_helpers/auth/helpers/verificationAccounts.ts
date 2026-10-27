@@ -20,10 +20,6 @@ export async function confirmDisposableEmail(email: string) {
   await account(email);
   await workerFixture("/verify", { email, emailVerified: true });
 }
-export async function unconfirmDisposableEmail(email: string) {
-  await account(email);
-  await workerFixture("/verify", { email, emailVerified: false });
-}
 export async function readDisposablePasswordResetLink(email: string) {
   await account(email);
   return readWorkerLink(email, "resetPassword");
@@ -31,18 +27,16 @@ export async function readDisposablePasswordResetLink(email: string) {
 type VerificationLinkOptions = {
   publication?: string;
   newEmail?: string;
-  ad?: string;
 };
 export async function readDisposableVerificationLink(
   email: string,
   options: VerificationLinkOptions = {},
 ) {
-  const { publication, newEmail, ad } = options;
+  const { publication, newEmail } = options;
   await account(email);
   if (newEmail) registerDisposableEmail(newEmail);
   return readWorkerLink(email, "verifyEmail", newEmail, {
     ...(publication ? { publication } : {}),
-    ...(ad ? { ad } : {}),
   });
 }
 
@@ -50,7 +44,7 @@ async function readWorkerLink(
   email: string,
   mode: string,
   newEmail?: string,
-  continuation?: { publication?: string; ad?: string },
+  continuation?: { publication?: string },
 ) {
   const mail = await workerFixture<{ text: string } | null>("/mail", {
     email,
@@ -64,11 +58,9 @@ async function readWorkerLink(
   const origin = new URL(playwrightTarget().origin);
   target.protocol = origin.protocol;
   target.host = origin.host;
-  if (continuation?.publication || continuation?.ad) {
+  if (continuation?.publication) {
     const next = new URL("/minha-conta/verificar-email", origin);
-    if (continuation.publication)
-      next.searchParams.set("publication", continuation.publication);
-    if (continuation.ad) next.searchParams.set("ad", continuation.ad);
+    next.searchParams.set("publication", continuation.publication);
     target.searchParams.set("continueUrl", next.href);
   }
   return target.href;

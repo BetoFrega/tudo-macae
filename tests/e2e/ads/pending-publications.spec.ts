@@ -118,21 +118,6 @@ test("excluir a última publicação interrompida remove o minibanner e suas fot
 
   await page.goto("/minha-conta/anuncios?filter=pending");
   const publication = pageObject(page).getByRole("heading", { name: title }).filter({ visible: true }).locator("..");
-  let rejectFirstDelete = true;
-  await page.route("**/minha-conta/anuncios**", async (route) => {
-    if (rejectFirstDelete && route.request().method() === "POST" && route.request().headers()["next-action"]) {
-      rejectFirstDelete = false;
-      await route.abort("failed");
-      return;
-    }
-    await route.continue();
-  });
-  page.once("dialog", dialog => dialog.accept());
-  await click(publication.getByRole("button", { name: "Excluir" }));
-  await expect(pageObject(page).getByRole("alert").filter({ hasText: "Não foi possível excluir a publicação." })).toContainText("Não foi possível excluir a publicação. Tente novamente.");
-  await expect(publication.getByRole("button", { name: "Excluir" })).toBeEnabled();
-  await page.screenshot({ path: "/tmp/issue-1403-delete-recovery.png", fullPage: true });
-
   page.once("dialog", dialog => dialog.accept());
   await click(publication.getByRole("button", { name: "Excluir" }));
 

@@ -6,11 +6,10 @@ import { makeRandomString } from "../../_helpers/makeRandomString";
 const SMALL_PNG = makePng(48, 32);
 
 /**
- * The blast radius of #306: the validation and the processing of an ad photo
- * moved to the acervo, and for the advertiser nothing may change. This covers
- * the whole round trip through the moved code — refusal message included — with
- * the ad's own image model untouched: the photo still lives in the ad document,
- * under `ad-images/`, and no media is registered in the acervo.
+ * An ad photo is validated and processed by the acervo's image code, yet the
+ * photo still lives in the ad document, under `ad-images/`, and no media is
+ * registered in the acervo. This covers the round trip through that code; the
+ * refusal of a non-image file is in PublicationJourney.photos.test.tsx.
  */
 test.describe("Anúncio com foto", () => {
   test("Anunciante cria um anúncio com foto, e a foto sobrevive à edição", async ({
@@ -29,19 +28,6 @@ test.describe("Anúncio com foto", () => {
 
     await authentication.login(userCredentials);
     await header.clickCreateAd();
-
-    await test.step("Um arquivo que não é imagem é recusado com a mensagem de sempre", async () => {
-      await createAdPage.choosePhoto(
-        "planilha.pdf",
-        "application/pdf",
-        Buffer.from("not-an-image"),
-      );
-
-      await expect(
-        pageObject(page).getByText("Tipo de arquivo inválido. Use JPEG, PNG, WebP ou GIF.").filter({ visible: true }),
-      ).toBeVisible();
-      await expect(createAdPage.photoCounter).toHaveText("0/3");
-    });
 
     await test.step("Publicar o anúncio com uma foto", async () => {
       await createAdPage.choosePhoto("bicicleta.png", "image/png", SMALL_PNG);

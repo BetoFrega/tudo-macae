@@ -16,7 +16,6 @@ export class ProfilePage extends BasePage {
   get lastContact() { return this.contactInputs.last(); }
   removeContactAt(index: number) { return this.removeContactButtons.nth(index); }
   get lastRemoveContactButton() { return this.removeContactButtons.last(); }
-  get firstRemoveContactButton() { return this.removeContactButtons.first(); }
   get lastWhatsappCheckbox() { return this.whatsappCheckboxes.last(); }
   get identityTypeSection() { return this.getByRole("region", { name: "Tipo do perfil", exact: true }); }
   identityTypeChoice(label: "Meu perfil pessoal" | "Um negócio") { return this.getByRole("radio", { name: label, exact: true }); }

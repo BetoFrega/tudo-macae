@@ -54,9 +54,11 @@ test("preserves business values after a technical failure and retries with keybo
   expect(await screen.findByText("Não foi possível salvar agora. Seus dados continuam aqui. Tente salvar novamente.")).toBeVisible();
   expect(screen.queryByText("internal detail")).not.toBeInTheDocument();
   expect(screen.getByRole("textbox", { name: "Nome do negócio" })).toHaveValue("Oficina do Bairro");
+  expect(screen.getByRole("textbox", { name: "Número de contato 1" })).toHaveValue("(22) 99999-9999");
   const retry = screen.getByRole("button", { name: "Tentar salvar novamente" });
   await waitFor(() => expect(retry).toBeEnabled());
-  await user.click(retry);
+  retry.focus();
+  await user.keyboard("{Enter}");
   await waitFor(() => expect(mocks.create).toHaveBeenCalledTimes(2));
   expect((mocks.create.mock.calls[0][0] as FormData).get("operationId")).toBe((mocks.create.mock.calls[1][0] as FormData).get("operationId"));
   expect(mocks.push).toHaveBeenCalledWith("/minha-conta/perfis/business-1/concluido");

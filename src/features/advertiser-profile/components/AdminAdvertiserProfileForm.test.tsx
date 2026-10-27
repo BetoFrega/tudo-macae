@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, expect, test, vi } from "vitest";
 import AdminAdvertiserProfileForm from "./AdminAdvertiserProfileForm";
@@ -108,13 +108,45 @@ test("locks claimable source fields while retrying a saved profile photo", async
   expect(screen.getByRole("checkbox", { name: "Conferi novamente esta fonte pública" })).toBeDisabled();
 });
 
-test("preserves claimable source and duplicate confirmation journey", async () => {
+test("lists possible duplicates and creates the claimable profile only after explicit confirmation", async () => {
   mocks.create.mockResolvedValueOnce({ success: false, duplicates: [{ id: "existing", title: "Oficina" }], confirmationToken: "confirm" }).mockResolvedValueOnce({ success: true, profileId: "profile", revision: 1 });
   render(<AdminAdvertiserProfileForm mode="create-claimable" initialData={initialData} categories={categories} />);
   const user = userEvent.setup();
   await user.type(screen.getByLabelText("Fonte pública"), "https://example.com/oficina");
   await user.click(screen.getByRole("button", { name: "Criar perfil público" }));
-  await screen.findByRole("alert");
-  await user.click(screen.getByRole("button", { name: "Criar mesmo assim" }));
+
+  const alert = await screen.findByRole("alert");
+  expect(alert).toHaveTextContent("Encontramos perfis que podem representar o mesmo negócio.");
+  const duplicate = within(alert).getByRole("link", { name: "Oficina" });
+  expect(duplicate).toHaveAttribute("href", "/admin/perfis/existing");
+  expect(duplicate).toHaveAttribute("target", "_blank");
+  expect(mocks.create).toHaveBeenCalledOnce();
+  const first = mocks.create.mock.calls[0][0] as FormData;
+  expect(first.get("duplicateConfirmationToken")).toBeNull();
+  expect(mocks.push).not.toHaveBeenCalled();
+
+  await user.click(within(alert).getByRole("button", { name: "Criar mesmo assim" }));
   await waitFor(() => expect(mocks.create).toHaveBeenCalledTimes(2));
+  const confirmed = mocks.create.mock.calls[1][0] as FormData;
+  expect(confirmed.get("duplicateConfirmationToken")).toBe("confirm");
+  expect(confirmed.get("idempotencyKey")).toBe(first.get("idempotencyKey"));
+  expect(confirmed.get("sourceUrl")).toBe("https://example.com/oficina");
+  expect(confirmed.get("title")).toBe("Oficina");
+  await waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/admin/perfis"));
+});
+
+test("locks saving while an activity area is unavailable until the admin removes it", async () => {
+  const user = userEvent.setup();
+  const inactiveSubcategory = [{ ...categories[0], subcategories: [{ ...categories[0].subcategories[0], isActive: false }] }];
+  render(<AdminAdvertiserProfileForm initialData={{ ...initialData, description: "Descrição preservada" }} profileId="profile" categories={inactiveSubcategory} />);
+
+  expect(screen.getByText("Área de atuação indisponível")).toBeVisible();
+  expect(screen.getByText("Remova ou substitua as áreas indisponíveis antes de salvar.")).toBeVisible();
+  expect(screen.getByRole("button", { name: "Salvar Alterações" })).toBeDisabled();
+
+  await user.click(screen.getByRole("button", { name: "Remover área de atuação" }));
+
+  expect(screen.queryByText("Área de atuação indisponível")).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Salvar Alterações" })).toBeEnabled();
+  expect(screen.getByLabelText("Descrição (Opcional)")).toHaveValue("Descrição preservada");
 });

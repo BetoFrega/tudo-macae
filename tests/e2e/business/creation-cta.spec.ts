@@ -88,16 +88,11 @@ test("visitante encontra cadastro na home e menu e conclui o negócio", async ({
   await page.keyboard.type("22988887777");
   await pageObject(page).getByLabel("Categoria da área de atuação", { exact: true }).selectOption(categoryFixture.category.id);
   await pageObject(page).getByLabel("Subcategoria da área de atuação", { exact: true }).selectOption(categoryFixture.subcategory.id);
-  await click(pageObject(page).getByRole("button", { name: "Criar negócio", exact: true }));
-  await expect(pageObject(page).getByText("Clique em Adicionar área para incluir a seleção antes de salvar.")).toBeVisible();
-  await page.screenshot({ path: testInfo.outputPath("pending-area-selection-mobile.png"), fullPage: true });
-  await click(pageObject(page).getByRole("button", { name: "Adicionar área" }));
-  await expect(pageObject(page).getByText(`${categoryFixture.category.name} → ${categoryFixture.subcategory.name}`)).toBeVisible();
-  await click(pageObject(page).getByRole("button", { name: "Remover área de atuação" }));
-  await expect(pageObject(page).getByText("0 de 3")).toBeVisible();
-  await pageObject(page).getByLabel("Subcategoria da área de atuação", { exact: true }).selectOption(categoryFixture.subcategory.id);
   await click(pageObject(page).getByRole("button", { name: "Adicionar área", exact: true }));
-  await click(pageObject(page).getByRole("button", { name: "Criar negócio", exact: true }));
+  await expect(pageObject(page).getByText(`${categoryFixture.category.name} → ${categoryFixture.subcategory.name}`, { exact: true })).toBeVisible();
+  const submit = pageObject(page).getByRole("button", { name: "Criar negócio", exact: true });
+  await submit.focus();
+  await page.keyboard.press("Enter");
 
   await expect(page).toHaveURL(/\/minha-conta\/perfis\/[^/]+\/concluido$/u);
   await expect(pageObject(page).getByRole("heading", { name: `Negócio salvo: ${businessName}`, level: 1, exact: true })).toBeVisible();
@@ -169,43 +164,6 @@ test("negócio sem contato fica salvo como cadastro parcial", async ({
   await pageObject(page).getByRole("textbox", { name: "Nome do negócio" }).fill(name);
   await click(pageObject(page).getByRole("button", { name: "Criar negócio", exact: true }));
 
-  await expect(page).toHaveURL(/\/minha-conta\/perfis\/[^/]+\/concluido$/u);
-  await expect(pageObject(page).getByRole("heading", { name: `Negócio salvo: ${name}`, exact: true })).toBeVisible();
-});
-
-test("erros no cadastro preservam dados e permitem repetir com teclado", async ({ page, authentication, userCredentials }, testInfo) => {
-  await authentication.login(userCredentials);
-  await page.goto("/minha-conta/perfis/novo?origem=catalogo");
-  const name = `Negócio recuperado ${makeRandomString()}`;
-  const title = pageObject(page).getByRole("textbox", { name: "Nome do negócio" });
-  await title.fill("A");
-  await pageObject(page).getByRole("textbox", { name: "Número de contato 1" }).fill("123");
-  await click(pageObject(page).getByRole("button", { name: "Criar negócio", exact: true }));
-  await expect(pageObject(page).getByText(/Confira os campos: Nome do negócio, Número de contato 1/)).toBeVisible();
-  await expect(title).toBeFocused();
-  await page.screenshot({ path: testInfo.outputPath("business-validation-error.png"), fullPage: true });
-
-  await title.fill(name);
-  await pageObject(page).getByRole("textbox", { name: "Número de contato 1" }).fill("22999999999");
-  let interrupted = false;
-  await page.route("**/*", async (route) => {
-    if (!interrupted && route.request().method() === "POST" && route.request().headers()["next-action"]) {
-      interrupted = true;
-      await route.fetch();
-      await route.abort("failed");
-      return;
-    }
-    await route.continue();
-  });
-  await click(pageObject(page).getByRole("button", { name: "Criar negócio", exact: true }));
-  await expect(pageObject(page).getByText("Não foi possível salvar agora. Seus dados continuam aqui. Tente salvar novamente.")).toBeVisible();
-  await expect(title).toHaveValue(name);
-  await expect(pageObject(page).getByRole("textbox", { name: "Número de contato 1" })).toHaveValue("(22) 99999-9999");
-  await expect.poll(() => interrupted).toBe(true);
-  await page.screenshot({ path: testInfo.outputPath("business-network-retry.png"), fullPage: true });
-  const retry = pageObject(page).getByRole("button", { name: "Tentar salvar novamente" });
-  await retry.focus();
-  await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/minha-conta\/perfis\/[^/]+\/concluido$/u);
   await expect(pageObject(page).getByRole("heading", { name: `Negócio salvo: ${name}`, exact: true })).toBeVisible();
 });

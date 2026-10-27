@@ -17,10 +17,6 @@ export class ActivityAreasForm extends BasePage {
     return this.getByText("Área de atuação indisponível", { exact: true });
   }
 
-  get correctionMessage() {
-    return this.getByText("Remova ou substitua as áreas indisponíveis antes de salvar.", { exact: true });
-  }
-
   selection(category: string, subcategory: string) {
     return this.getByText(`${category} → ${subcategory}`, { exact: true });
   }

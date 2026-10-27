@@ -186,6 +186,8 @@ test("Jornada: login real, navegação da conta, logout e recuperação de senha
         .getByRole("button", { name: "Minha conta" })
         .filter({ visible: true }),
     ).not.toBeVisible();
+    // Only the browser proves the server's deletion matches the cookie's attributes.
+    await expect.poll(async () => (await context.cookies()).some(cookie => cookie.name === "session")).toBe(false);
   });
 
   await test.step("Recuperar a senha pelo link nativo e entrar na mesma conta", async () => {

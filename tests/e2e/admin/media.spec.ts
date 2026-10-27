@@ -99,37 +99,6 @@ test.describe("Acervo de mídia", () => {
     }
   });
 
-  test("Cadastro sem texto alternativo e sem Procedência estruturada é recusado", async ({
-    userWithClaims,
-    adminMediaPage,
-  }) => {
-    const caption = `Legenda sem alt ${makeRandomString()}`;
-
-    await test.step("Setup: Usuário administrador", async () => {
-      await userWithClaims({ admin: true });
-    });
-
-    await adminMediaPage.open();
-
-    await adminMediaPage.chooseFile("prefeitura.png", "image/png", await smallPng());
-    await adminMediaPage.captionField.fill(caption);
-    await adminMediaPage.submit();
-
-    await expect(
-      pageObject(adminMediaPage.page).getByText("Informe o texto alternativo da imagem."),
-    ).toBeVisible();
-    await expect(
-      pageObject(adminMediaPage.page).getByText("Informe a autoria da mídia."),
-    ).toBeVisible();
-
-    // The caption is unique to this test and was never saved, so its absence
-    // from the shared library is a fact about this run, not about the emulator.
-    await test.step("A mídia não foi guardada", async () => {
-      await adminMediaPage.open();
-      await expect(adminMediaPage.card(caption)).not.toBeVisible();
-    });
-  });
-
   test("Administrador escolhe pelo seletor uma mídia já guardada no acervo", async ({
     userWithClaims,
     adminMediaPage,

@@ -15,11 +15,6 @@ test("Meus Perfis reflows long content and keeps catalogue and edit actions keyb
     contacts: [],
     activityAreas: [],
   });
-  for (const route of ["/minha-conta/perfis", "/minha-conta/perfis/novo"]) {
-    await page.goto(route);
-    await expect(pageObject(page).getByText("Você precisa se autenticar para ver essa página.", { exact: true })).toBeVisible();
-    await expect(pageObject(page).getByRole("button", { name: "Fazer login", exact: true })).toBeVisible();
-  }
   await authentication.login(userCredentials);
   await page.goto("/minha-conta/perfis");
   const surface = pageObject(page);

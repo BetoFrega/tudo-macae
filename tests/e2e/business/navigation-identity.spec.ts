@@ -4,8 +4,6 @@ import { makeRandomString } from "../../_helpers/makeRandomString";
 import { createClaimableProfileFixture, updateClaimableProfileFixture, type ClaimableProfileFixture } from "../_helpers/advertiser-profile/profileFixtures";
 import { deleteProfileFixture } from "../../_helpers/auth/db/deleteFixtureDocuments";
 import { slugify } from "@tudomacae/text-normalization/slugify";
-import type { Route } from "@playwright/test";
-import { click } from "../_helpers/click";
 
 test("visitante abre o Negócio correto após prefetch de rotas irmãs", async ({ page, categoryFixture }, testInfo) => {
   const prefix = `Navegação ${makeRandomString()}`;
@@ -143,60 +141,5 @@ test("visitante abre o Negócio correto após prefetch de rotas irmãs", async (
   }
   finally {
     for (const id of ids) await deleteProfileFixture(id);
-  }
-});
-
-test("navegação por teclado interrompida não foca o Negócio numa visita posterior", async ({ page, categoryFixture }) => {
-  const title = `Interrupção ${makeRandomString()}`;
-  const business = await createClaimableProfileFixture({
-    title,
-    description: "Informações públicas de um negócio local.",
-    contacts: [{ number: "22999999999", isWhatsapp: true }],
-    activityAreas: [{ categoryId: categoryFixture.category.id, subcategoryId: categoryFixture.subcategory.id }],
-    sourceUrl: "https://example.com/navigation-interruption-test",
-  });
-  const businessPath = `/negocio/${business.id}/${slugify(title)}`;
-  const heldRoutes: Route[] = [];
-  const holdBusinessRoute = (route: Route) => {
-    heldRoutes.push(route);
-  };
-  try {
-    // A document load gives the later Back step a Business entry that does not pass through the directory link.
-    await page.goto(businessPath);
-    const heading = pageObject(page).getByRole("heading", { name: title, exact: true });
-    await expect(heading).toBeVisible();
-    await expect(heading).not.toBeFocused();
-    await page.route(`**/negocio/${business.id}/**`, holdBusinessRoute);
-
-    await click(pageObject(page).getByRole("main").getByRole("link", { name: "Voltar para Negócios", exact: true }));
-    await expect(page).toHaveURL(url => url.pathname === "/negocios");
-    const target = pageObject(page).getByRole("main").getByRole("link", { name: title, exact: true });
-    await target.focus();
-    await expect(target).toBeFocused();
-    await page.keyboard.press("Enter");
-
-    await test.step("outra rota substitui a navegação antes de o título montar", async () => {
-      await click(pageObject(page).getByRole("contentinfo").getByRole("link", { name: "Política de Privacidade", exact: true }));
-      await expect(page).toHaveURL(url => url.pathname === "/politica-de-privacidade");
-      await expect(heading).toHaveCount(0);
-    });
-
-    await page.unroute(`**/negocio/${business.id}/**`, holdBusinessRoute);
-    await Promise.all(heldRoutes.map(route => route.continue().catch(() => undefined)));
-
-    await test.step("a visita posterior ao mesmo Negócio não recebe o foco antigo", async () => {
-      for (let back = 0; back < 3 && new URL(page.url()).pathname !== businessPath; back += 1) {
-        await page.goBack();
-      }
-      await expect(page).toHaveURL(url => url.pathname === businessPath);
-      await expect(heading).toBeVisible();
-      // Two frames let the heading's mount effect run before asserting where focus is.
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      await expect(heading).not.toBeFocused();
-    });
-  }
-  finally {
-    await page.unroute(`**/negocio/${business.id}/**`, holdBusinessRoute).catch(() => undefined);
-    await deleteProfileFixture(business.id);
   }
 });

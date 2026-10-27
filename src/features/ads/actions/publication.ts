@@ -8,6 +8,7 @@ import type { PublicationReview } from "@tudomacae/ads/client";
 import { revalidatePath, updateTag } from "next/cache";
 import { getCurrentUser } from "@/features/authentication/actions/getCurrentUser";
 import { adListingTags } from "@tudomacae/ads";
+import { invalidateActivityAreaAdvertisers } from "@/features/advertiser-profile/actions/invalidateActivityAreaAdvertisers";
 import { pendingPublicationTransitions } from "../../../integrations/ads/pendingPublicationTransitions";
 import {
   savePublication, readPublication,
@@ -94,7 +95,13 @@ function profileWithIdentityType({ identityType, ...fields }: PublicationProfile
 }
 export async function savePublicationProfile(input: PublicationProfileInput) {
   try {
-    const profileId = await persistProfile(await account(), profileWithIdentityType(publicationProfileInput.parse(input)));
+    const userId = await account();
+    const parsed = publicationProfileInput.parse(input);
+    const profileId = await persistProfile(userId, profileWithIdentityType(parsed));
+    if (parsed.declareActivityArea) {
+      const publication = await readPublication(userId, parsed.publicationId);
+      if (publication) invalidateActivityAreaAdvertisers([{ categoryId: publication.categoryId, subcategoryId: publication.subcategoryId }]);
+    }
     updateTag(`advertiser-profile-${profileId}`);
     revalidatePath("/minha-conta/perfis");
     revalidatePath("/minha-conta/anuncios");

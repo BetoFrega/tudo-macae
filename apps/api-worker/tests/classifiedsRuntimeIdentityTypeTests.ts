@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createClassifiedsPersistence, createClassifiedsCapabilities } from "../classifieds";
 import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
 import { identityTypeOf } from "@tudomacae/advertiser-identity/model";
-import { now, profile, call, save, barrier, adminActor, adFields, ownerActor, classifiedsDatabase } from "./classifiedsRuntimeHarness";
+import { now, profile, category, call, save, barrier, adminActor, adFields, ownerActor, classifiedsDatabase } from "./classifiedsRuntimeHarness";
 
 const owner = { ...adminActor, uid: "owner", admin: false };
 const fields = { title: "Ana", contacts: [{ number: "22999999999", isWhatsapp: true }], activityAreas: [] };
@@ -101,4 +101,19 @@ test("migration 0013 adopts legacy profiles untyped and claimables read as busin
   expect((await asOwner("profiles.classify", { id: "legacy-b", identityType: "business" })).error).toBeUndefined();
   const stored = z.object({ body: z.string() }).parse(await database.prepare("SELECT body FROM classifieds_records WHERE kind = 'profile' AND id = 'claimable'").first());
   expect(identityTypeOf(JSON.parse(stored.body))).toBe("business");
+});
+
+test("publication profile creation declares the publication's active subcategory only when asked", async () => {
+  await save(category("category"), { kind: "subcategory", id: "subcategory", namespace: "category", body: { name: "Sub", slug: "sub", categoryId: "category", order: 1, isActive: true } });
+  const persistence = createClassifiedsPersistence({ database: await classifiedsDatabase() });
+  const capabilities = createClassifiedsCapabilities({ persistence, actor: ownerActor, correlationId: "publication-area", now: () => now });
+  const { advertiserProfileId: _profile, ...draft } = adFields;
+  const areasOf = async (publicationId: string, declareActivityArea: boolean) => {
+    await capabilities.write("publications.save", { ...draft, id: publicationId });
+    const profileId = z.string().parse(await capabilities.write("publications.profile", { publicationId, title: "Oficina", contacts: [{ number: "22999998888", isWhatsapp: true }], identityType: "business", declareActivityArea }));
+    return z.object({ activityAreas: z.unknown().optional() }).parse(await capabilities.read("profiles.private", { id: profileId })).activityAreas;
+  };
+
+  expect(await areasOf("declared-draft", true)).toEqual([{ categoryId: "category", subcategoryId: "subcategory" }]);
+  expect(await areasOf("undeclared-draft", false) ?? []).toEqual([]);
 });

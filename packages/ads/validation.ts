@@ -96,5 +96,7 @@ export const publicationProfileInput = z.object({
   contacts: z.array(z.object({ number: z.string().regex(/^\d{10,11}$/), isWhatsapp: z.boolean() })).min(1).max(3),
   /** Applies only when this save creates the profile; a confirmed type never changes. */
   identityType: z.enum(["personal", "business"]).optional(),
+  /** Declares the publication's subcategory as an Área de atuação of the profile, so it can enter the business catalog. */
+  declareActivityArea: z.boolean().optional(),
 });
 export type PublicationProfileInput = z.infer<typeof publicationProfileInput>;

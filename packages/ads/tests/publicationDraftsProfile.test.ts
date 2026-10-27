@@ -147,3 +147,41 @@ test("publication profile creation refuses a type where the store cannot guarant
   expect(await drafts.saveProfile("owner", profileInput)).toBe("publication-draft");
   expect(drafts.profile("publication-draft")).not.toHaveProperty("identityType");
 });
+
+const declaring = { publicationId: input.id, title: "Ana", contacts: [{ number: "22999999999", isWhatsapp: true }], declareActivityArea: true };
+
+test("a declared profile save adds the stored publication's subcategory as an Área de atuação", async () => {
+  const drafts = setup([], {}, { activeAreas: ["bikes:used"] });
+  await drafts.save("owner", input);
+  await drafts.saveProfile("owner", declaring);
+  expect(drafts.profile("publication-draft")?.activityAreas).toEqual([{ categoryId: "bikes", subcategoryId: "used" }]);
+});
+
+test.each([
+  { name: "without the flag", options: { activeAreas: ["bikes:used"] }, profileInput: { ...declaring, declareActivityArea: false } },
+  { name: "with an inactive subcategory", options: { activeAreas: [] }, profileInput: declaring },
+  { name: "where the store cannot check the taxonomy", options: {}, profileInput: declaring },
+])("a profile save declares no area $name", async ({ options, profileInput }) => {
+  const drafts = setup([], {}, options);
+  await drafts.save("owner", input);
+  await drafts.saveProfile("owner", profileInput);
+  expect(drafts.profile("publication-draft")).not.toHaveProperty("activityAreas");
+});
+
+test.each([
+  { name: "already declares it", areas: [{ categoryId: "bikes", subcategoryId: "used" }] },
+  { name: "already has three areas", areas: ["a", "b", "c"].map(subcategoryId => ({ categoryId: "other", subcategoryId })) },
+])("an existing profile keeps its areas when it $name", async ({ areas }) => {
+  const drafts = setup([], { mine: { userId: "owner", activityAreas: areas } }, { activeAreas: ["bikes:used"] });
+  await drafts.save("owner", input);
+  await drafts.saveProfile("owner", { ...declaring, profileId: "mine" });
+  expect(drafts.profile("mine")?.activityAreas).toEqual(areas);
+});
+
+test("an existing profile keeps its areas and gains the publication's", async () => {
+  const areas = [{ categoryId: "other", subcategoryId: "a" }];
+  const drafts = setup([], { mine: { userId: "owner", activityAreas: areas } }, { activeAreas: ["bikes:used"] });
+  await drafts.save("owner", input);
+  await drafts.saveProfile("owner", { ...declaring, profileId: "mine" });
+  expect(drafts.profile("mine")?.activityAreas).toEqual([...areas, { categoryId: "bikes", subcategoryId: "used" }]);
+});

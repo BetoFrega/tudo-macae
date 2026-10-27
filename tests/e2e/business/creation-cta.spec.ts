@@ -90,7 +90,9 @@ test("visitante encontra cadastro na home e menu e conclui o negócio", async ({
   await pageObject(page).getByLabel("Subcategoria da área de atuação", { exact: true }).selectOption(categoryFixture.subcategory.id);
   await click(pageObject(page).getByRole("button", { name: "Adicionar área", exact: true }));
   await expect(pageObject(page).getByText(`${categoryFixture.category.name} → ${categoryFixture.subcategory.name}`, { exact: true })).toBeVisible();
-  await click(pageObject(page).getByRole("button", { name: "Criar negócio", exact: true }));
+  const submit = pageObject(page).getByRole("button", { name: "Criar negócio", exact: true });
+  await submit.focus();
+  await page.keyboard.press("Enter");
 
   await expect(page).toHaveURL(/\/minha-conta\/perfis\/[^/]+\/concluido$/u);
   await expect(pageObject(page).getByRole("heading", { name: `Negócio salvo: ${businessName}`, level: 1, exact: true })).toBeVisible();

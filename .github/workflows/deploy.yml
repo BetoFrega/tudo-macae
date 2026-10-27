@@ -56,7 +56,7 @@ jobs:
         run: test -f bin/deploy-workers-production.mjs
       - name: Require API Worker delivery support in the selected SHA
         run: test -f bin/deploy-api-worker-production.mjs
-      - uses: pnpm/setup@v3
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with:
           runtime: node@24
           cache: true
@@ -144,7 +144,7 @@ jobs:
           ref: ${{ github.sha }}
           lfs: true
           persist-credentials: false
-      - uses: pnpm/setup@v3
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with:
           runtime: node@24
           cache: true
@@ -228,7 +228,7 @@ jobs:
           # The web Worker bundles the app's `public/` PNGs, which live in Git LFS.
           lfs: true
           persist-credentials: false
-      - uses: pnpm/setup@v3
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with:
           runtime: node@24
           cache: true

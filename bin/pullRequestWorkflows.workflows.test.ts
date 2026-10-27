@@ -54,7 +54,7 @@ describe("Vitest runner routing", () => {
     const action = compositeAction("run-vitest");
     expect(action.runs.using).toBe("composite");
     expect(action.runs.steps.map(step => step.uses ?? step.run)).toEqual([
-      "pnpm/setup@v3",
+      "pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e",
       "pnpm install --frozen-lockfile",
       "pnpm test --tier=integration --bail=1",
       "actions/upload-artifact@v6",

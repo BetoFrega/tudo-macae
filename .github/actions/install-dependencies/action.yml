@@ -4,7 +4,7 @@ description: Set up pnpm and Node 24 with the pnpm store cache and install the l
 runs:
   using: composite
   steps:
-    - uses: pnpm/setup@v3
+    - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
       with:
         runtime: node@24
         cache: true

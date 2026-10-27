@@ -4,7 +4,7 @@ import { AdOperationError } from "@tudomacae/ads/operationError";
 import type { AdMutationStore } from "@tudomacae/ads/adMutations";
 import { hasPendingPublication } from "@tudomacae/ads/visibility";
 import type { StoredRecord, Transaction, RecordBody } from "@tudomacae/classifieds-persistence";
-import { parseStored } from "./classifiedsSupport";
+import { activityAreaActive, parseStored } from "./classifiedsSupport";
 import { isPersonalProfileIndexViolation, personalProfileIdOf } from "./classifiedsProfiles";
 import { body, data, forbidden } from "./classifiedsAdsRecords";
 import type { ClassifiedsAdContext } from "./classifiedsAdsContext";
@@ -30,9 +30,10 @@ export function draftTransaction(context: ClassifiedsAdContext, tx: Transaction,
       const record = await tx.read("profile", profileId);
       profiles.set(profileId, record);
       if (record) authority.profile(record.body, actorId);
-      return record ? parseStored(z.object({ userId: z.string().optional(), title: z.unknown(), contacts: z.unknown(), revision: z.number().default(1) }), record.body) : null;
+      return record ? parseStored(z.object({ userId: z.string().optional(), title: z.unknown(), contacts: z.unknown(), revision: z.number().default(1), activityAreas: z.array(z.object({ categoryId: z.string(), subcategoryId: z.string() })).optional() }), record.body) : null;
     },
     personalProfileOf: userId => personalProfileIdOf(tx, userId),
+    isActivityAreaActive: area => activityAreaActive(tx, area),
     saveProfile(profileId, profile) {
       profileWrites.set(profileId, body({ ...profiles.get(profileId)?.body, ...profile }));
       replacement = body({ ...ad?.body, ...replacement, advertiserProfileId: profileId });

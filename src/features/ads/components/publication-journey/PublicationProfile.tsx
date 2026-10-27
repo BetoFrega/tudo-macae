@@ -33,6 +33,38 @@ function ProfileSummary({ journey, onEdit }: { journey: Journey; onEdit: () => v
   );
 }
 
+/** The ad's subcategory, offered as an Área de atuação while the profile lacks it and still has room for one. */
+function suggestedActivityArea(journey: Journey) {
+  const subcategory = journey.activeSubcategories.find(candidate => candidate.id === journey.values.subcategoryId);
+  const areas = journey.profile?.activityAreas ?? [];
+  if (!subcategory || areas.length >= 3 || areas.some(area => area.subcategoryId === subcategory.id && area.categoryId === journey.values.categoryId)) return null;
+  return subcategory;
+}
+
+function useActivityAreaSuggestion(journey: Journey) {
+  const area = suggestedActivityArea(journey);
+  const [checked, setChecked] = useState(true);
+  return { area, checked, setChecked, field: area && checked ? { declareActivityArea: true } : {} };
+}
+
+function ActivityAreaSuggestion({ suggestion }: { suggestion: ReturnType<typeof useActivityAreaSuggestion> }) {
+  if (!suggestion.area) return null;
+  return (
+    <div className="space-y-1">
+      <label className="flex min-h-11 items-center gap-2 text-sm">
+        <input type="checkbox" checked={suggestion.checked} onChange={e => suggestion.setChecked(e.target.checked)} aria-describedby="publication-activity-area-hint" />
+        {`Incluir ${suggestion.area.name} nas áreas de atuação do perfil`}
+      </label>
+      <p
+        id="publication-activity-area-hint"
+        className="text-sm text-muted-foreground"
+      >
+        Com uma área de atuação, o perfil aparece no catálogo de negócios do Tudo Macaé.
+      </p>
+    </div>
+  );
+}
+
 function identityTypeField(value: AdvertiserIdentityType | null) {
   return value ? { identityType: value } : {};
 }
@@ -43,6 +75,7 @@ export function PublicationProfile({ journey, identityTypes }: { journey: Journe
   const [editing, setEditing] = useState(!profile || !hasPublishableProfile(profile));
   const [title, setTitle] = useState(profile?.title ?? "");
   const [contacts, setContacts] = useState(() => initialContacts(profile));
+  const activityArea = useActivityAreaSuggestion(journey);
   const identityType = useIdentityTypeChoice({ enabled: identityTypes && !profile, personalAvailable: !journey.profiles.some(candidate => candidate.identityType === "personal") });
   const save = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -51,7 +84,7 @@ export function PublicationProfile({ journey, identityTypes }: { journey: Journe
     await journey.run(async () => {
       await journey.persist();
       if (!isCurrent()) return;
-      const result = await savePublicationProfile({ publicationId: journey.publicationId.current!, ...(profile ? { profileId: profile.id } : {}), ...identityTypeField(identityType.value), title, contacts: contacts.map(c => ({ ...c, number: c.number.replace(/\D/g, "") })) });
+      const result = await savePublicationProfile({ publicationId: journey.publicationId.current!, ...(profile ? { profileId: profile.id } : {}), ...identityTypeField(identityType.value), ...activityArea.field, title, contacts: contacts.map(c => ({ ...c, number: c.number.replace(/\D/g, "") })) });
       if (!isCurrent()) return;
       if (!result.success) {
         journey.setError(result.error);
@@ -105,6 +138,7 @@ export function PublicationProfile({ journey, identityTypes }: { journey: Journe
         </div>
       ))}
       {contacts.length < 3 && <Button type="button" variant="outline" onClick={() => setContacts([...contacts, { number: "", isWhatsapp: false }])}>Adicionar telefone</Button>}
+      <ActivityAreaSuggestion suggestion={activityArea} />
       <div><Button type="submit">{journey.busy ? "Salvando..." : profile ? "Salvar perfil" : "Criar perfil"}</Button></div>
     </form>
   );

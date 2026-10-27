@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   recoverPending: vi.fn(),
   processPhoto: vi.fn(),
   contextProfiles: vi.fn(),
+  contextCategories: vi.fn(),
   getProfiles: vi.fn(),
   savePending: vi.fn(),
   saveImages: vi.fn(),
@@ -44,7 +45,7 @@ vi.mock("@tudomacae/media/imageProcessing", async importOriginal => ({
   processImage: mocks.processPhoto,
 }));
 vi.mock("../contexts/AdFormContext", () => ({
-  useAdFormContext: () => ({ profiles: mocks.contextProfiles(), categories: [], actions: { uploadAdImage: vi.fn() } }),
+  useAdFormContext: () => ({ profiles: mocks.contextProfiles(), categories: mocks.contextCategories(), actions: { uploadAdImage: vi.fn() } }),
 }));
 
 beforeEach(() => {
@@ -53,6 +54,7 @@ beforeEach(() => {
   mocks.emailVerified = false;
   mocks.recoverPending.mockResolvedValue({ publication: null, profiles: [] });
   mocks.contextProfiles.mockReturnValue([]);
+  mocks.contextCategories.mockReturnValue([]);
   mocks.savePending.mockResolvedValue({ success: true });
   mocks.saveImages.mockResolvedValue({ success: true, images: [] });
   mocks.saveProfile.mockResolvedValue({ success: true, profileId: "profile" });
@@ -173,4 +175,39 @@ it("leaves only the business choice after another session takes the personal pro
   await waitFor(() => expect(screen.getByText(personalProfileExistsMessage)).toHaveFocus());
   expect(screen.getByRole("radio", { name: "Um negócio" })).not.toBeChecked();
   expect(screen.getByRole("textbox", { name: "Nome do anunciante" })).toHaveValue("Ana");
+});
+
+it("suggests the ad's subcategory as an Área de atuação and sends the owner's choice", async () => {
+  const user = userEvent.setup();
+  const scroll = vi.spyOn(window, "scrollTo").mockImplementation(() => undefined);
+  mocks.contextCategories.mockReturnValue([{ id: "category", name: "Veículos", isActive: true, subcategories: [{ id: "subcategory", name: "Bicicletas", isActive: true }] }]);
+  try {
+    render(<PublicationJourney initial={{ id: "pending", userId: "user", title: "Bicicleta", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1 }} />);
+    const suggestion = screen.getByRole("checkbox", { name: "Incluir Bicicletas nas áreas de atuação do perfil" });
+    expect(suggestion).toBeChecked();
+    expect(suggestion).toHaveAccessibleDescription("Com uma área de atuação, o perfil aparece no catálogo de negócios do Tudo Macaé.");
+    await user.type(screen.getByRole("textbox", { name: "Nome do anunciante" }), "Ana");
+    await user.type(screen.getByRole("textbox", { name: "Telefone 1" }), "22999999999");
+    await user.click(screen.getByRole("button", { name: "Criar perfil" }));
+    await waitFor(() => expect(mocks.saveProfile).toHaveBeenCalledWith(expect.objectContaining({ declareActivityArea: true })));
+
+    await user.click(await screen.findByRole("button", { name: /Quem anuncia e como entrar em contato/ }));
+    await user.click(screen.getByRole("button", { name: "Editar perfil" }));
+    await user.click(screen.getByRole("checkbox", { name: "Incluir Bicicletas nas áreas de atuação do perfil" }));
+    await user.click(screen.getByRole("button", { name: "Salvar perfil" }));
+    await waitFor(() => expect(mocks.saveProfile).toHaveBeenCalledTimes(2));
+    expect(mocks.saveProfile).toHaveBeenLastCalledWith(expect.not.objectContaining({ declareActivityArea: expect.anything() }));
+  }
+  finally {
+    scroll.mockRestore();
+  }
+});
+
+it("offers no suggestion when the profile already declares the ad's subcategory", async () => {
+  const profile = { id: "profile", title: "Ana", contacts: [], activityAreas: [{ categoryId: "category", subcategoryId: "subcategory" }] };
+  mocks.contextProfiles.mockReturnValue([profile]);
+  mocks.contextCategories.mockReturnValue([{ id: "category", name: "Veículos", isActive: true, subcategories: [{ id: "subcategory", name: "Bicicletas", isActive: true }] }]);
+  render(<PublicationJourney initial={{ id: "pending", userId: "user", title: "Bicicleta", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", advertiserProfileId: "profile", createdAt: 1 }} />);
+  expect(await screen.findByRole("textbox", { name: "Nome do anunciante" })).toBeVisible();
+  expect(screen.queryByRole("checkbox", { name: /áreas de atuação/ })).not.toBeInTheDocument();
 });

@@ -17,6 +17,12 @@ export interface PublicationProfileRecord {
   title?: unknown;
   contacts?: unknown;
   revision?: number;
+  activityAreas?: PublicationActivityArea[];
+}
+
+export interface PublicationActivityArea {
+  categoryId: string;
+  subcategoryId: string;
 }
 
 export interface PublicationProfileWrite {
@@ -28,6 +34,7 @@ export interface PublicationProfileWrite {
   createdAt?: number;
   description?: string;
   identityType?: "personal" | "business";
+  activityAreas?: PublicationActivityArea[];
 }
 
 export interface PublicationDraftTransaction {
@@ -35,6 +42,8 @@ export interface PublicationDraftTransaction {
   readProfile(profileId: string): Promise<PublicationProfileRecord | null>;
   /** Absent where the store cannot guarantee one personal profile per account. */
   personalProfileOf?(userId: string): Promise<string | null>;
+  /** Absent where the store cannot check the taxonomy; the publication's area is then never declared. */
+  isActivityAreaActive?(area: PublicationActivityArea): Promise<boolean>;
   /** Merge profile fields and associate it with this publication atomically. */
   saveProfile(profileId: string, profile: PublicationProfileWrite): void;
   save(record: PublicationRecord): void;

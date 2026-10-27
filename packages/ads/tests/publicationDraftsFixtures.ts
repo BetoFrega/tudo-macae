@@ -3,7 +3,7 @@ import { createPublicationDrafts, type PublicationDraftStore, type PublicationRe
 export function setup(
   records: PublicationRecord[] = [],
   profiles: Record<string, string | PublicationProfileRecord> = {},
-  options: { identityTypes?: boolean } = {},
+  options: { identityTypes?: boolean; activeAreas?: string[] } = {},
 ) {
   const publications = new Map(records.map(record => [record.id, structuredClone(record)]));
   const profileRecords = new Map<string, PublicationProfileRecord & { identityType?: string }>(Object.entries(profiles).map(
@@ -25,6 +25,9 @@ export function setup(
                 return [...profileRecords].find(([, profile]) => profile.userId === userId && profile.identityType === "personal")?.[0] ?? null;
               },
             }),
+        ...(options.activeAreas
+          ? { async isActivityAreaActive(area: { categoryId: string; subcategoryId: string }) { return options.activeAreas!.includes(`${area.categoryId}:${area.subcategoryId}`); } }
+          : {}),
         saveProfile(profileId, profile) {
           const record = publications.get(id);
           if (!record) throw new Error("Missing publication");

@@ -1,6 +1,6 @@
 import { AdOperationError } from "../operationError";
 import { hasPublishableProfile, personalProfileExistsMessage, publicationReviewSnapshot, publicationProfileReviewSnapshot, type PublicationReview, type PendingAdPublication } from "../client";
-import type { PublicationDraftDependencies, PublicationDraftTransaction, PublicationProfileRecord, PublicationRecord } from "../publicationDrafts";
+import type { PublicationActivityArea, PublicationDraftDependencies, PublicationDraftTransaction, PublicationProfileRecord, PublicationRecord } from "../publicationDrafts";
 import { pendingPublicationInput, publicationIdentifier, type PendingPublicationInput, publicationProfileInput, type PublicationProfileInput } from "./publicationInput";
 import { slugify } from "@tudomacae/text-normalization/slugify";
 import { hasPendingPublication } from "../visibility";
@@ -53,12 +53,29 @@ function assertSelectableProfile(profile: PublicationProfileRecord | null, reque
   if ((profile && profile.userId !== ownerId) || (requestedProfileId && !profile)) throw new AdOperationError("conflict", "Perfil não encontrado nesta conta.");
 }
 
-function profileWrite(parsed: PublicationProfileInput, ownerId: string, profile: PublicationProfileRecord | null, updatedAt: number) {
+/** Matches the profile limit in `activityAreasSchema` of advertiser-identity; a larger value lets this write exceed it. */
+const maxActivityAreas = 3;
+
+/**
+ * The area comes from the stored publication, never from the client. It is skipped when already declared, when the
+ * profile is full, or when the taxonomy cannot confirm it is active.
+ */
+async function declaredActivityAreas(transaction: PublicationDraftTransaction, parsed: PublicationProfileInput, publication: PendingAdPublication, profile: PublicationProfileRecord | null) {
+  if (!parsed.declareActivityArea || !publication.categoryId || !publication.subcategoryId) return undefined;
+  const area: PublicationActivityArea = { categoryId: publication.categoryId, subcategoryId: publication.subcategoryId };
+  const current = profile?.activityAreas ?? [];
+  if (current.length >= maxActivityAreas || current.some(item => item.categoryId === area.categoryId && item.subcategoryId === area.subcategoryId)) return undefined;
+  if (!(await transaction.isActivityAreaActive?.(area))) return undefined;
+  return [...current, area];
+}
+
+function profileWrite(parsed: PublicationProfileInput, ownerId: string, profile: PublicationProfileRecord | null, updatedAt: number, activityAreas: PublicationActivityArea[] | undefined) {
   return {
     userId: ownerId, title: parsed.title, contacts: parsed.contacts, updatedAt,
     revision: profile ? (profile.revision ?? 1) + 1 : 1,
     ...(!profile ? { description: "", createdAt: updatedAt } : {}),
     ...(!profile && parsed.identityType ? { identityType: parsed.identityType } : {}),
+    ...(activityAreas ? { activityAreas } : {}),
   };
 }
 
@@ -107,7 +124,8 @@ export function buildPublicationDrafts({ store, now, authorityMode = "legacy" }:
       const profile = await transaction.readProfile(profileId);
       assertSelectableProfile(profile, parsed.profileId, ownerId);
       await assertIdentityTypeAvailable(transaction, parsed, ownerId, profile);
-      transaction.saveProfile(profileId, profileWrite(parsed, ownerId, profile, now()));
+      const activityAreas = await declaredActivityAreas(transaction, parsed, publication, profile);
+      transaction.saveProfile(profileId, profileWrite(parsed, ownerId, profile, now(), activityAreas));
       return { profileId, created: !profile };
     });
   }

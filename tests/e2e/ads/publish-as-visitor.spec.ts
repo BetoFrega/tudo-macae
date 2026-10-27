@@ -122,6 +122,7 @@ test("visitante deslogado publica anúncio registrando-se no modal", async ({
     await pageObject(page).getByRole("textbox", { name: "Telefone 1" }).filter({ visible: true }).fill("22999999999");
     // Only the API Worker composition asks the journey for the identity type.
     await pageObject(page).getByRole("radio", { name: "Meu perfil pessoal", exact: true }).filter({ visible: true }).check();
+    await expect(pageObject(page).getByRole("checkbox", { name: `Incluir ${categoryFixture.subcategory.name} nas áreas de atuação do perfil` }).filter({ visible: true })).toBeChecked();
     await capture("perfil");
     await click(pageObject(page).getByRole("button", { name: "Criar perfil", exact: true }).filter({ visible: true }));
     await expect(pageObject(page).getByRole("button", { name: "Publicar anúncio", exact: true }).filter({ visible: true })).toBeDisabled();
@@ -197,6 +198,7 @@ test("visitante deslogado publica anúncio registrando-se no modal", async ({
       await expect(pageObject(publicPage).getByRole("heading", { name: adTitle }).filter({ visible: true })).toBeVisible();
       await publicPage.goto(new URL(`${categoryPath}/${categoryFixture.subcategory.id}/${categoryFixture.subcategory.slug}`, page.url()).href);
       await expect(pageObject(publicPage).getByRole("heading", { name: adTitle }).filter({ visible: true })).toBeVisible();
+      await expect(pageObject(publicPage).locator("#negocios").getByText("Ana de Macaé", { exact: true }).filter({ visible: true })).toBeVisible();
     }
     finally { await visitor.close(); }
   });

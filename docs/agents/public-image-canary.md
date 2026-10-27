@@ -42,8 +42,8 @@ owns the adoption release and its production evidence.
 Run the hermetic Worker contract and runtime checks:
 
 ```bash
-npm run test:worker
-npm run typecheck:worker
+pnpm run test:worker
+pnpm run typecheck:worker
 ```
 
 After an authorized edge operation, use a current public Anúncio object key to verify
@@ -51,7 +51,7 @@ the closed route, diagnostic headers and a warm repeat. The probe fails without 
 sample; a denial-only run is not evidence that delivery works:
 
 ```bash
-PUBLIC_IMAGE_CANARY_SAMPLE_KEY='ad-images/<ad-id>/<file>' npm run probe:image-canary
+PUBLIC_IMAGE_CANARY_SAMPLE_KEY='ad-images/<ad-id>/<file>' pnpm run probe:image-canary
 ```
 
 ## Image revocation
@@ -97,8 +97,8 @@ URL purge request and provider outcome separately before claiming both layers cl
 photo replacement and a whole-ad deletion before promoting phase 1.
 
 ```bash
-PUBLIC_IMAGE_REVOCATION_EXECUTION_ID='<opaque-id>' PUBLIC_IMAGE_REVOCATION_SAMPLE_KEY='ad-images/<ad-id>/<file>' PUBLIC_IMAGE_REVOCATION_PHASE=warm npm run probe:image-revocation
-PUBLIC_IMAGE_REVOCATION_EXECUTION_ID='<opaque-id>' PUBLIC_IMAGE_REVOCATION_SAMPLE_KEY='ad-images/<ad-id>/<file>' PUBLIC_IMAGE_REVOCATION_PHASE=verify npm run probe:image-revocation
+PUBLIC_IMAGE_REVOCATION_EXECUTION_ID='<opaque-id>' PUBLIC_IMAGE_REVOCATION_SAMPLE_KEY='ad-images/<ad-id>/<file>' PUBLIC_IMAGE_REVOCATION_PHASE=warm pnpm run probe:image-revocation
+PUBLIC_IMAGE_REVOCATION_EXECUTION_ID='<opaque-id>' PUBLIC_IMAGE_REVOCATION_SAMPLE_KEY='ad-images/<ad-id>/<file>' PUBLIC_IMAGE_REVOCATION_PHASE=verify pnpm run probe:image-revocation
 ```
 
 For subsequent migration phases, record representative avatar, card and gallery

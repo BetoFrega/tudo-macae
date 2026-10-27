@@ -18,7 +18,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     },
@@ -37,7 +37,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     },
@@ -56,7 +56,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     },
@@ -75,7 +75,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     },
@@ -94,7 +94,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     },
@@ -113,7 +113,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     },
@@ -132,7 +132,7 @@
         "$TURBO_ROOT$/instrumentation-client.ts",
         "$TURBO_ROOT$/image-loader.js",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/package-lock.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
         "$TURBO_ROOT$/tests/_helpers/**"
       ]
     }

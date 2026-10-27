@@ -60,7 +60,7 @@ the rollout ticket.
 
 ## Verification and flushing
 
-Run the focused unit tests (`npm run test:unit -- src/posthogTracing.test.ts src/instrumentation.test.ts src/requestErrorDiagnostics.test.ts`), `npm run typecheck`, and the affected public
+Run the focused unit tests (`pnpm run test:unit src/posthogTracing.test.ts src/instrumentation.test.ts src/requestErrorDiagnostics.test.ts`), `pnpm run typecheck`, and the affected public
 journey E2E before delivery. The unit tests use real SDK spans and an in-memory
 exporter; they do not prove PostHog ingestion.
 

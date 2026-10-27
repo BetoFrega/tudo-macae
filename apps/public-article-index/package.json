@@ -14,7 +14,7 @@
     "jose": "^6.2.12"
   },
   "devDependencies": {
-    "@tudomacae/article-index-test-runtime": "*",
+    "@tudomacae/article-index-test-runtime": "workspace:*",
     "@cloudflare/workers-types": "^5.20261019.1",
     "@types/node": "^26",
     "typescript": "^6",

@@ -28,7 +28,7 @@ function wrangler(args) {
 
 // deploy.mjs generates the configuration from the environment and applies each bound database's migrations.
 function runDeploy(args, env) {
-  execFileSync("npm", ["run", "deploy", "--workspace=@tudomacae/api-worker", "--", "production", ...args], {
+  execFileSync("pnpm", ["--filter", "@tudomacae/api-worker", "run", "deploy", "production", ...args], {
     env: { ...process.env, ...env }, stdio: "inherit",
   });
 }

@@ -41,10 +41,10 @@ it.skipIf(inWorkers)("partitions the conventional collection without losing or r
 // until it is added to both this map and checks.yml.
 it.skipIf(inWorkers)("gives every test file to exactly one suite a pull-request workflow runs", () => {
   const suites = {
-    "npm run test:unit -- --shard=${{ matrix.shard }}/2": files(unit),
-    "npm test -- --tier=integration": files(integration),
-    "npm run test:worker": files(worker),
-    "npm test --workspace=web-workers-app": files(webWorkersApp, "apps/web-workers"),
+    "pnpm run test:unit --shard=${{ matrix.shard }}/2": files(unit),
+    "pnpm test --tier=integration": files(integration),
+    "pnpm run test:worker": files(worker),
+    "pnpm --filter web-workers-app test": files(webWorkersApp, "apps/web-workers"),
     "node --test apps/public-images/deploy.test.mjs": ["apps/public-images/deploy.test.mjs"],
   };
   const tracked = globSync("**/*.{test,spec}.{ts,tsx,js,mjs}", {

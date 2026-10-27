@@ -2,7 +2,7 @@
  * Whether the server that is booting may write the demo mass.
  *
  * `instrumentation.ts` runs in every environment, so the answer is yes only for
- * a local `next dev` beside the loopback API Worker fixture that `npm run dev`
+ * a local `next dev` beside the loopback API Worker fixture that `pnpm run dev`
  * starts. `AUTHENTICATION_FIXTURE_CONFIGURATION` is the load-bearing guard: it
  * names that fixture, and every seed write goes through it (`lib/worker.ts`).
  *

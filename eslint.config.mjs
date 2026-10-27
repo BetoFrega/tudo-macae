@@ -28,7 +28,7 @@ const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
 const reactVersion = createRequire(import.meta.url)("react/package.json")
   .version;
 
-// `npm run lint`'s ESLint cache re-lints a file only when it or its resolved
+// `pnpm run lint`'s ESLint cache re-lints a file only when it or its resolved
 // config changes, so inputs from outside the config ride in the settings: the
 // Tailwind theme (CSS) and today in UTC (local/no-expired-notes).
 const cacheInputs = {
@@ -68,6 +68,10 @@ const eslintConfig = defineConfig([
     ],
   },
   {
+    // pnpm owns the lockfile; linting it as YAML only slows every run.
+    ignores: ["pnpm-lock.yaml"],
+  },
+  {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     ...stylistic.configs.customize({
       indent: 2,
@@ -85,7 +89,6 @@ const eslintConfig = defineConfig([
   },
   {
     files: ["**/*.json"],
-    ignores: ["package-lock.json"],
     language: "json/json",
     plugins: { json },
     rules: {
@@ -166,10 +169,7 @@ const eslintConfig = defineConfig([
     // full of example markers with dates in the past; linting them would fail
     // the build permanently.
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx,json,yml,yaml,md,css}"],
-    // `package-lock.json` is excluded from the JSON block above, so matching it
-    // here would be the only config to claim it — and ESLint would fall back to
-    // the default JS language and parse the lockfile as a program.
-    ignores: ["eslint-rules/**", "package-lock.json"],
+    ignores: ["eslint-rules/**"],
     plugins: { local },
     rules: {
       "local/no-expired-notes": ["error", { bumpMonths: 3 }],

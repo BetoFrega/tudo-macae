@@ -67,4 +67,4 @@ If your output contradicts an existing contract or ADR, surface it explicitly ra
 than silently overriding it. An explicit supersession determines the current rule;
 newer prose or current code alone does not settle an unresolved product conflict.
 
-> _Contradicts ADR-0001 (use npm instead of pnpm) — but worth reopening because…_
+> _Contradicts ADR-0047 (use pnpm as the package manager) — but worth reopening because…_

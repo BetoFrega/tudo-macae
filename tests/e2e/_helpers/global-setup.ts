@@ -39,7 +39,7 @@ function assertServedRenderer() {
 const ASSET_FETCH_TIMEOUT_MS = 5_000;
 
 /**
- * `npm run build:check` writes into the same `.next/` the running e2e server
+ * `pnpm run build:check` writes into the same `.next/` the running e2e server
  * booted from, deleting the static assets for the build id it holds in
  * memory. The server keeps answering 200 on `/`, so nothing before this point
  * notices — the suite instead fails deep inside a feature test, on a
@@ -70,10 +70,10 @@ async function assertServedBuildIsOnDisk() {
   throw new Error(
     `${appUrl}${broken} does not respond 200.\n\n`
     + "The running e2e server's .next/ build was overwritten — typically by "
-    + "running `npm run build:check` while the e2e server is up — so "
+    + "running `pnpm run build:check` while the e2e server is up — so "
     + "the server is still serving HTML for a build id whose static assets "
     + "are gone.\n\n"
     + "Restart the e2e server:\n\n"
-    + "  npm run test:e2e",
+    + "  pnpm run test:e2e",
   );
 }

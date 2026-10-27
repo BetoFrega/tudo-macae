@@ -8,16 +8,16 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@tudomacae/terms-page": "*",
+    "@tudomacae/terms-page": "workspace:*",
     "next": "^16.4.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "@tudomacae/www-origin-routing": "*",
-    "@tudomacae/design-foundations": "*",
-    "@tudomacae/react-primitives": "*",
-    "@tudomacae/site-layout": "*"
+    "@tudomacae/www-origin-routing": "workspace:*",
+    "@tudomacae/design-foundations": "workspace:*",
+    "@tudomacae/react-primitives": "workspace:*",
+    "@tudomacae/site-layout": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",

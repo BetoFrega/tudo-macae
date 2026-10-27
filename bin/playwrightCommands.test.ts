@@ -38,10 +38,10 @@ describe.skipIf(inWorkers)("Playwright failure budgets", () => {
 describe("diagnostic Playwright commands", () => {
   test("offer unrestricted variants without hiding later CLI arguments", () => {
     expect(scripts["test:e2e:diagnostic"]).toBe(
-      "npm run test:e2e:diagnostic --workspace=@tudomacae/e2e --",
+      "pnpm --filter @tudomacae/e2e run test:e2e:diagnostic",
     );
     expect(scripts["test:e2e:full:diagnostic"]).toBe(
-      "npm run test:e2e:full:diagnostic --workspace=@tudomacae/e2e --",
+      "pnpm --filter @tudomacae/e2e run test:e2e:full:diagnostic",
     );
     expect(SCRIPT_MENU.map(entry => entry.script)).toEqual(
       expect.arrayContaining(["test:e2e:diagnostic", "test:e2e:full:diagnostic"]),

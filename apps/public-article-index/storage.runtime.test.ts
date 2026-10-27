@@ -7,7 +7,7 @@ let runtime: Awaited<ReturnType<typeof createArticleIndexTestRuntime>>;
 let bearer: string;
 beforeAll(async () => {
   runtime = await createArticleIndexTestRuntime({ build(directory) {
-    execFileSync("npm", ["run", "build", "--", "--outdir", directory], {
+    execFileSync("pnpm", ["run", "build", "--outdir", directory], {
       cwd: fileURLToPath(new URL(".", import.meta.url)), stdio: "pipe",
       env: { ...process.env, WRANGLER_LOG_PATH: join(directory, "wrangler.log") },
     });

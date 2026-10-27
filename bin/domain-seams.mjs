@@ -264,7 +264,7 @@ export function checkDomainSeams() {
 
 /**
  * protectDomainSeam for every seam, with the probes side by side: one at a time they took ~30 s of
- * `npm run lint` for 73 seams, nearly all of it each probe's Node and tsx startup.
+ * `pnpm run lint` for 73 seams, nearly all of it each probe's Node and tsx startup.
  * Rejects with the first failing seam in registry order, as the sequential check did.
  * @param {{id:string, entry:string, operations:string[], probe:string, factory?:string}[]} items @param {string} root
  */

@@ -27,7 +27,7 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.7.0",
     "lucide-react": "^1.59.0",
-    "@tudomacae/design-foundations": "*",
+    "@tudomacae/design-foundations": "workspace:*",
     "@radix-ui/react-checkbox": "^1.3.12",
     "@radix-ui/react-label": "^2.1.17",
     "@radix-ui/react-select": "^2.4.1",

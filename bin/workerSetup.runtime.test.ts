@@ -43,7 +43,7 @@ type ChildRun = { exitCode: number; output: string; diagnostics: string[] };
 async function runSiteSearchBundleSuite(preload: string): Promise<ChildRun> {
   try {
     const result = await execute(process.execPath, [
-      join(process.cwd(), "node_modules/.bin/vitest"),
+      join(process.cwd(), "node_modules/vitest/vitest.mjs"),
       "run", "--config", "vitest.worker.config.mts",
       "apps/site-search/bundle.runtime.test.ts",
     ], {

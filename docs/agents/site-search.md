@@ -125,7 +125,7 @@ outcomes by reading `site_search` and `site_search_worker` logs.
 ## Local and E2E verification
 
 Unit tests cover the contract and adapters through the package entry points;
-`npm run test:worker -- apps/site-search` covers the Worker. The E2E stack serves
+`pnpm run test:worker apps/site-search` covers the Worker. The E2E stack serves
 `tests/e2e/bin/siteSearchFake.ts` as a loopback Worker, and specs script replies
 per query. CI never depends on the external ranking.
 

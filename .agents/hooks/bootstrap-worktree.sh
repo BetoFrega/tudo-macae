@@ -7,7 +7,7 @@ root=$(git rev-parse --show-toplevel 2> /dev/null) || exit 0
 
 cd "$root"
 if command -v mise > /dev/null 2>&1; then
-  mise exec -- npm ci
+  mise exec -- pnpm install --frozen-lockfile
 else
-  npm ci
+  pnpm install --frozen-lockfile
 fi

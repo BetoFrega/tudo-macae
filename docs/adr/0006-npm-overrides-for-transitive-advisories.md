@@ -41,7 +41,7 @@ comentário; a validade fica no guia operacional.
 ## Operational maintenance
 
 [Override maintenance](../agents/dependency-overrides.md) owns the entries and exit
-conditions; `package.json` owns executable values.
+conditions; `pnpm-workspace.yaml` owns executable values.
 
 ## Consequences
 
@@ -56,5 +56,13 @@ conditions; `package.json` owns executable values.
   quebra aparece em runtime, não na instalação.
 - O registro operacional é manutenção manual: um override removido sem atualizar o
   guia deixa a linha mentindo.
+
+## Scope and amendments
+
+On 2026-10-27, [ADR 0047](0047-use-pnpm-as-the-package-manager.md) moved the
+overrides to `pnpm-workspace.yaml`, written as `"parent>child": version`. The three
+conditions still apply, and `pnpm audit` takes the place of `npm audit`. YAML accepts
+comments, but exit conditions stay in the operational guide so that one source owns
+them.
 
 The [pre-reorganization record](https://github.com/BetoFrega/macae-classificados/blob/7da1e3af1bb963d42cc75578463816155a63c3e9/docs/adr/0006-npm-overrides-for-transitive-advisories.md) preserves earlier dated wording and superseded clauses.

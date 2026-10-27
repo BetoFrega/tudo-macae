@@ -5,7 +5,7 @@ import { CANONICAL_APP_ORIGIN } from "./appOrigin.ts";
 /**
  * Browser analytics settings `next dev` takes from the production web Worker.
  * `instrumentation-client.ts` throws outside production builds when either is
- * missing, so dropping one breaks every page of `npm run dev`.
+ * missing, so dropping one breaks every page of `pnpm run dev`.
  */
 const PRODUCTION_ANALYTICS_VARIABLES = [
   "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN",
@@ -23,7 +23,7 @@ export function productionWebWorkerVariables(
 }
 
 /**
- * Environment `npm run dev` adds to `next dev`, on top of the API Worker
+ * Environment `pnpm run dev` adds to `next dev`, on top of the API Worker
  * fixture's own variables.
  *
  * `PUBLIC_APP_ORIGIN` must equal the fixture's `publicOrigin`: the

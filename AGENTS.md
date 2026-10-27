@@ -41,8 +41,8 @@
   [bug-report](./.agents/skills/bug-report/SKILL.md).
 - **Verificação**: rode checks proporcionais ao diff e reporte-os. Texto exige
   `git diff --check`; mudanças no harness (`AGENTS.md`, `.agents/`, `.claude/`,
-  `.codex/`, `skills-lock.json`) exigem também `npm run check:harness`. Para código
-  ou configuração executável, escolha lint, testes e build em `npm run help`;
+  `.codex/`, `skills-lock.json`) exigem também `pnpm run check:harness`. Para código
+  ou configuração executável, escolha lint, testes e build em `pnpm run help`;
   justifique omissões não óbvias.
 - **Assinatura**: tente o commit assinado uma vez. Se a etapa de assinatura pelo
   1Password falhar, considere o usuário ausente e repita somente esse commit sem
@@ -139,7 +139,7 @@ verificação proporcional definida em [`ACCESSIBILITY.md`](./ACCESSIBILITY.md).
   [`production-topology.md`](./docs/agents/production-topology.md); crawling e robots,
   [`production-crawling.md`](./docs/agents/production-crawling.md); dashboards e adoção
   de infraestrutura, [`production-operations.md`](./docs/agents/production-operations.md).
-  Refaça `npm run probe:edge` e trate regras do edge apenas como proposta.
+  Refaça `pnpm run probe:edge` e trate regras do edge apenas como proposta.
 - **Monitoramento de CI e PR**: ao acompanhar runs do GitHub Actions, inclusive durante
   `$ship-main` e `$deploy`, siga o [monitoramento compacto de runs](./docs/agents/production-delivery.md#compact-run-monitoring).
 - **Harness**: mudanças em instruções, skills, hooks ou adapters seguem

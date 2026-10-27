@@ -7,7 +7,7 @@ import { seedBlogPosts } from "./blogPosts";
 import { classifiedsAs, signIn } from "./worker";
 
 /**
- * Prints the sign-in details next to the URLs `npm run dev` already prints,
+ * Prints the sign-in details next to the URLs `pnpm run dev` already prints,
  * which is where somebody who just started the server is looking. The package
  * README says the same thing for anyone reading instead of running.
  */

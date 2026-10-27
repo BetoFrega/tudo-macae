@@ -42,8 +42,8 @@ local until its contents have been reviewed and sanitized.
 Verify the capture, privacy boundary, actual browser response and reporter output:
 
 ```sh
-npx vitest run --config vitest.unit.config.mts src/requestErrorDiagnostics.test.ts
-npm run test:e2e -- --config playwright.harness.config.ts tests/e2e/diagnostics/http-failures.spec.ts
+pnpm exec vitest run --config vitest.unit.config.mts src/requestErrorDiagnostics.test.ts
+pnpm run test:e2e --config playwright.harness.config.ts tests/e2e/diagnostics/http-failures.spec.ts
 ```
 
 These tests deliberately generate synthetic failures. They verify the diagnostic

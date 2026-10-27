@@ -72,7 +72,7 @@ never for current guidance.
 Run:
 
 ```bash
-npm run check:harness
+pnpm run check:harness
 ```
 
 The checker requires the rule and hook symlinks, validates skill frontmatter and exact
@@ -87,6 +87,6 @@ quality or file size.
 It also validates numbered ADR metadata, canonical ID uniqueness, filename/title
 identity and explicit relocation pointers. Product-versus-architecture classification
 is a semantic review under [Domain Docs](domain.md), not a keyword heuristic.
-`npm run lint` includes it, so the same invariants run in CI.
+`pnpm run lint` includes it, so the same invariants run in CI.
 The commit and CI entry points also enforce the
 [Impeccable artifact policy](impeccable-artifacts.md) against their Git snapshot.

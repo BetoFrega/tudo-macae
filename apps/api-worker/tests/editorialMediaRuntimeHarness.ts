@@ -49,7 +49,7 @@ export async function prepared(operationId: string, size = 100, alt?: string) {
 export function setupEditorialMediaRuntime(entry = "tests/editorialMediaFixtureWorker.ts") {
   beforeAll(async () => {
     directory = await mkdtemp(join(tmpdir(), "editorial-media-"));
-    execFileSync("npm", ["run", "build", "--workspace=@tudomacae/api-worker", "--", "--outdir", directory, "--entry", entry], { stdio: "pipe" });
+    execFileSync("pnpm", ["--filter", "@tudomacae/api-worker", "run", "build", "--outdir", directory, "--entry", entry], { stdio: "pipe" });
   });
   beforeEach(async () => {
     const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;

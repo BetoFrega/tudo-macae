@@ -24,7 +24,7 @@ its isolated database cannot render production image URLs.
 
 Publish the image Worker before an application build first introduces transformed
 lead URLs. The [production workflow](production-delivery.md) does not publish this
-Worker. Under release authority, run `npm run deploy --workspace=public-images-worker`,
+Worker. Under release authority, run `pnpm --filter public-images-worker run deploy`,
 read back the active version, canonical origin, service binding and scoped probe binding,
 and qualify unsigned/signed probes. Archive the completed PostHog flag only after
 verifying the deployed Worker no longer evaluates it.
@@ -81,7 +81,7 @@ for at most five keys concurrently. Each clean observation still inspects 45 cac
 entries per key inside the Worker. Up to three rounds can increase that work and latency. Detailed Worker logs retain the existing 10%
 sampling. Record observed volume and cost before enabling this diagnostic workload.
 Publish the probe-capable Worker before the application. Verify with
-`npm run test:worker` and the focused verifier/orchestrator unit tests.
+`pnpm run test:worker` and the focused verifier/orchestrator unit tests.
 Production uses the existing `PUBLIC_IMAGE_PURGE_*` configuration and the canonical
 `https://www.tudomacae.com.br` origin. Distribution starts independently of cleanup.
 
@@ -99,7 +99,7 @@ Newsroom action for this image class. Editorial republication must remain possib
 the advertiser permanent revocation-receipt procedure does not apply.
 
 Verify the canonical mutation and recovery adapter through the public module:
-`npm run test:integration -- src/packages/editorial/tests/publicMediaContent.integration.test.ts`.
+`pnpm run test:integration src/packages/editorial/tests/publicMediaContent.integration.test.ts`.
 This checks grant removal/restoration, shared use, replacement and failed-purge recovery
 under the integration tier in [Test Harness Operation](test-harness-operation.md).
 
@@ -187,4 +187,4 @@ The single-capability window can leave verification unconfirmed; preserve and
 retry durable cleanup intents after both sides agree. Recovery must restore both
 sides to the same numbered version. Do not claim seamless rotation. Read back the deployed Worker
 version and qualify signed/unsigned probes before exposure. Use
-`npm run typecheck` and the unit/runtime probe tests to verify the protocol.
+`pnpm run typecheck` and the unit/runtime probe tests to verify the protocol.

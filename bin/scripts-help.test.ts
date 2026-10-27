@@ -22,9 +22,9 @@ describe("renderScriptMenu", () => {
       .toContain("somente pedido explícito");
   });
 
-  it("offers every script in the menu, so `npm run help` can be the only menu", () => {
+  it("offers every script in the menu, so `pnpm run help` can be the only menu", () => {
     for (const { script, purpose } of SCRIPT_MENU) {
-      expect(rendered).toContain(`npm run ${script}`);
+      expect(rendered).toContain(`pnpm run ${script}`);
       expect(rendered).toContain(purpose);
     }
   });
@@ -36,7 +36,7 @@ describe("renderScriptMenu", () => {
 
   it("offers no script it also calls removed — the abort message reads as advice", () => {
     for (const script of REMOVED_SCRIPTS) {
-      expect(rendered).not.toContain(`npm run ${script}`);
+      expect(rendered).not.toContain(`pnpm run ${script}`);
     }
   });
 });
@@ -58,7 +58,7 @@ describe("expectedScriptNames", () => {
 describe("development scripts", () => {
   it("runs the full development stack with demo images enabled", () => {
     expect(packageScripts["dev:full"]).toBe(
-      "DEMO_SEED_IMAGES=1 npm run dev",
+      "DEMO_SEED_IMAGES=1 pnpm run dev",
     );
   });
 });

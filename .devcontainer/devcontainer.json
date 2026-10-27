@@ -27,7 +27,7 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "sudo sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources && npm install && npx playwright install --with-deps chromium",
+  "postCreateCommand": "sudo sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources && sudo npm install -g pnpm@12.15.0 && pnpm install && pnpm --filter @tudomacae/e2e exec playwright install --with-deps chromium",
   "customizations": {
     "vscode": {
       "extensions": [

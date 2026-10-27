@@ -3,9 +3,9 @@ version = 1
 name = "macae-classificados"
 
 [setup]
-script = "mise exec -- npm ci"
+script = "mise exec -- pnpm install --frozen-lockfile"
 
 [[actions]]
 name = "Dev Full"
 icon = "tool"
-command = "mise exec -- npm run dev:full"
+command = "mise exec -- pnpm run dev:full"

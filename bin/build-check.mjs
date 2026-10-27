@@ -1,4 +1,4 @@
-// `npm run build` sozinho não passa: o `RootLayout` renderiza `<Header />`, que
+// `pnpm run build` sozinho não passa: o `RootLayout` renderiza `<Header />`, que
 // chama `getCategories()` no API Worker. Sem API Worker o build morre em
 // "Classifieds authority configuration missing".
 //
@@ -38,7 +38,7 @@ async function exit(code) {
   process.exit(code);
 }
 
-const child = spawn("npx", ["next", "build"], {
+const child = spawn("pnpm", ["exec", "next", "build"], {
   stdio: "inherit",
   env: { ...process.env, ...fixture.env, PUBLIC_APP_ORIGIN: CANONICAL_APP_ORIGIN },
 });

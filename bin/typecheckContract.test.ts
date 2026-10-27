@@ -16,7 +16,7 @@ test("keeps pre-push limited to the fast typecheck", () => {
     .map(line => line.trim())
     .filter(line => line && !line.startsWith("#"));
 
-  expect(commands.filter(line => line.startsWith("npm "))).toEqual(["npm run typecheck"]);
+  expect(commands.filter(line => line.startsWith("pnpm "))).toEqual(["pnpm run typecheck"]);
   expect(commands.join("\n")).not.toMatch(/build|emulator|playwright|test:e2e/);
 });
 
@@ -24,5 +24,5 @@ test("uploads Git LFS objects before the typecheck consumes pre-push stdin", () 
   const prePush = readFileSync(".husky/pre-push", "utf8");
 
   expect(prePush.indexOf("git lfs pre-push \"$@\"")).toBeGreaterThan(-1);
-  expect(prePush.indexOf("git lfs pre-push \"$@\"")).toBeLessThan(prePush.indexOf("npm run typecheck"));
+  expect(prePush.indexOf("git lfs pre-push \"$@\"")).toBeLessThan(prePush.indexOf("pnpm run typecheck"));
 });

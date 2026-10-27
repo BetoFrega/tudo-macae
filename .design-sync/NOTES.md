@@ -20,7 +20,7 @@ Config lives in `config.json`; the conventions header the design agent reads is
   `ENOENT … node_modules/macae-classificados/package.json` — it resolves the
   package dir as `<node_modules>/<pkg>` and npm will not self-install. It also
   makes `import { Button } from "macae-classificados"` resolve inside preview
-  files. **npm install wipes it — recreate it after every install.**
+  files. **pnpm install wipes it — recreate it after every install.**
 - 18 source files expand to **85 exported components**, because shadcn compound
   components export every part (`CardHeader`, `DialogTrigger`, `SelectItem`…).
   That is correct: each part is real API the design agent may need.
@@ -119,7 +119,7 @@ Config lives in `config.json`; the conventions header the design agent reads is
 ## Re-sync risks
 
 - **The symlink is not in git** (`node_modules/` is ignored). A fresh clone, or
-  any `npm ci`/`npm install`, removes it and the build fails immediately.
+  any `pnpm install` removes it and the build fails immediately.
   Recreating it is step one of every re-sync.
 - **The safelist in `css-entry.css` is hand-maintained and will drift.** It was
   written against the token set in `globals.css` as of 2026-08-15. If tokens are

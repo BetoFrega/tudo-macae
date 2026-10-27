@@ -6,7 +6,7 @@
     "./fileInspectionProduction": "./fileInspectionProduction.ts"
   },
   "dependencies": {
-    "@tudomacae/media": "*",
+    "@tudomacae/media": "workspace:*",
     "sharp": "0.35.5"
   },
   "scripts": {

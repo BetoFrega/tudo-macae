@@ -100,5 +100,5 @@ todo.md
 /.vinext/
 /.wrangler/
 
-# Gerado do Notion por `npm run product:sync`; o conteúdo vive só no Notion.
+# Gerado do Notion por `pnpm run product:sync`; o conteúdo vive só no Notion.
 /PRODUCT.md

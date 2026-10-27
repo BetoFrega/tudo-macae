@@ -124,7 +124,7 @@ test("a 200 whose body stops before the document ends counts as a failure", asyn
 
 test("a refused rollback fails once with the manual recovery command", async () => {
   const result = await deliver({ render: brokenNewVersion, rollbackRefused: true });
-  expect(result.error?.message).toContain(`npx wrangler rollback '${previousVersion}' --name ${web} --message 'Restore previous production version'`);
+  expect(result.error?.message).toContain(`pnpm exec wrangler rollback '${previousVersion}' --name ${web} --message 'Restore previous production version'`);
   expect(result.error?.message).toMatch(/code 10211/);
   expect(result.error?.message).toMatch(/DataCache Durable Object/);
   expect(result.rollbacks).toHaveLength(1);
@@ -134,7 +134,7 @@ test("a refused rollback fails once with the manual recovery command", async () 
 
 test("a first delivery has no version to roll back to and names the manual recovery", async () => {
   const result = await deliver({ render: brokenNewVersion, firstDelivery: true });
-  expect(result.error?.message).toContain(`npx wrangler versions list --name ${web}`);
+  expect(result.error?.message).toContain(`pnpm exec wrangler versions list --name ${web}`);
   expect(result.rollbacks).toEqual([]);
   expect(result.published).toEqual([web]);
   expect(result.recovery.webRollback).toMatchObject({ from: newVersion, to: null, outcome: "not-attempted" });

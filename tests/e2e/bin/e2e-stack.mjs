@@ -151,7 +151,7 @@ rmSync(new URL("../../../.wrangler/deploy", import.meta.url), { recursive: true,
 //
 // `NEXT_PUBLIC_APP_ENV` is load-bearing on the build: the Next config inlines
 // `dangerouslyAllowLocalIP` from it, and without it localhost images are
-// blocked and the image tests fail without pointing back here. `npm run build:check`
+// blocked and the image tests fail without pointing back here. `pnpm run build:check`
 // deliberately leaves it unset — its build is not this build.
 //
 // `PUBLIC_APP_ORIGIN` feeds `metadataBase`, which resolves canonical and og:url
@@ -195,14 +195,14 @@ try {
     // `vite preview` persists that Worker's D1 under the same `.wrangler/state`.
     const migrationLogPath = fileURLToPath(new URL("../test-results/e2e-logs/article-index-migrations.log", import.meta.url));
     await completion(
-      start("npx", ["wrangler", "d1", "migrations", "apply", "DB", "--local", "--persist-to", ".wrangler/state",
+      start("pnpm", ["exec", "wrangler", "d1", "migrations", "apply", "DB", "--local", "--persist-to", ".wrangler/state",
         "-c", "apps/public-article-index/wrangler.jsonc"], appEnv, { path: migrationLogPath, source: "build" }),
       "article index migrations",
       migrationLogPath,
     );
   }
   await completion(
-    start("npx", vinext ? ["vite", "build", "-c", "vite.vinext.config.ts", "--logLevel", "warn"] : ["next", "build"], appEnv, {
+    start("pnpm", vinext ? ["exec", "vite", "build", "-c", "vite.vinext.config.ts", "--logLevel", "warn"] : ["exec", "next", "build"], appEnv, {
       path: E2E_BUILD_LOG_PATH,
       source: "build",
     }),
@@ -217,9 +217,9 @@ try {
     );
     await completion(
       start(
-        vinext ? "npx" : process.execPath,
+        vinext ? "pnpm" : process.execPath,
         vinext
-          ? ["vite", "preview", "-c", "vite.vinext.config.ts", "--strictPort", "--port", String(appPort())]
+          ? ["exec", "vite", "preview", "-c", "vite.vinext.config.ts", "--strictPort", "--port", String(appPort())]
           : ["bin/start-app.mjs", "-p", String(appPort())],
         {
           ...appEnv,

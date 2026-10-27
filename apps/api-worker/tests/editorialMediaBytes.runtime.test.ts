@@ -40,7 +40,7 @@ async function uploaded(operationId: string, content: Buffer, contentType = "ima
 
 beforeAll(async () => {
   directory = await mkdtemp(join(tmpdir(), "editorial-media-bytes-"));
-  execFileSync("npm", ["run", "build", "--workspace=@tudomacae/api-worker", "--", "--outdir", directory, "--entry", "tests/editorialMediaBytesFixtureWorker.ts"], { stdio: "pipe" });
+  execFileSync("pnpm", ["--filter", "@tudomacae/api-worker", "run", "build", "--outdir", directory, "--entry", "tests/editorialMediaBytesFixtureWorker.ts"], { stdio: "pipe" });
 });
 beforeEach(async () => {
   const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;

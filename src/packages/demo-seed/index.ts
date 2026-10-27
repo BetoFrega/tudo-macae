@@ -53,7 +53,7 @@ const NO_IMAGES_SEEDED: DemoImageSeedSummary = {
 /**
  * Fills the local stack with the demo mass — category catalogue, accounts,
  * businesses, ads and the Matérias as Blog posts, all in the API Worker
- * fixture — so `npm run dev` lands on a site that looks used.
+ * fixture — so `pnpm run dev` lands on a site that looks used.
  *
  * The single entry point of this package, and it carries its own environment
  * guard: `instrumentation.ts` runs in every environment and in both runtimes,

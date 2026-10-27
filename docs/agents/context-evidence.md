@@ -100,6 +100,6 @@ Use `git cat-file -s <revision>:<path>` for bytes and
 | Production | `67fb6b4^:docs/agents/production-topology.md` | `f4acbb7:docs/agents/production-*.md` |
 | Product Ideation | `f4acbb7^:.agents/skills/idea-pipeline/SKILL.md` | router and triggered references at `f4acbb7` | <!-- context-reference: historical -->
 
-For every before/after pair, run `npm run check:harness` after the current-tree
+For every before/after pair, run `pnpm run check:harness` after the current-tree
 measurement. It verifies internal pointers, destination existence and active references
 to retired context.

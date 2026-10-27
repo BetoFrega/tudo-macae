@@ -6,6 +6,6 @@ The [Blog contract](https://app.notion.com/p/3f684301eab38152baa8d10e9cc74d8a?pv
 Historical records remain stored; this change does not provision or dismantle providers.
 
 The machine hostname returns uncached 404 responses for every route. Candidate
-verification retains independent origin proofs and host isolation; `npm run probe:edge`
+verification retains independent origin proofs and host isolation; `pnpm run probe:edge`
 checks unavailable MCP, tools and session routes after deployment. Before deployment,
 the previous protocol can still be served; Git delivery does not qualify retirement.

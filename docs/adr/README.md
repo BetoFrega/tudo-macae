@@ -9,6 +9,7 @@ original decision date; acceptance does not certify implementation or activation
 
 ## Architecture records
 
+- [0047 — Use pnpm as the package manager](0047-use-pnpm-as-the-package-manager.md)
 - [0046 — Move the current Next application to Workers with vinext as a bridge](0046-move-the-next-application-to-workers-with-vinext.md)
 - [0045 — Give each API Worker context its own D1 database](0045-separate-api-worker-databases.md)
 - [0044 — Store Classifieds authority in D1](0044-store-classifieds-authority-in-d1.md)

@@ -9,13 +9,13 @@
     "./canonical": "./canonical.ts"
   },
   "dependencies": {
-    "@tudomacae/www-origin-routing": "*",
-    "@tudomacae/categories": "*",
-    "@tudomacae/advertiser-identity": "*",
+    "@tudomacae/www-origin-routing": "workspace:*",
+    "@tudomacae/categories": "workspace:*",
+    "@tudomacae/advertiser-identity": "workspace:*",
     "zod": "^4.6.7",
-    "@tudomacae/classifieds-persistence": "*",
-    "@tudomacae/classifieds-photos": "*",
-    "@tudomacae/ads": "*"
+    "@tudomacae/classifieds-persistence": "workspace:*",
+    "@tudomacae/classifieds-photos": "workspace:*",
+    "@tudomacae/ads": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

@@ -43,5 +43,5 @@ guarded. Pages guard the narrowest scope that covers their filter: the article f
 guards and 64 written records; 192 statements per batch; 4 attempts. One Blog save
 touches its article, receipt, up to 20 Media and the grants it replaces.
 
-Verify with `npx vitest run --config vitest.worker.config.mts apps/api-worker/tests/editorial.runtime.test.ts`
-and `npx vitest run --config vitest.unit.config.mts packages/editorial-persistence/tests`.
+Verify with `pnpm exec vitest run --config vitest.worker.config.mts apps/api-worker/tests/editorial.runtime.test.ts`
+and `pnpm exec vitest run --config vitest.unit.config.mts packages/editorial-persistence/tests`.

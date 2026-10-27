@@ -56,23 +56,24 @@ jobs:
         run: test -f bin/deploy-workers-production.mjs
       - name: Require API Worker delivery support in the selected SHA
         run: test -f bin/deploy-api-worker-production.mjs
-      - uses: actions/setup-node@v5
+      - uses: pnpm/setup@v3
         with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
+          runtime: node@24
+          cache: true
+          install: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
       # The selected SHA builds the web Worker the way its own delivery script will.
       - name: Build web Worker before production mutation
         env:
           RELEASE_SHA: ${{ steps.candidate.outputs.sha }}
         run: |
           if test -f wrangler.web.jsonc; then
-            CLOUDFLARE_ENV=production WEB_ASSET_RELEASE="$RELEASE_SHA" npx vite build --config vite.vinext.config.ts --logLevel warn
+            CLOUDFLARE_ENV=production WEB_ASSET_RELEASE="$RELEASE_SHA" pnpm exec vite build --config vite.vinext.config.ts --logLevel warn
             # The build's Wrangler redirect makes later Wrangler runs in apps/* refuse their own config.
             rm -rf .wrangler/deploy
           elif test -f apps/web-workers/package.json; then
-            npx turbo run build --filter=web-workers-app
+            pnpm exec turbo run build --filter=web-workers-app
           fi
       # The bundle that production will serve must answer pages before anything is published.
       - name: Smoke the web Worker bundle before production mutation
@@ -89,21 +90,21 @@ jobs:
         env:
           RELEASE_SHA: ${{ steps.candidate.outputs.sha }}
           XDG_CONFIG_HOME: /tmp/wrangler-config
-        run: npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
+        run: pnpm exec turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only --concurrency=2
       - name: Check the public images delivery script
         run: node --test apps/public-images/deploy.test.mjs
-      - run: npm run lint
+      - run: pnpm run lint
         env:
           DOMAIN_SEAMS_BASE: ${{ steps.candidate.outputs.sha }}^
       - name: Check Worker HTTP, authorization and persistence contracts
-        run: npm run test:worker
+        run: pnpm run test:worker
       - name: Check Vitest unit tier
-        run: npm test -- --tier=unit --bail=1
+        run: pnpm test --tier=unit --bail=1
       - name: Check Vitest integration tier and application build before production mutation
-        run: npm test -- --tier=integration --bail=1 && npm run build:check
-      - run: npm exec --workspace=@tudomacae/e2e -- playwright install --with-deps chromium
+        run: pnpm test --tier=integration --bail=1 && pnpm run build:check
+      - run: pnpm --filter @tudomacae/e2e exec playwright install --with-deps chromium
       - name: Check E2E journeys and harness on a disposable local stack
-        run: npm run test:e2e:full -- --max-failures=1
+        run: pnpm run test:e2e:full --max-failures=1
       - name: Retain sanitized test diagnostics
         uses: actions/upload-artifact@v6
         if: always()
@@ -143,11 +144,12 @@ jobs:
           ref: ${{ github.sha }}
           lfs: true
           persist-credentials: false
-      - uses: actions/setup-node@v5
+      - uses: pnpm/setup@v3
         with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
+          runtime: node@24
+          cache: true
+          install: false
+      - run: pnpm install --frozen-lockfile
       - name: Require production D1 migrations ready
         env:
           CLOUDFLARE_ACCOUNT_ID: abd87961a304b923acbc329f0b0d1919
@@ -226,11 +228,12 @@ jobs:
           # The web Worker bundles the app's `public/` PNGs, which live in Git LFS.
           lfs: true
           persist-credentials: false
-      - uses: actions/setup-node@v5
+      - uses: pnpm/setup@v3
         with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
+          runtime: node@24
+          cache: true
+          install: false
+      - run: pnpm install --frozen-lockfile
       - name: Publish and read back production Workers
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

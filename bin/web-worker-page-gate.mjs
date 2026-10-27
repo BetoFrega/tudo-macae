@@ -77,7 +77,7 @@ export async function probeWebPages(expectedVersion, { request = fetch, wait = d
 }
 
 const restoreCommand = (name, version) =>
-  `npx wrangler rollback '${version}' --name ${name} --message 'Restore previous production version'`;
+  `pnpm exec wrangler rollback '${version}' --name ${name} --message 'Restore previous production version'`;
 
 async function rollBack({ workerName, previousVersion, sha, command, readActiveVersion }) {
   command(["rollback", previousVersion, "--name", workerName,
@@ -108,7 +108,7 @@ export async function gateWebRelease(release) {
   const outcome = fields => record({ from: version, to: previousVersion, reason: failure, ...fields });
   if (!previousVersion || previousVersion === version) {
     outcome({ outcome: "not-attempted" });
-    throw new Error(`${failure}. No earlier ${workerName} version is recorded; pick one from \`npx wrangler versions list --name ${workerName}\` and run ${restoreCommand(workerName, "<version-id>")}, or deliver a fixed main`);
+    throw new Error(`${failure}. No earlier ${workerName} version is recorded; pick one from \`pnpm exec wrangler versions list --name ${workerName}\` and run ${restoreCommand(workerName, "<version-id>")}, or deliver a fixed main`);
   }
   try {
     await rollBack(release);

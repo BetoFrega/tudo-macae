@@ -64,7 +64,7 @@ The versioned file is one rule, not a complete ruleset or an automatic deploymen
 ## Verify
 
 ```bash
-npm run probe:edge
+pnpm run probe:edge
 ```
 
 `redirect.apex.http` and `redirect.apex.https` each sample `/`, an encoded path
@@ -82,5 +82,5 @@ Restore the captured, known-good version of **Apex to canonical www** in the
 same Redirect Rules screen, then read back its expression, target, status,
 query preservation and enabled state. Keep the proxied placeholder DNS.
 Disabling the redirect does not recover a prior origin; it makes fresh apex
-requests reach a placeholder. Verify HTTP and HTTPS with `npm run probe:edge`.
+requests reach a placeholder. Verify HTTP and HTTPS with `pnpm run probe:edge`.
 Browser-cached permanent redirects may outlive a provider change.

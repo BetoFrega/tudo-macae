@@ -13,7 +13,7 @@ run typecheck, the web Worker build when present and its bundle smoke
 (`node bin/web-bundle-smoke.mjs`, below), typecheck, build and tests of
 every Worker app (PR checks cover only affected apps), lint, Worker contracts,
 both Vitest tiers plus `build:check`, and the complete E2E collection
-(`npm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
+(`pnpm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
 Google identity.
 
 The bundle smoke serves `dist/server` with `wrangler dev --local` and requires `/` and
@@ -258,7 +258,7 @@ preparation is required.
 Keep the correction issue open until normal delivery succeeds. [Worker recovery](www-origin-runbook.md#deploy-and-recovery)
 compares `workers-recovery-<run-id>-<attempt>` versions/routes with
 Cloudflare and restores only affected versions using
-`npx wrangler rollback '<previous-version>' --config '<worker-config>' --env production --message 'Restore previous production version'`,
+`pnpm exec wrangler rollback '<previous-version>' --config '<worker-config>' --env production --message 'Restore previous production version'`,
 then read back versions/routes. A `webRollback` entry with outcome `restored`
 leaves only the web Worker changed and already restored; any other outcome needs
 the command the job printed. Wrangler refuses a Terms Worker rollback across a
@@ -267,7 +267,7 @@ release by redeploying a fixed `main`. Preserve independent deployments; a `www-
 rollback affects `www` and MCP and never targets a version with `CLOUD_RUN_ORIGIN`
 ([why](www-origin-runbook.md#deploy-and-recovery)).
 `api-worker-recovery-<run-id>-<attempt>` names the API Worker's previous version;
-restore it with `npx wrangler rollback '<previous-version>' --name tudo-macae-api-production --message 'Restore previous production version'`.
+restore it with `pnpm exec wrangler rollback '<previous-version>' --name tudo-macae-api-production --message 'Restore previous production version'`.
 Rollback leaves D1 migrations applied.
 
 ## Verification and limits
@@ -276,6 +276,6 @@ Use run steps, the `playwright-<run-id>-<attempt>` report and recovery artifacts
 for delivery failures, and
 [Test Harness Operation](test-harness-operation.md#e2e-stack-and-preflight) to
 reproduce E2E locally. Verify provider configuration; emulators do not prove IAM.
-`npm run probe:edge` verifies the outer delivery contract.
+`pnpm run probe:edge` verifies the outer delivery contract.
 
 Reference: [GitHub concurrency](https://docs.github.com/en/actions/concepts/workflows-and-actions/concurrency).

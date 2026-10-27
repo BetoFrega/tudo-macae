@@ -10,7 +10,7 @@
     "deploy": "node deploy.mjs"
   },
   "dependencies": {
-    "@tudomacae/public-image-delivery": "*"
+    "@tudomacae/public-image-delivery": "workspace:*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261019.1",

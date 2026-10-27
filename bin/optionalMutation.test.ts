@@ -26,7 +26,7 @@ it("makes the conventional command use the canonical unit and integration collec
     .flatMap((step: { run?: string }) => step.run ? [step.run] : []);
   // The Checks workflow runs the unit tier (vitest.unit.config.mts).
   expect(runs).toEqual(expect.arrayContaining([
-    "npm test -- --tier=integration --bail=1",
+    "pnpm test --tier=integration --bail=1",
   ]));
   expect(runs.join("\n")).not.toMatch(/vitest run|stryker|test:mutation|--tier=unit/);
 });

@@ -1,19 +1,20 @@
 # Workspace orchestration
 
-npm installs dependencies; Turborepo schedules and caches tasks. Each workspace
-declares its runtime/tool dependencies and scripts. Import through declared npm
+pnpm installs dependencies; Turborepo schedules and caches tasks. Each workspace
+declares its runtime/tool dependencies and scripts; pnpm links only declared
+dependencies, so an undeclared import fails to resolve. Import through declared package
 exports, never source aliases. Source TypeScript is compiled by consumers.
 Package tests use public entries; adapter tests belong with their composition.
 
 ## Selection, caching and verification
 
 ```sh
-npm ci
-npx turbo run build typecheck test --dry=json
-npx turbo run build --graph=task-graph.html
-RELEASE_SHA=$(git rev-parse HEAD) npx turbo run build --filter=web-workers-app
-npx turbo run typecheck test build --filter=www-origin-worker
-TURBO_SCM_BASE=origin/main TURBO_SCM_HEAD=HEAD npx turbo run typecheck test build --affected --filter='!//'
+pnpm install --frozen-lockfile
+pnpm exec turbo run build typecheck test --dry=json
+pnpm exec turbo run build --graph=task-graph.html
+RELEASE_SHA=$(git rev-parse HEAD) pnpm exec turbo run build --filter=web-workers-app
+pnpm exec turbo run typecheck test build --filter=www-origin-worker
+TURBO_SCM_BASE=origin/main TURBO_SCM_HEAD=HEAD pnpm exec turbo run typecheck test build --affected --filter='!//'
 ```
 
 PR selection requires Git history and excludes root Next tasks and E2E: independent
@@ -38,8 +39,8 @@ There is no remote Turbo cache. The `Checks` workflow keeps ESLint's cache and
 `tsconfig.tsbuildinfo` between pull-request runs with `actions/cache`.
 
 For affected workspaces, run declared typecheck/test/build tasks,
-`npm run lint:boundaries` and
-`npm run test:unit -- bin/workspaceOrchestration.test.ts`. Select relevant browser journeys through
+`pnpm run lint:boundaries` and
+`pnpm run test:unit bin/workspaceOrchestration.test.ts`. Select relevant browser journeys through
 [Test Selection](test-selection.md), including indirect consumers of shared image preprocessing/controls.
 Validate refactors without destructive cleanup or production probes. Deploy remains
 separate and requires production authorization; use
@@ -55,7 +56,7 @@ retains PR-base protection.
 
 `design-foundations` owns reset, themes, tokens and SVG brand. Its stylesheet uses
 `source(none)`; each app scans its own sources and shared physical `lib` directories,
-since Tailwind does not scan them through npm symlinks. Declared dependencies propagate
+since Tailwind does not scan them through workspace symlinks. Declared dependencies propagate
 Turbo edges/hashes. Web app and Terms need no extra-workspace inputs.
 
 `react-primitives` owns Button, NavigationMenu and Sheet; `site-layout` owns document,
@@ -66,7 +67,7 @@ for prerendering; Cloudflare uses document anchors for destination ownership.
 Auth, loading, navigation fetch/fallback logs and image/font adapters remain in apps.
 
 Root button/navigation-menu/sheet shims only reexport shared controls; remove each
-when callers use npm entries. No persistence adapter accompanies this extraction.
+when callers use package entries. No persistence adapter accompanies this extraction.
 
 ## E2E workspace
 
@@ -76,9 +77,9 @@ fixtures/snapshots, HTTPS and the application-stack supervisor. Root `test:e2e*`
 The launcher accepts both legacy `tests/<journey>` and `tests/e2e/<journey>` paths.
 
 ```sh
-npm run test:e2e -- tests/e2e/ads/create-new-ad.spec.ts --project=chromium
-npm run test:e2e --workspace=@tudomacae/e2e -- --list
-npx turbo run test:e2e:full --filter=@tudomacae/e2e
+pnpm run test:e2e tests/e2e/ads/create-new-ad.spec.ts --project=chromium
+pnpm --filter @tudomacae/e2e run test:e2e --list
+pnpm exec turbo run test:e2e:full --filter=@tudomacae/e2e
 ```
 
 Declare app/package dependencies for selection. Executable E2E tasks have no build

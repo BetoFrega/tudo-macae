@@ -64,9 +64,9 @@ Creating a Worker requires [product-level Admin](https://developers.cloudflare.c
 existing-Worker Editor cannot create or scope grants before existence. A creation-authorized operator uses reviewed SHA:
 
 ```sh
-CLOUDFLARE_ENV=production WEB_ASSET_RELEASE="$(git rev-parse HEAD)" npx vite build --config vite.vinext.config.ts --logLevel warn
+CLOUDFLARE_ENV=production WEB_ASSET_RELEASE="$(git rev-parse HEAD)" pnpm exec vite build --config vite.vinext.config.ts --logLevel warn
 RELEASE_SHA="$(git rev-parse HEAD)" CLOUDFLARE_ENV=production node bin/retain-web-assets.mjs --bootstrap
-npx wrangler deploy --config dist/server/wrangler.json --tag "$(git rev-parse HEAD)" --var "SOURCE_SHA:$(git rev-parse HEAD)"
+pnpm exec wrangler deploy --config dist/server/wrangler.json --tag "$(git rev-parse HEAD)" --var "SOURCE_SHA:$(git rev-parse HEAD)"
 ```
 
 Read back active version and unchanged zone routes. Grant CI Editor on the new Worker,
@@ -76,7 +76,7 @@ manifest. Use `$wizard` if credential transfer cannot avoid agent disclosure.
 Bootstrap is route-free.
 
 Protected delivery publishes application before edge with `WEB_WORKER` and reads back
-both versions without an application route. Run `npm run probe:edge`.
+both versions without an application route. Run `pnpm run probe:edge`.
 
 ### Recovery
 
@@ -87,4 +87,4 @@ visitor (`terms-worker-unavailable` in the
 can; otherwise recover by redeploying a
 fixed `main` or by `wrangler rollback`, as
 [Production delivery](production-delivery.md#manual-recovery) describes. Run the bundled router regression with
-`npm run test:worker -- apps/www-origin/index.runtime.test.ts`.
+`pnpm run test:worker apps/www-origin/index.runtime.test.ts`.

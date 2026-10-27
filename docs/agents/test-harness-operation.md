@@ -11,21 +11,21 @@ reason about the test harness. For choosing a tier, see
 
 ## Vitest tiers
 
-`npm run test:integration` starts the API Worker fixture (`apps/api-worker/testing.mjs`), because the test
+`pnpm run test:integration` starts the API Worker fixture (`apps/api-worker/testing.mjs`), because the test
 environment defaults to the production authorities, Better Auth and D1
 Classifieds (`bin/setTestEnvVars.ts`). A fixture that cannot start fails the run
 as a `Falha ambiental`. Create accounts and sessions through
 `tests/_helpers/auth/helpers/workerSession.ts`.
 
-`npm test` runs both tiers; `npm test -- --tier=unit` or `--tier=integration`
+`pnpm test` runs both tiers; `pnpm test --tier=unit` or `--tier=integration`
 runs one. On pull requests the unit tier runs in the `Checks` workflow
 (`.github/workflows/checks.yml`), and the `Vitest Tests` workflow runs only
 `--tier=integration` with `--bail=1`, so it stops after the first failed test.
-Production delivery runs both tiers and `npm run build:check`. For complete local
+Production delivery runs both tiers and `pnpm run build:check`. For complete local
 diagnosis, keep the unrestricted collection explicit:
 
 ```bash
-npm test -- --bail=0
+pnpm test --bail=0
 ```
 
 
@@ -42,7 +42,7 @@ fixture is an environment failure, not a reason to move an integration test to u
 
 `bin/appPorts.ts` is the sole authority for the local app port. The primary
 checkout uses 5002; each linked worktree derives its own port from its path.
-`npm run dev`, the E2E stack, Playwright and the metadata fallback read that
+`pnpm run dev`, the E2E stack, Playwright and the metadata fallback read that
 module, so do not hardcode the port elsewhere. Check the invariant with:
 
 ```bash
@@ -60,7 +60,7 @@ Ask the worktree for its app URL without starting anything:
 node -e 'import("./bin/appPorts.ts").then(m => console.log(m.appUrl()))'
 ```
 
-`npm run dev` (`bin/dev.mjs`) refuses to start when that port is already held
+`pnpm run dev` (`bin/dev.mjs`) refuses to start when that port is already held
 and names the holding process.
 
 ## E2E stack and preflight
@@ -90,7 +90,7 @@ To replace an unverified server, stop this worktree's existing stack through its
 owning invocation, then require a fresh one with the selected Playwright filters:
 
 ```bash
-E2E_REQUIRE_FRESH_SERVER=1 npm run test:e2e -- tests/e2e/ads/create-new-ad.spec.ts
+E2E_REQUIRE_FRESH_SERVER=1 pnpm run test:e2e tests/e2e/ads/create-new-ad.spec.ts
 ```
 
 The command above selects one spec; substitute the affected specs. With this
@@ -110,16 +110,16 @@ or diagnostic reason.
 Use the cheapest layer that can reject the change, without treating the layers as
 substitutes:
 
-- `npm run typecheck` generates the current Next.js route types and runs TypeScript
+- `pnpm run typecheck` generates the current Next.js route types and runs TypeScript
   across the application, tests and harness. It starts no fixture, server or browser.
-- `npm run build:check` starts the API Worker fixture and runs the complete Next.js
+- `pnpm run build:check` starts the API Worker fixture and runs the complete Next.js
   production build. It also validates compilation, prerendering and Next.js's final
   typecheck.
 - `node bin/web-bundle-smoke.mjs` serves an already built production web Worker bundle
   (`CLOUDFLARE_ENV=production vite build -c vite.vinext.config.ts`) and reads two pages.
   It is the only layer that exercises that bundle before production
   ([gate](production-delivery.md)). Delete `dist` and `.wrangler/deploy` after the build.
-- `npm run test:e2e` owns the disposable API Worker fixture, production build,
+- `pnpm run test:e2e` owns the disposable API Worker fixture, production build,
   server and browser stack, then verifies the integrated user journeys.
 
 The local pre-push hook runs only the fast typecheck. Pull requests run that same
@@ -129,10 +129,10 @@ therefore does not bypass the checks the branch protection requires.
 
 Playwright prepares Git LFS test assets, starts the API Worker fixture, then
 uses `next build && next start`.
-`npm run test:e2e` owns that stack; `npm run dev` is the hot-reload app. See
+`pnpm run test:e2e` owns that stack; `pnpm run dev` is the hot-reload app. See
 [E2E Test Authoring](e2e-test-authoring.md) for the test-side commands.
 
-`npm run dev` and `dev:full` (`bin/dev.mjs`) start the API Worker fixture with
+`pnpm run dev` and `dev:full` (`bin/dev.mjs`) start the API Worker fixture with
 D1 Classifieds, then `next dev` with the fixture's environment, so local login
 and Classifieds use Better Auth and D1. The fixture lives in memory: every boot
 starts empty and the demo seed refills it. A fixture that cannot start stops the
@@ -141,8 +141,8 @@ variables `next dev` receives.
 
 The application-backed collections stop after their first failed test, because
 every case shares that stack and later failures may repeat one environmental
-loss. Use `npm run test:e2e:diagnostic` or
-`npm run test:e2e:full:diagnostic` only when diagnosis needs every independent
+loss. Use `pnpm run test:e2e:diagnostic` or
+`pnpm run test:e2e:full:diagnostic` only when diagnosis needs every independent
 failure. The standalone harness remains unrestricted because it does not share
 the application stack.
 
@@ -197,8 +197,8 @@ category; raw command diagnostics and remote URLs are never printed.
 
 ### Stale `.next/` assets
 
-`npm run build:check` can replace assets held by a running E2E server. Stop the
-old server, then run `npm run test:e2e` to rebuild and restart the stack.
+`pnpm run build:check` can replace assets held by a running E2E server. Stop the
+old server, then run `pnpm run test:e2e` to rebuild and restart the stack.
 
 ### Pre-provisioned Chromium
 
@@ -206,7 +206,7 @@ If the installed browser revision differs from Playwright's pinned revision,
 point it at the supplied browser for that invocation:
 
 ```bash
-E2E_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium npx playwright test
+E2E_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium pnpm run test:e2e
 ```
 
 Leave this escape hatch unset locally and in CI when Playwright supplies its
@@ -215,9 +215,9 @@ matching browser.
 ## Harness self-tests
 
 When changing Playwright configuration, fixtures, page objects or diagnostics, run
-the harness collections. Use `npm run test:harness` when only those collections
+the harness collections. Use `pnpm run test:harness` when only those collections
 are needed. When verification also needs application journeys, compose the
-selected journeys and all required harness cases through `npm run test:e2e:full`
+selected journeys and all required harness cases through `pnpm run test:e2e:full`
 in one invocation. Confirm that any file or grep filters retain the required
 harness cases; use the unfiltered full collection when that scope is needed.
 The full collection follows the application-backed failure budget and diagnostic
@@ -240,7 +240,7 @@ warnings or errors. Detailed sanitized output remains available after the run in
 - `.next/e2e-server.log`.
 
 Native email-verification links and their `oobCode` or `apiKey` parameters are redacted
-before either console or file output. Use `E2E_VERBOSE=1 npm run test:e2e -- ...` only
+before either console or file output. Use `E2E_VERBOSE=1 pnpm run test:e2e ...` only
 when the detailed sanitized stream is necessary for an active diagnosis. A normal run
 must stay compact enough for an agent to inspect without loading build route tables,
 routine operational INFO events or repeated runtime warnings into its context.

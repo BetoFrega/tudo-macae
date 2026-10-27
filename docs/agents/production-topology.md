@@ -32,7 +32,7 @@ Load the branch that owns the question:
 Re-measure the public contract without changing production:
 
 ```bash
-npm run probe:edge
+pnpm run probe:edge
 ```
 
 The probe is [`bin/probe-edge.mjs`](../../bin/probe-edge.mjs). It runs weekly and on
@@ -109,7 +109,7 @@ Cloudflare and Next.js cache markers describe independent caches.
   `Cache-Control: private, no-store, max-age=0, must-revalidate` and
   `CDN-Cache-Control: no-store`; `/noticias` uses
   `Cache-Control: public, no-cache, max-age=0, must-revalidate` before an external CDN
-  reuses it. Verify both policies with `npm run probe:edge`. These response policies preserve the independent Next.js data and
+  reuses it. Verify both policies with `pnpm run probe:edge`. These response policies preserve the independent Next.js data and
   component caches. `x-nextjs-cache`, when present, is diagnostic rather than a
   delivery invariant.
 - Cloudflare caches immutable `/_terms-workers/<sha>/_next/static/**` assets.

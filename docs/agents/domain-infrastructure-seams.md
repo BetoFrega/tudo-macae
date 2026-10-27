@@ -80,7 +80,7 @@ before/after measurement of the affected test path.
 
 `domain-seams.json` is the registry of protected entry points, operations and
 construction factories and isolated probes. `remainingOperations` makes an incremental cut explicit; it is
-not protected coverage. `npm run lint:boundaries` checks each protected entry's
+not protected coverage. `pnpm run lint:boundaries` checks each protected entry's
 transitive source imports, including type imports, and runs its probe in a fresh
 process without provider credentials. Local source is followed; only the reviewed
 pure external dependencies `zod`, `remark-parse` and `unified` are allowed.

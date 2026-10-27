@@ -1,6 +1,6 @@
 # demoSeed
 
-Massa de demonstração para o servidor de desenvolvimento. `npm run dev` sobe com
+Massa de demonstração para o servidor de desenvolvimento. `pnpm run dev` sobe com
 o site cheio em vez de vazio.
 
 ## Onde a massa vive
@@ -44,7 +44,7 @@ elegível, embora Subcategorias sem inventário continuem omitidas em `/negocios
 
 Os anunciantes de massa seguem o mesmo padrão — `<nome>@demo.local`, a mesma
 senha — e estão listados em `lib/data/accounts.json`. O seed imprime as três
-nomeadas no log a cada boot, junto das URLs que o `npm run dev` já mostra.
+nomeadas no log a cada boot, junto das URLs que o `pnpm run dev` já mostra.
 
 A conta `editor` também abre `/redacao/materias`, que sobe com as Matérias de
 `lib/data/articles.json`.
@@ -155,7 +155,7 @@ sem nenhum anúncio de propósito: o estado vazio de uma página de subcategoria
 
 ## Imagens curadas
 
-Use `DEMO_SEED_IMAGES=1 npm run dev` para preencher progressivamente as duas
+Use `DEMO_SEED_IMAGES=1 pnpm run dev` para preencher progressivamente as duas
 trilhas: uma foto por anúncio e fotos para os Negócios selecionados. O perfil `bare`
 continua sem foto.
 
@@ -168,12 +168,12 @@ que já tem foto é pulado. Falhas ficam no terminal e não interrompem o
 restante do lote; outro boot retoma o que faltar sem duplicar. Um boot de conteúdo
 preserva fotos já concluídas.
 
-Toda avaliação local com Impeccable usa `npm run dev:full`, com imagens. Confira o
+Toda avaliação local com Impeccable usa `pnpm run dev:full`, com imagens. Confira o
 fim do job antes de julgar a composição. A massa inclui manchete longa, categorias
 com inventário desigual e negócios sem anúncio.
 
 ## Verificação
 
-Verifique com `npm run test:integration -- demoSeed.integration.test.ts demoSeedBlog.integration.test.ts`.
+Verifique com `pnpm run test:integration demoSeed.integration.test.ts demoSeedBlog.integration.test.ts`.
 A integração do seed lê os Classificados e o Blog pelo Worker e aceita um fixture
 vazio ou já preenchido pelo dev:full. Ela remove a massa de Classificados ao terminar.

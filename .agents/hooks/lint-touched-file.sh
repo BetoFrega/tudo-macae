@@ -42,8 +42,8 @@ while IFS= read -r file; do
     *) continue ;;
   esac
 
-  npx eslint --fix "$absolute_file" > /dev/null 2>&1
-  if ! remaining=$(npx eslint "$absolute_file" 2>&1); then
+  pnpm exec eslint --fix "$absolute_file" > /dev/null 2>&1
+  if ! remaining=$(pnpm exec eslint "$absolute_file" 2>&1); then
     failures="${failures}
 eslint ainda reclama de ${absolute_file} depois do --fix:
 

@@ -15,7 +15,7 @@ describe("expensive workflows", () => {
     expect(workflowFiles()).not.toContain("playwright.yml");
   });
 
-  it.each(["npx playwright test", "npm run test:e2e"])("recognizes the Playwright command %s without changing a real workflow", (command) => {
+  it.each(["pnpm exec playwright test", "pnpm run test:e2e", "pnpm --filter @tudomacae/e2e run test:e2e"])("recognizes the Playwright command %s without changing a real workflow", (command) => {
     const fixture: Workflow = {
       name: "Pull request fixture",
       on: { pull_request: { types: ["synchronize"] } },
@@ -54,9 +54,9 @@ describe("Vitest runner routing", () => {
     const action = compositeAction("run-vitest");
     expect(action.runs.using).toBe("composite");
     expect(action.runs.steps.map(step => step.uses ?? step.run)).toEqual([
-      "actions/setup-node@v5",
-      "npm ci",
-      "npm test -- --tier=integration --bail=1",
+      "pnpm/setup@v3",
+      "pnpm install --frozen-lockfile",
+      "pnpm test --tier=integration --bail=1",
       "actions/upload-artifact@v6",
     ]);
     expect(action.runs.steps.at(-1)).toMatchObject({

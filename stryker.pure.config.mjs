@@ -9,7 +9,7 @@ process.env.AGENT_HARNESS_SOURCE_ROOT = fileURLToPath(new URL(".", import.meta.u
 
 /** @type {import('@stryker-mutator/api/core').PartialStrykerOptions} */
 const config = {
-  packageManager: "npm",
+  packageManager: "pnpm",
   testRunner: "vitest",
   vitest: {
     configFile: "vitest.mutation.pure.config.mts",
@@ -46,7 +46,7 @@ const config = {
   // unchanged date parsing and labels swept in by whole-file mutation. In
   // Reproduce with:
   //
-  //   npm run test:mutation:pure
+  //   pnpm run test:mutation:pure
   //
   // Measured 2026-08-29 for #473 with its five affected pure files narrowed by
   // `--mutate`: 250 mutants, 85.60% total and covered (214 killed, 36 survived,

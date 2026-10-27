@@ -86,6 +86,14 @@ it("updates independent title and text counters while typing and clearing the pu
   expect(screen.getByText("0/1000")).toBeVisible();
 });
 
+// The edit form's status switch is asserted in AdForm.test.tsx; a new ad has no status to toggle yet.
+it("offers no status switch while creating an ad", () => {
+  render(<PublicationJourney />);
+  expect(screen.getByRole("textbox", { name: "Título do anúncio" })).toBeVisible();
+  expect(screen.queryByRole("switch")).not.toBeInTheDocument();
+  expect(screen.queryByText("Anúncio Ativo")).not.toBeInTheDocument();
+});
+
 it("notifies the global reminder after the profile is saved", async () => {
   const user = userEvent.setup();
   const event = vi.spyOn(window, "dispatchEvent");

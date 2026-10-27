@@ -76,6 +76,22 @@ test("rechecks a same-UID login and revoked administrator role before exposing a
   expect(screen.getByText("hidden")).toBeInTheDocument();
 });
 
+test("reports a rejected permission check as unavailable and recovers on retry", async () => {
+  vi.mocked(canManageAd).mockRejectedValueOnce(new Error("network unavailable")).mockResolvedValueOnce({ status: "allowed" });
+  const auth = { user: { uid: "owner", email: "owner@example.com" }, isAdmin: false, isEditor: false, loading: false, logout: async () => {}, login: async () => ({ success: true }) };
+  function StatusProbe() {
+    const { allowed, unavailable, retry } = useAdManagementPermission("ad");
+    return <button onClick={retry}>{unavailable ? "unavailable" : allowed ? "allowed" : "hidden"}</button>;
+  }
+  render(<AuthContext.Provider value={auth}><StatusProbe /></AuthContext.Provider>);
+  await act(async () => {});
+  expect(screen.getByRole("button")).toHaveTextContent("unavailable");
+  fireEvent.click(screen.getByRole("button"));
+  await act(async () => {});
+  expect(screen.getByRole("button")).toHaveTextContent("allowed");
+  expect(canManageAd).toHaveBeenCalledTimes(2);
+});
+
 test("preserves controls through background refresh and exposes an accessible retry after failure", async () => {
   const auth = { user: { uid: "owner", email: "owner@example.com" }, isAdmin: false, isEditor: false, loading: false, logout: async () => {}, login: async () => ({ success: true }) };
   vi.mocked(canManageAd).mockResolvedValueOnce({ status: "allowed" }).mockResolvedValueOnce({ status: "unavailable" }).mockResolvedValueOnce({ status: "allowed" });

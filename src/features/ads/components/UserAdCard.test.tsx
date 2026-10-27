@@ -28,14 +28,14 @@ function renderPausedCard() {
 
 beforeEach(() => vi.clearAllMocks());
 
-test("shows a persistent profile recovery for the same Ad", async () => {
-  mocks.updateStatus.mockResolvedValue({
+test("shows a persistent profile recovery for the same Ad and activates only on an explicit retry", async () => {
+  mocks.updateStatus.mockResolvedValueOnce({
     success: false,
     reason: "profile",
     error: "Complete um contato válido no perfil antes de ativar o anúncio.",
     adId: "ad-1",
     advertiserProfileId: "profile-1",
-  });
+  }).mockResolvedValueOnce({ success: true, status: "active" });
   const user = userEvent.setup();
   renderPausedCard();
 
@@ -50,6 +50,13 @@ test("shows a persistent profile recovery for the same Ad", async () => {
   );
   expect(screen.getByRole("link", { name: "Corrigir perfil" })).toHaveAttribute("target", "_blank");
   expect(mocks.refresh).not.toHaveBeenCalled();
+  expect(screen.getByText("Pausado", { exact: true })).toBeVisible();
+  expect(mocks.updateStatus).toHaveBeenCalledOnce();
+
+  await user.click(screen.getByRole("button", { name: "Tentar novamente" }));
+  await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Anúncio ativo"));
+  expect(mocks.updateStatus).toHaveBeenNthCalledWith(2, "ad-1", "active");
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 });
 
 test("prevents concurrent activation and confirms the persisted active state", async () => {

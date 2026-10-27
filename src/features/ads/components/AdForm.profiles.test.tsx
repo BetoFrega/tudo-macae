@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import AdForm from "./AdForm";
@@ -70,10 +70,33 @@ describe("AdForm advertiser profile", () => {
       profileManagementHref: "/minha-conta/perfis",
       initialData: { categoryId: "cat-1", subcategoryId: "sub-1", title: "Anúncio", text: "Descrição com detalhes suficientes", advertiserProfileId: "prof-1", images: [] },
     });
+    const exit = screen.getByRole("link", { name: "Corrigir contato do anunciante" });
+    // fireEvent.click returns false when the handler cancels the navigation.
+    expect(fireEvent.click(exit)).toBe(true);
+    expect(confirm).not.toHaveBeenCalled();
     await user.type(screen.getByRole("textbox", { name: "Texto do Anúncio" }), " mais detalhes");
-    await user.click(screen.getByRole("link", { name: "Corrigir contato do anunciante" }));
+    expect(fireEvent.click(exit)).toBe(false);
     expect(confirm).toHaveBeenCalledWith(expect.stringContaining("alterações não salvas"));
     expect(screen.getByRole("textbox", { name: "Texto do Anúncio" })).toHaveValue("Descrição com detalhes suficientes mais detalhes");
+    confirm.mockRestore();
+  });
+
+  it("asks before leaving when only a new photo is unsaved", async () => {
+    const user = userEvent.setup();
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    Object.defineProperty(URL, "createObjectURL", { configurable: true, value: vi.fn(() => "blob:preview") });
+    Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: vi.fn() });
+    renderAdForm({
+      adId: "ad-1",
+      profiles: [mockProfiles[0]!],
+      profileManagementHref: "/minha-conta/perfis",
+      initialData: { categoryId: "cat-1", subcategoryId: "sub-1", title: "Anúncio", text: "Descrição com detalhes suficientes", advertiserProfileId: "prof-1", images: [] },
+    });
+    await user.upload(document.querySelector<HTMLInputElement>("#image-upload")!, new File(["photo"], "foto.png", { type: "image/png" }));
+    await expect(screen.findByTestId("photo-counter")).resolves.toHaveTextContent("1/3");
+    expect(fireEvent.click(screen.getByRole("link", { name: "Corrigir contato do anunciante" }))).toBe(false);
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(screen.getByTestId("photo-counter")).toHaveTextContent("1/3");
     confirm.mockRestore();
   });
 

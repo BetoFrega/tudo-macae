@@ -110,6 +110,7 @@ describe("AdForm Component", () => {
     expect(screen.getByRole("heading", { name: "Editar Anúncio" })).toBeInTheDocument();
     expect(screen.getByDisplayValue("Anúncio Existente")).toBeInTheDocument();
     expect(screen.getByText("Profile 2", { selector: "span" })).toBeInTheDocument(); // Profile 2 selected
+    expect(screen.getByRole("switch", { name: "Anúncio Ativo" })).toBeChecked();
 
     // Submit update
     const saveBtn = screen.getByRole("button", { name: "Salvar Alterações" });
@@ -123,5 +124,36 @@ describe("AdForm Component", () => {
     expect(adId).toBe("ad-existing");
     expect(formData.get("title")).toBe("Anúncio Existente");
     expect(formData.get("status")).toBe("active");
+  });
+
+  it("keeps the edit and offers email verification when activation needs a confirmed email", async () => {
+    vi.mocked(mockActions.updateAd)
+      .mockResolvedValueOnce({ success: false, reason: "email", error: "Confirme seu e-mail antes de reativar o anúncio.", adId: "ad-paused" })
+      .mockResolvedValueOnce({ success: true, slug: "anuncio-revisado" });
+    const user = userEvent.setup();
+    renderAdForm({
+      adId: "ad-paused",
+      initialData: {
+        categoryId: "cat-1", subcategoryId: "sub-1", title: "Anúncio pausado",
+        text: "Descrição do anúncio pausado com detalhes", advertiserProfileId: "prof-1", status: "paused", images: [],
+      },
+    });
+    const title = screen.getByRole("textbox", { name: "Título do Anúncio" });
+    await user.clear(title);
+    await user.type(title, "Anúncio revisado");
+    await user.click(screen.getByRole("switch", { name: "Anúncio Ativo" }));
+    await user.click(screen.getByRole("button", { name: "Salvar Alterações" }));
+
+    const recovery = await screen.findByRole("alert");
+    expect(recovery).toHaveTextContent("Confirme seu e-mail antes de reativar o anúncio.");
+    expect(recovery).toHaveTextContent("não ativa o anúncio automaticamente");
+    expect(screen.getByRole("link", { name: "Verificar e-mail" })).toHaveAttribute("href", "/minha-conta/verificar-email?ad=ad-paused");
+    expect(title).toHaveValue("Anúncio revisado");
+
+    await user.click(screen.getByRole("button", { name: "Salvar Alterações" }));
+    await waitFor(() => expect(mockActions.updateAd).toHaveBeenCalledTimes(2));
+    const retried = (mockActions.updateAd as Mock).mock.calls[1][1] as FormData;
+    expect(retried.get("title")).toBe("Anúncio revisado");
+    expect(retried.get("status")).toBe("active");
   });
 });

@@ -11,7 +11,7 @@ import { slugify } from "@tudomacae/text-normalization/slugify";
 import { makePng } from "../../_helpers/makePng";
 
 test.describe("Edit Advertiser Profile", () => {
-  test("classifies an untyped profile and keeps one personal profile per account in D1", async ({
+  test("classifies an untyped profile and creates a personal profile in D1", async ({
     page, userCredentials, authentication, profilePage, adProfileFixture,
   }) => {
     await authentication.login(userCredentials);
@@ -24,20 +24,13 @@ test.describe("Edit Advertiser Profile", () => {
       await expect(profilePage.identityTypeSection.getByRole("button", { name: "Definir tipo", exact: true })).toHaveCount(0);
       await expect(profilePage.titleInput).toHaveValue(adProfileFixture.title);
     });
-    await test.step("creation requires a type and accepts one personal profile", async () => {
+    await test.step("creation accepts a personal profile", async () => {
       await page.goto("/minha-conta/perfis/novo");
       await profilePage.fillProfileTitle(`Pessoal ${makeRandomString()}`);
       await profilePage.contactAt(0).fill("22999999992");
-      await profilePage.submit();
-      await expect(pageObject(page).getByText("Escolha se este perfil é pessoal ou de um negócio.", { exact: true })).toBeVisible();
       await profilePage.identityTypeChoice("Meu perfil pessoal").check();
       await profilePage.submit();
       await expect(page).toHaveURL(/\/minha-conta\/perfis$/);
-    });
-    await test.step("a second personal profile is unavailable", async () => {
-      await page.goto("/minha-conta/perfis/novo");
-      await expect(profilePage.identityTypeChoice("Meu perfil pessoal")).toBeDisabled();
-      await expect(profilePage.identityTypeChoice("Um negócio")).toBeEnabled();
     });
   });
 

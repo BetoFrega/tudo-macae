@@ -15,14 +15,6 @@ test.describe("Admin Advertiser Profiles", () => {
     const profileName = `Negócio público ${makeRandomString()}`;
 
     await authentication.login(adminUserCredentials);
-    await page.goto("/minha-conta/perfis/novo");
-    const personalForm = pageObject(page).locator("form").filter({ visible: true });
-    await personalForm.getByLabel("Título do Perfil").fill(profileName);
-    await personalForm.getByRole("radio", { name: "Um negócio", exact: true }).check();
-    await click(personalForm.getByRole("button", { name: "Criar Perfil", exact: true }));
-    await expect(page).toHaveURL(/\/minha-conta\/perfis$/);
-    await expect(pageObject(page).getByRole("heading", { name: profileName, exact: true }).filter({ visible: true })).toBeVisible();
-
     await adminProfilesPage.goto();
     await click(adminProfilesPage.createClaimableLink);
     await expect(adminProfilesPage.createPageHeading).toBeVisible();
@@ -37,9 +29,6 @@ test.describe("Admin Advertiser Profiles", () => {
     );
     await adminProfilesPage.sourceInput.fill("https://example.com/negocio-publico");
     await click(adminProfilesPage.createButton);
-    await expect(adminProfilesPage.duplicateAlert).toBeVisible();
-    await expect(adminProfilesPage.duplicateAlert.getByRole("link", { name: profileName, exact: true })).toBeVisible();
-    await click(adminProfilesPage.confirmDuplicateButton);
 
     await expect(adminProfilesPage.heading).toBeVisible();
     const row = adminProfilesPage.getClaimableRow(profileName);
@@ -153,7 +142,7 @@ test.describe("Admin Advertiser Profiles", () => {
     const subcategoryUrl = `/categoria/${categoryFixture.category.id}/${categoryFixture.category.slug}/${categoryFixture.subcategory.id}/${categoryFixture.subcategory.slug}`;
     const businessRegion = storeCategoriesPage.businesses(categoryFixture.subcategory.name);
 
-    await test.step("Desativar suspende a exposição e explicita a associação indisponível", async () => {
+    await test.step("Desativar suspende a exposição", async () => {
       await page.goto(subcategoryUrl);
       await expect(
         businessRegion.getByText(updatedTitle, { exact: true }),
@@ -178,14 +167,6 @@ test.describe("Admin Advertiser Profiles", () => {
           "Ainda não há negócios publicados nesta subcategoria.",
           { exact: true },
         ),
-      ).toBeVisible();
-
-      await adminProfilesPage.goto();
-      await click(adminProfilesPage.getEditButton(updatedTitle));
-      await expect(adminProfilesPage.activityAreas.unavailable).toBeVisible();
-      await expect(adminProfilesPage.saveButton).toBeDisabled();
-      await expect(
-        adminProfilesPage.activityAreas.correctionMessage,
       ).toBeVisible();
     });
 

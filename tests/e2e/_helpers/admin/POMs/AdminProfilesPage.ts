@@ -105,14 +105,6 @@ export class AdminProfilesPage extends BasePage {
     return this.getByRole("button", { name: "Criar perfil público", exact: true });
   }
 
-  get duplicateAlert() {
-    return this.getByRole("alert").filter({ hasText: "podem representar o mesmo negócio" });
-  }
-
-  get confirmDuplicateButton() {
-    return this.getByRole("button", { name: "Criar mesmo assim", exact: true });
-  }
-
   get deleteButton() {
     return this.getByRole("button", { name: "Excluir perfil", exact: true });
   }

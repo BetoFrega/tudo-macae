@@ -8,7 +8,7 @@
  * a second spelling that drifted would either orphan the old documents or start
  * overwriting somebody's work.
  */
-export const DEMO_KEY_PREFIX = "demo-";
+const DEMO_KEY_PREFIX = "demo-";
 
 /** The uid or document id a data-file key always resolves to. */
 export function demoIdFor(key: string): string {

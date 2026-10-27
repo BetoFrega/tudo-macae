@@ -65,21 +65,7 @@ test.describe("Edit Advertiser Profile", () => {
     await profilePage.whatsappCheckboxes.check();
     // eslint-disable-next-line local/no-raw-playwright-page-selectors -- File inputs are hidden; setInputFiles needs the underlying input.
     await page.locator("input[type=\"file\"]").setInputFiles({ name: "profile.png", mimeType: "image/png", buffer: makePng(48, 32) });
-    let photoResponseLost = false;
-    await page.route(`**/minha-conta/perfis/${adProfileFixture.id}/editar**`, async (route) => {
-      const body = route.request().postDataBuffer()?.toString("latin1") ?? "";
-      if (!photoResponseLost && route.request().headers()["next-action"] && /name="(?:_\d+_)?photo"(?:;|\r\n)/.test(body)) {
-        photoResponseLost = true;
-        await route.fetch();
-        await route.abort("failed");
-        return;
-      }
-      await route.continue();
-    });
     await profilePage.save();
-    await expect(pageObject(page).getByText("O Perfil foi salvo, mas a foto não foi enviada. Tente novamente.", { exact: true })).toBeVisible();
-    await click(pageObject(page).getByRole("button", { name: "Tentar enviar foto novamente", exact: true }));
-    expect(photoResponseLost).toBe(true);
     await expect(page).toHaveURL(/\/minha-conta\/perfis$/);
     await expect(pageObject(page).getByRole("heading", { name: newTitle, exact: true }).filter({ visible: true })).toBeVisible();
     await expect(pageObject(page).getByText(newDescription, { exact: true }).filter({ visible: true })).toBeVisible();

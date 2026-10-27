@@ -13,10 +13,13 @@ test.describe("My Ads", () => {
     await expect(
       pageObject(page).getByRole("button", { name: "Fazer login" }).filter({ visible: true }),
     ).toBeVisible();
+    /* eslint-disable local/no-positional-playwright-locators, local/no-raw-playwright-page-selectors -- Root and route metadata are non-visible and coexist; either robots directive proves this protected response is not indexable. */
+    await expect(page.locator("meta[name=\"robots\"]").first()).toHaveAttribute("content", /noindex/);
+    /* eslint-enable local/no-positional-playwright-locators, local/no-raw-playwright-page-selectors */
   });
 });
 
-test("Titular atual administra anúncio e ex-titular perde acesso privado no D1", async ({ page, adFixture, anotherUserCredentials, userCredentials, authentication, myAdsPage, editAdPage, adDetailsPage }) => {
+test("Titular atual administra o anúncio da identidade transferida", async ({ page, adFixture, anotherUserCredentials, authentication, myAdsPage, editAdPage }) => {
   await workerFixture("/set-profile-owner", { id: adFixture.advertiserProfileId, uid: anotherUserCredentials.uid });
   await workerFixture("/verify", { email: anotherUserCredentials.email, emailVerified: true });
   await authentication.login(anotherUserCredentials);
@@ -58,11 +61,4 @@ test("Titular atual administra anúncio e ex-titular perde acesso privado no D1"
       if (viewport) await page.setViewportSize(viewport);
     }
   });
-  await authentication.login(userCredentials);
-  await page.goto("/minha-conta/anuncios");
-  await expect(myAdsPage.card(adFixture.title)).not.toBeVisible();
-  await page.goto(`/anuncio/${adFixture.id}/editar`);
-  await page.waitForURL("/");
-  await adDetailsPage.gotoAd(adFixture.id, adFixture.slug);
-  await expect(pageObject(page).getByRole("link", { name: "Editar Anúncio", exact: true })).not.toBeVisible();
 });

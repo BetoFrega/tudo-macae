@@ -25,7 +25,7 @@ export default function AdminLayout({
   );
 }
 
-async function AdminLayoutContent({ children }: { children: React.ReactNode }) {
+export async function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   if (!user) return unauthorized();
   if (!user.isAdmin) return forbidden();

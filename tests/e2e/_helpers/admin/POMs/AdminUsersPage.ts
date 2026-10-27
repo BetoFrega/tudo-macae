@@ -1,27 +1,10 @@
-import type { Page } from "@playwright/test";
 import { BasePage } from "../../fixtures/POMs/BasePage";
-import type { UserSidebar } from "../../fixtures/POMs/UserSidebar";
-import type { AdminDashboardPage } from "./AdminDashboardPage";
 
 /**
  * Page object model for the Admin Users Page.
  * @link /src/app/admin/usuarios/page.tsx
  */
 export class AdminUsersPage extends BasePage {
-  sidebar: UserSidebar;
-  dash: AdminDashboardPage;
-  constructor(page: Page, sidebar: UserSidebar, dash: AdminDashboardPage) {
-    super(page);
-    this.sidebar = sidebar;
-    this.dash = dash;
-  }
-
-  async goto() {
-    await this.sidebar.open();
-    await this.sidebar.clickAdminPanel();
-    await this.dash.clickViewUsers();
-  }
-
   /**
    * Navigate to users page via sidebar (open sidebar -> admin panel -> users link).
    * Useful when already logged in as admin but not on admin pages.
@@ -114,15 +97,5 @@ export class AdminUsersPage extends BasePage {
 
   get confirmButton() {
     return this.getByRole("button", { name: "Confirmar" });
-  }
-
-  get cancelButton() {
-    return this.getByRole("button", { name: "Cancelar" });
-  }
-
-  get selfRemoveWarning() {
-    return this.getByText(
-      "Você não pode remover seu próprio status de admin",
-    );
   }
 }

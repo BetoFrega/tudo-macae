@@ -34,7 +34,9 @@ relevante da aplicação, registrar o impedimento e manter o E2E.
 ## Fronteiras que precisam permanecer
 
 - Claims/sessão e autorização por rota: preservar cookies reais, renovação e
-  bloqueios no app. A matriz pode consolidar papel × rota, não eliminar rotas.
+  bloqueios no app. Acesso negado segue a regra da camada E2E em
+  [Test Selection](../../agents/test-selection.md): um caso por superfície
+  protegida, e as demais variantes em testes de runtime do Worker.
 - Publicação, edição, exclusão e pausa de Anúncio: preservar preparação pela
   aplicação, conclusão de ações e leitura pública/cache. Writers diretos não
   substituem esses contratos.

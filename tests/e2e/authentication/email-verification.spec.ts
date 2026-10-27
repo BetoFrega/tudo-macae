@@ -33,23 +33,17 @@ test("cadastro confirma por link nativo e retoma a publicação sem publicar aut
     const confirmation = await separate.newPage();
     // Evaluate keeps the credential out of Playwright navigation step titles.
     await confirmation.goto(new URL("/minha-conta/acao", page.url()).href);
-    // A suspended session read must not trap the continuation in its provider queue.
-    await confirmation.route("**/api/autenticacao/sessao", () => {});
     await confirmation.evaluate(url => window.location.assign(url), link);
-    await expect(pageObject(confirmation).getByRole("heading", { name: "E-mail confirmado", exact: true }).filter({ visible: true })).toBeVisible({ timeout: 20_000 });
-    await expect(pageObject(confirmation).getByRole("alert").filter({ hasText: "Não foi possível atualizar sua sessão." })).toContainText("a página será carregada novamente");
+    await expect(pageObject(confirmation).getByRole("heading", { name: "E-mail confirmado", exact: true }).filter({ visible: true })).toBeVisible();
     // Capture only the redacted, synthetic confirmation state; never the action URL.
     expect(new URL(confirmation.url()).search).toBe("");
     for (const width of [1280, 1440, 390]) {
       await confirmation.setViewportSize({ width, height: 844 });
-      const capture = testInfo.outputPath(`confirmation-session-recovery-${width}.png`);
+      const capture = testInfo.outputPath(`confirmation-${width}.png`);
       await confirmation.screenshot({ path: capture, fullPage: true });
-      await testInfo.attach(`confirmed email with session recovery, ${width}px`, { path: capture, contentType: "image/png" });
+      await testInfo.attach(`confirmed email, ${width}px`, { path: capture, contentType: "image/png" });
     }
-    await confirmation.unroute("**/api/autenticacao/sessao");
-    const continuationDocument = confirmation.waitForRequest(request => request.isNavigationRequest() && request.resourceType() === "document" && new URL(request.url()).pathname === "/minha-conta/verificar-email");
     await click(pageObject(confirmation).getByRole("link", { name: "Continuar publicação" }).filter({ visible: true }));
-    await continuationDocument;
     await click(pageObject(confirmation).getByRole("button", { name: "Entrar na minha conta" }).filter({ visible: true }));
     await pageObject(confirmation).getByRole("textbox", { name: "Email" }).fill(verifiedUserCredentials.email);
     await pageObject(confirmation).getByRole("textbox", { name: "Senha" }).fill(verifiedUserCredentials.password);

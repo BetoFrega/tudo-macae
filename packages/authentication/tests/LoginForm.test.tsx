@@ -60,3 +60,26 @@ test("registration announces the attempt limit while preserving credentials and 
   expect(screen.getByLabelText("Senha")).toHaveValue("safe-fixture-password");
   expect(screen.getByRole("checkbox")).toBeChecked();
 });
+
+test("registration requires accepting the terms before creating the account", async () => {
+  vi.stubGlobal("ResizeObserver", class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  });
+  login.mockResolvedValue({ success: true });
+  const user = userEvent.setup();
+  const onSuccess = vi.fn();
+  render(<RegisterForm email="ana@example.com" onEmailChange={vi.fn()} onSuccess={onSuccess} onSwitchToLogin={vi.fn()} />);
+  await user.type(screen.getByLabelText("Senha"), "safe-fixture-password");
+  await user.click(screen.getByRole("button", { name: "Criar conta" }));
+  expect(await screen.findByRole("alert")).toHaveTextContent("Você precisa concordar com os Termos de Uso e Política de Privacidade.");
+  expect(login).not.toHaveBeenCalled();
+  expect(onSuccess).not.toHaveBeenCalled();
+
+  await user.click(screen.getByRole("checkbox", { name: /Termos de Uso/ }));
+  await user.click(screen.getByRole("button", { name: "Criar conta" }));
+  expect(login).toHaveBeenCalledExactlyOnceWith({ method: "email-password", action: "register", data: { email: "ana@example.com", password: "safe-fixture-password", challengeToken: undefined } });
+  expect(onSuccess).toHaveBeenCalledOnce();
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});

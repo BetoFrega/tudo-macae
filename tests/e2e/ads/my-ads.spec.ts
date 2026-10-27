@@ -29,20 +29,32 @@ test("Titular atual administra anúncio e ex-titular perde acesso privado no D1"
   await editAdPage.saveChanges();
   await expect(pageObject(page).getByText("Conteúdo atualizado pelo titular atual da identidade", { exact: true })).toBeVisible();
   await expect(pageObject(page).getByRole("link", { name: "Editar Anúncio", exact: true })).toBeVisible();
-  await test.step("No celular, os controles do anúncio não sobrepõem a descrição", async () => {
-    // The permission notice renders in this same controls slot; its unavailable state is covered by useAdManagementPermission.test.tsx.
+  await test.step("No celular, o aviso de permissão indisponível fica abaixo da descrição", async () => {
+    // Kept in the browser because no happy path renders the permission notice and only layout proves its placement;
+    // its states and retry are covered by useAdManagementPermission.test.tsx.
     const viewport = page.viewportSize();
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.route("**/*", async (route) => {
+      const request = route.request();
+      if (request.method() === "POST" && request.headers()["next-action"] && request.postData()?.includes(adFixture.id)) {
+        await route.abort("failed");
+      }
+      else {
+        await route.continue();
+      }
+    });
     try {
+      await page.reload();
+      const status = pageObject(page).getByRole("status").filter({ hasText: "Não foi possível confirmar suas permissões." });
+      await expect(status).toBeVisible();
       const title = await pageObject(page).getByRole("heading", { name: "Descrição", exact: true }).boundingBox();
-      const controls = await pageObject(page).getByRole("link", { name: "Editar Anúncio", exact: true }).boundingBox();
+      const notice = await status.boundingBox();
       expect(title).not.toBeNull();
-      expect(controls).not.toBeNull();
-      const overlaps = controls!.x < title!.x + title!.width && title!.x < controls!.x + controls!.width
-        && controls!.y < title!.y + title!.height && title!.y < controls!.y + controls!.height;
-      expect(overlaps).toBe(false);
+      expect(notice).not.toBeNull();
+      expect(notice!.y).toBeGreaterThanOrEqual(title!.y + title!.height);
     }
     finally {
+      await page.unroute("**/*");
       if (viewport) await page.setViewportSize(viewport);
     }
   });

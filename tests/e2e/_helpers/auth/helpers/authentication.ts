@@ -5,7 +5,6 @@ export {
   registerTestUser,
   deleteUserByEmail,
   deleteUser,
-  updateTestUserClaims,
 } from "../../../../_helpers/auth/helpers/authentication";
 
 /**

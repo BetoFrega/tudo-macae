@@ -1,2 +1,2 @@
 "use client";
-export { LoginModalContext, LoginModalProvider, useLoginModal } from "@tudomacae/authentication/ui";
+export { LoginModalContext, useLoginModal } from "@tudomacae/authentication/ui";

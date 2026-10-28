@@ -60,7 +60,7 @@ export default async function SubcategoryPage(props: SubcategoryPageProps) {
   );
 }
 
-async function SubcategoryContent({
+export async function SubcategoryContent({
   params,
   searchParams,
 }: {

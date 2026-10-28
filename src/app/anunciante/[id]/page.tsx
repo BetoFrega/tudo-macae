@@ -54,7 +54,7 @@ async function LegacyAdvertiserContent({ params, searchParams }: AdvertiserPageP
   return <LegacyAdvertiser profileId={id} cursor={cursor} />;
 }
 
-async function LegacyAdvertiser({ profileId, cursor }: { profileId: string; cursor?: string | string[] | undefined }) {
+export async function LegacyAdvertiser({ profileId, cursor }: { profileId: string; cursor?: string | string[] | undefined }) {
   const [profile, adPage, categories] = await Promise.all([
     getPublicAdvertiserProfile(profileId),
     recoverAdPage(() => listAdsByProfilePage(profileId, cursor)),

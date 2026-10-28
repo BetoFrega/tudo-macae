@@ -109,3 +109,14 @@ test("preserves controls through background refresh and exposes an accessible re
   await act(async () => {});
   expect(screen.getByRole("button", { name: "Editar Anúncio" })).toBeInTheDocument();
 });
+
+test("hides edit and delete controls from a denied account", async () => {
+  vi.mocked(canManageAd).mockResolvedValueOnce({ status: "denied" });
+  const auth = { user: { uid: "visitor", email: "visitor@example.com" }, isAdmin: false, isEditor: false, loading: false, logout: async () => {}, login: async () => ({ success: true }) };
+  render(<AuthContext.Provider value={auth}><AdManagementControls adId="ad" /></AuthContext.Provider>);
+  await act(async () => {});
+  expect(canManageAd).toHaveBeenCalledWith("ad");
+  expect(screen.queryByRole("button", { name: "Editar Anúncio" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Excluir" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+});

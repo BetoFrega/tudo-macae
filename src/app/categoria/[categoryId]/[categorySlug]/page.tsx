@@ -58,7 +58,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
   );
 }
 
-async function CategoryContent({
+export async function CategoryContent({
   params,
   searchParams,
 }: {

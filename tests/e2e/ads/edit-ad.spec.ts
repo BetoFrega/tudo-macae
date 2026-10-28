@@ -96,36 +96,17 @@ test.describe("Edit Ad Permissions", () => {
     await page.screenshot({ path: testInfo.outputPath("updated-ad-contact-mobile.png"), fullPage: true });
   });
 
-  test("Não-proprietário não vê controles de edição/exclusão e acesso direto é bloqueado", async ({
+  test("Não-proprietário é redirecionado ao abrir o editor", async ({
     page,
     anotherUserCredentials,
     authentication,
     adFixture,
   }) => {
-    const adUrl = `/anuncio/${adFixture.id}/${adFixture.slug}`;
-
+    // The ownership check runs in the editor page itself; hidden controls are covered by
+    // useAdManagementPermission.test.tsx and ownership variants by the Worker runtime tests.
     await authentication.login(anotherUserCredentials);
-    await expect(
-      pageObject(page).getByRole("button", { name: "Minha conta" }).filter({ visible: true }),
-    ).toBeVisible();
-
-    await page.goto(adUrl);
-    await expect(
-      pageObject(page).getByRole("heading", { name: adFixture.title })
-        .filter({ visible: true }),
-    ).toBeVisible({ timeout: 10000 });
-
-    await expect(
-      pageObject(page).getByRole("link", { name: "Editar Anúncio" }).filter({ visible: true }),
-    ).not.toBeVisible();
-
-    await expect(
-      pageObject(page).getByRole("button", { name: "Excluir" }).filter({ visible: true }),
-    ).not.toBeVisible();
-
-    // Also verify direct URL access is blocked - should redirect away from edit
     await page.goto(`/anuncio/${adFixture.id}/editar`);
-    await expect(page).not.toHaveURL(/.*\/editar/);
+    await page.waitForURL("/");
   });
 
   test("Admin vê exclusão e pode editar anúncio de outro usuário", async ({

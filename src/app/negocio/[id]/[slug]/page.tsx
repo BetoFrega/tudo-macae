@@ -61,7 +61,7 @@ export default function BusinessPage(props: BusinessPageProps) {
   return <Suspense fallback={<Loading className="min-h-96" />}><BusinessContent {...props} /></Suspense>;
 }
 
-async function BusinessContent({ params, searchParams }: BusinessPageProps) {
+export async function BusinessContent({ params, searchParams }: BusinessPageProps) {
   await connection();
   const { id, slug } = await params;
   if (!isPublicAdProfileId(id)) notFound();
@@ -187,7 +187,7 @@ interface BusinessAdsProps {
   firstActivity: ReturnType<typeof resolveBusinessActivities>[number] | undefined;
 }
 
-function BusinessAds({ firstActivity, ...listing }: BusinessAdsProps) {
+export function BusinessAds({ firstActivity, ...listing }: BusinessAdsProps) {
   const { adPage, cursor } = listing;
   if (adPage.items.length > 0 || cursor || adPage.nextCursor || adPage.invalidCursor) {
     return <BusinessAdsSection {...listing} />;

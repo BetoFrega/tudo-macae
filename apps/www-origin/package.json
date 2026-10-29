@@ -12,7 +12,7 @@
     "@tudomacae/www-origin-routing": "*"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261025.1",
+    "@cloudflare/workers-types": "^5.20261026.1",
     "@types/node": "^26",
     "miniflare": "^5.20261019.2-beta",
     "typescript": "^6",

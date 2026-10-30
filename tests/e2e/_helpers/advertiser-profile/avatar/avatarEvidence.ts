@@ -62,12 +62,6 @@ export function isAvatarVariant(url: URL): boolean {
   return url.pathname.startsWith("/api/classifieds/photos/public/") && url.searchParams.has("w");
 }
 
-const maxDiagnosticRequestCount = 20;
-
-export function incrementDiagnosticCount(count: number): number {
-  return Math.min(count + 1, maxDiagnosticRequestCount);
-}
-
 export async function captureAvatarSurface(
   page: Page,
   consumer: string,

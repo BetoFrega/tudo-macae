@@ -10,7 +10,7 @@ import { Loading } from "@/components/ui/loading";
 export default function CatalogPage(props: PageProps<"/minha-conta/negocios/[businessId]/catalogo">) {
   return <Suspense fallback={<Loading />}><CatalogContent {...props} /></Suspense>;
 }
-async function CatalogContent({ params }: PageProps<"/minha-conta/negocios/[businessId]/catalogo">) {
+export async function CatalogContent({ params }: PageProps<"/minha-conta/negocios/[businessId]/catalogo">) {
   await connection();
   const user = await getCurrentUser();
   if (!user) unauthorized();

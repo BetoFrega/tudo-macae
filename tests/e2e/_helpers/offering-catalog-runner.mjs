@@ -17,8 +17,9 @@ const key = join(directory, "key.pem");
 const certificate = join(directory, "cert.pem");
 copyFileSync(new URL("../fixtures/offering-catalog-provider/key.pem", import.meta.url), key);
 copyFileSync(new URL("../fixtures/offering-catalog-provider/cert.pem", import.meta.url), certificate);
+// The catalog stays disabled for a business until the spec releases it; flag mapping
+// for other provider answers is covered by packages/advertiser-identity/tests/offeringFlag.test.ts.
 const decisions = new Map();
-const pending = new Set();
 async function readJsonBody(request) {
   let body = "";
   for await (const chunk of request) body += chunk;
@@ -27,25 +28,13 @@ async function readJsonBody(request) {
 
 function answerControl(input, response) {
   if (input.decision) decisions.set(input.businessId, input.decision);
-  response.end(JSON.stringify({ pending: pending.has(input.businessId) }));
+  response.end("{}");
 }
 
-async function answerFlags(input, response) {
-  const businessId = input.person_properties?.business_id;
-  const decision = decisions.get(businessId) ?? "disabled";
-  if (decision === "slow") {
-    pending.add(businessId);
-    response.once("close", () => pending.delete(businessId));
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    if (response.destroyed) return;
-  }
-  if (decision === "unavailable") {
-    response.statusCode = 503;
-    response.end("{}");
-    return;
-  }
+function answerFlags(input, response) {
+  const decision = decisions.get(input.person_properties?.business_id) ?? "disabled";
   response.end(JSON.stringify({ flags: {
-    "business-offering-catalog": { enabled: decision === "enabled", reason: { code: decision === "outside_audience" ? "no_condition_match" : "condition_match" } },
+    "business-offering-catalog": { enabled: decision === "enabled", reason: { code: "condition_match" } },
     "authentication-render-session-sharing": { enabled: true },
     "business-registration-visibility": { enabled: true },
   } }));
@@ -60,7 +49,7 @@ const server = createServer({ key: readFileSync(key), cert: readFileSync(certifi
   const input = await readJsonBody(request);
   response.setHeader("content-type", "application/json");
   if (request.url === "/control") return answerControl(input, response);
-  await answerFlags(input, response);
+  answerFlags(input, response);
 });
 await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
 const port = server.address().port;

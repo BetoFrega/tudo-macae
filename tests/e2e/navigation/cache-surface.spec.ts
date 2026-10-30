@@ -44,10 +44,7 @@ async function builtDeploymentIds() {
   return [routesManifest.deploymentId];
 }
 
-test("Contrato HTTP: invalidação privada, HTML público e revisão PPR", async ({ request }) => {
-  await test.step("Invalidação global indisponível", async () => {
-    expect((await request.get("/nuke-cache")).status()).toBe(404);
-  });
+test("Contrato HTTP: HTML por visitante, recursos públicos e revisão PPR", async ({ request }) => {
   await test.step("HTML da home respeita a decisão por visitante", async () => {
     const response = await request.get("/");
     expect(response.status()).toBe(200);

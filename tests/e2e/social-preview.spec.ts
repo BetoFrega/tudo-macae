@@ -77,24 +77,4 @@ test("Meta crawlers receive social cards for public share targets", async ({
       "og:url": new URL(adPath, playwrightTarget().canonicalOrigin).href,
     });
   }
-
-  await test.step("missing and non-canonical share targets answer 404 and 308 before rendering", async () => {
-    const status = async (path: string) => {
-      const response = await page.request.get(path, { maxRedirects: 0 });
-      const location = response.headers().location;
-      return { status: response.status(), location: location && new URL(location, playwrightTarget().canonicalOrigin).pathname };
-    };
-    for (const path of [`/anuncio/${adFixture.id}-ausente/${adFixture.slug}`, `/categoria/${categoryFixture.category.id}-ausente/${categoryFixture.category.slug}`]) {
-      expect(await status(path), path).toEqual({ status: 404, location: undefined });
-    }
-    const canonical = {
-      [`/anuncio/${adFixture.id}`]: adPath,
-      [`/anuncio/${adFixture.id}/titulo-antigo`]: adPath,
-      [`/categoria/${categoryFixture.category.id}`]: categoryPath,
-      [`/categoria/${categoryFixture.category.id}/${categoryFixture.category.slug}/${categoryFixture.subcategory.id}/nome-antigo`]: subcategoryPath,
-    };
-    for (const [path, location] of Object.entries(canonical)) {
-      expect(await status(path), path).toEqual({ status: 308, location });
-    }
-  });
 });

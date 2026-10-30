@@ -13,10 +13,30 @@ async function migrateDatabases(runtime, directory) {
       await migrated.exec(await readFile(join(directory, migrations, file), "utf8"));
   }
 }
+/**
+ * Stands in for the `ArticleIndexWriter` entrypoint of `apps/public-article-index`, so a Blog save confirms its
+ * distribution. Without this binding every save answers `unconfirmed`. The index's version rules and an unbound or
+ * failing index are covered by `tests/editorialBlogDistribution.runtime.test.ts`.
+ */
+function articleIndexWriter(directory) {
+  const contents = `import { WorkerEntrypoint } from "cloudflare:workers";
+export class ArticleIndexWriter extends WorkerEntrypoint {
+  summaries() { return []; }
+  publish() { return "confirmed"; }
+  retire() { return "confirmed"; }
+}
+export default { fetch: () => new Response(null, { status: 404 }) };`;
+  return {
+    name: "article-index-writer",
+    compatibilityDate: "2026-09-25",
+    manifest: { mainModule: "articleIndexWriter.js", modulesRoot: directory, modules: { "articleIndexWriter.js": { type: "esm", contents } } },
+  };
+}
 /** Blog and Media over the editorial D1, with Hosted Images faked on R2 as in the runtime tests. */
 function editorialBindings(mediaUploadOrigin, publicOrigin) {
   return {
     EDITORIAL_DB: { type: "d1", id: "editorial-e2e" },
+    ARTICLE_INDEX: { type: "worker", worker: "article-index-writer", exportName: "ArticleIndexWriter" },
     MEDIA_HOSTED: { type: "r2", name: "editorial-media" },
     // The browser uploads to the app it is on, which is not the canonical origin outside production.
     MEDIA_UPLOAD_ORIGIN: { type: "json", value: mediaUploadOrigin ?? publicOrigin },
@@ -120,6 +140,7 @@ export async function startAuthenticationFixture({
             },
           },
         },
+        { config: articleIndexWriter(directory) },
       ],
     };
     runtime = new Miniflare(options);

@@ -49,6 +49,7 @@ test.skipIf(inWorkers)("the application entrypoint collects only application jou
     expect(isolatedHarness.length).toBeGreaterThan(0);
     expect(appHarness).toEqual([
       "fixture-cleanup.spec.ts: Falha ao salvar subcategoria remove a categoria criada pela fixture",
+      "session-fixture-readiness.spec.ts: A fixture de sessão espera a leitura inicial da pendência antes de liberar navegação",
     ]);
     const partition = [...application, ...isolatedHarness, ...appHarness];
     expect(new Set(partition).size).toBe(partition.length);

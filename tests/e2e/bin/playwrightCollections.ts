@@ -6,5 +6,5 @@ export const standaloneHarnessTests = [
   "**/diagnostics/http-failures.spec.ts",
 ];
 
-export const applicationHarnessTests = ["**/fixture-cleanup.spec.ts"];
+export const applicationHarnessTests = ["**/fixture-cleanup.spec.ts", "**/session-fixture-readiness.spec.ts"];
 export const harnessTests = [...standaloneHarnessTests, ...applicationHarnessTests];

@@ -1,5 +1,5 @@
-import { pageObject } from "../_helpers/fixtures/POMs/pageObject";
-import { expect, test } from "../_helpers/fixtures";
+import { pageObject } from "./_helpers/fixtures/POMs/pageObject";
+import { expect, test } from "./_helpers/fixtures";
 
 const reminderPath = "/api/autenticacao/lembrete";
 

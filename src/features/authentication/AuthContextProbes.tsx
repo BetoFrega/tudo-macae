@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from "./AuthContext";
  * Reads the roles back out of the context the way any consumer would, so the
  * assertions are about what a component would see rather than about state.
  */
-export function RoleProbe() {
+function RoleProbe() {
   const { user, isAdmin, isEditor, logout, logoutError } = useAuth();
   return (
     <>

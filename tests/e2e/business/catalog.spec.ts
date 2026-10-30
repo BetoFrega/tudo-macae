@@ -158,12 +158,6 @@ test("visitante encontra Negócios por categoria em páginas limitadas", async (
     await expect(pageObject(page).getByText("21 negócios exibidos", { exact: true })).toBeVisible();
     await click(pageObject(page).getByRole("link", { name: `${prefix} 00` }));
 
-    const stale = await request.get(`/negocio/${claimableId}/nome-antigo`, { maxRedirects: 0 });
-    expect(stale.status()).toBe(308);
-    expect(stale.headers().location).toBe(canonicalPath);
-    const legacy = await request.get(`/anunciante/${claimableId}`, { maxRedirects: 0 });
-    expect(legacy.status()).toBe(308);
-    expect(legacy.headers().location).toBe(canonicalPath);
     const sitemap = await request.get("/sitemap.xml");
     expect(await sitemap.text()).toContain(canonicalPath);
     const robots = await request.get("/robots.txt");

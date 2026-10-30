@@ -26,15 +26,15 @@
     "@tudomacae/public-image-delivery": "workspace:*",
     "@tudomacae/text-normalization": "workspace:*",
     "@tudomacae/www-origin-routing": "workspace:*",
-    "better-auth": "1.7.12",
+    "better-auth": "1.7.13",
     "jose": "^6.2.12",
     "lucide-react": "^1.59.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261025.1",
+    "@cloudflare/workers-types": "^5.20261027.1",
     "typescript": "^6",
     "vitest": "^5.0.5",
-    "wrangler": "^4.151.2"
+    "wrangler": "^4.153.0"
   }
 }

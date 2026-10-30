@@ -22,7 +22,7 @@ describe("classifyPullRequestDiff", () => {
     { files: [{ filename: "AGENTS.md", status: "modified" }] },
     { files: [{ filename: ".agents/skills/example/SKILL.md", status: "modified" }] },
     { files: [{ filename: ".github/workflows/vitest.yml", status: "modified" }] },
-    { files: [{ filename: "package-lock.json", status: "modified" }] },
+    { files: [{ filename: "pnpm-lock.yaml", status: "modified" }] },
     { files: [{ filename: "src/page.tsx", status: "modified" }] },
     { files: [{ filename: "docs/readme.MD", status: "modified" }] },
     { files: [{ filename: "docs/renamed.md", previous_filename: "src/page.tsx", status: "renamed" }] },

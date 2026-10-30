@@ -24,7 +24,7 @@ representative diff scope; `slugify.ts` itself is unchanged by this documentatio
 work. Reproduce the probe with:
 
 ```bash
-mise exec -- npm run test:mutation:pure -- --mutate 'src/lib/slugify.ts:84-87'
+mise exec -- pnpm run test:mutation:pure --mutate 'src/lib/slugify.ts:84-87'
 ```
 
 Stryker produced `reports/mutation-pure/mutation.html` in 5 seconds: only

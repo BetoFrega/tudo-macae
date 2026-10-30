@@ -22,7 +22,7 @@ test("delivers every main push or a manual dispatch and preserves active deliver
 });
 test("checks every Worker app, not only the affected ones, before production mutation", () => {
   const runs = workflow.jobs.checks.steps.map((step: { run?: string }) => step.run ?? "").join("\n");
-  expect(runs).toContain("npx turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only");
+  expect(runs).toContain("pnpm exec turbo run typecheck build test --filter='!//' --filter='!@tudomacae/e2e' --filter='!./packages/*' --only");
   expect(runs).not.toContain("--affected");
   // node:test suites sit outside turbo's test tasks.
   expect(runs).toContain("node --test apps/public-images/deploy.test.mjs");
@@ -60,7 +60,7 @@ test.skipIf(inWorkers)("fixes the event's main SHA before checkout without repos
 });
 test("checks domain protection against the selected revision's history when main advances", () => {
   const lint = workflow.jobs.checks.steps.find(
-    (step: { run?: string }) => step.run === "npm run lint",
+    (step: { run?: string }) => step.run === "pnpm run lint",
   );
   expect(lint.env.DOMAIN_SEAMS_BASE).toBe("${{ steps.candidate.outputs.sha }}^");
   const eligibility = workflow.jobs.checks.steps.find(
@@ -71,14 +71,14 @@ test("checks domain protection against the selected revision's history when main
 });
 test("runs the complete E2E collection in checks, never with production access", () => {
   const steps = workflow.jobs.checks.steps as Array<{ run?: string }>;
-  expect(steps.some(step => step.run === "npm run test:e2e:full -- --max-failures=1")).toBe(true);
+  expect(steps.some(step => step.run === "pnpm run test:e2e:full --max-failures=1")).toBe(true);
   const mutation = JSON.stringify([workflow.jobs.production, workflow.jobs.workers]);
   expect(mutation).not.toMatch(/playwright|test:e2e|test:harness|chromium/);
 });
 test("runs fail-fast Vitest and the application build before production mutation", () => {
   const steps = workflow.jobs.checks.steps as Array<{ run?: string; uses?: string }>;
-  const unit = steps.findIndex(step => step.run === "npm test -- --tier=unit --bail=1");
-  const integration = steps.findIndex(step => step.run === "npm test -- --tier=integration --bail=1 && npm run build:check");
+  const unit = steps.findIndex(step => step.run === "pnpm test --tier=unit --bail=1");
+  const integration = steps.findIndex(step => step.run === "pnpm test --tier=integration --bail=1 && pnpm run build:check");
   expect(unit).toBeGreaterThan(-1);
   expect(unit).toBeLessThan(integration);
   expect(JSON.stringify(steps)).not.toMatch(/setup-java|emulators/);
@@ -91,10 +91,10 @@ test("runs fail-fast Vitest and the application build before production mutation
 });
 test("typechecks immediately after dependency installation and before expensive setup", () => {
   const steps = workflow.jobs.checks.steps as Array<{ run?: string }>;
-  const installDependencies = steps.findIndex(step => step.run === "npm ci");
-  const typecheck = steps.findIndex(step => step.run === "npm run typecheck");
-  const lint = steps.findIndex(step => step.run === "npm run lint");
-  const workerTests = steps.findIndex(step => step.run === "npm run test:worker");
+  const installDependencies = steps.findIndex(step => step.run === "pnpm install --frozen-lockfile");
+  const typecheck = steps.findIndex(step => step.run === "pnpm run typecheck");
+  const lint = steps.findIndex(step => step.run === "pnpm run lint");
+  const workerTests = steps.findIndex(step => step.run === "pnpm run test:worker");
   const integration = steps.findIndex(step => step.run?.includes("--tier=integration"));
 
   expect(typecheck).toBe(installDependencies + 1);
@@ -104,10 +104,10 @@ test("typechecks immediately after dependency installation and before expensive 
 });
 test("builds the web Worker candidate before any production mutation", () => {
   const steps = workflow.jobs.checks.steps as Array<{ name?: string; run?: string }>;
-  const typecheck = steps.findIndex(step => step.run === "npm run typecheck");
+  const typecheck = steps.findIndex(step => step.run === "pnpm run typecheck");
   const webBuild = steps.findIndex(step => step.name === "Build web Worker before production mutation");
   expect(webBuild).toBe(typecheck + 1);
-  expect(steps[webBuild].run).toContain("CLOUDFLARE_ENV=production WEB_ASSET_RELEASE=\"$RELEASE_SHA\" npx vite build --config vite.vinext.config.ts");
+  expect(steps[webBuild].run).toContain("CLOUDFLARE_ENV=production WEB_ASSET_RELEASE=\"$RELEASE_SHA\" pnpm exec vite build --config vite.vinext.config.ts");
   expect(steps[webBuild].run).toContain("rm -rf .wrangler/deploy");
   expect(workflow.jobs.production.needs).toEqual(["checks"]);
 });
@@ -122,7 +122,7 @@ test("the Checks workflow serves the production web Worker bundle on every pull 
   const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
   const steps = jobs.workers.steps as Array<{ name?: string; run?: string }>;
   const smoke = steps.find(step => step.name === "Build and smoke the production web Worker bundle");
-  expect(smoke?.run).toContain("CLOUDFLARE_ENV=production WEB_ASSET_RELEASE=\"$RELEASE_SHA\" npx vite build --config vite.vinext.config.ts");
+  expect(smoke?.run).toContain("CLOUDFLARE_ENV=production WEB_ASSET_RELEASE=\"$RELEASE_SHA\" pnpm exec vite build --config vite.vinext.config.ts");
   expect(smoke?.run).toContain("node bin/web-bundle-smoke.mjs");
   expect(smoke?.run).toContain("rm -rf .wrangler/deploy");
   expect(jobs.workers.env.RELEASE_SHA).toBe("${{ github.sha }}");
@@ -204,17 +204,17 @@ test("blocks delivery when production D1 migrations are pending", () => {
 
 test("checks Worker runtime contracts before production mutation", () => {
   const steps = workflow.jobs.checks.steps as Array<{ run?: string }>;
-  expect(steps.some(step => step.run === "npm run test:worker")).toBe(true);
+  expect(steps.some(step => step.run === "pnpm run test:worker")).toBe(true);
 });
 
 test("the Checks workflow runs type, lint, Worker candidates, every Worker runtime test and the unit tier on every pull request", () => {
   const { jobs } = parse(readFileSync(".github/workflows/checks.yml", "utf8"));
   const runs = (name: string) => jobs[name].steps.flatMap((step: { run?: string }) => step.run ? [step.run] : []).join("\n");
-  expect(runs("typecheck")).toBe("npm run typecheck");
-  expect(runs("lint")).toBe("npm run lint");
+  expect(runs("typecheck")).toBe("pnpm run typecheck");
+  expect(runs("lint")).toBe("pnpm run lint");
   // PRs compare against the base branch, so turbo checks only the affected apps.
   expect(jobs.workers.env.TURBO_SCM_BASE).toBe("origin/${{ github.base_ref }}");
-  expect(runs("workers")).toContain("npx turbo run typecheck build --affected");
+  expect(runs("workers")).toContain("pnpm exec turbo run typecheck build --affected");
   // The root Typecheck job covers packages/; Web Workers type-checks only the apps.
   expect(runs("workers")).toContain("--filter='!./packages/*' --only");
   // Each test file runs in one job only (bin/ordinaryTestCollection.test.ts).
@@ -222,8 +222,8 @@ test("the Checks workflow runs type, lint, Worker candidates, every Worker runti
   expect(runs("workers")).not.toContain("test:worker");
   // bin/ tests (deploy scripts included) run in the unit tier, so Web Workers doesn't repeat them.
   expect(runs("workers")).not.toContain("vitest.unit.config.mts");
-  expect(runs("unit")).toBe("npm run test:unit -- --shard=${{ matrix.shard }}/2");
-  expect(runs("worker-runtime")).toBe("npm run test:worker");
+  expect(runs("unit")).toBe("pnpm run test:unit --shard=${{ matrix.shard }}/2");
+  expect(runs("worker-runtime")).toBe("pnpm run test:worker");
 });
 
 test("the Checks workflow keeps the lint and typecheck caches between runs", () => {

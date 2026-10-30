@@ -6,7 +6,7 @@ const args = process.argv.slice(2);
 const iconVocabulary = `${JSON.stringify(Object.keys(dynamicIconImports).sort())}\n`;
 const iconFile = resolve("lib/supportedIcons.json");
 if (args.includes("--refresh-icon-names")) writeFileSync(iconFile, iconVocabulary);
-if (JSON.stringify(JSON.parse(readFileSync(iconFile, "utf8"))) !== iconVocabulary.trim()) throw new Error("Lucide vocabulary changed. Run npm run build --workspace=@tudomacae/api-worker -- --refresh-icon-names.");
+if (JSON.stringify(JSON.parse(readFileSync(iconFile, "utf8"))) !== iconVocabulary.trim()) throw new Error("Lucide vocabulary changed. Run pnpm --filter @tudomacae/api-worker run build --refresh-icon-names.");
 const outputIndex = args.indexOf("--outdir");
 const directory = resolve(outputIndex < 0 ? "dist" : args[outputIndex + 1]);
 const entryIndex = args.indexOf("--entry");

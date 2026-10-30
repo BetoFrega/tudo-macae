@@ -1,14 +1,15 @@
 name: Install dependencies
-description: Set up Node 24 with the npm cache and install the locked dependencies.
+description: Set up pnpm and Node 24 with the pnpm store cache and install the locked dependencies.
 
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v5
+    - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
       with:
-        node-version: 24
-        cache: "npm"
+        runtime: node@24
+        cache: true
+        install: false
 
     - name: Install dependencies
       shell: bash
-      run: npm ci
+      run: pnpm install --frozen-lockfile

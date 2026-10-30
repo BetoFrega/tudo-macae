@@ -36,8 +36,8 @@ version and tombstone rules as the HTTP routes and answer `confirmed`, `stale` o
 `correlationId` and rejects. The API
 Worker binds it as `ARTICLE_INDEX` only when its deploy sets `PUBLIC_ARTICLE_INDEX_SERVICE`
 (`apps/api-worker/deploy.mjs`); without it, Blog saves stay `unconfirmed` for the index.
-Verify with `npm run test --workspace=public-article-index-worker` and
-`npx vitest run --config vitest.worker.config.mts apps/api-worker/tests/editorialBlogDistribution.runtime.test.ts`.
+Verify with `pnpm --filter public-article-index-worker run test` and
+`pnpm exec vitest run --config vitest.worker.config.mts apps/api-worker/tests/editorialBlogDistribution.runtime.test.ts`.
 
 `apps/public-article-index/wrangler.jsonc` keeps local defaults and declares the
 production D1 binding and permitted runtime identity under `env.production`.
@@ -78,16 +78,16 @@ and field names.
 
 ## Local and E2E verification
 
-`npm run test --workspace=public-article-index-worker` bundles the actual Worker and runs
+`pnpm --filter public-article-index-worker run test` bundles the actual Worker and runs
 its handlers against Miniflare's D1. Tests supply a generated signing key through the
 JWKS network boundary; production always uses Google's JWKS and has no test-mode
 bypass or configurable issuer/key endpoint.
 
-The root consumer checks run with `npm run test:worker -- bin/articleIndexConsumer.runtime.test.ts`.
+The root consumer checks run with `pnpm run test:worker bin/articleIndexConsumer.runtime.test.ts`.
 They exercise the build artifact over HTTP without importing Worker implementation.
 `@tudomacae/article-index-test-runtime` is test infrastructure shared by runtime tests
 and the E2E preload; its controlled build callback receives a temporary output directory.
-`npm run build --workspace=public-article-index-worker` produces the Worker bundle and
+`pnpm --filter public-article-index-worker run build` produces the Worker bundle and
 ordered SQL migrations in `dist/`. The root preload uses that workspace command.
 
 Worker runtime tests prove SQL and OIDC contracts. The E2E stack explicitly

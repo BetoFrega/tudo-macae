@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "zod": "^4.6.7",
-    "@tudomacae/ads": "*",
-    "@tudomacae/public-image-delivery": "*"
+    "@tudomacae/ads": "workspace:*",
+    "@tudomacae/public-image-delivery": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^6",

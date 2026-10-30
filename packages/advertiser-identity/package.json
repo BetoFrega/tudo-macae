@@ -28,14 +28,14 @@
   },
   "dependencies": {
     "zod": "^4.6.7",
-    "@tudomacae/react-primitives": "*",
+    "@tudomacae/react-primitives": "workspace:*",
     "@hookform/resolvers": "^6.0.0",
     "react-hook-form": "^7.90.0",
-    "@tudomacae/ads": "*",
-    "@tudomacae/civil-time": "*",
-    "@tudomacae/text-normalization": "*",
-    "@tudomacae/public-image-delivery": "*",
-    "@tudomacae/media": "*",
+    "@tudomacae/ads": "workspace:*",
+    "@tudomacae/civil-time": "workspace:*",
+    "@tudomacae/text-normalization": "workspace:*",
+    "@tudomacae/public-image-delivery": "workspace:*",
+    "@tudomacae/media": "workspace:*",
     "lucide-react": "^1.59.0"
   },
   "scripts": {

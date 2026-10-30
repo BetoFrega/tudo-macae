@@ -16,10 +16,10 @@ const skill = readFileSync(".agents/skills/kill-mutants/SKILL.md", "utf8");
 const commands = skill.match(/```bash\n([\s\S]*?)```/)?.[1].trim().split("\n") ?? [];
 const configs = { pure, component, integration };
 
-// Run the documented shell quoting with an inert npm; no Stryker process starts.
+// Run the documented shell quoting with an inert pnpm; no Stryker process starts.
 function captureArguments(command: string): string[] {
   return execFileSync("bash", ["-c", `
-    npm() { printf '%s\\n' "$@"; }
+    pnpm() { printf '%s\\n' "$@"; }
     ${command}
   `], { encoding: "utf8" }).trim().split("\n");
 }
@@ -49,7 +49,7 @@ describe("documented focal mutation commands", () => {
     ];
     for (const [index, [tier, scope]] of expected.entries()) {
       expect(captureArguments(commands[index])).toEqual([
-        "run", `test:mutation:${tier}`, "--", "--mutate", scope,
+        "run", `test:mutation:${tier}`, "--mutate", scope,
       ]);
       for (const entry of scope.split(",")) {
         const file = entry.split(":")[0];

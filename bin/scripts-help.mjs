@@ -1,4 +1,4 @@
-// Fonte única do "qual script para quê": `npm run help` e o `check:harness`
+// Fonte única do "qual script para quê": `pnpm run help` e o `check:harness`
 // leem daqui. Importar não imprime nada — só a invocação
 // direta imprime.
 import { realpathSync } from "node:fs";
@@ -89,7 +89,7 @@ export const SCRIPT_MENU = [
 /** The build and start contract the delivery pipelines invoke. */
 export const PROVIDER_SCRIPTS = ["build", "start"];
 
-/** Lifecycle do npm: `prepare` instala os hooks do husky depois de `npm install`. */
+/** Lifecycle de instalação: `prepare` instala os hooks do husky depois de `pnpm install`. */
 export const LIFECYCLE_SCRIPTS = ["prepare"];
 
 /** `check:harness` reprova qualquer arquivo versionado que cite um destes. */
@@ -115,7 +115,7 @@ export function expectedScriptNames() {
 export function renderScriptMenu() {
   const width = Math.max(...SCRIPT_MENU.map(entry => entry.script.length));
   const rows = SCRIPT_MENU.map(
-    entry => `  npm run ${entry.script.padEnd(width)}  ${entry.purpose}`,
+    entry => `  pnpm run ${entry.script.padEnd(width)}  ${entry.purpose}`,
   );
 
   return [
@@ -126,7 +126,7 @@ export function renderScriptMenu() {
     "Mutação focal de agentes: .agents/skills/kill-mutants/SKILL.md.",
     "",
     `Contrato de build e execução: ${PROVIDER_SCRIPTS.join(", ")}.`,
-    "Não rode nenhum deles à mão — `npm run build:check` é o build local.",
+    "Não rode nenhum deles à mão — `pnpm run build:check` é o build local.",
   ].join("\n");
 }
 

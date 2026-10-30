@@ -11,7 +11,7 @@ test's location.
   hermetic; run it without the API Worker fixture:
 
   ```bash
-  npm run test:unit
+  pnpm run test:unit
   ```
 
 - **Integration (Vitest):** one module whose rule depends on API Worker fixture
@@ -23,7 +23,7 @@ test's location.
   bindings (D1, R2, Images) under the local Workers runtime. Name it
   `*.runtime.test.ts` under `apps/` or `bin/`, the only paths
   `vitest.worker.config.mts` collects, and run it with
-  `npm run test:worker -- <paths>`; it binds local ports.
+  `pnpm run test:worker <paths>`; it binds local ports.
 
 - **E2E (Playwright):** essential happy-path user journeys whose proof needs a
   real browser or the integrated application. Keep representative checks of the
@@ -228,7 +228,7 @@ Use integration tests only when the API Worker's behaviour is the rule under
 test, such as the demo seed writing its mass through the fixture.
 
 Feature tests sit beside the feature; package tests stay in the package's
-`tests/` directory. `npm test` explicitly composes `test:unit` and `test:integration`. File location does not
+`tests/` directory. `pnpm test` explicitly composes `test:unit` and `test:integration`. File location does not
 determine environmental dependencies.
 
 An integration fixture may directly write only a legacy or malformed persisted

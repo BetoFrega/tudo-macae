@@ -13,7 +13,7 @@ export const onRequestError: Instrumentation.onRequestError = async (error, requ
 
 /**
  * Fills the local API Worker fixture before the server answers its first
- * request, so `npm run dev` lands on a site that looks used instead of an
+ * request, so `pnpm run dev` lands on a site that looks used instead of an
  * empty database.
  *
  * One call: the package decides whether this environment may be seeded, in

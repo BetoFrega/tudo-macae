@@ -25,7 +25,7 @@ beforeAll(async () => {
     .setExpirationTime("5m")
     .sign(privateKey);
   directory = await mkdtemp(join(tmpdir(), "authentication-diagnostics-"));
-  execFileSync("npm", ["run", "build", "--workspace=@tudomacae/api-worker", "--", "--entry", "tests/diagnosticsFixtureWorker.ts", "--outdir", directory], { stdio: "pipe" });
+  execFileSync("pnpm", ["--filter", "@tudomacae/api-worker", "run", "build", "--entry", "tests/diagnosticsFixtureWorker.ts", "--outdir", directory], { stdio: "pipe" });
   const bundle = (await readdir(directory)).find(name => name.endsWith(".js"));
   if (!bundle) throw new Error("Diagnostic fixture bundle missing");
   runtime = new Miniflare({

@@ -9,7 +9,7 @@
     "./account-entry": "./account-entry.ts"
   },
   "dependencies": {
-    "@tudomacae/react-primitives": "*",
+    "@tudomacae/react-primitives": "workspace:*",
     "lucide-react": "^1.59.0"
   },
   "peerDependencies": {

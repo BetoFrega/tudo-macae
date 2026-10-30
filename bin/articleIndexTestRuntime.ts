@@ -12,7 +12,7 @@ export function createArticleIndexTestRuntime(
     ...(identity ? { identity } : {}),
     withoutMigrations,
     build(directory) {
-      execFileSync("npm", ["run", "build", "--workspace=public-article-index-worker", "--", "--outdir", directory], {
+      execFileSync("pnpm", ["--filter", "public-article-index-worker", "run", "build", "--outdir", directory], {
         stdio: "pipe", env: { ...process.env, WRANGLER_LOG_PATH: join(directory, "wrangler.log") },
       });
     },

@@ -7,7 +7,7 @@ const BUILD_INPUTS = [
   "bin",
   "image-loader.js",
   "next.config.ts",
-  "package-lock.json",
+  "pnpm-lock.yaml",
   "package.json",
   "postcss.config.mjs",
   "public",

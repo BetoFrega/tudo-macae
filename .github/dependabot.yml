@@ -41,9 +41,9 @@ updates:
           - "eslint-config-next"
     ignore:
       # TypeScript 7 dropped the stable programmatic compiler API, so
-      # @typescript-eslint/parser cannot run on it at all. npm refuses to
-      # install the two together (`peer typescript@">=4.8.4 <6.1.0"`), and
-      # forcing past that only trades the ERESOLVE for an ESLint crash.
+      # @typescript-eslint/parser cannot run on it at all. pnpm reports the
+      # unmet peer (`peer typescript@">=4.8.4 <6.1.0"`), and installing past
+      # it only trades the warning for an ESLint crash.
       # typescript-eslint closed its TS 7 support request as not planned
       # because the fix has to land in TypeScript 7.1, so there is nothing to
       # do here but wait — and without this, Dependabot reopens the PR daily.

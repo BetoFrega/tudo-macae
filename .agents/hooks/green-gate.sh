@@ -14,7 +14,7 @@
 #   próprio fixture do API Worker, então os dois são herméticos.
 #
 # O build e E2E ficam de fora deste hook por custo. A entrega manual usa
-# `npm run build:check`; E2E exige execução local/manual explícita.
+# `pnpm run build:check`; E2E exige execução local/manual explícita.
 # O procedimento de entrega está em docs/agents/production-delivery.md.
 set -uo pipefail
 
@@ -34,20 +34,20 @@ ${2}
 "
 }
 
-if ! out=$(npx eslint . 2>&1); then
-  record "npm run lint" "$out"
+if ! out=$(pnpm exec eslint . 2>&1); then
+  record "pnpm run lint" "$out"
 fi
 
 if [ -d .next/types ] || [ -d .next/dev/types ]; then
-  if ! out=$(npx tsc --noEmit 2>&1); then
-    record "npx tsc --noEmit" "$out"
+  if ! out=$(pnpm exec tsc --noEmit 2>&1); then
+    record "pnpm exec tsc --noEmit" "$out"
   fi
 else
-  echo "portão de verde: tipos gerados do Next ausentes, tsc não rodou (npm run dev ou npm run build:check para gerá-los)" >&2
+  echo "portão de verde: tipos gerados do Next ausentes, tsc não rodou (pnpm run dev ou pnpm run build:check para gerá-los)" >&2
 fi
 
-if ! out=$(npm test 2>&1 | tail -40); then
-  record "npm test" "$out"
+if ! out=$(pnpm test 2>&1 | tail -40); then
+  record "pnpm test" "$out"
 fi
 
 if [ -n "$failures" ]; then

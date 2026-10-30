@@ -36,11 +36,11 @@ Production deployment, real migration, mail delivery and activation require
 operational authorization. Until authorization is recorded in the ticket, use only
 disposable local identities and D1.
 
-1. Use `npm run test:worker -- apps/api-worker/tests/authentication.runtime.test.ts`
+1. Use `pnpm run test:worker apps/api-worker/tests/authentication.runtime.test.ts`
    for real local D1 transactions, identity preservation, concurrent recovery,
    cooldown finalization and runtime recovery.
 2. Use the relevant Next journeys together under
-   `E2E_REQUIRE_FRESH_SERVER=1 npm run test:e2e`; Better Auth is the test default.
+   `E2E_REQUIRE_FRESH_SERVER=1 pnpm run test:e2e`; Better Auth is the test default.
    The supervisor owns the disposable Worker and native mail sink. Fixture
    configuration is private and ignored; its service token is accepted only with
    the test environment and loopback API.
@@ -49,7 +49,7 @@ disposable local identities and D1.
    through approved tools. Never put its value in a receipt or chat. Configure
    `AUTHENTICATION_D1_ID`, `CLASSIFIEDS_D1_ID`, `AUTHENTICATION_API_ORIGIN`,
    `AUTHENTICATION_RUNTIME_ACCOUNT` and the qualification public origin before
-   `npm run deploy --workspace=@tudomacae/api-worker -- qualification`.
+   `pnpm --filter @tudomacae/api-worker run deploy qualification`.
    `EDITORIAL_D1_ID` is optional: without it the deploy drops `EDITORIAL_DB` and
    the Media routes answer 404 (`apps/api-worker/deploy.mjs`).
    `PUBLIC_ARTICLE_INDEX_SERVICE` is optional too: it names the index Worker bound as
@@ -93,7 +93,7 @@ same immutable SHA for both artifacts. Before freezing or promoting Next:
 1. The [production workflow](production-delivery.md) applies the API Worker's D1
    migrations and publishes it before promoting Next. Outside it, for example during a
    recovery, run the same steps with
-   `AUTHENTICATION_D1_ID=<id> CLASSIFIEDS_D1_ID=<id> [EDITORIAL_D1_ID=<id>] AUTHENTICATION_API_ORIGIN=<api-origin> AUTHENTICATION_RUNTIME_ACCOUNT=<runtime-service-account> npm run deploy --workspace=@tudomacae/api-worker -- production --migrations-only`,
+   `AUTHENTICATION_D1_ID=<id> CLASSIFIEDS_D1_ID=<id> [EDITORIAL_D1_ID=<id>] AUTHENTICATION_API_ORIGIN=<api-origin> AUTHENTICATION_RUNTIME_ACCOUNT=<runtime-service-account> pnpm --filter @tudomacae/api-worker run deploy production --migrations-only`,
    then the same command without `--migrations-only`. Do not activate D1 during
    schema preparation.
 2. Read back the API's active version at 100%, exact D1 bindings, runtime environment,

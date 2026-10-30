@@ -18,7 +18,7 @@ asset or a baseline.
 
 `PRODUCT.md` is generated and ignored: its content lives only in the Notion page
 [Visão de produto](https://app.notion.com/p/3ff84301eab3814e9740df573046a187).
-Before running Impeccable, run `npm run product:sync` with `NOTION_TOKEN` set to an
+Before running Impeccable, run `pnpm run product:sync` with `NOTION_TOKEN` set to an
 integration that can read that page. Change the product vision in Notion, never in
 the generated file.
 
@@ -157,19 +157,19 @@ Apply this compatibility gate:
   not supply that authority. When the gate fails, report that live remains running and
   why; do not call the command or report shutdown as complete.
 - **Complete:** after an authorized stop, inspect the source diff and injection journal,
-  then run `npm run check:harness` to invoke the shared production-residue detector. A
+  then run `pnpm run check:harness` to invoke the shared production-residue detector. A
   clean detector plus a stopped owned process proves completed shutdown. A blocked stop
   or a detector failure is a pending path, not completion evidence. Preserve the session
   journals and all other artifacts outside the exact authorized deletion list.
 
 ## Verification
 
-The commit hook invokes `npm run check:harness -- --staged` before lint-staged.
+The commit hook invokes `pnpm run check:harness --staged` before lint-staged.
 The artifact check reads every entry and every tracked `.gitignore` from the index;
 unstaged fixes or local ignore overrides cannot hide staged violations. It also works
 before the first commit. The existing lint-staged rules keep their own behavior.
 
-Without `--staged`, `npm run check:harness` checks all of `HEAD`, as delivered to CI,
+Without `--staged`, `pnpm run check:harness` checks all of `HEAD`, as delivered to CI,
 including prohibited artifacts unchanged by the current diff. After editing the
 policy locally, stage that policy and use `--staged` to validate it before committing.
 `--artifacts-root <path>` selects another Git repository for this check only.

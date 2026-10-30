@@ -8,11 +8,11 @@ Done on 2026-10-16.
 
 - **Import:** `apply` [run 38828111596](https://github.com/BetoFrega/macae-classificados/actions/runs/38828111596) imported 4081 records and reported 2572 `unchanged`.
 - **Parity:** `compare` runs [38830811478](https://github.com/BetoFrega/macae-classificados/actions/runs/38830811478) and [38831919420](https://github.com/BetoFrega/macae-classificados/actions/runs/38831919420) both reported `same: 6653, missing: 0, changed: 0, extra: 0`.
-- **Promotion:** about 01:10Z, with `npx wrangler d1 execute tudo-macae-editorial-production --remote --command "UPDATE editorial_authority SET authority = 'worker' WHERE id = 1"`. A trigger refuses any return to `legacy`.
+- **Promotion:** about 01:10Z, with `pnpm exec wrangler d1 execute tudo-macae-editorial-production --remote --command "UPDATE editorial_authority SET authority = 'worker' WHERE id = 1"`. A trigger refuses any return to `legacy`.
 - **After promotion:** `compare` [run 38833640817](https://github.com/BetoFrega/macae-classificados/actions/runs/38833640817) also reported `same: 6653, missing: 0, changed: 0, extra: 0`, so no late Firebase write needed a manual copy.
 - **Drain:** confirmed by the elapsed default request timeout after the traffic move, plus Beto's decision to proceed. No request-log evidence was recorded.
 
-Check the current authority: `npx wrangler d1 execute tudo-macae-editorial-production --remote --command "SELECT authority FROM editorial_authority"`.
+Check the current authority: `pnpm exec wrangler d1 execute tudo-macae-editorial-production --remote --command "SELECT authority FROM editorial_authority"`.
 
 ## Recovery
 

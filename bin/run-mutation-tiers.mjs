@@ -6,7 +6,7 @@ import {
 
 function runTier(tierName) {
   return new Promise((resolve) => {
-    const child = spawn("npm", ["run", `test:mutation:${tierName}`], {
+    const child = spawn("pnpm", ["run", `test:mutation:${tierName}`], {
       stdio: ["ignore", "pipe", "pipe"],
     });
 

@@ -97,7 +97,7 @@ fixtures use the seam to recreate it.
 ## Verification
 
 ```sh
-npm run test:worker -- apps/api-worker/tests/photos.runtime.test.ts
-npm run test --workspace=@tudomacae/classifieds-photos
-npm run lint:boundaries
+pnpm run test:worker apps/api-worker/tests/photos.runtime.test.ts
+pnpm --filter @tudomacae/classifieds-photos run test
+pnpm run lint:boundaries
 ```

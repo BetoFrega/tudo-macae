@@ -33,9 +33,9 @@
     "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/ads/tests"
   },
   "dependencies": {
-    "@tudomacae/text-normalization": "*",
+    "@tudomacae/text-normalization": "workspace:*",
     "zod": "^4.6.7",
-    "@tudomacae/public-image-delivery": "*"
+    "@tudomacae/public-image-delivery": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^6",

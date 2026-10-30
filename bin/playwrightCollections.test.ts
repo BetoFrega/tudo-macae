@@ -10,7 +10,7 @@ import { expect, test } from "vitest";
 const inWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
 
 const execute = promisify(execFile);
-// The e2e workspace owns @playwright/test; npm may nest it there instead of hoisting it to the root.
+// The e2e workspace owns @playwright/test; pnpm links it only into that workspace.
 const playwrightCli = createRequire(resolve("tests/e2e/package.json")).resolve("@playwright/test/cli");
 type Suite = { suites?: Suite[]; specs?: { file: string; title: string }[] };
 

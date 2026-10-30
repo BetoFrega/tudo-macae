@@ -43,7 +43,7 @@ const ids = (value: { items: { id: string }[] }) => value.items.map(item => item
 
 beforeAll(async () => {
   directory = await mkdtemp(join(tmpdir(), "editorial-d1-"));
-  execFileSync("npm", ["run", "build", "--workspace=@tudomacae/api-worker", "--", "--outdir", directory, "--entry", "tests/editorialFixtureWorker.ts"], { stdio: "pipe" });
+  execFileSync("pnpm", ["--filter", "@tudomacae/api-worker", "run", "build", "--outdir", directory, "--entry", "tests/editorialFixtureWorker.ts"], { stdio: "pipe" });
 });
 beforeEach(async () => {
   const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;

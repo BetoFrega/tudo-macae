@@ -40,14 +40,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup pnpm and Node.js
+        uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with:
-          node-version: "24"
-          cache: "npm"
+          runtime: node@24
+          cache: true
+          install: false
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # Exit 1 is drift, exit 2 is "could not measure" — see bin/probe-edge.mjs.
       # The retry is for exit 2 only: a single challenged request says nothing,
@@ -56,12 +57,12 @@ jobs:
         id: probe
         run: |
           set +e
-          npm run probe:edge --silent | tee probe-output.txt
+          pnpm --silent run probe:edge | tee probe-output.txt
           status=${PIPESTATUS[0]}
           if [ "$status" = "2" ]; then
             echo "::notice::Probe could not measure production; retrying once in 60s."
             sleep 60
-            npm run probe:edge --silent | tee probe-output.txt
+            pnpm --silent run probe:edge | tee probe-output.txt
             status=${PIPESTATUS[0]}
           fi
           echo "status=$status" >> "$GITHUB_OUTPUT"
@@ -111,7 +112,7 @@ jobs:
             cat probe-output.txt
             echo '```'
             echo
-            echo "Reproduza local com \`npm run probe:edge\`."
+            echo "Reproduza local com \`pnpm run probe:edge\`."
           } >> report.md
 
           # One live ticket at a time: a second one nagging about the same

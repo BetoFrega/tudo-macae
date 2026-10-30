@@ -22,7 +22,7 @@
       "name": "tudo-macae-terms-workers",
       "workers_dev": false,
       // Vars do not inherit between environments. `vite.vinext.config.ts` inlines the
-      // NEXT_PUBLIC_* ones into the browser bundle, `bin/devEnvironment.ts` gives `npm run dev`
+      // NEXT_PUBLIC_* ones into the browser bundle, `bin/devEnvironment.ts` gives `pnpm run dev`
       // the analytics ones, and `web-worker/runtimeIdentity.ts` derives K_REVISION.
       "vars": {
         "K_SERVICE": "tudo-macae-terms-workers",

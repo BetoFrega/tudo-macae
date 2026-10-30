@@ -15,7 +15,7 @@ For GitHub Actions polling, follow [Compact run monitoring](../../../docs/agents
 
 Before dispatch, always offer to run the repository's full local verification,
 including complete E2E. When the user accepts, resolve the applicable non-mutation
-checks through `npm run help` and dispatch only after they pass; otherwise report the
+checks through `pnpm run help` and dispatch only after they pass; otherwise report the
 blocking results. Local verification supplements the workflow's checks, which
 include the complete E2E collection, as defined in Production delivery.
 The optional full-suite offer does not replace the affected-journey verification

@@ -1,7 +1,7 @@
 ---
 record: adr
 id: "0001"
-status: accepted
+status: superseded
 decided: 2025-11-20
 ---
 
@@ -28,5 +28,10 @@ We will use **npm** as the package manager for this project.
 - Slower dependency installation compared to pnpm.
 - Less efficient use of disk space (no content-addressable store).
 - "Phantom dependencies" are possible (npm flattens dependencies, allowing access to packages not explicitly declared in `package.json`), unlike pnpm's strict mode.
+
+## Scope and amendments
+
+On 2026-10-27, [ADR 0047](0047-use-pnpm-as-the-package-manager.md) superseded this
+decision: the repository no longer depends on Firebase.
 
 The [pre-reorganization record](https://github.com/BetoFrega/macae-classificados/blob/7da1e3af1bb963d42cc75578463816155a63c3e9/docs/adr/0001-use-npm-instead-of-pnpm.md) preserves earlier dated wording and superseded clauses.

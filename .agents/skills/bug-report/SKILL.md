@@ -13,7 +13,7 @@ A defect report here is not a note that something feels wrong — it is a small 
 
 **Verify it yourself in the code.** This is the rule that matters most. Findings arrive from subagents, reviews, and reasoning-at-a-distance, and a meaningful share of them are wrong — confidently written and falsified the moment someone opens the file. Read the actual source and confirm each link in the chain before filing. If the claim came from somewhere else, re-derive it; do not launder someone else's assertion into a ticket under your name.
 
-**Measure it if the runtime can show you.** Reasoning tells you a bug is possible; a probe tells you it is real. #227 is persuasive because it pastes three identical probe runs against the emulators, not because its argument is clever. If you can reproduce against `npm run dev` or the e2e stack, do it and paste the output verbatim. If you genuinely can't, say which part is reasoned rather than observed — an honest boundary is worth more than a confident overclaim.
+**Measure it if the runtime can show you.** Reasoning tells you a bug is possible; a probe tells you it is real. #227 is persuasive because it pastes three identical probe runs against the emulators, not because its argument is clever. If you can reproduce against `pnpm run dev` or the e2e stack, do it and paste the output verbatim. If you genuinely can't, say which part is reasoned rather than observed — an honest boundary is worth more than a confident overclaim.
 
 **Search for duplicates.** Query the tracker before writing. A second ticket for a known defect costs a maintainer more than silence would have.
 

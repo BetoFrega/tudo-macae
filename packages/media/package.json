@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "zod": "^4.6.7",
-    "@tudomacae/civil-time": "*",
-    "@tudomacae/react-primitives": "*",
+    "@tudomacae/civil-time": "workspace:*",
+    "@tudomacae/react-primitives": "workspace:*",
     "@hookform/resolvers": "^6.0.0",
     "react-hook-form": "^7.90.0",
     "clsx": "^2.1.1",

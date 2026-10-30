@@ -9,7 +9,7 @@
     "build": "wrangler deploy --dry-run --env production --outdir dist"
   },
   "dependencies": {
-    "@tudomacae/www-origin-routing": "*"
+    "@tudomacae/www-origin-routing": "workspace:*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261027.1",

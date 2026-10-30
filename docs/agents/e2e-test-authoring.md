@@ -13,7 +13,7 @@ invocation planning, the E2E stack and environmental diagnosis.
 Run UI mode on a stable port with:
 
 ```bash
-npm run test:e2e -- --ui-port=53413
+pnpm run test:e2e --ui-port=53413
 ```
 
 The suite has `retries: 0`. A flaky test is a defect; fix the cause instead of

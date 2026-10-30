@@ -4,7 +4,7 @@ import { unitMutationTierByName } from "./bin/mutationTiers.ts";
 
 /** @type {import('@stryker-mutator/api/core').PartialStrykerOptions} */
 const config = {
-  packageManager: "npm",
+  packageManager: "pnpm",
   testRunner: "vitest",
   vitest: {
     configFile: "vitest.mutation.component.config.mts",
@@ -43,7 +43,7 @@ const config = {
   // are an emptied layout class and the same empty error paragraph described
   // above. Reproduce the state invariants with:
   //
-  //   npx stryker run stryker.component.config.mjs --mutate "src/features/news/components/StoryForm.tsx:59-64,src/features/news/components/StoryForm.tsx:77-82,src/features/news/components/StoryForm.tsx:195-197"
+  //   pnpm exec stryker run stryker.component.config.mjs --mutate "src/features/news/components/StoryForm.tsx:59-64,src/features/news/components/StoryForm.tsx:77-82,src/features/news/components/StoryForm.tsx:195-197"
   //
   // The full-file rerun is 50/6/1.
   //
@@ -54,7 +54,7 @@ const config = {
   // precedence, conflict recovery, cursor preservation, every priority label,
   // and empty queues. Reproduce with:
   //
-  //   npx stryker run stryker.component.config.mjs --mutate "src/features/news/components/StoryPriorityForms.tsx,src/features/news/components/StoryQueueSection.tsx"
+  //   pnpm exec stryker run stryker.component.config.mjs --mutate "src/features/news/components/StoryPriorityForms.tsx,src/features/news/components/StoryQueueSection.tsx"
   //
   // One known trade-off versus the former single-tier run: one `cn` mutant in
   // `src/lib/utils.ts` moves from Timeout to NoCoverage, because its previous
@@ -74,7 +74,7 @@ const config = {
   //
   // Reproduce with:
   //
-  //   npm run test:mutation:component
+  //   pnpm run test:mutation:component
   //
   // Measured 2026-08-29 for #473 with the Delegation action and list narrowed
   // by `--mutate`: 118 mutants, 64.41% total (76 killed, 31 survived, 11

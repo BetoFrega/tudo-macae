@@ -26,7 +26,7 @@ directives.
 Re-measure the public result with the shared probe:
 
 ```bash
-npm run probe:edge
+pnpm run probe:edge
 ```
 
 The `robots.precedence` check records the status, responding layer, Cloudflare default
@@ -36,7 +36,7 @@ rule and exactly the two canonical sitemap URLs. Comments, whitespace, directive
 sitemap order and redundant records do not change the measurement. Nonempty Disallow
 records, a scoped crawler group or missing,
 changed or additional sitemaps produce drift. Verify expected and divergent responses
-through the exported measurement with `npm run test:unit -- bin/edgeProbeMeasurements.test.ts`. Confirm the
+through the exported measurement with `pnpm run test:unit bin/edgeProbeMeasurements.test.ts`. Confirm the
 application response and its source separately when changing it:
 
 ```bash
@@ -60,7 +60,7 @@ active, published, non-deleting Anúncios newest first, with `lastmod` from
 
 Drift above 40,000 is the signal to split the file into a sitemap index before
 Anúncios stop being listed. Verify the threshold logic with
-`npm run test:unit -- bin/edgeProbeMeasurements.test.ts`.
+`pnpm run test:unit bin/edgeProbeMeasurements.test.ts`.
 
 ## Precedence
 

@@ -9,7 +9,7 @@ import type { SavePostInput } from "@tudomacae/editorial-blog/blog";
 
 /**
  * The seed's only way into accounts and Classifieds: the API Worker fixture
- * that `npm run dev` starts (`apps/api-worker/testing.mjs`). Every record goes
+ * that `pnpm run dev` starts (`apps/api-worker/testing.mjs`). Every record goes
  * through the Worker's own procedures, signed in as the account that owns it,
  * so the demo mass passes the validation and ownership rules production runs.
  *
@@ -27,7 +27,7 @@ function fixtureConfiguration(): Promise<FixtureConfiguration> {
   const path = process.env.AUTHENTICATION_FIXTURE_CONFIGURATION;
   if (!path) {
     throw new Error(
-      "The demo seed needs the API Worker fixture that `npm run dev` starts; AUTHENTICATION_FIXTURE_CONFIGURATION is not set.",
+      "The demo seed needs the API Worker fixture that `pnpm run dev` starts; AUTHENTICATION_FIXTURE_CONFIGURATION is not set.",
     );
   }
   configuration ??= readFile(path, "utf8").then(text => JSON.parse(text) as FixtureConfiguration);

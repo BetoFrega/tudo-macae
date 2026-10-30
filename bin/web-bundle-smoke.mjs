@@ -84,7 +84,7 @@ async function waitForReady(logPath, port, exited) {
 
 async function main() {
   if (!existsSync(WRANGLER_CONFIG)) {
-    console.error(`web-bundle-smoke: ${WRANGLER_CONFIG} missing; build first with CLOUDFLARE_ENV=production npx vite build -c vite.vinext.config.ts`);
+    console.error(`web-bundle-smoke: ${WRANGLER_CONFIG} missing; build first with CLOUDFLARE_ENV=production pnpm exec vite build -c vite.vinext.config.ts`);
     return 1;
   }
   const port = process.env.WEB_BUNDLE_SMOKE_PORT ? Number(process.env.WEB_BUNDLE_SMOKE_PORT) : await freePort();
@@ -93,8 +93,8 @@ async function main() {
   const logDescriptor = openSync(logPath, "w");
   const exited = { done: false, code: null };
   const group = spawnProcessGroup(
-    "npx",
-    ["wrangler", "dev", "-c", WRANGLER_CONFIG, "--local", "--ip", "127.0.0.1", "--port", String(port), "--persist-to", join(workDirectory, "state")],
+    "pnpm",
+    ["exec", "wrangler", "dev", "-c", WRANGLER_CONFIG, "--local", "--ip", "127.0.0.1", "--port", String(port), "--persist-to", join(workDirectory, "state")],
     { stdio: ["ignore", logDescriptor, logDescriptor], env: { ...process.env, WRANGLER_SEND_METRICS: "false", CI: "1" } },
   );
   group.child.on("exit", (code) => {

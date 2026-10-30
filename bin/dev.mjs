@@ -1,7 +1,7 @@
-// `npm run dev`: the API Worker fixture plus `next dev` on this worktree's app
+// `pnpm run dev`: the API Worker fixture plus `next dev` on this worktree's app
 // port, with hot reload.
 //
-// `npx next` directly, never `npm run dev`, which would recurse into this script.
+// `pnpm exec next` directly, never `pnpm run dev`, which would recurse into this script.
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -69,7 +69,7 @@ for (const signal of STOP_SIGNALS) {
   }
 }
 
-const group = spawnProcessGroup("npx", ["next", "dev", "-p", String(port)], {
+const group = spawnProcessGroup("pnpm", ["exec", "next", "dev", "-p", String(port)], {
   stdio: "inherit",
   env: {
     ...process.env,
@@ -90,7 +90,7 @@ child.on("error", (error) => {
 child.on("close", async (code) => {
   let cleanupFailed = false;
   try {
-    // npx may exit before its descendants. Only our process group may be
+    // pnpm exec may exit before its descendants. Only our process group may be
     // signalled, and its last writer must exit before the fixture closes.
     if (stopping) await forwarding.wait();
     else await group.terminateAndWait();

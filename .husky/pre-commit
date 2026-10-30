@@ -1,2 +1,2 @@
-npm run check:harness -- --staged
-npx lint-staged
+pnpm run check:harness --staged
+pnpm exec lint-staged

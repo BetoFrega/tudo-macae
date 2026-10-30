@@ -117,11 +117,11 @@ during the 2026-10-12 cutover are gone.
 ## Verification
 
 ```sh
-npm run test --workspace=@tudomacae/classifieds-persistence
-npm run test:worker -- apps/api-worker/tests/classifieds.runtime.test.ts
-npm run typecheck --workspace=@tudomacae/api-worker
-npm run build --workspace=@tudomacae/api-worker
-npm run lint:boundaries
+pnpm --filter @tudomacae/classifieds-persistence run test
+pnpm run test:worker apps/api-worker/tests/classifieds.runtime.test.ts
+pnpm --filter @tudomacae/api-worker run typecheck
+pnpm --filter @tudomacae/api-worker run build
+pnpm run lint:boundaries
 ```
 
 Set `CLASSIFIEDS_ENVELOPE_OUTPUT` to a temporary JSONL path when collecting local load

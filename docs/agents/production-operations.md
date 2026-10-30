@@ -53,7 +53,7 @@ records their cleanup and the post-removal Billing measurement.
 Read the control plane before operating; repository declarations do not prove absence:
 
 ```bash
-npx firebase-tools apphosting:backends:list --project macaetem-dev
+pnpm dlx firebase-tools apphosting:backends:list --project macaetem-dev
 gcloud run services list --project macaetem-dev --region us-east5
 ```
 

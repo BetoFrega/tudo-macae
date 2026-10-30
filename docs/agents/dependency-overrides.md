@@ -2,45 +2,42 @@
 
 The [0006 policy](../adr/0006-npm-overrides-for-transitive-advisories.md) owns the
 architectural choice. This guide owns the operational removal conditions transferred
-on 2026-10-04; `package.json` owns installed override values. Recheck the dated
+on 2026-10-04; `pnpm-workspace.yaml` owns installed override values. Recheck the dated
 advisory rationale before relying on it as current upstream state.
 
 ## Override entries and exit conditions
 
 Verifique os overrides declarados e os ranges originais de todas as cópias no
-lockfile. O range pedido pelo pai permanece no manifesto do lockfile, mesmo
-quando o override muda a versão resolvida:
+lockfile. O lockfile do pnpm guarda só a versão resolvida; o comando consulta no
+registro o range que cada cópia do pai pede:
 
 ```sh
 node <<'NODE'
-const { overrides } = require('./package.json');
-const { packages } = require('./package-lock.json');
-const parents = {
-  'typed-rest-client': ['qs'], nx: ['axios', 'brace-expansion', 'smol-toml'],
-  satori: ['fflate'], '@tailwindcss/typography': ['postcss-selector-parser'],
-  'micromark-extension-math': ['katex'], miniflare: ['undici'],
-};
+const { execFileSync } = require('node:child_process');
+const { readFileSync } = require('node:fs');
+const { parse, parseAllDocuments } = require('yaml');
+const { overrides } = parse(readFileSync('pnpm-workspace.yaml', 'utf8'));
+const { packages } = parseAllDocuments(readFileSync('pnpm-lock.yaml', 'utf8'))
+  .map(document => document.toJS()).at(-1);
 console.log({ overrides });
-for (const [name, children] of Object.entries(parents)) {
-  const copies = Object.entries(packages).filter(([location]) =>
-    location.split('node_modules/').at(-1) === name);
-  if (!copies.length) console.log({ name, state: 'absent from lockfile' });
-  for (const [location, pkg] of copies) console.log({ location, version: pkg.version,
-    requested: Object.fromEntries(children.map(child => [child,
-      pkg.dependencies?.[child] ?? pkg.optionalDependencies?.[child] ?? null])),
-  });
+for (const [selector, version] of Object.entries(overrides)) {
+  const [parent, child] = selector.split('>');
+  const copies = Object.keys(packages).filter(id => id.slice(0, id.lastIndexOf('@')) === parent);
+  if (!copies.length) console.log({ parent, state: 'absent from lockfile' });
+  for (const copy of copies) console.log({ copy, child, override: version,
+    requested: execFileSync('pnpm', ['view', copy, `dependencies.${child}`], { encoding: 'utf8' }).trim() || null });
 }
 NODE
 ```
 
-Em 2026-10-04, esse comando confirmou que `nx` está ausente; esse override está
+Em 2026-10-27, esse comando confirmou que `nx` está ausente; esse override está
 inativo no lockfile atual. Os demais pais ainda pedem
 ranges anteriores às correções. A tabela conserva o racional de adoção, incluindo
 as versões antigas; a presença do override não prova que ele continue necessário.
-Para conferir os pais históricos ausentes, use o registro npm:
+Para conferir os pais históricos ausentes, consulte o registro:
 
 ```sh
-npm view nx@23.2.1 version dependencies.axios dependencies.brace-expansion dependencies.smol-toml
+pnpm view nx@23.2.1 version dependencies.axios dependencies.brace-expansion dependencies.smol-toml
 ```
 
 Esses manifestos históricos foram conferidos em 2026-10-04.
@@ -67,15 +64,15 @@ GHSA-m8m8-qj5v-23w3, GHSA-44g4-m2mj-wpvx, GHSA-r4gj-5m52-g5wh.
 
 Os consumidores de `qs` com ranges compatíveis resolvem pelo lockfile, sem
 override. `express@4.22.3` e `body-parser@1.20.8` aceitam `qs@~6.16.0`;
-confira os ranges com `npm view express@4.22.3 dependencies.qs` e
-`npm view body-parser@1.20.8 dependencies.qs`. O override de `satori` preserva
+confira os ranges com `pnpm view express@4.22.3 dependencies.qs` e
+`pnpm view body-parser@1.20.8 dependencies.qs`. O override de `satori` preserva
 os outros consumidores de `fflate`.
 
 Os dois overrides de major cruzado usam só APIs que sobreviveram ao bump, conferido
 em 2026-10-23: `@tailwindcss/typography` chama `astSync`, `selector()` e `remove()`
 (`grep -n "parser" node_modules/@tailwindcss/typography/src/utils.js`), e
 `micromark-extension-math` chama `katex.renderToString`
-(`grep -n katex node_modules/micromark-extension-math/lib/html.js`).
+(`grep -n katex node_modules/.pnpm/node_modules/micromark-extension-math/lib/html.js`).
 
 O override de `miniflare` fica na versão principal 7 que ele pina e preserva a
 cópia 8 do `jsdom`. A 7.30.1 exporta tudo o que o `miniflare` usa, conferido em

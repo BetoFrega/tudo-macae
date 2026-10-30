@@ -33,7 +33,7 @@ ran in the real checkout and no real artifact was deleted. The core invocations 
 node <skill-scripts>/live.mjs
 node <skill-scripts>/live-resume.mjs --id resume01
 node <skill-scripts>/live-server.mjs stop
-npm run check:harness -- --staged --artifacts-root <fixture-root>
+pnpm run check:harness --staged --artifacts-root <fixture-root>
 ```
 
 | Scenario | Inventory and authority | Observed result |

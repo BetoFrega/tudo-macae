@@ -53,15 +53,15 @@ an explicit human request for a broad investigation.
    sample paths with that tier's complete inventory:
 
    ```bash
-   npm run test:mutation:pure -- --mutate 'packages/text-normalization/slugify.ts'
-   npm run test:mutation:component -- --mutate 'src/features/navigation/UserSidebar.tsx:24-28,src/features/navigation/UserSidebar.tsx:30-37'
-   npm run test:mutation:integration -- --mutate 'src/packages/demo-seed/lib/environment.ts'
+   pnpm run test:mutation:pure --mutate 'packages/text-normalization/slugify.ts'
+   pnpm run test:mutation:component --mutate 'src/features/navigation/UserSidebar.tsx:24-28,src/features/navigation/UserSidebar.tsx:30-37'
+   pnpm run test:mutation:integration --mutate 'src/packages/demo-seed/lib/environment.ts'
    ```
 
    Inspect the selected config for prerequisites and report location. Integration
    starts from a green ordinary integration suite; retain the config's environment and
    concurrency requirements. Do not start empty
-   tiers. The aggregate `npm run test:mutation` and tier commands without `--mutate`
+   tiers. The aggregate `pnpm run test:mutation` and tier commands without `--mutate`
    are full-scope runs reserved for an explicit human request for a broad investigation.
 
    Save the actual arguments, report location and elapsed time; compare with a

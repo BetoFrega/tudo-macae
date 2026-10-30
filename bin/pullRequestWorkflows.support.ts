@@ -7,7 +7,7 @@ import { parse } from "yaml";
 
 export const workflowsDirectory = path.join(".github", "workflows");
 export const actionsDirectory = path.join(".github", "actions");
-export const expensiveWorkflowOperation = /npx playwright test|npm run test:e2e/;
+export const expensiveWorkflowOperation = /(?:pnpm exec|npx) playwright test|run test:e2e/;
 
 export type PullRequestTrigger = {
   types: string[];

@@ -44,7 +44,7 @@ async function seed() {
 beforeAll(async () => {
   png = [...await sharp({ create: { width: 2, height: 2, channels: 3, background: "white" } }).png().toBuffer()];
   directory = await mkdtemp(join(tmpdir(), "classifieds-photos-"));
-  execFileSync("npm", ["run", "build", "--workspace=@tudomacae/api-worker", "--", "--outdir", directory, "--entry", "tests/photosFixtureWorker.ts"], { stdio: "pipe" });
+  execFileSync("pnpm", ["--filter", "@tudomacae/api-worker", "run", "build", "--outdir", directory, "--entry", "tests/photosFixtureWorker.ts"], { stdio: "pipe" });
 });
 beforeEach(async () => {
   const bundle = (await readdir(directory)).find(file => file.endsWith(".js"))!;

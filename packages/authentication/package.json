@@ -16,10 +16,10 @@
     "./diagnostics": "./diagnostics.ts"
   },
   "dependencies": {
-    "@tudomacae/react-primitives": "*",
+    "@tudomacae/react-primitives": "workspace:*",
     "lucide-react": "^1.59.0",
     "zod": "^4.6.7",
-    "@tudomacae/www-origin-routing": "*"
+    "@tudomacae/www-origin-routing": "workspace:*"
   },
   "peerDependencies": {
     "react": "^19.3.0",

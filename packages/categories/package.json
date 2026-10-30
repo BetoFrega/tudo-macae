@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "zod": "^4.6.7",
-    "@tudomacae/advertiser-identity": "*",
-    "@tudomacae/react-primitives": "*",
+    "@tudomacae/advertiser-identity": "workspace:*",
+    "@tudomacae/react-primitives": "workspace:*",
     "@hookform/resolvers": "^6.0.0",
     "react-hook-form": "^7.90.0",
     "lucide-react": "^1.59.0"

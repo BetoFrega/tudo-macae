@@ -23,7 +23,7 @@ if (selected.size !== 0 && tiers.length !== selected.size) {
 }
 const logDirectory = join(process.cwd(), "test-results/vitest-logs");
 const temporaryLogDirectory = mkdtempSync(join(tmpdir(), "vitest-logs-"));
-const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 
 async function runTier({ name, script }) {
   const logPath = join(logDirectory, `${name}.log`);
@@ -33,8 +33,8 @@ async function runTier({ name, script }) {
   console.log(`Vitest ${name} started\n  logs ${logPath}`);
 
   const group = spawnProcessGroup(
-    npmCommand,
-    ["run", script, ...(forwardedArguments.length === 0 ? [] : ["--", ...forwardedArguments])],
+    pnpmCommand,
+    ["run", script, ...forwardedArguments],
     { stdio: ["inherit", "pipe", "pipe"], env: process.env },
   );
   const { child } = group;

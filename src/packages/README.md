@@ -18,7 +18,7 @@ src/packages/<name>/
 
 **Infrastructure seams.** For new or changed domain behaviour, follow [Domain Infrastructure Seams](../../docs/agents/domain-infrastructure-seams.md), including composition entry points and gradual migration of existing coupling.
 
-**No cycles.** Package dependencies must remain acyclic. Run `npm run lint:boundaries` to check package rules and the [protected domain seams](../../docs/agents/domain-infrastructure-seams.md#fitness-function).
+**No cycles.** Package dependencies must remain acyclic. Run `pnpm run lint:boundaries` to check package rules and the [protected domain seams](../../docs/agents/domain-infrastructure-seams.md#fitness-function).
 
 Avoid barrel files that re-export a whole subtree. Add several small entry points when callers need distinct interfaces, and keep the implementation hidden in `lib/`.
 

@@ -39,12 +39,12 @@ export function registerAuthenticationRuntime() {
   beforeAll(async () => {
     directory = await mkdtemp(join(tmpdir(), "authentication-worker-"));
     execFileSync(
-      "npm",
+      "pnpm",
       [
+        "--filter",
+        "@tudomacae/api-worker",
         "run",
         "build",
-        "--workspace=@tudomacae/api-worker",
-        "--",
         "--outdir",
         directory,
         "--entry",

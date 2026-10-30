@@ -4,7 +4,7 @@ import { integrationMutationScope } from "./bin/integrationMutationTier.ts";
 /**
  * Mutation testing over the integration tier — the files that only
  * `*.integration.test.ts` covers, and that the unit-tier configs therefore
- * cannot reach. Run it with `npm run test:mutation:integration -- --mutate ...`
+ * cannot reach. Run it with `pnpm run test:mutation:integration --mutate ...`
  * as `.agents/skills/kill-mutants/SKILL.md` documents.
  *
  * Separate from the unit-tier configs (`stryker.pure.config.mjs` and
@@ -16,9 +16,9 @@ import { integrationMutationScope } from "./bin/integrationMutationTier.ts";
  * This comment is the canonical record of what the tier costs and why it is
  * believed safe; the mutation skill points here rather than restating it.
  *
- * `npm run test:mutation:integration` runs Stryker through
+ * `pnpm run test:mutation:integration` runs Stryker through
  * `bin/test-integration.mjs`, which starts the API Worker fixture these suites
- * need; `npx stryker run` alone lacks it and fails the dry run.
+ * need; `pnpm exec stryker run` alone lacks it and fails the dry run.
  *
  * **A test here must never assert on the contents of a whole collection.** A
  * mutant that skips a validation writes the very record the assertion says
@@ -28,7 +28,7 @@ import { integrationMutationScope } from "./bin/integrationMutationTier.ts";
  */
 /** @type {import('@stryker-mutator/api/core').PartialStrykerOptions} */
 const config = {
-  packageManager: "npm",
+  packageManager: "pnpm",
   testRunner: "vitest",
   vitest: {
     configFile: "vitest.mutation.integration.config.mts",

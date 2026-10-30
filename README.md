@@ -34,13 +34,13 @@ Read [`docs/agents/production-topology.md`](docs/agents/production-topology.md) 
 reasoning about caching, headers, crawling or redirects, and re-measure with:
 
 ```bash
-npm run probe:edge
+pnpm run probe:edge
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 24 (pinned in `mise.toml`)
+- Node.js 24 and pnpm 12 (pinned in `mise.toml`)
 
 *Alternatively, open the repository in VS Code Dev Containers or GitHub Codespaces for an automated environment with Node.js and Playwright pre-configured.*
 
@@ -48,14 +48,14 @@ npm run probe:edge
 1. Clone the repository.
 2. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 ### Running the App
 To start the development environment:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 This command starts an in-memory API Worker fixture (accounts, Classifieds, Blog
@@ -63,19 +63,19 @@ and Media) and the app with hot reload at
 [http://localhost:5002](http://localhost:5002).
 
 The fixture is seeded on boot with a demo mass — categories, accounts and
-advertiser profiles — so the app looks used from the first page. `npm run dev`
+advertiser profiles — so the app looks used from the first page. `pnpm run dev`
 prints the sign-in credentials along with the URLs, and
 [`src/packages/demo-seed/README.md`](src/packages/demo-seed/README.md) is where
 they are written down. Nothing of this exists outside the local fixture.
 
 That is the port of a normal clone. A **linked git worktree derives a port of
-its own**, so two sessions can run at once; `npm run dev` prints that worktree's
+its own**, so two sessions can run at once; `pnpm run dev` prints that worktree's
 URL before the app starts. See `docs/agents/test-harness-operation.md`.
 
 Every other script — tests, lint, build check, mutation tiers — is listed by:
 
 ```bash
-npm run help
+pnpm run help
 ```
 
 ---

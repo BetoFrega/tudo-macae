@@ -8,10 +8,10 @@
     "./runtime-identity": "./runtime-identity.ts"
   },
   "dependencies": {
-    "@tudomacae/authentication": "*",
+    "@tudomacae/authentication": "workspace:*",
     "zod": "^4.6.7",
     "@opentelemetry/api": "^1.10.0",
-    "@tudomacae/www-origin-routing": "*"
+    "@tudomacae/www-origin-routing": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

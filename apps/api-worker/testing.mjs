@@ -36,12 +36,12 @@ export async function startAuthenticationFixture({
   const { publicKey, privateKey } = await generateKeyPair("RS256");
   try {
     execFileSync(
-      "npm",
+      "pnpm",
       [
+        "--filter",
+        "@tudomacae/api-worker",
         "run",
         "build",
-        "--workspace=@tudomacae/api-worker",
-        "--",
         "--outdir",
         directory,
         "--entry",
@@ -144,7 +144,7 @@ export async function startAuthenticationFixture({
       .setSubject("fixture")
       .setIssuedAt()
       // The signing key exists only in this process, so the token cannot
-      // outlive the fixture; a shorter expiry would break a long `npm run dev`.
+      // outlive the fixture; a shorter expiry would break a long `pnpm run dev`.
       .setExpirationTime("30d")
       .sign(privateKey);
     controller = createFixtureController({

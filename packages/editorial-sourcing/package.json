@@ -9,8 +9,8 @@
     "./sourceDatePresentation": "./sourceDatePresentation.ts"
   },
   "dependencies": {
-    "@tudomacae/civil-time": "*",
-    "@tudomacae/editorial-access": "*"
+    "@tudomacae/civil-time": "workspace:*",
+    "@tudomacae/editorial-access": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

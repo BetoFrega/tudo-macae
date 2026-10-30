@@ -33,7 +33,7 @@ function graph(extra: string[] = [], release = "a".repeat(40), cloudflareEnviron
 }
 beforeAll(() => {
   if (inWorkers) return;
-  for (const file of ["package.json", "package-lock.json", "turbo.json", "tsconfig.json",
+  for (const file of ["package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "turbo.json", "tsconfig.json",
     "tests/e2e/package.json", "tests/e2e/turbo.json", "packages/editorial-planning/package.json", "packages/editorial-sourcing/package.json", "packages/editorial-access/package.json", "packages/categories/package.json",
     ...["media", "media-files", "civil-time", "advertiser-identity"].map(name => `packages/${name}/package.json`),
     "packages/ads/package.json", "packages/text-normalization/package.json",
@@ -102,7 +102,7 @@ test("changes web asset build identity with the release and never caches root si
   expect(first.tasks.find(task => task.taskId === "//#build")!.resolvedTaskDefinition.cache).toBe(false);
 });
 
-for (const file of ["image-loader.js", "package.json", "package-lock.json"]) {
+for (const file of ["image-loader.js", "package.json", "pnpm-lock.yaml"]) {
   test(`selects every E2E task after changing ${file}`, () => {
     git("reset", "--hard", base);
     const original = readFileSync(path.join(directory, file), "utf8");

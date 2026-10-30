@@ -32,7 +32,7 @@ export function reject<T extends z.ZodType>(schema: T, input: unknown) {
 }
 
 /** What every ad carries; the schemas differ only in which id they add. */
-export const validAdFields = {
+const validAdFields = {
   categoryId: "category-1",
   subcategoryId: "subcategory-1",
   title: "Bicicleta usada em bom estado",

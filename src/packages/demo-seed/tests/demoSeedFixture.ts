@@ -25,7 +25,7 @@ export const NAMED_ACCOUNTS = [
 export const DEMO_PASSWORD = "demo1234";
 
 /** Scope demo records by ID prefix and Categories by their initial taxonomy slugs. */
-export const DEMO_PREFIX = "demo-";
+const DEMO_PREFIX = "demo-";
 export const INITIAL_CATEGORY_SLUGS = new Set(initialCategories.map(category => slugify(category.slug)));
 /**
  * State written by the one shared boot in `registerDemoSeedFixture`. Every group of

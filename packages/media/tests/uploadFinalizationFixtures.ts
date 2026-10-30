@@ -2,7 +2,7 @@ import { vi } from "vitest";
 import { createMediaUploadFinalization, type MediaUploadReservation, type FinalizedMediaRecord, type MediaUploadFinalizationDependencies } from "../uploadFinalization";
 import type { MediaMetadata } from "../model";
 
-export const reservationId = "a".repeat(64);
+const reservationId = "a".repeat(64);
 export const finalizeInput = { reservationId, idempotencyKey: "input-key" };
 export function finalizationFixture() {
   let time = 1000;

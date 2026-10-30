@@ -7,8 +7,8 @@ import { vi } from "vitest";
 export const mockRouterPush = vi.fn();
 
 // Context Mocks
-export const mockProfiles = [{ id: "p1", title: "Profile 1", userId: "u1", description: "", createdAt: 0, updatedAt: 0 }];
-export const mockCategories = [
+const mockProfiles = [{ id: "p1", title: "Profile 1", userId: "u1", description: "", createdAt: 0, updatedAt: 0 }];
+const mockCategories = [
   { id: "c1", name: "Cat 1", isActive: true, slug: "cat1", order: 1, subcategories: [{ id: "s1", name: "Sub 1", isActive: true, slug: "sub1", order: 1 }] },
 ];
 export const mockActions = {

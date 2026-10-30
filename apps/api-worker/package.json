@@ -26,7 +26,7 @@
     "@tudomacae/public-image-delivery": "workspace:*",
     "@tudomacae/text-normalization": "workspace:*",
     "@tudomacae/www-origin-routing": "workspace:*",
-    "better-auth": "1.7.13",
+    "better-auth": "1.7.14",
     "jose": "^6.2.12",
     "lucide-react": "^1.59.0",
     "zod": "^4.6.7"

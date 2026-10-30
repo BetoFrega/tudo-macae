@@ -8,7 +8,6 @@ import { NavigationIntegration } from "@/features/navigation/NavigationIntegrati
 import { appUrl } from "../../bin/appPorts";
 import { AuthProvider } from "@/features/authentication/AuthContext";
 import Footer from "@/features/navigation/Footer";
-import { ElectionLocationBanner } from "@/components/ElectionLocationBanner";
 import Header from "@/features/navigation/Header";
 import { createOpenGraph } from "@/lib/socialMetadata";
 import { BusinessNavigationFocusRouteObserver } from "@/features/business/BusinessNavigationFocus";
@@ -43,7 +42,6 @@ export default function RootLayout({
     <SiteDocument fontClassName={fontClassName}>
       <NavigationIntegration>
         <AuthProvider>
-          <ElectionLocationBanner />
           <Header />
           <Suspense>
             <AccountReminder />

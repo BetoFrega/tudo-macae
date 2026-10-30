@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@tudomacae/react-primitives": "workspace:*",
-    "lucide-react": "^1.59.0",
+    "lucide-react": "^1.62.0",
     "zod": "^4.6.7",
     "@tudomacae/www-origin-routing": "workspace:*"
   },

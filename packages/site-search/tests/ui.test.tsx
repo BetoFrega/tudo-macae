@@ -91,6 +91,26 @@ describe("SiteSearchLoading", () => {
     expect(status.textContent).toBe("A busca está levando mais tempo que o normal. Você ainda pode ajustar sua busca.");
     expect(document.activeElement).toBe(document.body);
   });
+
+  // jsdom applies no Tailwind CSS, so this reads the variants the browser would apply:
+  // an unprefixed or `motion-reduce:` animation without `motion-reduce:animate-none`
+  // would keep the skeleton pulsing for visitors who ask for reduced motion.
+  test("pulses the skeleton only when the visitor allows motion", () => {
+    render(<SiteSearchLoading />);
+
+    const results = screen.getByRole("region", { name: "Resultados da busca" });
+    const tokensOf = (element: Element) => [...element.classList];
+    const animated = [...results.querySelectorAll("*")].filter(element =>
+      tokensOf(element).some(token => /^(?:motion-safe:|motion-reduce:)?animate-(?!none$)/u.test(token)));
+    const animatedUnderReducedMotion = animated.filter((element) => {
+      const tokens = tokensOf(element);
+      if (tokens.some(token => /^motion-reduce:animate-(?!none$)/u.test(token))) return true;
+      return tokens.some(token => /^animate-(?!none$)/u.test(token)) && !tokens.includes("motion-reduce:animate-none");
+    });
+
+    expect(animated).toHaveLength(13);
+    expect(animatedUnderReducedMotion).toEqual([]);
+  });
 });
 
 describe("SiteSearchResults", () => {

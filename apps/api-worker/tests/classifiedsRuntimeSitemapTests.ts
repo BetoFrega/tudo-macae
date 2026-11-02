@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { z } from "zod";
 import { createClassifiedsPersistence, createClassifiedsCapabilities } from "../classifieds";
 import { PersistenceLimit, type PersistenceMetrics } from "@tudomacae/classifieds-persistence";
-import { now, capability, classifiedsDatabase } from "./classifiedsRuntimeHarness";
+import { now, capability, classifiedsDatabase, save, profile, adFields, ownerActor } from "./classifiedsRuntimeHarness";
 
 const entries = z.array(z.object({ id: z.string(), slug: z.string(), lastModified: z.number().optional() }).strict());
 
@@ -44,4 +44,12 @@ test("sitemap reads one bounded indexed statement without returning ad bodies", 
   expect(metrics[0]!.returnedBytes).toBeLessThan(1_000);
   expect((await measured.adSitemap(2)).map(row => row.id)).toEqual(["large-2", "large-1"]);
   for (const limit of [0, 50_002, 1.5]) await expect(measured.adSitemap(limit)).rejects.toBeInstanceOf(PersistenceLimit);
+});
+
+test("an ad its owner creates through the public write path is listed in the sitemap", async () => {
+  await save({ ...profile(), body: { ...profile().body, contacts: [{ number: "22999998888", isWhatsapp: true }] } });
+  const owner = createClassifiedsCapabilities({ persistence: createClassifiedsPersistence({ database: await classifiedsDatabase() }), actor: ownerActor, correlationId: crypto.randomUUID(), now: () => now });
+  await owner.write("ads.create", { ...adFields, id: "created-by-owner" });
+
+  expect(entries.parse((await capability("ads.sitemap", {})).value).map(entry => entry.id)).toContain("created-by-owner");
 });

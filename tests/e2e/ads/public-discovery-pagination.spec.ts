@@ -61,12 +61,11 @@ test("public category, subcategory and profile links reach ads beyond the first 
     }
     const robots = await request.get("/robots.txt");
     expect(await robots.text()).toContain("Sitemap: https://www.tudomacae.com.br/sitemaps/anuncios.xml");
-    // The origin reuses a read for about a minute; polling outlasts one stale render.
-    await expect.poll(async () => {
-      const sitemap = await request.get("/sitemaps/anuncios.xml");
-      expect(sitemap.status()).toBe(200);
-      return sitemap.text();
-    }, { timeout: 90_000, intervals: [1000, 2000, 5000] }).toContain(`/anuncio/${adFixture.id}/${adFixture.slug}</loc>`);
+    // The origin may serve a read up to a minute old, so this proves the route reaches public ads, not that a new ad is listed;
+    // which ads are listed is covered by classifiedsRuntimeSitemapTests.ts and the route's rendering by its route.test.ts.
+    const sitemap = await request.get("/sitemaps/anuncios.xml");
+    expect(sitemap.status()).toBe(200);
+    expect(await sitemap.text()).toContain("<url><loc>https://www.tudomacae.com.br/anuncio/");
   }
   finally {
     await Promise.all(created.map(deleteAdFixture));

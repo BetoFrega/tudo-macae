@@ -12,7 +12,8 @@ afterEach(() => {
 });
 test("revocation clears a mounted section within the polling interval without repeated pageview events", async () => {
   vi.useFakeTimers();
-  vi.stubGlobal("fetch", vi.fn(async () => new Response("null", { status: 404 })));
+  const fetcher = vi.fn(async () => new Response("null", { status: 404 }));
+  vi.stubGlobal("fetch", fetcher);
   const initial = { items: [{ id: "a", name: "Consulta", description: "Descrição", price: { mode: "on_request" as const } }] };
   const { rerender } = render(<PublicOfferingCatalog businessId="business" initial={initial} />);
   expect(screen.getByRole("heading", { name: "Consulta" })).toBeVisible();
@@ -20,8 +21,13 @@ test("revocation clears a mounted section within the polling interval without re
   expect(posthog.capture).toHaveBeenCalledTimes(1);
   screen.getByRole("link", { name: "Link direto para o catálogo" }).focus();
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(15000);
+    await vi.advanceTimersByTimeAsync(14999);
   });
+  expect(fetcher).not.toHaveBeenCalled();
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(1);
+  });
+  expect(fetcher).toHaveBeenCalledWith("/api/negocios/business/catalogo", expect.objectContaining({ cache: "no-store" }));
   expect(screen.getByRole("status")).toHaveFocus();
   expect(screen.getByRole("status")).toHaveTextContent("Este catálogo não está disponível agora.");
   expect(screen.queryByRole("heading", { name: "Consulta" })).not.toBeInTheDocument();

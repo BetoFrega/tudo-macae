@@ -7,11 +7,11 @@ import sharp from "sharp";
 import { randomBytes } from "node:crypto";
 
 /**
- * The newsroom journey through the API Worker. Each step reopens the post, so it asserts the durable state;
- * the messages accept an unconfirmed distribution.
+ * The newsroom journey through the API Worker. Each step reopens the post, so it asserts the durable state.
+ * The API Worker fixture confirms the public index write and the image purge, so each mutation reports a confirmed
+ * distribution. The unconfirmed outcome is covered by `apps/api-worker/tests/editorialBlogDistribution.runtime.test.ts`,
+ * `editorialBlogMediaCleanup.runtime.test.ts` and `ArticleDraftForm.test.tsx`.
  */
-/** A mutation answers only after the public index projection settles; the E2E stack's projection target fails slowly. */
-const mutationTimeout = 20_000;
 
 const smallPng = () => sharp(randomBytes(48 * 32 * 3), { raw: { width: 48, height: 32, channels: 3 } }).png().toBuffer();
 
@@ -52,10 +52,10 @@ test.describe("Posts da redação", () => {
       await picker.getByLabel("Crédito").fill(`Arquivo do Tudo Macaé ${makeRandomString()}`);
       await picker.getByLabel("Data de aquisição").fill("2026-08-20T14:30");
       await click(picker.getByRole("button", { name: "Cadastrar e escolher", exact: true }));
-      await expect(view.getByText("Capa selecionada.", { exact: true })).toBeVisible({ timeout: mutationTimeout });
+      await expect(view.getByText("Capa selecionada.", { exact: true })).toBeVisible();
       await click(view.getByRole("button", { name: "Salvar rascunho", exact: true }));
       // A new post's form remounts on its own URL, so the save message does not survive.
-      await expect(page).toHaveURL(/\/redacao\/materias\/(?!nova$)[^/]+$/u, { timeout: mutationTimeout });
+      await expect(page).toHaveURL(/\/redacao\/materias\/(?!nova$)[^/]+$/u);
       postId = decodeURIComponent(new URL(page.url()).pathname.split("/").at(-1)!);
       await expect(await listedPost(page, title)).toContainText("Rascunho");
     });
@@ -64,7 +64,7 @@ test.describe("Posts da redação", () => {
       await openPost(page, title);
       await expect(view.getByLabel("Texto", { exact: true })).toHaveValue(body);
       await click(view.getByRole("button", { name: "Publicar", exact: true }));
-      await expect(view.getByRole("status")).toHaveText(/Post publicado\.|não foi confirmada/u, { timeout: mutationTimeout });
+      await expect(view.getByRole("status")).toHaveText("Post publicado.");
       await expect(await listedPost(page, title)).toContainText("Publicado");
     });
 
@@ -85,7 +85,7 @@ test.describe("Posts da redação", () => {
     await test.step("Retirar o post do ar", async () => {
       await openPost(page, title);
       await click(view.getByRole("button", { name: "Retirar do ar", exact: true }));
-      await expect(view.getByRole("status")).toHaveText(/Post retirado do ar\./u, { timeout: mutationTimeout });
+      await expect(view.getByRole("status")).toHaveText("Post retirado do ar. Conteúdo preservado.");
       await expect(await listedPost(page, title)).toContainText("Rascunho");
     });
 

@@ -74,6 +74,16 @@ test("visibility, enablement, eligibility and flag combine without losing data o
     { actorId: "admin", businessId: "a", previous: true, enabled: false, at: 1000, operationId: "revoke" },
   ]);
 });
+test.each(["disabled", "outside_audience", "unavailable"] as const)("a %s flag hides an enabled, visible catalog from visitors and management", async (decision) => {
+  const state: OfferingCatalogState = { enabled: true, revision: 3, items: [{ id: "item-1", ...consultation, price: { mode: "on_request" }, visible: true }] };
+  const catalog = createOfferingCatalog({
+    store: { read: async () => state, transact: async (_id, change) => change(state, { ownerId: "owner", claimable: false }).state },
+    flag: async () => decision, isPublicBusiness: async () => true, now: () => 1000, newId: () => "unused",
+  });
+  expect(await catalog.readPublic("a")).toBeNull();
+  await expect(catalog.readManagement({ businessId: "a", actor: owner })).rejects.toMatchObject({ outcome: decision });
+  await expect(catalog.readManagement({ businessId: "a", actor: admin })).rejects.toMatchObject({ outcome: decision });
+});
 test("third parties cannot edit and only administrators may enable", async () => {
   const { catalog } = fixture();
   await expect(catalog.saveItem({ businessId: "a", actor: { id: "third", admin: false }, expectedRevision: 0, item: consultation })).rejects.toMatchObject({ outcome: "authorization" });

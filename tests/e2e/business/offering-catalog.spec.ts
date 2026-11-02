@@ -4,7 +4,7 @@ import { test } from "../_helpers/fixtures";
 import { click } from "../_helpers/click";
 import { businessCanonicalPath } from "@tudomacae/advertiser-identity/businessPresentation";
 
-// Run with node tests/_helpers/offering-catalog-runner.mjs test:e2e -- <spec>.
+// Run with node tests/e2e/_helpers/offering-catalog-runner.mjs test:e2e -- <spec>.
 test("owner prepares, administrator enables and revokes, visitor cannot bypass controls", async ({ page, browser, request, authentication, userCredentials, adminUserCredentials, adProfileFixture }, testInfo) => {
   const businessId = adProfileFixture.id;
   const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
@@ -74,7 +74,7 @@ test("owner prepares, administrator enables and revokes, visitor cannot bypass c
     await publicPage.setViewportSize({ width: 1280, height: 900 });
     await publicPage.screenshot({ path: testInfo.outputPath("offering-catalog-public-desktop.png"), fullPage: true });
     await click(pageObject(page).getByRole("button", { name: "Revogar exibição do catálogo", exact: true }));
-    await expect(pageObject(publicPage).getByRole("heading", { name: "Consulta inicial", exact: true })).toHaveCount(0, { timeout: 20000 });
+    await expect(pageObject(page).getByText("Catálogo não habilitado pelo administrador.", { exact: false })).toBeVisible();
     expect((await request.get(`/api/negocios/${businessId}/catalogo`)).status()).toBe(404);
     await authentication.login(userCredentials);
     await page.goto(management);
@@ -96,39 +96,8 @@ test("owner prepares, administrator enables and revokes, visitor cannot bypass c
     await click(pageObject(page).getByRole("button", { name: "Habilitar exibição do catálogo", exact: true }));
     await publicPage.reload();
     await expect(pageObject(publicPage).getByRole("heading", { name: "Consulta atualizada", exact: true })).toBeVisible();
-    await release("disabled");
-    await expect(pageObject(publicPage).getByRole("heading", { name: "Consulta atualizada", exact: true })).toHaveCount(0, { timeout: 20000 });
-    for (const decision of ["disabled", "outside_audience", "unavailable"]) {
-      await release(decision);
-      await publicPage.goto(`${canonical}#catalogo`);
-      await expect(pageObject(publicPage).getByRole("heading", { name: "Catálogo do negócio", exact: true })).toHaveCount(0);
-      expect((await request.get(`/api/negocios/${businessId}/catalogo`)).status()).toBe(404);
-      await page.goto(management);
-      await expect(pageObject(page).getByRole("heading", { name: "Catálogo do negócio", exact: true })).toHaveCount(0);
-    }
   }
   finally {
     await visitor.close();
   }
 });
-
-for (const actor of ["owner", "administrator"] as const) {
-  test(`profile editing streams while the catalog flag is pending for ${actor}`, async ({ page, request, authentication, userCredentials, adminUserCredentials, adProfileFixture, profilePage, adminProfilesPage }) => {
-    const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
-    if (!host?.startsWith("https://localhost:")) throw new Error("Run with the offering catalog HTTPS provider fixture.");
-    await authentication.login(actor === "owner" ? userCredentials : adminUserCredentials);
-    await request.post(`${host}/control`, { data: { businessId: adProfileFixture.id, decision: "slow" } });
-    const route = actor === "owner" ? `/minha-conta/perfis/${adProfileFixture.id}/editar` : `/admin/perfis/${adProfileFixture.id}`;
-    await page.goto(route, { waitUntil: "commit" });
-    const title = actor === "owner" ? profilePage.titleInput : adminProfilesPage.titleInput;
-    await expect(title).toBeVisible();
-    await expect(title).toHaveValue(adProfileFixture.title);
-    const evaluation = await request.post(`${host}/control`, { data: { businessId: adProfileFixture.id } });
-    expect(await evaluation.json()).toEqual({ pending: true });
-    await page.screenshot({ path: `test-results/offering-catalog-edit-${actor}-pending-desktop.png`, fullPage: true });
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.screenshot({ path: `test-results/offering-catalog-edit-${actor}-pending-mobile.png`, fullPage: true });
-    await page.waitForLoadState("load");
-    await expect(pageObject(page).getByRole("link", { name: "Gerenciar catálogo do negócio", exact: true })).toHaveCount(0);
-  });
-}

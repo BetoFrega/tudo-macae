@@ -60,6 +60,9 @@ const fixtureWorker = {
       ...(request.headers.get("x-fixture-bound-renderer") === "1" ? { boundRenderer: true } : {}),
       verifyHumanChallenge: createSiteverify(fetch),
       editorialMedia: () => editorialMedia(env),
+      // The fixture has no image CDN to purge, so retiring editorial images confirms; without this, a save that
+      // retires one answers `unconfirmed`. Failing and stalled purges are covered by `editorialBlogMediaCleanup.runtime.test.ts`.
+      editorialImagePurge: () => async () => ({ success: true }),
       classifiedsPersistence: () => createClassifiedsPersistence({ database }),
       classifiedsPhotos: environment => createHostedPhotoFixture({ database: environment.CLASSIFIEDS_DB, bucket: env.PHOTOS, images: env.IMAGES, ...(failurePhase.success ? { failure: failurePhase.data } : {}) }).lifecycle,
       classifiedsOfferingFlag: () => createOfferingFlag({ host: "https://offering-flags.test", token: "disposable-catalog-fixture", fetch: (url, init) => env.OFFERING_FLAGS ? env.OFFERING_FLAGS.fetch(url, init) : Promise.resolve(new Response(null, { status: 503 })) }),

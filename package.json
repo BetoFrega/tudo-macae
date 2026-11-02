@@ -85,7 +85,7 @@
     "@tudomacae/www-origin-routing": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.59.0",
+    "lucide-react": "^1.62.0",
     "next": "^16.4.2",
     "posthog-js": "^1.440.0",
     "react": "^19.3.0",

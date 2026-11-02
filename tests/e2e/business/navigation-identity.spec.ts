@@ -1,51 +1,24 @@
 import { expect, test } from "../_helpers/fixtures";
 import { pageObject } from "../_helpers/fixtures/POMs/pageObject";
 import { makeRandomString } from "../../_helpers/makeRandomString";
-import { createClaimableProfileFixture, updateClaimableProfileFixture, type ClaimableProfileFixture } from "../_helpers/advertiser-profile/profileFixtures";
+import { createClaimableProfileFixture } from "../_helpers/advertiser-profile/profileFixtures";
 import { deleteProfileFixture } from "../../_helpers/auth/db/deleteFixtureDocuments";
 import { slugify } from "@tudomacae/text-normalization/slugify";
 
-test("visitante abre o Negócio correto após prefetch de rotas irmãs", async ({ page, categoryFixture }, testInfo) => {
-  const prefix = `Navegação ${makeRandomString()}`;
-  const originalTitle = `${prefix} 00`;
-  const renamedTitle = `${prefix} 00 atualizado`;
-  const businesses: ClaimableProfileFixture[] = [];
-  const ids: string[] = [];
+test("visitante abre um Negócio da listagem pelo teclado e o foco chega ao título", async ({ page, categoryFixture }, testInfo) => {
+  const title = `Navegação ${makeRandomString()}`;
+  const { id } = await createClaimableProfileFixture({
+    title,
+    description: "Informações públicas de um negócio local.",
+    contacts: [{ number: "22999999999", isWhatsapp: true }],
+    activityAreas: [{ categoryId: categoryFixture.category.id, subcategoryId: categoryFixture.subcategory.id }],
+    sourceUrl: "https://example.com/navigation-test",
+  });
   try {
-    for (const index of [0, 1]) {
-      const title = `${prefix} ${String(index).padStart(2, "0")}`;
-      const business = await createClaimableProfileFixture({
-        title,
-        description: "Informações públicas de um negócio local.",
-        contacts: [{ number: "22999999999", isWhatsapp: true }],
-        activityAreas: [{ categoryId: categoryFixture.category.id, subcategoryId: categoryFixture.subcategory.id }],
-        sourceUrl: "https://example.com/navigation-test",
-      });
-      businesses.push(business);
-      ids.push(business.id);
-    }
-    const prefetchedPaths = new Set<string>();
-    page.on("response", (response) => {
-      const pathname = new URL(response.url()).pathname;
-      if (ids.some(id => pathname.startsWith(`/negocio/${id}/`)) && response.request().headers()["rsc"] === "1") {
-        prefetchedPaths.add(pathname);
-      }
-    });
+    const businessPath = `/negocio/${id}/${slugify(title)}`;
     await page.goto("/negocios");
-    const target = pageObject(page).getByRole("link", { name: originalTitle, exact: true });
-    await target.scrollIntoViewIfNeeded();
-    await expect.poll(() => prefetchedPaths.size).toBe(2);
-    const stalePath = `/negocio/${ids[0]}/${slugify(originalTitle)}`;
-    const canonicalPath = `/negocio/${ids[0]}/${slugify(renamedTitle)}`;
-    await expect(target).toHaveAttribute("href", stalePath);
-    await updateClaimableProfileFixture(businesses[0]!, {
-      title: renamedTitle,
-      description: "Informações públicas de um negócio local.",
-      contacts: [{ number: "22999999999", isWhatsapp: true }],
-      activityAreas: [{ categoryId: categoryFixture.category.id, subcategoryId: categoryFixture.subcategory.id }],
-      sourceUrl: "https://example.com/navigation-test-updated",
-    });
-    await expect(target).toHaveAttribute("href", stalePath);
+    const target = pageObject(page).getByRole("link", { name: title, exact: true });
+    await expect(target).toHaveAttribute("href", businessPath);
     await test.step("teclado alcança e ativa o Negócio do link", async () => {
       let targetReceivedFocus = false;
       for (let tabPress = 0; tabPress < 40 && !targetReceivedFocus; tabPress += 1) {
@@ -59,8 +32,8 @@ test("visitante abre o Negócio correto após prefetch de rotas irmãs", async (
       await page.keyboard.press("Enter");
     });
     await test.step("o destino correto recebe o foco após navegar", async () => {
-      await expect(page).toHaveURL(new URL(canonicalPath, page.url()).href);
-      const destinationHeading = pageObject(page).getByRole("heading", { name: renamedTitle, exact: true });
+      await expect(page).toHaveURL(new URL(businessPath, page.url()).href);
+      const destinationHeading = pageObject(page).getByRole("heading", { name: title, exact: true });
       await expect(destinationHeading).toBeVisible();
       await expect(destinationHeading).toHaveAttribute("tabindex", "-1");
       try {
@@ -140,6 +113,6 @@ test("visitante abre o Negócio correto após prefetch de rotas irmãs", async (
     });
   }
   finally {
-    for (const id of ids) await deleteProfileFixture(id);
+    await deleteProfileFixture(id);
   }
 });

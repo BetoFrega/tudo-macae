@@ -19,8 +19,6 @@ export const SITE_SEARCH_FAKE_TOKEN = "phc_e2e_site_search";
 export interface SiteSearchFakeReply {
   status: number;
   body: unknown;
-  delayMs?: number;
-  held?: boolean;
 }
 
 async function readJson(request: IncomingMessage): Promise<Record<string, unknown>> {
@@ -35,94 +33,36 @@ async function readJson(request: IncomingMessage): Promise<Record<string, unknow
   }
 }
 
-interface ReplyProgress {
-  started: number;
-  completed: number;
-  businessStarted: number;
-}
-
-interface HeldReply {
-  wait: Promise<void>;
-  release(): void;
-}
-
 interface FakeState {
   replies: Map<string, SiteSearchFakeReply>;
-  replyProgress: Map<string, ReplyProgress>;
-  heldReplies: Map<string, HeldReply>;
 }
 
 interface FakeRequest {
   body: Record<string, unknown>;
-  url: URL;
   send(status: number, body: unknown): void;
 }
 
-type FakeRoute = (state: FakeState, request: FakeRequest) => Promise<void> | void;
-
-const emptyProgress = (): ReplyProgress => ({ started: 0, completed: 0, businessStarted: 0 });
-
-function releaseHeldReply(state: FakeState, query: string) {
-  state.heldReplies.get(query)?.release();
-  state.heldReplies.delete(query);
-}
-
-function holdReply(state: FakeState, query: string) {
-  let release = () => {};
-  const wait = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  state.heldReplies.set(query, { wait, release });
-}
+type FakeRoute = (state: FakeState, request: FakeRequest) => void;
 
 function evaluateFlags(_state: FakeState, { body, send }: FakeRequest) {
   if (body.api_key !== SITE_SEARCH_FAKE_TOKEN) return send(401, {});
   send(200, { flags: { "business-registration-visibility": { enabled: true } } });
 }
 
-function trackSearchStart(state: FakeState, query: string, types: unknown): ReplyProgress {
-  const progress = state.replyProgress.get(query) ?? emptyProgress();
-  state.replyProgress.set(query, progress);
-  progress.started += 1;
-  if (Array.isArray(types) && types.includes("business")) progress.businessStarted += 1;
-  return progress;
-}
-
-async function search(state: FakeState, { body, send }: FakeRequest) {
-  const query = String(body.query);
-  const reply = state.replies.get(query);
-  const progress = trackSearchStart(state, query, body.types);
-  if (reply?.held) await state.heldReplies.get(query)?.wait;
-  if (reply?.delayMs) await new Promise(resolve => setTimeout(resolve, reply.delayMs));
+function search(state: FakeState, { body, send }: FakeRequest) {
+  const reply = state.replies.get(String(body.query));
   if (reply) send(reply.status, reply.body);
   else send(200, { chunks: [], durationMs: 1 });
-  progress.completed += 1;
-}
-
-function readReplyProgress(state: FakeState, { url, send }: FakeRequest) {
-  send(200, state.replyProgress.get(url.searchParams.get("query") ?? "") ?? emptyProgress());
 }
 
 function scriptReply(state: FakeState, { body, send }: FakeRequest) {
   if (typeof body.query !== "string") return send(404, {});
-  releaseHeldReply(state, body.query);
-  const reply = body.reply as SiteSearchFakeReply;
-  state.replies.set(body.query, reply);
-  if (reply.held) holdReply(state, body.query);
-  send(204, {});
-}
-
-function releaseReply(state: FakeState, { body, send }: FakeRequest) {
-  if (typeof body.query !== "string") return send(404, {});
-  releaseHeldReply(state, body.query);
+  state.replies.set(body.query, body.reply as SiteSearchFakeReply);
   send(204, {});
 }
 
 function resetFake(state: FakeState, { send }: FakeRequest) {
-  for (const held of state.heldReplies.values()) held.release();
-  state.heldReplies.clear();
   state.replies.clear();
-  state.replyProgress.clear();
   send(204, {});
 }
 
@@ -130,18 +70,12 @@ const routes: Record<string, FakeRoute> = {
   "POST /flags": evaluateFlags,
   "POST /i/v0/e": (_state, { send }) => send(200, {}),
   "POST /search": search,
-  "GET /__replies": readReplyProgress,
   "PUT /__replies": scriptReply,
-  "POST /__replies/release": releaseReply,
   "DELETE /__replies": resetFake,
 };
 
 export async function startSiteSearchFake() {
-  const state: FakeState = {
-    replies: new Map(),
-    replyProgress: new Map(),
-    heldReplies: new Map(),
-  };
+  const state: FakeState = { replies: new Map() };
   const server = createServer(async (request, response) => {
     const send = (status: number, body: unknown) => {
       response.writeHead(status, {
@@ -157,7 +91,7 @@ export async function startSiteSearchFake() {
     const path = url.pathname.replace(/\/$/u, "");
     const body = request.method === "POST" || request.method === "PUT" ? await readJson(request) : {};
     const route = routes[`${request.method} ${path}`];
-    if (route) return route(state, { body, url, send });
+    if (route) return route(state, { body, send });
     send(404, {});
   });
   await new Promise<void>(resolve => server.listen(0, LOOPBACK, resolve));

@@ -16,13 +16,6 @@ export async function scriptReply(query: string, reply: SiteSearchFakeReply) {
   expect(response.status).toBe(204);
 }
 
-export async function releaseReply(query: string) {
-  const response = await fetch(`${await fakeUrl()}/__replies/release`, {
-    method: "POST", body: JSON.stringify({ query }),
-  });
-  expect(response.status).toBe(204);
-}
-
 export function headerSearch(page: Page) {
   return pageObject(page).getByRole("banner").getByRole("search", { name: "Buscar no Tudo Macaé" });
 }

@@ -135,7 +135,7 @@
     "lint-staged": "^17.6.0",
     "miniflare": "^5.20261019.2-beta",
     "react-server-dom-webpack": "^19.3.1",
-    "tailwind-csstree": "^0.4.1",
+    "tailwind-csstree": "^0.4.2",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "turbo": "2.11.10",

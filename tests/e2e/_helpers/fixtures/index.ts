@@ -21,7 +21,7 @@ type MyFixtures = {
 
 };
 
-export const legacyTest = base.extend<MyFixtures>({
+const legacyTest = base.extend<MyFixtures>({
   profilePage: async ({ page, userSidebar }, use) => {
     await use(new ProfilePage(page, userSidebar));
   },

@@ -20,6 +20,8 @@ const realDelayMessage = "Application E2E specs cover happy paths without real d
 const realDelays = [
   { selector: "CallExpression[callee.property.name='waitForTimeout']", message: realDelayMessage },
   { selector: "CallExpression[callee.name='setTimeout']", message: realDelayMessage },
+  // `test.setTimeout(...)` only configures Playwright's budget, so only global receivers count.
+  { selector: "CallExpression[callee.property.name='setTimeout'][callee.object.name=/^(globalThis|window|self)$/]", message: realDelayMessage },
   { selector: "Property[key.name='delayMs']", message: realDelayMessage },
 ];
 

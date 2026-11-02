@@ -106,7 +106,7 @@
     "@eslint/css": "^2.0.1",
     "@eslint/json": "^2.1.1",
     "@eslint/markdown": "^8.0.3",
-    "@posthog/cli": "^0.18.10",
+    "@posthog/cli": "^0.19.0",
     "@stryker-mutator/api": "^10.0.0",
     "@stryker-mutator/core": "^10.0.0",
     "@stryker-mutator/vitest-runner": "^10.0.0",

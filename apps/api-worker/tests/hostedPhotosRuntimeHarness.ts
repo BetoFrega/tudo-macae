@@ -11,7 +11,7 @@ import { copyMigratedDatabase } from "./migratedDatabase";
 
 export let runtime: Miniflare;
 let directory: string;
-export let options: ConstructorParameters<typeof Miniflare>[0];
+let options: ConstructorParameters<typeof Miniflare>[0];
 export let now: number;
 export const classifiedsDatabase = () => runtime.getD1Database("CLASSIFIEDS_DB");
 export const bytes = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]);

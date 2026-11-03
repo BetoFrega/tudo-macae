@@ -11,7 +11,7 @@
     "migrate": "wrangler d1 migrations apply DB --remote --env production"
   },
   "dependencies": {
-    "jose": "^6.2.12"
+    "jose": "^6.2.14"
   },
   "devDependencies": {
     "@tudomacae/article-index-test-runtime": "workspace:*",

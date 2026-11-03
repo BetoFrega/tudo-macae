@@ -31,7 +31,7 @@ export const BLOCK_STRIDE = 8;
  * never be handed this worktree's port while the app is down.
  */
 export const FIRST_BLOCK_PORT = 20_000;
-export const BLOCK_COUNT = 1_000;
+const BLOCK_COUNT = 1_000;
 export const LAST_BLOCK_PORT = FIRST_BLOCK_PORT + BLOCK_COUNT * BLOCK_STRIDE - 1;
 
 /** Repository root — the directory holding `bin/`. */

@@ -12,7 +12,7 @@ function hasOriginTiming(headers) {
     metric.trim().split(";")[0] !== "cfReqDur") ?? false;
 }
 
-export function respondingLayer(headers) {
+function respondingLayer(headers) {
   if (headers.get("x-www-origin") === "cloud-run") return "cloud-run";
   if (headers.get("x-www-origin") === "terms-workers") return "terms-workers";
   if (headers.get("via")?.includes("google") || headers.has("x-fah-adapter")

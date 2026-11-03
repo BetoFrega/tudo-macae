@@ -5,9 +5,9 @@ import { runInNewContext } from "node:vm";
 import { expect } from "vitest";
 import { parse } from "yaml";
 
-export const workflowsDirectory = path.join(".github", "workflows");
-export const actionsDirectory = path.join(".github", "actions");
-export const expensiveWorkflowOperation = /(?:pnpm exec|npx) playwright test|run test:e2e/;
+const workflowsDirectory = path.join(".github", "workflows");
+const actionsDirectory = path.join(".github", "actions");
+const expensiveWorkflowOperation = /(?:pnpm exec|npx) playwright test|run test:e2e/;
 
 export type PullRequestTrigger = {
   types: string[];

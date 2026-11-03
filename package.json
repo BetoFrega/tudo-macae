@@ -126,7 +126,7 @@
     "@vitejs/plugin-rsc": "^0.5.38",
     "babel-plugin-react-compiler": "1.0.0",
     "dependency-cruiser": "^18.7.0",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "eslint-config-next": "^16.4.2",
     "eslint-plugin-better-tailwindcss": "^4.10.0",
     "eslint-plugin-yml": "^3.9.0",

@@ -44,9 +44,3 @@ export function reusedRendererMismatch(expected: E2eRenderer, recorded: string |
   return `The running e2e server was started with E2E_RENDERER=${served || "unknown"}, but this run asks for ${expected}.\n\n`
     + "Stop that server and run the suite again.";
 }
-
-/** The line each renderer's server prints once it listens, after ANSI codes are removed. */
-export const E2E_SERVER_READY: Record<E2eRenderer, RegExp> = {
-  next: /Ready in/u,
-  vinext: /Local:\s+http:\/\/localhost:\d+/u,
-};

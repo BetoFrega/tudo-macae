@@ -8,14 +8,14 @@ import { workerVersionHeader } from "@tudomacae/www-origin-routing/contract";
  * HTML. Caching one of them at the edge would let a stored copy answer for a
  * broken version.
  */
-export const webPageProbePaths = ["/", "/termos-e-condicoes", "/noticias"];
+const webPageProbePaths = ["/", "/termos-e-condicoes", "/noticias"];
 
 /**
  * Five shared retries ten seconds apart give the new version about a minute to
  * reach every colo. The response timeout covers the body, so a streamed 200
  * that stops before `</html>` fails.
  */
-export const webPageProbeTiming = { retries: 5, retryDelayMs: 10_000, responseTimeoutMs: 10_000 };
+const webPageProbeTiming = { retries: 5, retryDelayMs: 10_000, responseTimeoutMs: 10_000 };
 
 const versionPattern = /^[a-f0-9-]{8,64}$/u;
 
@@ -63,7 +63,7 @@ async function pageFailure(request, path, expectedVersion, timeoutMs) {
 }
 
 /** Every path must render a complete document from `expectedVersion` through `www`. */
-export async function probeWebPages(expectedVersion, { request = fetch, wait = delay, paths = webPageProbePaths, timing = webPageProbeTiming } = {}) {
+async function probeWebPages(expectedVersion, { request = fetch, wait = delay, paths = webPageProbePaths, timing = webPageProbeTiming } = {}) {
   let retries = timing.retries;
   for (const path of paths) {
     for (;;) {

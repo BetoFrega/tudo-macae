@@ -4,7 +4,7 @@ import { expect } from "./fixtures";
 import { pageObject } from "./fixtures/POMs/pageObject";
 import { SITE_SEARCH_FAKE_ADDRESS_PATH, type SiteSearchFakeReply } from "../bin/siteSearchFake";
 
-export async function fakeUrl() {
+async function fakeUrl() {
   return (JSON.parse(await readFile(SITE_SEARCH_FAKE_ADDRESS_PATH, "utf8")) as { url: string }).url;
 }
 

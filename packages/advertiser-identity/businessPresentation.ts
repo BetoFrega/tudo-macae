@@ -16,6 +16,10 @@ export function businessCanonicalPath(business: { id: string; title: string }) {
   return `/negocio/${business.id}/${slugify(business.title)}`;
 }
 
+export function businessClaimPath(business: { id: string; title: string }) {
+  return `${businessCanonicalPath(business)}/reivindicar`;
+}
+
 export function businessMetadataDescription(business: {
   title: string;
   description?: string;

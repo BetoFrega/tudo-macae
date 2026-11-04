@@ -6,9 +6,8 @@ import {
   createLockedSkillFixture,
   expectedHash,
   removeFixtureRoots,
-  repositoryRoot,
-  runHarness,
-} from "./agentHarnessFixtures";
+} from "./agentHarnessCheckerFixtures";
+import { repositoryRoot, runHarness } from "./agentHarnessFixtures";
 
 // These tests run real processes, which the Workers runtime (quality-flare's Tests check) lacks.
 const inWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";

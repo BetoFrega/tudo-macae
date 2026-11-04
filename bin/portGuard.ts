@@ -23,7 +23,7 @@ const PROBE_TIMEOUT_MS = 500;
  * allowed to be missing — a CI image without it still gets the refusal, just
  * without a name.
  */
-export function isListening(port: number, timeoutMs = PROBE_TIMEOUT_MS) {
+function isListening(port: number, timeoutMs = PROBE_TIMEOUT_MS) {
   return new Promise<boolean>((resolve) => {
     const socket = connect({ host: LOOPBACK, port });
     const settle = (result: boolean) => {

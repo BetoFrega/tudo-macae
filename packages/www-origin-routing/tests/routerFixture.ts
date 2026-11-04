@@ -4,7 +4,7 @@ import {
   type WwwOriginLogEvent,
 } from "@tudomacae/www-origin-routing/router";
 
-export const browser = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140 Safari/537.36";
+const browser = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140 Safari/537.36";
 export const workerVersion = "0123abcd-0000-4000-8000-000000000000";
 
 /** A response the Web application rendered, stamped like `web-worker/workerVersion.ts` does. */

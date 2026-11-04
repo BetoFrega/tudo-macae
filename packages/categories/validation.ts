@@ -40,8 +40,6 @@ export const subcategoryRecordSchema = z.object({
 });
 
 // Extended schemas for use-cases
-export const createCategorySchema = categoryRecordSchema;
-
 export const updateCategorySchema = categoryRecordSchema.extend({
   id: z.string().min(1, "Category ID is required"),
 });
@@ -65,7 +63,7 @@ export const deleteSubcategorySchema = z.object({
 });
 
 // Type exports
-export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
+export type CreateCategoryInput = z.infer<typeof categoryRecordSchema>;
 export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>;
 export type CreateSubcategoryInput = z.infer<typeof createSubcategorySchema>;
 export type UpdateSubcategoryInput = z.infer<typeof updateSubcategorySchema>;

@@ -31,7 +31,9 @@ test's location.
   - Validation, failure, recovery, unavailable, timeout and race states belong in
     unit or integration tests, with fake timers for anything time-based. E2E cases
     never script a provider failure or wait on a real delay (`delayMs`,
-    `waitForTimeout`, a fake that answers after the app's timeout).
+    `waitForTimeout`, `setTimeout`, a fake that answers after the app's timeout,
+    or holds its reply until the test releases it). `eslint.playwright.mjs`
+    rejects the first three in application specs.
   - Exception: one denied-access case per protected surface, because only the
     browser proves that the session reaches the server before private data
     renders. Cover the remaining authorization variants in Worker runtime tests.

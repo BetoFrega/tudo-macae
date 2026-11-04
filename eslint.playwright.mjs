@@ -1,4 +1,29 @@
 import local from "./eslint-rules/index.js";
+import { harnessTests } from "./tests/e2e/bin/playwrightCollections.ts";
+
+// `this.click(...)` is BasePage's delegate to the same helper.
+const rawClick = {
+  selector:
+    "CallExpression[callee.property.name='click']"
+    + ":not([callee.object.type='ThisExpression'])",
+  message:
+    "Use click(locator) from tests/e2e/_helpers/click.ts — or this.click(...) "
+    + "inside a POM — instead of Playwright's .click(). "
+    + "It detects at runtime whether the target is an in-app link and waits "
+    + "for the navigation to land — a click that arrives before hydration is "
+    + "swallowed without navigating, and the failure surfaces much later.",
+};
+// docs/agents/test-selection.md: application journeys never wait on a real delay; harness specs are outside that rule.
+const realDelayMessage = "Application E2E specs cover happy paths without real delays; "
+  + "move timeout, loading and race states to unit or integration tests with fake timers "
+  + "(docs/agents/test-selection.md).";
+const realDelays = [
+  { selector: "CallExpression[callee.property.name='waitForTimeout']", message: realDelayMessage },
+  { selector: "CallExpression[callee.name='setTimeout']", message: realDelayMessage },
+  // `test.setTimeout(...)` only configures Playwright's budget, so only global receivers count.
+  { selector: "CallExpression[callee.property.name='setTimeout'][callee.object.name=/^(globalThis|window|self)$/]", message: realDelayMessage },
+  { selector: "Property[key.name='delayMs']", message: realDelayMessage },
+];
 
 // Playwright authoring conventions for `tests/**` (docs/agents/e2e-test-authoring.md).
 export const playwrightConventions = [
@@ -6,18 +31,14 @@ export const playwrightConventions = [
     files: ["tests/**/*"],
     rules: {
       "react-hooks/rules-of-hooks": "off",
-      "no-restricted-syntax": ["error", {
-        // `this.click(...)` is BasePage's delegate to the same helper.
-        selector:
-          "CallExpression[callee.property.name='click']"
-          + ":not([callee.object.type='ThisExpression'])",
-        message:
-          "Use click(locator) from tests/e2e/_helpers/click.ts — or this.click(...) "
-          + "inside a POM — instead of Playwright's .click(). "
-          + "It detects at runtime whether the target is an in-app link and waits "
-          + "for the navigation to land — a click that arrives before hydration is "
-          + "swallowed without navigating, and the failure surfaces much later.",
-      }],
+      "no-restricted-syntax": ["error", rawClick],
+    },
+  },
+  {
+    files: ["tests/e2e/**/*.spec.ts"],
+    ignores: harnessTests,
+    rules: {
+      "no-restricted-syntax": ["error", rawClick, ...realDelays],
     },
   },
   {

@@ -8,6 +8,7 @@ import type { AdvertiserIdentityType } from "@tudomacae/advertiser-identity/mode
 export type OfferEvent = { actorId: string; identityType?: AdvertiserIdentityType; internalActor?: boolean } & (
   | { name: "ad_published"; adId: string; categoryId: string; subcategoryId: string }
   | { name: "advertiser_identity_created"; identityId: string }
+  | { name: "business_claimed"; identityId: string }
 );
 
 const captureUrl = "https://eu.i.posthog.com/i/v0/e/";

@@ -17,6 +17,8 @@ export interface RecordInput {
 export interface StoredRecord extends RecordInput { version: string }
 export interface RecordQuery {
   kind: RecordKind;
+  /** Records of one scoped collection, such as an `operation` namespace. */
+  namespace?: string;
   profileId?: string;
   /** Ads associated with profiles currently owned by this account, plus its unassociated legacy ads. */
   advertiserOwnerId?: string;

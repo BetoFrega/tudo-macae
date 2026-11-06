@@ -25,7 +25,11 @@ export default async function ClaimedBusinessPage({ params }: PageProps<"/minha-
         A página continua no catálogo com as informações de antes. Confira se estão certas e publique um anúncio para aparecer também nos Classificados.
       </p>
       <h2 className="mt-8 text-xl font-semibold">Próximos passos</h2>
-      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+      <ul className="
+        mt-4 grid gap-3
+        sm:grid-cols-2
+      "
+      >
         <li>
           <Button asChild className="min-h-11 w-full">
             <Link href="/publicar">Publicar o primeiro anúncio</Link>

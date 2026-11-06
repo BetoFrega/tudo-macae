@@ -143,7 +143,7 @@
     "typescript": "^6",
     "vinext": "^1.4.1",
     "vite": "^8.3.5",
-    "vitest": "^5.0.5",
+    "vitest": "^5.1.0",
     "wrangler": "^4.156.1",
     "yaml": "^2.9.1"
   },

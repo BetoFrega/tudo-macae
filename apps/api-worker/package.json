@@ -28,7 +28,7 @@
     "@tudomacae/www-origin-routing": "workspace:*",
     "better-auth": "1.7.15",
     "jose": "^6.2.14",
-    "lucide-react": "^1.66.0",
+    "lucide-react": "^1.67.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {

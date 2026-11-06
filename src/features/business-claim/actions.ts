@@ -14,7 +14,9 @@ function text(form: FormData, name: string) {
   return typeof value === "string" ? value : "";
 }
 
-function failure(error: unknown): BusinessClaimFormState {
+type ClaimFailure = Extract<BusinessClaimFormState, { status: "error" }>;
+
+function failure(error: unknown): ClaimFailure {
   if (error instanceof BusinessClaimError) return { status: "error", message: error.message, fieldErrors: error.fieldErrors };
   return { status: "error", message: unavailable, fieldErrors: {} };
 }
@@ -50,8 +52,7 @@ export async function reviewBusinessClaim(_previous: BusinessClaimReviewState, f
     });
   }
   catch (error) {
-    const state = failure(error);
-    return state.status === "error" ? state : { status: "error", message: unavailable, fieldErrors: {} };
+    return failure(error);
   }
   revalidatePath("/admin/reivindicacoes");
   revalidatePath("/negocio/[id]/[slug]", "page");

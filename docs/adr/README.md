@@ -9,6 +9,7 @@ original decision date; acceptance does not certify implementation or activation
 
 ## Architecture records
 
+- [0048 — Transfer a claimable Business through a reviewed claim ledger](0048-transfer-claimable-businesses-through-a-reviewed-claim-ledger.md)
 - [0047 — Use pnpm as the package manager](0047-use-pnpm-as-the-package-manager.md)
 - [0046 — Move the current Next application to Workers with vinext as a bridge](0046-move-the-next-application-to-workers-with-vinext.md)
 - [0045 — Give each API Worker context its own D1 database](0045-separate-api-worker-databases.md)

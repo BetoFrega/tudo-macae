@@ -24,7 +24,8 @@
     "./filterBusinessCatalogCategories": "./filterBusinessCatalogCategories.ts",
     "./phonePresentation": "./phonePresentation.ts",
     "./identityDeletion": "./identityDeletion.ts",
-    "./supplySnapshot": "./supplySnapshot.ts"
+    "./supplySnapshot": "./supplySnapshot.ts",
+    "./businessClaim": "./businessClaim.ts"
   },
   "dependencies": {
     "zod": "^4.6.7",

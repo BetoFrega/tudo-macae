@@ -3,6 +3,8 @@ import { createAdvertiserIdentityDeletion } from "@tudomacae/advertiser-identity
 import { isAdImagePath } from "@tudomacae/ads/imagePath";
 import { createClassifiedsIdentityDeletionStore } from "./db/classifiedsIdentityDeletion";
 import { createClassifiedsOfferings } from "./classifiedsOfferings";
+import { createClassifiedsBusinessClaims } from "./classifiedsBusinessClaims";
+import { businessClaimMail, type BusinessClaimMail } from "./businessClaimMail";
 import type { CatalogFlagDecision } from "@tudomacae/advertiser-identity/offeringCatalog";
 import { createHash, randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -27,7 +29,7 @@ import { createClassifiedsAdministrationStore } from "./db/classifiedsAdministra
 import { activityAreaActive } from "./db/classifiedsSupport";
 import { createClassifiedsBusinessCatalogStore, readBusinessCatalogSnapshot } from "./db/classifiedsBusinessCatalog";
 
-export type ClassifiedsActor = { uid: string; admin: boolean; editor: boolean; emailVerified?: boolean; channel: "administration" };
+export type ClassifiedsActor = { uid: string; admin: boolean; editor: boolean; email?: string; emailVerified?: boolean; channel: "administration" };
 const reference = z.object({ id: z.string().min(1) });
 const area = z.object({ categoryId: z.string().min(1), subcategoryId: z.string().min(1), civilDate: z.string().optional() });
 const businessList = z.object({
@@ -53,6 +55,9 @@ export function createClassifiedsCapabilities(dependencies: {
   environment?: string; release?: string;
   offeringFlag?: (id: string) => Promise<CatalogFlagDecision>;
   recordOfferEvent?: (event: OfferEvent) => void;
+  /** Present with `publicOrigin`; without both, claim decisions are recorded but not e-mailed. */
+  sendMail?: (mail: BusinessClaimMail) => Promise<void>;
+  publicOrigin?: string;
 }) {
   const { actor, persistence } = dependencies;
   const now = dependencies.now ?? Date.now;
@@ -83,6 +88,17 @@ export function createClassifiedsCapabilities(dependencies: {
     return readBusinessCatalogSnapshot(() => read(businessCatalog()));
   }
   const offerings = createClassifiedsOfferings({ persistence, now, newId, flag: dependencies.offeringFlag, observe: dependencies.observeOffering, isPublicBusiness: async id => Boolean(await business.read({ id })) });
+  // The claim event belongs to the claimant who now owns the Business, never to the reviewing administrator.
+  const businessClaims = createClassifiedsBusinessClaims({ persistence, now, newId,
+    claimed: ({ businessId, ownerId }) => dependencies.recordOfferEvent?.({ name: "business_claimed", actorId: ownerId, identityId: businessId, identityType: "business" }),
+    notify: async (notices) => {
+      const { sendMail, publicOrigin } = dependencies;
+      if (!sendMail || !publicOrigin) return;
+      const sent = await Promise.allSettled(notices.map(notice => sendMail(businessClaimMail(notice, publicOrigin))));
+      const failed = sent.filter(result => result.status === "rejected").length;
+      // The review already committed; a failed notice is reported, never retried by repeating the review.
+      if (failed > 0) console.warn(JSON.stringify({ severity: "WARNING", event: "business_claim_notice_failed", service: "api-worker", environment: dependencies.environment ?? "unknown", release: dependencies.release ?? "unknown", correlationId: dependencies.correlationId, outcome: "failed", count: failed }));
+    } });
   const subcategories = createSubcategoryLifecycle({ subcategories: taxonomy.subcategories, activityAreas: { removeAll: profiles.removeActivityArea } });
   const categories = createCategoryLifecycle({ categories: taxonomy.categories, subcategories });
   const administration = createAdvertiserProfileAdministration({ store: createClassifiedsAdministrationStore({ persistence, now, newId, digest, photoUrl: dependencies.photoUrl }), now, digestConfirmationEvidence: digest });
@@ -213,12 +229,14 @@ export function createClassifiedsCapabilities(dependencies: {
         if (operation === "offerings.management") authenticated();
         return offerings.read(operation, input, actor);
       }
+      if (operation.startsWith("claims.")) return businessClaims.read(operation, input, authenticated());
       return readHandlers[operation]?.(input);
     },
     async write(operation: ClassifiedsWriteOperation, input: unknown) {
       authenticated();
       if (isAdOperation(operation)) return ads.write(operation, input);
       if (operation.startsWith("offerings.")) return offerings.write(operation, input, authenticated());
+      if (operation.startsWith("claims.")) return businessClaims.write(operation, input, authenticated());
       const handler = writeHandlers[operation];
       if (handler) return handler(input);
       authenticated();

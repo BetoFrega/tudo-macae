@@ -62,7 +62,7 @@ function addCursorFilter(filter: Filter, cursor: Binding[] | undefined, ordering
 
 function addColumnFilters(filter: Filter, query: RecordQuery) {
   for (const [column, value] of [
-    ["profile_id", query.profileId], ["category_id", query.categoryId],
+    ["namespace", query.namespace], ["profile_id", query.profileId], ["category_id", query.categoryId],
     ["owner_id", query.ownerId], ["normalized_title", query.normalizedTitle], ["slug", query.slug],
   ] as const) {
     if (value === undefined) continue;

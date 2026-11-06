@@ -8,21 +8,23 @@ import { offeringCatalog } from "@/packages/classifieds-api/offerings";
 import { siteSearchResultTypeMeta } from "@tudomacae/site-search/search";
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight, UserRound } from "lucide-react";
-import { IdentityPublicImage } from "@/integrations/advertiser-identity/rendering";
+import { IdentityAppLink, IdentityPublicImage } from "@/integrations/advertiser-identity/rendering";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { IdentityAvatar } from "@tudomacae/advertiser-identity/presentation";
+import { BusinessClaimInvite, IdentityAvatar } from "@tudomacae/advertiser-identity/presentation";
 import { AdGrid } from "@/features/ads/components/AdGrid";
 import { listAdsByProfilePage } from "@/features/ads/actions/listAdsByProfile";
 import { AdvertiserContactList } from "@/features/advertiser-profile/components/AdvertiserContactList";
 import { BusinessNavigationFocusHeading } from "@/features/business/BusinessNavigationFocus";
 import { BusinessAdministrationStatus } from "@/features/business/BusinessAdministrationStatus";
+import { businessClaimVisible } from "@/integrations/advertiser-identity/businessClaimVisibility";
 import type { Category } from "@tudomacae/categories/model";
 import { getCategories } from "@/features/categories/actions/getCategories";
 import { resolveBusinessActivities } from "@/features/business/resolveBusinessActivities";
 import { getBusinessUseCase } from "@/packages/classifieds-api";
 import {
   businessCanonicalPath,
+  businessClaimPath,
   businessMetadataDescription,
 } from "@tudomacae/advertiser-identity/businessPresentation";
 import { connection } from "next/server";
@@ -67,10 +69,11 @@ export async function BusinessContent({ params, searchParams }: BusinessPageProp
   if (!isPublicAdProfileId(id)) notFound();
   const query = await searchParams;
   const cursor = query.adCursor;
-  const [business, categories, adPage] = await Promise.all([
+  const [business, categories, adPage, claimReleased] = await Promise.all([
     getBusinessUseCase({ id }),
     getCategories(),
     recoverAdPage(() => listAdsByProfilePage(id, cursor)),
+    businessClaimVisible(),
   ]);
   if (!business) notFound();
   const canonicalPath = businessCanonicalPath(business);
@@ -151,6 +154,9 @@ export async function BusinessContent({ params, searchParams }: BusinessPageProp
                 isClaimable={business.isClaimable === true}
               />
             </div>
+            {claimReleased && business.isClaimable === true && (
+              <BusinessClaimInvite href={businessClaimPath(business)} Link={IdentityAppLink} />
+            )}
             <AdvertiserContactList
               {...(business.contacts ? { contacts: business.contacts } : {})}
               sourcePath={canonicalPath}

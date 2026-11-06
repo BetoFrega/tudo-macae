@@ -14,6 +14,7 @@ function fixture() {
   let business: ClaimedBusiness | null = { title: "Café com Arte", claimable: true };
   const audits: BusinessClaimAudit[] = [];
   const claimed: unknown[] = [];
+  const notices: unknown[] = [];
   let sequence = 0;
   const claims = createBusinessClaims({
     store: {
@@ -30,9 +31,12 @@ function fixture() {
     now: () => 1_000,
     newId: () => `claim-${++sequence}`,
     claimed: event => claimed.push(event),
+    notify: async (sent) => {
+      notices.push(...sent);
+    },
   });
   const submit = (actor: BusinessClaimActor = owner) => claims.submit({ businessId: "business", actor, responsibleName: "Ana", cnpj: validCnpj });
-  return { claims, audits, claimed, submit, ledger: () => ledger, business: () => business, setBusiness: (value: ClaimedBusiness | null) => {
+  return { claims, audits, claimed, notices, submit, ledger: () => ledger, business: () => business, setBusiness: (value: ClaimedBusiness | null) => {
     business = value;
   } };
 }
@@ -86,6 +90,10 @@ test("approval transfers the Business, settles the competing claim and is audite
   expect(result).toEqual({ revision: 3, status: "approved" });
   expect(f.business()?.claimable).toBe(false);
   expect(f.claimed).toEqual([{ businessId: "business", ownerId: "owner" }]);
+  expect(f.notices).toEqual([
+    { businessId: "business", businessTitle: "Café com Arte", claimantEmail: "owner@example.test", outcome: "approved" },
+    { businessId: "business", businessTitle: "Café com Arte", claimantEmail: "rival@example.test", outcome: "rejected", reason: competingClaimApprovedReason },
+  ]);
   expect(f.audits).toEqual([expect.objectContaining({ actorId: "admin", claimantId: "owner", outcome: "approved", verification: "published_contact_call", rejectedCompetingClaims: [rivalClaim!.id], operationId: "op-1" })]);
   expect(await f.claims.readOwn({ businessId: "business", actor: rival })).toEqual({ claimable: false, claim: { status: "rejected", submittedAt: 1_000, reason: competingClaimApprovedReason } });
 });
@@ -99,6 +107,7 @@ test("a rejection tells the claimant why and lets them try again", async () => {
   expect(await f.claims.readOwn({ businessId: "business", actor: owner })).toMatchObject({ claim: { status: "rejected", reason: "O CNPJ é de outra empresa." } });
   expect(f.business()?.claimable).toBe(true);
   expect(f.claimed).toEqual([]);
+  expect(f.notices).toEqual([{ businessId: "business", businessTitle: "Café com Arte", claimantEmail: "owner@example.test", outcome: "rejected", reason: "O CNPJ é de outra empresa." }]);
   await f.submit();
   expect(f.ledger().claims.map(claim => claim.status)).toEqual(["rejected", "pending"]);
 });

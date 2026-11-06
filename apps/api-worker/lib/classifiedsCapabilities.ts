@@ -4,6 +4,7 @@ import { isAdImagePath } from "@tudomacae/ads/imagePath";
 import { createClassifiedsIdentityDeletionStore } from "./db/classifiedsIdentityDeletion";
 import { createClassifiedsOfferings } from "./classifiedsOfferings";
 import { createClassifiedsBusinessClaims } from "./classifiedsBusinessClaims";
+import { businessClaimMail, type BusinessClaimMail } from "./businessClaimMail";
 import type { CatalogFlagDecision } from "@tudomacae/advertiser-identity/offeringCatalog";
 import { createHash, randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -54,6 +55,9 @@ export function createClassifiedsCapabilities(dependencies: {
   environment?: string; release?: string;
   offeringFlag?: (id: string) => Promise<CatalogFlagDecision>;
   recordOfferEvent?: (event: OfferEvent) => void;
+  /** Present with `publicOrigin`; without both, claim decisions are recorded but not e-mailed. */
+  sendMail?: (mail: BusinessClaimMail) => Promise<void>;
+  publicOrigin?: string;
 }) {
   const { actor, persistence } = dependencies;
   const now = dependencies.now ?? Date.now;
@@ -86,7 +90,15 @@ export function createClassifiedsCapabilities(dependencies: {
   const offerings = createClassifiedsOfferings({ persistence, now, newId, flag: dependencies.offeringFlag, observe: dependencies.observeOffering, isPublicBusiness: async id => Boolean(await business.read({ id })) });
   // The claim event belongs to the claimant who now owns the Business, never to the reviewing administrator.
   const businessClaims = createClassifiedsBusinessClaims({ persistence, now, newId,
-    claimed: ({ businessId, ownerId }) => dependencies.recordOfferEvent?.({ name: "business_claimed", actorId: ownerId, identityId: businessId, identityType: "business" }) });
+    claimed: ({ businessId, ownerId }) => dependencies.recordOfferEvent?.({ name: "business_claimed", actorId: ownerId, identityId: businessId, identityType: "business" }),
+    notify: async (notices) => {
+      const { sendMail, publicOrigin } = dependencies;
+      if (!sendMail || !publicOrigin) return;
+      const sent = await Promise.allSettled(notices.map(notice => sendMail(businessClaimMail(notice, publicOrigin))));
+      const failed = sent.filter(result => result.status === "rejected").length;
+      // The review already committed; a failed notice is reported, never retried by repeating the review.
+      if (failed > 0) console.warn(JSON.stringify({ severity: "WARNING", event: "business_claim_notice_failed", service: "api-worker", environment: dependencies.environment ?? "unknown", release: dependencies.release ?? "unknown", correlationId: dependencies.correlationId, outcome: "failed", count: failed }));
+    } });
   const subcategories = createSubcategoryLifecycle({ subcategories: taxonomy.subcategories, activityAreas: { removeAll: profiles.removeActivityArea } });
   const categories = createCategoryLifecycle({ categories: taxonomy.categories, subcategories });
   const administration = createAdvertiserProfileAdministration({ store: createClassifiedsAdministrationStore({ persistence, now, newId, digest, photoUrl: dependencies.photoUrl }), now, digestConfirmationEvidence: digest });

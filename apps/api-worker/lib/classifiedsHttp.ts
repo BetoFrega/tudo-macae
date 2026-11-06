@@ -14,6 +14,7 @@ import { IdempotencyConflict, PersistenceConflict, PersistenceLimit } from "@tud
 import { classifiedsErrorSchema } from "@tudomacae/classifieds-client/protocol";
 import { createClassifiedsCapabilities } from "./classifiedsCapabilities";
 import type { OfferEvent } from "./offerEvents";
+import type { BusinessClaimMail } from "./businessClaimMail";
 import { purgingCanonicalAnswers } from "./classifiedsCanonical";
 import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
 import { readIdentityAccount } from "./db/identityAccounts";
@@ -90,6 +91,7 @@ export async function classifiedsContext(dependencies: {
   offeringFlag?: (id: string) => Promise<CatalogFlagDecision>;
   recordOfferEvent?: (event: OfferEvent) => void;
   canonicalCache?: Cache;
+  sendMail?: (mail: BusinessClaimMail) => Promise<void>;
 }) {
   const qualified = await dependencies.qualification?.().catch(() => false) === true;
   if (!qualified || !dependencies.persistence) throw new TRPCError({ code: "NOT_FOUND" });
@@ -103,6 +105,7 @@ export async function classifiedsContext(dependencies: {
     observeOffering: event => console.info(JSON.stringify({ event: "business_offering_catalog_operation", service: "api-worker", environment: env.WORKERS_ENVIRONMENT ?? "unknown", release: env.CF_VERSION_METADATA?.id ?? "unknown", correlationId: request.headers.get("x-request-id"), ...event })),
     photoUrl: dependencies.photoUrl, photos: dependencies.photos, offeringFlag: dependencies.offeringFlag,
     ...(dependencies.recordOfferEvent ? { recordOfferEvent: dependencies.recordOfferEvent } : {}),
+    ...(dependencies.sendMail ? { sendMail: dependencies.sendMail, publicOrigin: env.PUBLIC_APP_ORIGIN } : {}),
   }), request, dependencies.canonicalCache, (operation, count) => console.error(JSON.stringify({ event: "classifieds_canonical_purge", service: "api-worker", environment: env.WORKERS_ENVIRONMENT ?? "unknown", release: env.CF_VERSION_METADATA?.id ?? "unknown", correlationId: request.headers.get("x-request-id"), operation, outcome: "failed", count })));
 }
 

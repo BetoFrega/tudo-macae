@@ -187,12 +187,23 @@ function latestOf(ledger: BusinessClaimLedger, claimantId: string) {
   return ledger.claims.filter(claim => claim.claimantId === claimantId).at(-1);
 }
 
+/** A decision the claimant must hear about, sent after the review commits. */
+export interface BusinessClaimNotice {
+  businessId: string;
+  businessTitle: string;
+  claimantEmail: string;
+  outcome: "approved" | "rejected";
+  reason?: string;
+}
+
 export function createBusinessClaims(dependencies: {
   store: BusinessClaimStore;
   now: () => number;
   newId: () => string;
   /** Called after an approval commits, with the account that now owns the Business. */
   claimed?: (event: { businessId: string; ownerId: string }) => void;
+  /** Delivery failures must not undo the committed review; the caller reports them. */
+  notify?: (notices: BusinessClaimNotice[]) => Promise<void>;
 }) {
   return {
     async readOwn(input: { businessId: string; actor: BusinessClaimActor }) {
@@ -233,13 +244,20 @@ export function createBusinessClaims(dependencies: {
       if (!Number.isInteger(input.expectedRevision) || input.expectedRevision < 0) throw new BusinessClaimError("validation");
       const choice = parseDecision(input);
       let approvedOwner: string | undefined;
+      let notices: BusinessClaimNotice[] = [];
       const ledger = await dependencies.store.transact(input.businessId, (ledger, business) => {
+        approvedOwner = undefined;
+        notices = [];
         if (ledger.revision !== input.expectedRevision) throw new BusinessClaimError("conflict");
         const claim = ledger.claims.find(candidate => candidate.id === input.claimId);
         if (claim?.status !== "pending") throw new BusinessClaimError("conflict");
         const at = dependencies.now();
         const base = { actorId: input.actor.id, at };
+        const notice = (target: BusinessClaim, outcome: BusinessClaimNotice["outcome"], reason?: string): BusinessClaimNotice => ({
+          businessId: input.businessId, businessTitle: business?.title ?? "", claimantEmail: target.claimantEmail, outcome, ...(reason ? { reason } : {}),
+        });
         if (choice.outcome === "rejected") {
+          notices = [notice(claim, "rejected", choice.reason)];
           const review: BusinessClaimReview = { ...base, outcome: "rejected", reason: choice.reason };
           return {
             ledger: { revision: ledger.revision + 1, claims: ledger.claims.map(candidate => candidate.id === claim.id ? { ...candidate, status: "rejected", review } : candidate) },
@@ -254,6 +272,7 @@ export function createBusinessClaims(dependencies: {
           return candidate;
         });
         approvedOwner = claim.claimantId;
+        notices = [notice(claim, "approved"), ...competing.map(candidate => notice(candidate, "rejected", competingClaimApprovedReason))];
         return {
           ledger: { revision: ledger.revision + 1, claims },
           transfer: { ownerId: claim.claimantId },
@@ -261,6 +280,7 @@ export function createBusinessClaims(dependencies: {
         };
       });
       if (approvedOwner) dependencies.claimed?.({ businessId: input.businessId, ownerId: approvedOwner });
+      if (notices.length > 0) await dependencies.notify?.(notices);
       return { revision: ledger.revision, status: choice.outcome };
     },
   };

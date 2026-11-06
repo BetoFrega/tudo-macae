@@ -13,6 +13,7 @@ export {
   type BusinessClaimEvidence,
   type BusinessClaimFieldErrors,
   type BusinessClaimLedger,
+  type BusinessClaimNotice,
   type BusinessClaimOutcome,
   type BusinessClaimStore,
   type BusinessClaimVerification,

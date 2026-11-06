@@ -17,11 +17,13 @@ const review = reference.extend({
 export function createClassifiedsBusinessClaims(dependencies: {
   persistence: ClassifiedsPersistence; now(): number; newId(): string;
   claimed?: (event: { businessId: string; ownerId: string }) => void;
+  notify?: Parameters<typeof createBusinessClaims>[0]["notify"];
 }) {
   function claims(intent?: Parameters<typeof createClassifiedsBusinessClaimStore>[0]["intent"]) {
     return createBusinessClaims({
       store: createClassifiedsBusinessClaimStore({ persistence: dependencies.persistence, now: dependencies.now, ...(intent ? { intent } : {}) }),
-      now: dependencies.now, newId: dependencies.newId, ...(dependencies.claimed ? { claimed: dependencies.claimed } : {}),
+      now: dependencies.now, newId: dependencies.newId,
+      ...(dependencies.claimed ? { claimed: dependencies.claimed } : {}), ...(dependencies.notify ? { notify: dependencies.notify } : {}),
     });
   }
   const actorOf = (actor: ClassifiedsActor) => ({

@@ -5,8 +5,8 @@ import {
 } from "../businessClaim";
 
 const validCnpj = "11.222.333/0001-81";
-const owner = { id: "owner", admin: false };
-const rival = { id: "rival", admin: false };
+const owner = { id: "owner", admin: false, email: "owner@example.test", emailVerified: true };
+const rival = { id: "rival", admin: false, email: "rival@example.test", emailVerified: true };
 const admin = { id: "admin", admin: true };
 
 function fixture() {
@@ -53,7 +53,7 @@ test("an owner's claim waits for review and repeating it keeps the same request"
   await f.submit();
 
   expect(f.ledger().claims).toHaveLength(1);
-  expect(f.ledger().claims[0]).toMatchObject({ claimantId: "owner", evidence: { kind: "cnpj", cnpj: "11222333000181" } });
+  expect(f.ledger().claims[0]).toMatchObject({ claimantId: "owner", claimantEmail: "owner@example.test", evidence: { kind: "cnpj", cnpj: "11222333000181" } });
   expect(f.business()).toEqual({ title: "Café com Arte", claimable: true });
   expect(await f.claims.readOwn({ businessId: "business", actor: owner })).toEqual({ claimable: true, claim: { status: "pending", submittedAt: 1_000 } });
 });
@@ -128,7 +128,14 @@ test("an approval is refused once the Business stopped being claimable", async (
 
 test("a flooded Business stops accepting new claims until the dispute is reviewed", async () => {
   const f = fixture();
-  for (let index = 0; index < maxPendingClaimsPerBusiness; index++) await f.submit({ id: `claimant-${index}`, admin: false });
+  for (let index = 0; index < maxPendingClaimsPerBusiness; index++) await f.submit({ ...owner, id: `claimant-${index}` });
 
   await expect(f.submit()).rejects.toMatchObject({ outcome: "limit" });
+});
+
+test("only an account with a confirmed e-mail can ask for a Business", async () => {
+  const f = fixture();
+  await expect(f.submit({ ...owner, emailVerified: false })).rejects.toMatchObject({ outcome: "unverified_email" });
+  await expect(f.submit({ id: "owner", admin: false })).rejects.toMatchObject({ outcome: "unverified_email" });
+  expect(f.ledger().claims).toEqual([]);
 });

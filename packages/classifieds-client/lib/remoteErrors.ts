@@ -18,7 +18,7 @@ const failureSchema = z.object({ error: z.object({ message: z.string(), data: z.
 /** Rebuilds each domain error the server serialized, so callers keep handling it by type. */
 const remoteErrors: Record<ClassifiedsErrorBody["name"], ErrorFactory> = {
   OfferingCatalogError: error => new OfferingCatalogError(z.enum(["validation", "authorization", "conflict", "disabled", "outside_audience", "unavailable"]).parse(error.code), z.record(z.string(), z.string()).refine(fields => Object.keys(fields).every(key => ["name", "description", "priceMode", "amount", "sourceUrl"].includes(key))).parse(error.details.fieldErrors)),
-  BusinessClaimError: error => new BusinessClaimError(z.enum(["validation", "authorization", "not_claimable", "conflict", "limit"]).parse(error.code), z.record(z.enum(["responsibleName", "cnpj", "note", "verification", "reason"]), z.string()).parse(error.details.fieldErrors ?? {})),
+  BusinessClaimError: error => new BusinessClaimError(z.enum(["validation", "authorization", "unverified_email", "not_claimable", "conflict", "limit"]).parse(error.code), z.record(z.enum(["responsibleName", "cnpj", "note", "verification", "reason"]), z.string()).parse(error.details.fieldErrors ?? {})),
   AdvertiserProfileAccessError: error => new AdvertiserProfileAccessError(error.code === "not-found" ? "not-found" : "forbidden"),
   AdvertiserProfileRevisionConflict: error => new AdvertiserProfileRevisionConflict(z.number().parse(error.details.currentRevision)),
   AdvertiserProfileCreationPayloadConflict: error => new AdvertiserProfileCreationPayloadConflict(z.string().parse(error.details.profileId)),

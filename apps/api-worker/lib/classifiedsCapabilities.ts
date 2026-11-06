@@ -28,7 +28,7 @@ import { createClassifiedsAdministrationStore } from "./db/classifiedsAdministra
 import { activityAreaActive } from "./db/classifiedsSupport";
 import { createClassifiedsBusinessCatalogStore, readBusinessCatalogSnapshot } from "./db/classifiedsBusinessCatalog";
 
-export type ClassifiedsActor = { uid: string; admin: boolean; editor: boolean; emailVerified?: boolean; channel: "administration" };
+export type ClassifiedsActor = { uid: string; admin: boolean; editor: boolean; email?: string; emailVerified?: boolean; channel: "administration" };
 const reference = z.object({ id: z.string().min(1) });
 const area = z.object({ categoryId: z.string().min(1), subcategoryId: z.string().min(1), civilDate: z.string().optional() });
 const businessList = z.object({

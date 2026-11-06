@@ -13,8 +13,8 @@ test("a reviewed claim moves the claimable Business to its owner once, with audi
   const events: unknown[] = [];
   let sequence = 0;
   const dependencies = { persistence, correlationId: "claim", now: () => now, newId: () => `claim-${++sequence}`, recordOfferEvent: (event: unknown) => events.push(event) };
-  const owner = createClassifiedsCapabilities({ ...dependencies, actor: ownerActor });
-  const rival = createClassifiedsCapabilities({ ...dependencies, actor: { ...ownerActor, uid: "rival" } });
+  const owner = createClassifiedsCapabilities({ ...dependencies, actor: { ...ownerActor, email: "owner@example.test" } });
+  const rival = createClassifiedsCapabilities({ ...dependencies, actor: { ...ownerActor, uid: "rival", email: "rival@example.test" } });
   const admin = createClassifiedsCapabilities({ ...dependencies, actor: adminActor });
   const submission = { businessId: "business", responsibleName: "Ana", cnpj: "11.222.333/0001-81", operationId: "submit" };
 
@@ -23,7 +23,7 @@ test("a reviewed claim moves the claimable Business to its owner once, with audi
   await rival.write("claims.submit", { ...submission, operationId: "rival-submit" });
   await expect(owner.read("claims.pending", {})).rejects.toMatchObject({ outcome: "authorization" });
   const [pending] = await admin.read("claims.pending", {}) as { businessId: string; revision: number; claims: { id: string; claimantId: string; evidence: { cnpj: string } }[] }[];
-  expect(pending).toMatchObject({ businessId: "business", title: "Negócio", revision: 2, claims: [{ claimantId: "owner", evidence: { cnpj: "11222333000181" } }, { claimantId: "rival" }] });
+  expect(pending).toMatchObject({ businessId: "business", title: "Negócio", revision: 2, claims: [{ claimantId: "owner", claimantEmail: "owner@example.test", evidence: { cnpj: "11222333000181" } }, { claimantId: "rival" }] });
 
   const review = { businessId: "business", claimId: pending!.claims[0]!.id, expectedRevision: 2, operationId: "approve", outcome: "approved", verification: "published_contact_call" };
   expect(await admin.write("claims.review", review)).toEqual({ revision: 3, status: "approved" });

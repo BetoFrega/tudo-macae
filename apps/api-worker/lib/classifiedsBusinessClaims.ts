@@ -24,7 +24,9 @@ export function createClassifiedsBusinessClaims(dependencies: {
       now: dependencies.now, newId: dependencies.newId, ...(dependencies.claimed ? { claimed: dependencies.claimed } : {}),
     });
   }
-  const actorOf = (actor: ClassifiedsActor) => ({ id: actor.uid, admin: actor.admin });
+  const actorOf = (actor: ClassifiedsActor) => ({
+    id: actor.uid, admin: actor.admin, ...(actor.email ? { email: actor.email } : {}), ...(actor.emailVerified !== undefined ? { emailVerified: actor.emailVerified } : {}),
+  });
   return {
     read(operation: string, input: unknown, actor: ClassifiedsActor) {
       if (operation === "claims.pending") return claims().listPending({ actor: actorOf(actor) });

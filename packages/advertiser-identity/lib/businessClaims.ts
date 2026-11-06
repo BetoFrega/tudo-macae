@@ -18,6 +18,8 @@ export interface BusinessClaimReview {
 export interface BusinessClaim {
   id: string;
   claimantId: string;
+  /** The claimant's verified account e-mail when they asked, for the reviewer to compare with public records. */
+  claimantEmail: string;
   status: "pending" | "approved" | "rejected";
   responsibleName: string;
   evidence: BusinessClaimEvidence;
@@ -74,6 +76,9 @@ export interface BusinessClaimStore {
 export interface BusinessClaimActor {
   id: string;
   admin: boolean;
+  /** Read from the account by the server, never from the request. */
+  email?: string;
+  emailVerified?: boolean;
 }
 
 export type BusinessClaimField = "responsibleName" | "cnpj" | "note" | "verification" | "reason";
@@ -87,13 +92,14 @@ const fieldMessages: Record<BusinessClaimField, string> = {
   reason: "Explique o motivo da recusa, com até 300 caracteres.",
 };
 
-export type BusinessClaimOutcome = "validation" | "authorization" | "not_claimable" | "conflict" | "limit";
+export type BusinessClaimOutcome = "validation" | "authorization" | "unverified_email" | "not_claimable" | "conflict" | "limit";
 
 export class BusinessClaimError extends Error {
   constructor(public readonly outcome: BusinessClaimOutcome, public readonly fieldErrors: BusinessClaimFieldErrors = {}) {
     super({
       validation: "Confira os campos do pedido.",
       authorization: "Você não pode fazer esta operação.",
+      unverified_email: "Confirme o e-mail da sua conta antes de pedir para assumir um negócio.",
       not_claimable: "Este negócio não pode mais ser assumido.",
       conflict: "Os pedidos deste negócio mudaram. Recarregue antes de decidir.",
       limit: "Este negócio já tem pedidos demais em análise.",
@@ -197,6 +203,8 @@ export function createBusinessClaims(dependencies: {
     async submit(input: { businessId: string; actor: BusinessClaimActor; responsibleName: unknown; cnpj: unknown; note?: unknown }) {
       assertIdentifiers(input.businessId, input.actor.id);
       const value = parseSubmission(input);
+      if (input.actor.emailVerified !== true || !input.actor.email) throw new BusinessClaimError("unverified_email");
+      const claimantEmail = input.actor.email;
       const ledger = await dependencies.store.transact(input.businessId, (ledger, business) => {
         if (business?.claimable !== true) throw new BusinessClaimError("not_claimable");
         // A repeated submission keeps the request already under review.
@@ -204,7 +212,7 @@ export function createBusinessClaims(dependencies: {
         if (ledger.claims.filter(claim => claim.status === "pending").length >= maxPendingClaimsPerBusiness)
           throw new BusinessClaimError("limit");
         const claim: BusinessClaim = {
-          id: dependencies.newId(), claimantId: input.actor.id, status: "pending",
+          id: dependencies.newId(), claimantId: input.actor.id, claimantEmail, status: "pending",
           responsibleName: value.responsibleName, evidence: { kind: "cnpj", cnpj: value.cnpj },
           ...(value.note ? { note: value.note } : {}), submittedAt: dependencies.now(),
         };
@@ -265,7 +273,7 @@ const review = z.object({
 export const businessClaimLedgerSchema = z.object({
   revision: z.number().int().nonnegative(),
   claims: z.array(z.object({
-    id: z.string(), claimantId: z.string(), status: z.enum(["pending", "approved", "rejected"]),
+    id: z.string(), claimantId: z.string(), claimantEmail: z.string(), status: z.enum(["pending", "approved", "rejected"]),
     responsibleName: z.string(), evidence: z.object({ kind: z.literal("cnpj"), cnpj: z.string() }),
     note: z.string().optional(), submittedAt: z.number(), review: review.optional(),
   })),

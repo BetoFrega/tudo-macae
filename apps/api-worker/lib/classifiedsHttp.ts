@@ -122,7 +122,7 @@ export async function classifiedsActor(dependencies: ActorDependencies) {
     : null;
   if (uid && (!account || account.disabled)) throw new TRPCError({ code: "FORBIDDEN" });
   return account
-    ? { uid: account.uid, admin: account.claims.admin === true, editor: account.claims.editor === true, emailVerified: account.emailVerified,
+    ? { uid: account.uid, admin: account.claims.admin === true, editor: account.claims.editor === true, email: account.email, emailVerified: account.emailVerified,
         channel: "administration" as const }
     : undefined;
 }

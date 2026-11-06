@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import {
   BusinessClaimError, competingClaimApprovedReason, createBusinessClaims, maxPendingClaimsPerBusiness, normalizeCnpj,
-  type BusinessClaimAudit, type BusinessClaimLedger, type ClaimedBusiness,
+  type BusinessClaimActor, type BusinessClaimAudit, type BusinessClaimLedger, type ClaimedBusiness,
 } from "../businessClaim";
 
 const validCnpj = "11.222.333/0001-81";
@@ -31,7 +31,7 @@ function fixture() {
     newId: () => `claim-${++sequence}`,
     claimed: event => claimed.push(event),
   });
-  const submit = (actor = owner) => claims.submit({ businessId: "business", actor, responsibleName: "Ana", cnpj: validCnpj });
+  const submit = (actor: BusinessClaimActor = owner) => claims.submit({ businessId: "business", actor, responsibleName: "Ana", cnpj: validCnpj });
   return { claims, audits, claimed, submit, ledger: () => ledger, business: () => business, setBusiness: (value: ClaimedBusiness | null) => {
     business = value;
   } };

@@ -10,6 +10,7 @@ const adminNavigationItems = [
   { href: "/admin/usuarios", label: "Usuários" },
   { href: "/admin/anuncios", label: "Anúncios" },
   { href: "/admin/perfis", label: "Perfis de Anunciantes" },
+  { href: "/admin/reivindicacoes", label: "Pedidos de negócios" },
   { href: "/admin/midias", label: "Acervo de Mídia" },
 ];
 

@@ -1,3 +1,4 @@
+import { businessClaimReleased } from "./businessClaimRelease";
 import { OfferingCatalogError, type CatalogFlagDecision } from "@tudomacae/advertiser-identity/offeringCatalog";
 import { BusinessCatalogCursorError } from "@tudomacae/advertiser-identity/business";
 import { BusinessClaimError } from "@tudomacae/advertiser-identity/businessClaim";
@@ -106,6 +107,7 @@ export async function classifiedsContext(dependencies: {
     photoUrl: dependencies.photoUrl, photos: dependencies.photos, offeringFlag: dependencies.offeringFlag,
     ...(dependencies.recordOfferEvent ? { recordOfferEvent: dependencies.recordOfferEvent } : {}),
     ...(dependencies.sendMail ? { sendMail: dependencies.sendMail, publicOrigin: env.PUBLIC_APP_ORIGIN } : {}),
+    claimsReleased: () => businessClaimReleased(env.FLAGS),
   }), request, dependencies.canonicalCache, (operation, count) => console.error(JSON.stringify({ event: "classifieds_canonical_purge", service: "api-worker", environment: env.WORKERS_ENVIRONMENT ?? "unknown", release: env.CF_VERSION_METADATA?.id ?? "unknown", correlationId: request.headers.get("x-request-id"), operation, outcome: "failed", count })));
 }
 

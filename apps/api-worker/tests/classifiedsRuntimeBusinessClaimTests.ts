@@ -16,12 +16,14 @@ test("a reviewed claim moves the claimable Business to its owner once, with audi
   const dependencies = { persistence, correlationId: "claim", now: () => now, newId: () => `claim-${++sequence}`, recordOfferEvent: (event: unknown) => events.push(event),
     sendMail: async (mail: { to: string; subject: string; text: string }) => {
       mails.push(mail);
-    }, publicOrigin: "https://tudomacae.test" };
+    }, publicOrigin: "https://tudomacae.test", claimsReleased: async () => true };
   const owner = createClassifiedsCapabilities({ ...dependencies, actor: { ...ownerActor, email: "owner@example.test" } });
   const rival = createClassifiedsCapabilities({ ...dependencies, actor: { ...ownerActor, uid: "rival", email: "rival@example.test" } });
   const admin = createClassifiedsCapabilities({ ...dependencies, actor: adminActor });
   const submission = { businessId: "business", responsibleName: "Ana", cnpj: "11.222.333/0001-81", operationId: "submit" };
 
+  const unreleased = createClassifiedsCapabilities({ ...dependencies, claimsReleased: async () => false, actor: { ...ownerActor, email: "owner@example.test" } });
+  await expect(unreleased.write("claims.submit", submission)).rejects.toMatchObject({ outcome: "not_claimable" });
   expect(await owner.write("claims.submit", submission)).toEqual({ status: "pending", submittedAt: now });
   expect(await owner.write("claims.submit", submission)).toEqual({ status: "pending", submittedAt: now });
   await rival.write("claims.submit", { ...submission, operationId: "rival-submit" });

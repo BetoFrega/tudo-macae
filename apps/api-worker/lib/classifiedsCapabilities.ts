@@ -58,6 +58,8 @@ export function createClassifiedsCapabilities(dependencies: {
   /** Present with `publicOrigin`; without both, claim decisions are recorded but not e-mailed. */
   sendMail?: (mail: BusinessClaimMail) => Promise<void>;
   publicOrigin?: string;
+  /** The `business-claim` release decision; absent keeps new claims closed. */
+  claimsReleased?: () => Promise<boolean>;
 }) {
   const { actor, persistence } = dependencies;
   const now = dependencies.now ?? Date.now;
@@ -90,6 +92,7 @@ export function createClassifiedsCapabilities(dependencies: {
   const offerings = createClassifiedsOfferings({ persistence, now, newId, flag: dependencies.offeringFlag, observe: dependencies.observeOffering, isPublicBusiness: async id => Boolean(await business.read({ id })) });
   // The claim event belongs to the claimant who now owns the Business, never to the reviewing administrator.
   const businessClaims = createClassifiedsBusinessClaims({ persistence, now, newId,
+    ...(dependencies.claimsReleased ? { released: dependencies.claimsReleased } : {}),
     claimed: ({ businessId, ownerId }) => dependencies.recordOfferEvent?.({ name: "business_claimed", actorId: ownerId, identityId: businessId, identityType: "business" }),
     notify: async (notices) => {
       const { sendMail, publicOrigin } = dependencies;

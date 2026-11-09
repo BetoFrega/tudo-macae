@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createBusinessClaims } from "@tudomacae/advertiser-identity/businessClaim";
+import { BusinessClaimError, createBusinessClaims } from "@tudomacae/advertiser-identity/businessClaim";
 import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
 import { jsonValue } from "./db/classifiedsSupport";
 import { createClassifiedsBusinessClaimStore } from "./db/classifiedsBusinessClaims";
@@ -18,6 +18,8 @@ export function createClassifiedsBusinessClaims(dependencies: {
   persistence: ClassifiedsPersistence; now(): number; newId(): string;
   claimed?: (event: { businessId: string; ownerId: string }) => void;
   notify?: Parameters<typeof createBusinessClaims>[0]["notify"];
+  /** The release decision; only an explicit `true` accepts new claims. Reviews stay open so pending claims can be decided. */
+  released?: () => Promise<boolean>;
 }) {
   function claims(intent?: Parameters<typeof createClassifiedsBusinessClaimStore>[0]["intent"]) {
     return createBusinessClaims({
@@ -34,8 +36,9 @@ export function createClassifiedsBusinessClaims(dependencies: {
       if (operation === "claims.pending") return claims().listPending({ actor: actorOf(actor) });
       return claims().readOwn({ ...reference.parse(input), actor: actorOf(actor) });
     },
-    write(operation: string, input: unknown, actor: ClassifiedsActor) {
+    async write(operation: string, input: unknown, actor: ClassifiedsActor) {
       if (operation === "claims.submit") {
+        if (await dependencies.released?.().catch(() => false) !== true) throw new BusinessClaimError("not_claimable");
         const command = submission.parse(input);
         return claims({ actorId: actor.uid, key: command.operationId, operation, input: jsonValue(command) }).submit({ ...command, actor: actorOf(actor) });
       }

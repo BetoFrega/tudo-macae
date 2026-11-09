@@ -35,7 +35,6 @@ function answerFlags(input, response) {
   const decision = decisions.get(input.person_properties?.business_id) ?? "disabled";
   response.end(JSON.stringify({ flags: {
     "business-offering-catalog": { enabled: decision === "enabled", reason: { code: "condition_match" } },
-    "authentication-render-session-sharing": { enabled: true },
     "business-registration-visibility": { enabled: true },
   } }));
 }

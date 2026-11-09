@@ -307,6 +307,19 @@
     ]
   },
   {
+    "id": "business-claim-workspace",
+    "entry": "packages/advertiser-identity/businessClaim.ts",
+    "factory": "createBusinessClaims",
+    "operations": [
+      "submit",
+      "readOwn",
+      "listPending",
+      "review"
+    ],
+    "probe": "packages/advertiser-identity/tests/businessClaim.probe.ts",
+    "remainingOperations": []
+  },
+  {
     "id": "workspace-site-search",
     "entry": "packages/site-search/search.ts",
     "factory": "createSiteSearch",

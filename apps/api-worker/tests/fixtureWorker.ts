@@ -25,6 +25,9 @@ type FixtureEnv = Env & {
   MEDIA_UPLOAD_ORIGIN?: string;
 };
 
+/** The web stack's Flagship store owns the business-claim release in E2E; the API fixture accepts claims so the journey can run once the page exposes it. */
+const releasedFlags = { getBooleanDetails: async (flagKey: string) => ({ flagKey, value: true }) } as unknown as Flagship;
+
 /** Media over the editorial D1 and the R2-backed Hosted fake, wired like the production composition. */
 function editorialMedia(env: FixtureEnv) {
   // Stacks without the editorial D1 (the E2E app stack) keep the legacy source, as a deployment without it does.
@@ -76,7 +79,7 @@ const fixtureWorker = {
         });
         if (!response.ok) throw new Error("Email delivery unavailable");
       },
-    }).fetch(request, { ...env, CLASSIFIEDS_DB: database });
+    }).fetch(request, { ...env, CLASSIFIEDS_DB: database, FLAGS: releasedFlags });
   },
   /** Runs only the Media and authentication maintenance; Classifieds maintenance has its own fixture. */
   async scheduled(controller: ScheduledController, env: FixtureEnv) {

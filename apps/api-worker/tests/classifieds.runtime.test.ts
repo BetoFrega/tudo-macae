@@ -8,3 +8,4 @@ import "./classifiedsRuntimeAdPaginationTests";
 import "./classifiedsRuntimeDeletionTests";
 import "./classifiedsRuntimeIdentityTests";
 import "./classifiedsRuntimeIdentityTypeTests";
+import "./classifiedsRuntimeBusinessClaimTests";

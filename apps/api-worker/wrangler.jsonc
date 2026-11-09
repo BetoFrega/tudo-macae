@@ -67,6 +67,8 @@
   "images": { "binding": "IMAGES" },
   // The Blog distributes to the public article index through its bound writer entrypoint.
   "services": [{ "binding": "ARTICLE_INDEX", "service": "tudo-macae-public-article-index", "entrypoint": "ArticleIndexWriter" }],
+  // Release flags; locally the binding reads Wrangler's empty local flag store, so every flag stays off.
+  "flagship": [{ "binding": "FLAGS", "app_id": "bbf7fbfb-4575-410d-b948-bb1c47ef30ff" }],
   "send_email": [
     {
       "name": "EMAIL",

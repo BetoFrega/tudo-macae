@@ -13,7 +13,7 @@
     "jose": "^6.2.14"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261101.1",
+    "@cloudflare/workers-types": "^5.20261106.1",
     "@types/node": "^26",
     "miniflare": "^5.20261019.2-beta",
     "typescript": "^6",

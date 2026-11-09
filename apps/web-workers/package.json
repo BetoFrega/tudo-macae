@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@tudomacae/terms-page": "workspace:*",
-    "next": "^16.4.4",
+    "next": "^16.4.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0",

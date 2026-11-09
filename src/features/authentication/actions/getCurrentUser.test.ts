@@ -14,7 +14,7 @@ beforeEach((context) => {
 
 const execute = promisify(execFile);
 
-test("the server getter preserves render isolation and the session-sharing gate", async () => {
+test("the server getter shares one session lookup per render and isolates renders", async () => {
   const source = await readFile(new URL("./getCurrentUser.ts", import.meta.url), "utf8");
   const getter = source.replace(/^import .*;$/gm, "");
   const readerUrl = pathToFileURL(join(process.cwd(), "src/integrations/authentication/renderSessionReader.ts")).href;
@@ -31,8 +31,6 @@ const { renderToPipeableStream } = require("next/dist/compiled/react-server-dom-
 const { createRenderSessionReader } = await import(${JSON.stringify(readerUrl)});
 let sessionValue = "first-request";
 let reads = 0;
-let sharing = true;
-let flagUnavailable = false;
 async function cookies() { return { get: () => ({ value: sessionValue }) }; }
 async function resolveSession(value) {
   reads++;
@@ -40,10 +38,6 @@ async function resolveSession(value) {
 }
 const readCurrentUserForRender = createRenderSessionReader({
   cache,
-  sharingEnabled: () => {
-    if (flagUnavailable) throw new Error("flag unavailable");
-    return sharing;
-  },
   resolve: async () => {
     const cookieStore = await cookies();
     const session = await resolveSession(cookieStore.get("session")?.value);
@@ -54,8 +48,7 @@ ${getter}
 async function Probe() {
   const parent = await getCurrentUser();
   const child = await getCurrentUser();
-  if (sharing && !flagUnavailable) assert.equal(parent, child);
-  else assert.notEqual(parent, child);
+  assert.equal(parent, child);
   assert.equal(parent?.uid ?? null, sessionValue === "invalid" ? null : sessionValue);
   return createElement("span", null, parent?.uid ?? "absent");
 }
@@ -76,19 +69,10 @@ assert.equal(reads, 2);
 sessionValue = "invalid";
 await request();
 assert.equal(reads, 3);
-sharing = false;
-sessionValue = "flag-off-request";
-await request();
-assert.equal(reads, 5);
-sharing = true;
-flagUnavailable = true;
-sessionValue = "flag-unavailable-request";
-await request();
-assert.equal(reads, 7);
-console.log(JSON.stringify({ requests: 5, authReads: reads }));
+console.log(JSON.stringify({ requests: 3, authReads: reads }));
 `);
     const result = await execute(process.execPath, ["--conditions=react-server", "--import", "tsx", runner]);
-    expect(JSON.parse(result.stdout)).toEqual({ requests: 5, authReads: 7 });
+    expect(JSON.parse(result.stdout)).toEqual({ requests: 3, authReads: 3 });
   }
   finally {
     await rm(directory, { recursive: true, force: true });

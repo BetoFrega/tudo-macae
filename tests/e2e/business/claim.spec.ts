@@ -39,6 +39,8 @@ async function capture(page: Page, testInfo: TestInfo, name: string) {
   const directory = testInfo.outputPath("journey");
   mkdirSync(directory, { recursive: true });
   const path = `${directory}/${name}.png`;
+  // A full-page capture of a scrolled page paints the sticky header mid-image.
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path, fullPage: true });
   await testInfo.attach(name, { path, contentType: "image/png" });
 }

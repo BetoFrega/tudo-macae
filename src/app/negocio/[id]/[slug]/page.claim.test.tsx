@@ -39,7 +39,7 @@ test("a released claim invites the owner of a claimable business to its claim pa
   state.released = true;
   await renderBusiness();
 
-  expect(screen.getByRole("heading", { level: 2, name: "É o dono? Assuma esta página" })).toBeVisible();
+  expect(screen.getByText("É o dono deste negócio?", { exact: false })).toBeVisible();
   expect(invite()).toHaveAttribute("href", "/negocio/business-id/cafe-com-arte/reivindicar");
 });
 

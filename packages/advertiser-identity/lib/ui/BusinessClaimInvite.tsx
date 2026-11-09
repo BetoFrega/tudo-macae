@@ -1,21 +1,17 @@
-import { Button } from "@tudomacae/react-primitives/button";
 import type { IdentityLink } from "./rendering";
 
+/** One quiet line under the public-information notice; visitors read past it, owners find it. */
 export function BusinessClaimInvite({ href, Link }: { href: string; Link: IdentityLink }) {
   return (
-    <section
-      aria-labelledby="business-claim-invite-title"
-      className="mt-4 max-w-prose rounded-lg border border-border p-4"
-    >
-      <h2 id="business-claim-invite-title" className="font-semibold">
-        É o dono? Assuma esta página
-      </h2>
-      <p className="mt-1 text-sm/relaxed text-muted-foreground">
-        Confirme que você responde por este negócio para atualizar as informações, ver quem procurou e publicar anúncios.
-      </p>
-      <Button asChild className="mt-3 min-h-11">
-        <Link href={href}>Assumir esta página</Link>
-      </Button>
-    </section>
+    <p className="mt-2 text-sm text-muted-foreground">
+      É o dono deste negócio?
+      {" "}
+      <Link
+        href={href}
+        className="font-medium text-foreground underline underline-offset-4"
+      >
+        Assumir esta página
+      </Link>
+    </p>
   );
 }

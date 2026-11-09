@@ -15,6 +15,9 @@
   "exports": { "DataCache": { "type": "durable-object", "storage": "sqlite" } },
   "durable_objects": { "bindings": [{ "name": "DATA_CACHE", "class_name": "DataCache" }] },
   "services": [{ "binding": "ARTICLE_INDEX", "service": "tudo-macae-public-article-index-prototype", "entrypoint": "ArticleIndexReader" }],
+  // Release flags (`web-worker/flagshipFlag.ts`). Locally the binding reads Wrangler's
+  // local flag store, which starts empty, so every flag resolves to its safe default.
+  "flagship": [{ "binding": "FLAGS", "app_id": "bbf7fbfb-4575-410d-b948-bb1c47ef30ff" }],
   "env": {
     "production": {
       // The Terms Worker: the router sends it the journeys in `workersJourneys` and the
@@ -45,6 +48,7 @@
       "assets": { "not_found_handling": "none", "binding": "ASSETS" },
       "version_metadata": { "binding": "CF_VERSION_METADATA" },
       "durable_objects": { "bindings": [{ "name": "DATA_CACHE", "class_name": "DataCache" }] },
+      "flagship": [{ "binding": "FLAGS", "app_id": "bbf7fbfb-4575-410d-b948-bb1c47ef30ff" }],
       // `web-worker/outboundBindings.ts` sends calls to AUTHENTICATION_API_URL and SITE_SEARCH_URL through these.
       "services": [
         { "binding": "ARTICLE_INDEX", "service": "tudo-macae-public-article-index", "entrypoint": "ArticleIndexReader" },

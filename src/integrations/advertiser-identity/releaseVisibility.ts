@@ -24,13 +24,13 @@ const readFlag = createPostHogFlagReader({
 });
 
 /** One decision per server render keeps every surface of a release consistent. */
-export function createReleaseVisibility({ flagKey, event, context }: { flagKey: string; event: string; context: string }) {
+export function createReleaseVisibility({ flagKey, event, context, read = readFlag }: { flagKey: string; event: string; context: string; read?: (flagKey: string) => Promise<unknown> }) {
   let nextFailureReportAt = 0;
   return cache(async () => {
     await connection();
     const requestHeaders = await headers();
     const correlationId = requestCorrelationId(requestHeaders.get(edgeRequestIdHeader));
-    return resolveReleaseVisibility(() => readFlag(flagKey), (error) => {
+    return resolveReleaseVisibility(() => read(flagKey), (error) => {
       const now = Date.now();
       if (now < nextFailureReportAt) return;
       nextFailureReportAt = now + 30_000;

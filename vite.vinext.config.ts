@@ -22,6 +22,7 @@ export default defineConfig({
     tsconfigPaths: true,
     alias: [
       { find: /^@\/components\/ui\/image$/u, replacement: fileURLToPath(new URL("./web-worker/image.tsx", import.meta.url)) },
+      { find: /^@\/integrations\/release-control\/flagshipFlag$/u, replacement: fileURLToPath(new URL("./web-worker/flagshipFlag.ts", import.meta.url)) },
       { find: /^@\/packages\/editorial\/articleSitemapProduction$/u, replacement: fileURLToPath(new URL("./web-worker/articleSitemapProduction.ts", import.meta.url)) },
     ],
   },

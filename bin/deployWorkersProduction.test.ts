@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { expect, test } from "vitest";
 import { activeVersion, assertRouteSafeConfig, deployedVersion, deployWorkers, probeWorkerContracts, routeSnapshot, workers } from "./deploy-workers-production.mjs";
+import { wranglerFailureMessage } from "./wrangler-failure.mjs";
 
 const version = "12345678-1234-1234-1234-123456789abc";
 
@@ -195,4 +196,20 @@ test("post-deploy probes require a live Article sitemap and both identity guards
     : String(url).endsWith("/sitemap.xml")
       ? new Response(articleSitemap, { status: 200, headers: { "x-www-origin": "cloud-run" } })
       : new Response(null, { status: 401 }))).rejects.toThrow(/sitemap probe failed/);
+});
+
+test("a failed Wrangler command reports the provider's explanation without the bindings table", () => {
+  const stderr = [
+    "\u001b[31m✘ \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mA request to the Cloudflare API (/accounts/a/workers/scripts/w/versions) failed.\u001b[0m",
+    "",
+    "  Uncaught Error: Disallowed operation called within global scope. [code: 10021]",
+    "  ",
+    "  If you think this is a bug, please open an issue at: https://github.com/cloudflare/workers-sdk/issues/new/choose",
+    "🪵  Logs were written to \"/home/runner/.config/.wrangler/logs/wrangler.log\"",
+  ].join("\n");
+  const message = wranglerFailureMessage(["deploy"], { status: 1, stderr });
+  expect(message).toBe("Wrangler deploy failed (exit 1, code 10021): A request to the Cloudflare API (/accounts/a/workers/scripts/w/versions) failed."
+    + " Uncaught Error: Disallowed operation called within global scope. [code: 10021]");
+  expect(wranglerFailureMessage(["deploy"], { status: 1, stderr: "" })).toBe("Wrangler deploy failed (exit 1)");
+  expect(wranglerFailureMessage(["deploy"], { status: 1, stderr: `✘ [ERROR] ${"x".repeat(5000)}` }).length).toBeLessThan(900);
 });

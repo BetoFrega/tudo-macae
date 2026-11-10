@@ -44,7 +44,8 @@ Esses manifestos históricos foram conferidos em 2026-10-04.
 
 | Override                          | Alerta              | Racional de adoção                                             | Remover quando                                                                                       |
 | --------------------------------- | ------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `typed-rest-client` → `qs@6.16.0` | GHSA-q8mj-m7cp-5q26, GHSA-x5fp-wj9c-mxmx, GHSA-4mjr-xmp4-gh2g | `typed-rest-client@2.3.1` pina `qs@6.15.1` | `typed-rest-client` aceitar `qs@>=6.16.0` e resolver uma versão sem advisories após remover o override |
+| `typed-rest-client` → `qs@6.16.2` | GHSA-q8mj-m7cp-5q26, GHSA-x5fp-wj9c-mxmx, GHSA-4mjr-xmp4-gh2g, CVE-2026-110816 | `typed-rest-client@2.3.1` pina `qs@6.15.1` | `typed-rest-client` aceitar `qs@>=6.16.1` e resolver uma versão sem advisories após remover o override |
+| `eslint`, `@eslint/config-array`, `@typescript-eslint/typescript-estree`, `@stryker-mutator/core` → `minimatch@11.0.5` | GHSA-g3hv-75wg-m249 | Em 2026-11-10, `eslint@10.14.0` pedia `^10.2.6`, `@eslint/config-array@0.23.5` `^10.2.4`, `@typescript-eslint/typescript-estree@8.72.2` `^10.2.2` e `@stryker-mutator/core@10.1.1` `~10.2.4`; a correção só existe na 11.0.1 | Todos os quatro pais aceitarem `minimatch@>=11.0.1` e resolverem uma versão sem advisories após remover os overrides |
 | `nx` → `axios@1.20.0` | [Axios 1.20.0](#advisories-de-axios-1200) | `nx@23.2.1` pina `axios@1.18.1` | `nx` aceitar `axios@>=1.20.0` e resolver uma versão sem advisories após remover o override |
 | `nx` → `brace-expansion@5.0.12` | GHSA-q2hr-2g5m-vwhr, GHSA-qhr7-859c-m2p7, GHSA-6j4f-fj2g-mc7p | `nx@23.2.1` pina `brace-expansion@5.0.9` | `nx` aceitar `brace-expansion@>=5.0.12` e resolver uma versão sem advisories após remover o override |
 | `nx` → `smol-toml@1.7.1` | GHSA-7w5x-hrqm-74c2 | `nx@23.2.1` pina `smol-toml@1.6.1` | `nx` aceitar `smol-toml@>=1.7.1` e resolver uma versão sem advisories após remover o override |
@@ -73,6 +74,13 @@ em 2026-10-23: `@tailwindcss/typography` chama `astSync`, `selector()` e `remove
 (`grep -n "parser" node_modules/@tailwindcss/typography/src/utils.js`), e
 `micromark-extension-math` chama `katex.renderToString`
 (`grep -n katex node_modules/.pnpm/node_modules/micromark-extension-math/lib/html.js`).
+
+Os overrides de `minimatch` cruzam o major 10 → 11, que removeu `makeRe()`,
+`Minimatch#regexp`, `matchOne()`, `debug` e a classe `AST`. Os quatro pais usam só
+`minimatch()`, `new Minimatch()`, `.match()`, `.hasMagic()`, `.negate` e `.pattern`,
+conferido em 2026-11-10
+(`grep -rn "minimatch\|Minimatch\|matcher\." node_modules/.pnpm/{eslint@*,@eslint+config-array@*,@typescript-eslint+typescript-estree@*,@stryker-mutator+core@*}/node_modules/*/{lib,dist}`).
+A cópia `minimatch@3.1.5` dos plugins de ESLint fica fora do range afetado (`>=7.0.0`).
 
 O override de `miniflare` fica na versão principal 7 que ele pina e preserva a
 cópia 8 do `jsdom`. A 7.30.1 exporta tudo o que o `miniflare` usa, conferido em

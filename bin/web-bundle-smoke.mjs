@@ -6,9 +6,10 @@
 // mutation and in PR checks, so this gate serves the bundle and reads the pages.
 //
 // `wrangler dev -c dist/server/wrangler.json --local` serves the exact file the delivery script
-// publishes, with the production `env` vars. Service bindings show "not connected" locally, and
-// the pages checked here render without them. `vite preview` would rebuild the dev pipeline
-// instead of serving that artifact.
+// publishes, with the production `env` vars. Service bindings show "not connected" locally, so
+// data sections render their unavailable state, yet every page here still answers 200 with a
+// closed document. A page that stops doing so without bindings cannot stay in `PAGES`.
+// `vite preview` would rebuild the dev pipeline instead of serving that artifact.
 //
 // Usage: node bin/web-bundle-smoke.mjs   (after `CLOUDFLARE_ENV=production vite build -c vite.vinext.config.ts`)
 // `WEB_BUNDLE_SMOKE_PORT` pins the port; otherwise the OS picks a free one.
@@ -26,10 +27,21 @@ const REQUEST_TIMEOUT_MS = 20_000;
 const DIAGNOSTIC_LINES = 6;
 const DIAGNOSTIC_LINE_LENGTH = 160;
 
-/** What a page must contain: a closed document proves the whole body streamed. */
+/**
+ * What a page must contain: a closed document proves the whole body streamed, and a marker from
+ * the route's own module (its `<h1>` or metadata title, not the shared header) proves that route
+ * rendered. One page per route family, so a shim or renderer defect confined to one segment
+ * still fails. A route enters only if its own content renders without bindings: `/publicar` and
+ * `/admin` render only the shared layout here.
+ */
 const PAGES = [
   { path: "/", markers: ["</html>", "<img"] },
-  { path: "/termos-e-condicoes", markers: ["</html>"] },
+  { path: "/termos-e-condicoes", markers: ["</html>", "Termos de Uso e Condições Gerais"] },
+  { path: "/politica-de-privacidade", markers: ["</html>", "<h1>Política de Privacidade"] },
+  { path: "/noticias", markers: ["</html>", "<title>Blog | Tudo Macaé</title>"] },
+  { path: "/negocios", markers: ["</html>", "<title>Catálogo de negócios em Macaé"] },
+  { path: "/busca?q=pizza", markers: ["</html>", "<title>Buscar | Tudo Macaé</title>"] },
+  { path: "/minha-conta/recuperar-senha", markers: ["</html>", "Recuperar acesso"] },
 ];
 
 function freePort() {

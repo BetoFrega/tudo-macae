@@ -11,7 +11,11 @@ allowBuilds:
   workerd: true
 
 overrides:
-  "typed-rest-client>qs": 6.16.0
+  "typed-rest-client>qs": 6.16.2
+  "eslint>minimatch": 11.0.5
+  "@eslint/config-array>minimatch": 11.0.5
+  "@typescript-eslint/typescript-estree>minimatch": 11.0.5
+  "@stryker-mutator/core>minimatch": 11.0.5
   "nx>axios": 1.20.0
   "nx>brace-expansion": 5.0.12
   "nx>smol-toml": 1.7.1

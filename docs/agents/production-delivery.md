@@ -230,7 +230,7 @@ incident.
 The `production` environment allows main only and supplies secret `CLOUDFLARE_API_TOKEN`.
 `deploy.yml` sets the non-secret account and `tudomacae.com.br` zone IDs. Scope the account-owned
 token to Workers Editor on the four published Workers and `tudo-macae-api-production`,
-account D1 Write and zone
+account D1 Write, Flagship Read (Wrangler validates the `FLAGS` binding on upload) and zone
 Workers Routes Read on `tudomacae.com.br`. Terms needs
 [route-free bootstrap](web-workers-runbook.md#first-production-worker-bootstrap)
 before an individual Editor grant. [Workers authorization](https://developers.cloudflare.com/workers/authorization/)

@@ -5,6 +5,7 @@ import path from "node:path";
 import ts from "typescript";
 import { retainWebAssets, webAssetManifestPath } from "./retain-web-assets.mjs";
 import { gateWebRelease } from "./web-worker-page-gate.mjs";
+import { wranglerFailureMessage } from "./wrangler-failure.mjs";
 
 import { webAssetPathPattern } from "@tudomacae/www-origin-routing/webAssets";
 
@@ -88,9 +89,7 @@ function wrangler(args, options = {}) {
     });
   }
   catch (error) {
-    const providerCode = String(error.stderr ?? "").match(/\[code: (\d+)\]/u)?.[1];
-    const cause = error.code ?? `exit ${error.status ?? "unknown"}`;
-    throw new Error(`Wrangler ${args[0]} failed (${cause}${providerCode ? `, code ${providerCode}` : ""})`);
+    throw new Error(wranglerFailureMessage(args, error));
   }
 }
 

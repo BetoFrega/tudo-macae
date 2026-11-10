@@ -116,7 +116,7 @@ substitutes:
   production build. It also validates compilation, prerendering and Next.js's final
   typecheck.
 - `node bin/web-bundle-smoke.mjs` serves an already built production web Worker bundle
-  (`CLOUDFLARE_ENV=production vite build -c vite.vinext.config.ts`) and reads two pages.
+  (`CLOUDFLARE_ENV=production vite build -c vite.vinext.config.ts`) and reads its page list.
   It is the only layer that exercises that bundle before production
   ([gate](production-delivery.md)). Delete `dist` and `.wrangler/deploy` after the build.
 - `pnpm run test:e2e` owns the disposable API Worker fixture, production build,

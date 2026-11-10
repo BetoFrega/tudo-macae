@@ -16,8 +16,9 @@ both Vitest tiers plus `build:check`, and the complete E2E collection
 (`pnpm run test:e2e:full`) on a disposable local stack. Test jobs receive no production secrets or
 Google identity.
 
-The bundle smoke serves `dist/server` with `wrangler dev --local` and requires `/` and
-`/termos-e-condicoes` to answer 200 with a closed document (`/` also an `<img`) within 20 s.
+The bundle smoke serves `dist/server` with `wrangler dev --local` and requires one page per
+route family (`PAGES` in `bin/web-bundle-smoke.mjs`) to answer 200 with a closed document
+and its markers within 20 s. It proves GET rendering only; no journey runs on the bundle.
 Neither `next build` nor the Next-renderer E2E runs the vinext bundle, so a renderer
 regression that hangs every page (a recursive `<Image>` did) reaches no other gate. The
 `Web Workers` PR job runs the same production-env build and smoke without secrets; Wrangler

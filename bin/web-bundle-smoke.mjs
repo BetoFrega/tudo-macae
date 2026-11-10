@@ -6,9 +6,10 @@
 // mutation and in PR checks, so this gate serves the bundle and reads the pages.
 //
 // `wrangler dev -c dist/server/wrangler.json --local` serves the exact file the delivery script
-// publishes, with the production `env` vars. Service bindings show "not connected" locally, and
-// the pages checked here render without them. `vite preview` would rebuild the dev pipeline
-// instead of serving that artifact.
+// publishes, with the production `env` vars. Service bindings show "not connected" locally, so
+// data sections render their unavailable state, yet every page here still answers 200 with a
+// closed document. A page that stops doing so without bindings cannot stay in `PAGES`.
+// `vite preview` would rebuild the dev pipeline instead of serving that artifact.
 //
 // Usage: node bin/web-bundle-smoke.mjs   (after `CLOUDFLARE_ENV=production vite build -c vite.vinext.config.ts`)
 // `WEB_BUNDLE_SMOKE_PORT` pins the port; otherwise the OS picks a free one.
@@ -26,10 +27,20 @@ const REQUEST_TIMEOUT_MS = 20_000;
 const DIAGNOSTIC_LINES = 6;
 const DIAGNOSTIC_LINE_LENGTH = 160;
 
-/** What a page must contain: a closed document proves the whole body streamed. */
+/**
+ * What a page must contain: a closed document proves the whole body streamed. One page per
+ * route family, so a shim or renderer defect confined to one layout or segment still fails.
+ */
 const PAGES = [
   { path: "/", markers: ["</html>", "<img"] },
   { path: "/termos-e-condicoes", markers: ["</html>"] },
+  { path: "/politica-de-privacidade", markers: ["</html>", "Política de Privacidade"] },
+  { path: "/noticias", markers: ["</html>"] },
+  { path: "/negocios", markers: ["</html>"] },
+  { path: "/busca?q=pizza", markers: ["</html>", "<form"] },
+  { path: "/publicar", markers: ["</html>", "<form"] },
+  { path: "/minha-conta/recuperar-senha", markers: ["</html>", "Recuperar acesso"] },
+  { path: "/admin", markers: ["</html>"] },
 ];
 
 function freePort() {

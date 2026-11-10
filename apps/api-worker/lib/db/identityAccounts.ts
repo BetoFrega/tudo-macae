@@ -34,3 +34,11 @@ export async function readIdentityAccount(database: D1Database, uid: string) {
   if (!row) return null;
   return identityAccount(row);
 }
+
+/** Admin and editor are the roles that mark `internal_actor` on offer events; ids leave only as set membership. */
+export async function readInternalAccountIds(database: D1Database): Promise<Set<string>> {
+  const { results } = await database
+    .prepare("SELECT id FROM user WHERE json_extract(claims,'$.admin')=1 OR json_extract(claims,'$.editor')=1")
+    .all<{ id: string }>();
+  return new Set(results.map(row => row.id));
+}

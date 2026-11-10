@@ -23,6 +23,8 @@ export interface SupplySnapshotInventory {
   /** Identities whose stored Catálogo de ofertas setting is enabled. */
   enabledCatalogs: ReadonlySet<string>;
   activityAreas: ActiveActivityAreas;
+  /** Account ids holding the admin or editor role when the store is read; the snapshot exports only membership. */
+  internalAccounts: ReadonlySet<string>;
 }
 
 export interface SupplySnapshotStore {
@@ -40,12 +42,19 @@ export interface SupplySnapshotDestination {
 export const supplySnapshotColumns = [
   "snapshot_date", "kind", "id", "status", "publication_state", "discoverable", "identity_type", "has_owner",
   "claimable", "has_contact", "catalog_enabled", "category_id", "subcategory_id", "created_at", "updated_at",
+  "internal_owner",
 ] as const;
 type SupplySnapshotRow = Record<typeof supplySnapshotColumns[number], string | number | boolean | undefined>;
 
 /** The calendar day in Macaé, `YYYY-MM-DD`, that names one snapshot. */
 export function supplySnapshotDate(now: number): string {
   return formatSaoPauloDateTimeInput(now).slice(0, 10);
+}
+
+/** Empty without an owning account, so a Negócio reivindicável is neither internal nor external supply. */
+function internalOwner(identity: AdvertiserProfileData | undefined, internalAccounts: ReadonlySet<string>) {
+  const owner = identity?.userId?.trim();
+  return owner ? internalAccounts.has(owner) : undefined;
 }
 
 function csvField(value: string | number | boolean | undefined) {
@@ -67,10 +76,11 @@ async function identityRow(snapshotDate: string, identity: AdvertiserProfileData
     claimable: isClaimableAdvertiserProfile(identity), has_contact: (identity.contacts?.length ?? 0) > 0,
     catalog_enabled: inventory.enabledCatalogs.has(identity.id), category_id: undefined, subcategory_id: undefined,
     created_at: identity.createdAt, updated_at: identity.updatedAt,
+    internal_owner: internalOwner(identity, inventory.internalAccounts),
   };
 }
 
-function adRow(snapshotDate: string, ad: SupplySnapshotAd, identities: Map<string, AdvertiserProfileData>): SupplySnapshotRow {
+function adRow(snapshotDate: string, ad: SupplySnapshotAd, identities: Map<string, AdvertiserProfileData>, internalAccounts: ReadonlySet<string>): SupplySnapshotRow {
   const status = adStatus({ status: ad.status ?? null });
   const identity = ad.advertiserProfileId ? identities.get(ad.advertiserProfileId) : undefined;
   return {
@@ -79,6 +89,7 @@ function adRow(snapshotDate: string, ad: SupplySnapshotAd, identities: Map<strin
     identity_type: identity ? identityTypeOf(identity) : undefined, has_owner: undefined, claimable: undefined, has_contact: undefined,
     catalog_enabled: undefined, category_id: ad.categoryId, subcategory_id: ad.subcategoryId,
     created_at: ad.createdAt, updated_at: ad.updatedAt ?? ad.createdAt,
+    internal_owner: internalOwner(identity, internalAccounts),
   };
 }
 
@@ -94,7 +105,7 @@ export function createSupplySnapshotExport(dependencies: { store: SupplySnapshot
       const inventory = await dependencies.store.read();
       const identities = new Map(inventory.identities.map(identity => [identity.id, identity]));
       const rows = [
-        ...inventory.ads.map(ad => adRow(snapshotDate, ad, identities)),
+        ...inventory.ads.map(ad => adRow(snapshotDate, ad, identities, inventory.internalAccounts)),
         ...await Promise.all(inventory.identities.map(identity => identityRow(snapshotDate, identity, inventory))),
       ];
       await dependencies.destination.write(snapshotDate, toCsv(rows));

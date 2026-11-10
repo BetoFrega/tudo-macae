@@ -10,7 +10,7 @@
     "deploy": "wrangler deploy --env production"
   },
   "dependencies": {
-    "jose": "^6.2.14"
+    "jose": "^6.2.15"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261106.1",

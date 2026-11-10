@@ -14,7 +14,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@tudomacae/react-primitives/sheet";
 import { useAuth } from "@/features/authentication/AuthContext";
 import { useLoginModal } from "../authentication/LoginModalContext";
 import { AccountEntry } from "@tudomacae/site-layout/account-entry";

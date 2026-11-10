@@ -28,19 +28,20 @@ const DIAGNOSTIC_LINES = 6;
 const DIAGNOSTIC_LINE_LENGTH = 160;
 
 /**
- * What a page must contain: a closed document proves the whole body streamed. One page per
- * route family, so a shim or renderer defect confined to one layout or segment still fails.
+ * What a page must contain: a closed document proves the whole body streamed, and a marker from
+ * the route's own module (its `<h1>` or metadata title, not the shared header) proves that route
+ * rendered. One page per route family, so a shim or renderer defect confined to one segment
+ * still fails. A route enters only if its own content renders without bindings: `/publicar` and
+ * `/admin` render only the shared layout here.
  */
 const PAGES = [
   { path: "/", markers: ["</html>", "<img"] },
-  { path: "/termos-e-condicoes", markers: ["</html>"] },
-  { path: "/politica-de-privacidade", markers: ["</html>", "Política de Privacidade"] },
-  { path: "/noticias", markers: ["</html>"] },
-  { path: "/negocios", markers: ["</html>"] },
-  { path: "/busca?q=pizza", markers: ["</html>", "<form"] },
-  { path: "/publicar", markers: ["</html>", "<form"] },
+  { path: "/termos-e-condicoes", markers: ["</html>", "Termos de Uso e Condições Gerais"] },
+  { path: "/politica-de-privacidade", markers: ["</html>", "<h1>Política de Privacidade"] },
+  { path: "/noticias", markers: ["</html>", "<title>Blog | Tudo Macaé</title>"] },
+  { path: "/negocios", markers: ["</html>", "<title>Catálogo de negócios em Macaé"] },
+  { path: "/busca?q=pizza", markers: ["</html>", "<title>Buscar | Tudo Macaé</title>"] },
   { path: "/minha-conta/recuperar-senha", markers: ["</html>", "Recuperar acesso"] },
-  { path: "/admin", markers: ["</html>"] },
 ];
 
 function freePort() {

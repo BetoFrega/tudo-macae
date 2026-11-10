@@ -27,7 +27,7 @@
     "@tudomacae/text-normalization": "workspace:*",
     "@tudomacae/www-origin-routing": "workspace:*",
     "better-auth": "1.7.15",
-    "jose": "^6.2.14",
+    "jose": "^6.2.15",
     "lucide-react": "^1.70.0",
     "zod": "^4.6.7"
   },

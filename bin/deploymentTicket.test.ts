@@ -51,7 +51,7 @@ test.skipIf(inWorkers)("updates the existing blocker without closing it when pro
   expect(calls[1]).toContain("repos/BetoFrega/tudo-macae/issues/42/comments");
   const request = calls[1]?.join(" ");
   expect(request).toContain("rótulo `no-issue`");
-  expect(request).toContain("aplique explicitamente");
+  expect(request).toContain("inclusive a que só melhora o diagnóstico");
   expect(request).toContain("Inspecione os passos e artifacts desta execução");
   expect(request).toContain("causa concreta");
   expect(request).toContain("ligada a este ticket");

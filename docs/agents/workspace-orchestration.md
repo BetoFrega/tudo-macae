@@ -66,8 +66,7 @@ Next uses next/link, with pathname reads inside existing header Suspense boundar
 for prerendering; Cloudflare uses document anchors for destination ownership.
 Auth, loading, navigation fetch/fallback logs and image/font adapters remain in apps.
 
-The root button shim only reexports the shared control; remove it
-when callers use package entries. No persistence adapter accompanies this extraction.
+No persistence adapter accompanies this extraction.
 
 ## E2E workspace
 

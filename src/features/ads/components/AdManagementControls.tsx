@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { DeleteAdButton } from "./DeleteAdButton";
 import { EditAdButton } from "./EditAdButton";
 import { useAdManagementPermission } from "./useAdManagementPermission";

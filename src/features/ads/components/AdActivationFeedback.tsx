@@ -1,6 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import type { AdActivationIssueDetails } from "../activationRecovery";
 
 interface AdActivationFeedbackProps {

@@ -2,7 +2,7 @@ import { OfferingCatalogEntry } from "@/features/business-offering-catalog/Offer
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Loading } from "@/components/ui/loading";
 import { adminGetAdvertiserProfile } from "@/features/advertiser-profile/actions/adminGetAdvertiserProfile";
 import AdminAdvertiserProfileForm from "@/features/advertiser-profile/components/AdminAdvertiserProfileForm";

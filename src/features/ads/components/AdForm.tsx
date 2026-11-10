@@ -6,7 +6,7 @@ import {
   Loader2,
 } from "lucide-react";
 import type { FieldErrors } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { useState } from "react";

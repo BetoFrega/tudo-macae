@@ -4,7 +4,7 @@ import { Copy, Share2 } from "lucide-react";
 import posthog from "posthog-js";
 import { useState, useSyncExternalStore } from "react";
 import { CANONICAL_APP_ORIGIN } from "../../../bin/appOrigin";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { cn } from "@/lib/utils";
 

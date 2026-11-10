@@ -3,7 +3,7 @@ import { hasPublishableProfile } from "@tudomacae/ads/client";
 import { getUserAdvertiserProfiles } from "@/features/advertiser-profile/actions/getUserAdvertiserProfiles";
 import Link from "next/link";
 import { unauthorized } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { getCurrentUser } from "@/features/authentication/actions/getCurrentUser";
 import { getCategoriesLive } from "@/features/categories/actions/getCategories";
 import { listAdsByUserUseCase } from "@/integrations/ads/use-cases/listAdsByUserUseCase";

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Loading } from "@/components/ui/loading";
 import { getAdvertiserProfile } from "@/features/advertiser-profile/actions/getAdvertiserProfile";

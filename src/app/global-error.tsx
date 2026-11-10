@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { unstable_isUnrecognizedActionError } from "next/navigation";
 import posthog from "posthog-js";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 
 type GlobalErrorProps = Readonly<{
   error: Error & { digest?: string };

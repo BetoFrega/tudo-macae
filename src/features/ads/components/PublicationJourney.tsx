@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLoginModal } from "@/features/authentication/LoginModalContext";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Form } from "@/components/ui/form";
 import { hasPublishableProfile, type PendingAdPublication } from "@tudomacae/ads/client";
 import { usePublicationJourney } from "../hooks/usePublicationJourney";

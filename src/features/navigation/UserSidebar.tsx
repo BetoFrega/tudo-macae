@@ -4,7 +4,7 @@ import { Suspense, use, useEffect, useLayoutEffect, useRef, useState, type RefOb
 import { Briefcase, List, LogOut, Newspaper, Plus, Shield, User } from "lucide-react";
 import Link from "next/link";
 import posthog from "posthog-js";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import {
   Sheet,
   SheetClose,

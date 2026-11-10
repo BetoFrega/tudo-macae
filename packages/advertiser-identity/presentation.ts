@@ -6,4 +6,5 @@ export { AdvertiserContactList } from "./lib/ui/AdvertiserContactList";
 export { IdentityAvatar } from "./lib/ui/IdentityAvatar";
 export { PublicInformationNotice } from "./lib/ui/PublicInformationNotice";
 export { BusinessAdministrationStatus } from "./lib/ui/BusinessAdministrationStatus";
+export { BusinessClaimInvite } from "./lib/ui/BusinessClaimInvite";
 export type { IdentityImage, IdentityLink } from "./lib/ui/rendering";

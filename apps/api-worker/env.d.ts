@@ -6,6 +6,7 @@ interface __BaseEnv_Env {
 	CLASSIFIEDS_DB: D1Database;
 	EDITORIAL_DB: D1Database;
 	EMAIL: SendEmail;
+	FLAGS: Flagship;
 	IMAGES: ImagesBinding;
 	CF_VERSION_METADATA: WorkerVersionMetadata;
 	PUBLIC_APP_ORIGIN: string;

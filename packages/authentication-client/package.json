@@ -18,9 +18,9 @@
     "test": "cd ../.. && vitest run --config vitest.unit.config.mts packages/authentication-client/tests"
   },
   "devDependencies": {
-    "@opentelemetry/context-async-hooks": "^3.0.0",
+    "@opentelemetry/context-async-hooks": "^3.1.0",
     "@opentelemetry/core": "^3.0.0",
-    "@opentelemetry/sdk-trace": "^3.0.0",
+    "@opentelemetry/sdk-trace": "^3.1.0",
     "@types/node": "^26"
   }
 }

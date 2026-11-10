@@ -15,16 +15,29 @@ slow to roll back through deployment. Classify a deterministic correction, refac
 low-risk change as `unflagged` unless one of those conditions also applies. A flag is a
 release control, never an authorization or security boundary.
 
+## Provider
+
+New flags live in [Cloudflare Flagship](https://developers.cloudflare.com/flagship/),
+app `tudo-macae` (decided by Beto on 2026-11-09). The web Worker reads them through the
+`FLAGS` binding in `wrangler.web.jsonc`; `src/integrations/release-control/flagshipFlag.ts`
+is the app seam, and outside the Worker build it resolves every flag to its safe default.
+Wrangler's local flag store starts empty, so local runs and E2E see the safe default
+unless a test adds the flag with `wrangler flagship flags create --local`.
+
+Flags created before that date still live in PostHog
+(`grep -rn createPostHogFlagReader src`); migrate one by recreating it in Flagship with
+its current state before switching its reader.
+
 ## Choose the control type
 
 Choose by the decision the application consumes; record the type and rationale in
 the work plan or delivery record before implementation or test design.
 
-| Decision | PostHog type | Example |
+| Decision | Flagship variant | Example |
 |---|---|---|
 | Enable or disable a capability, including a temporary global rollout | Boolean | Enable D1 sitemap reads |
-| Serve named alternatives to different audiences | Multivariate | `control` or `new` by cohort |
-| Deliver application settings with the same payload for every caller | Remote config | `{"source":"d1","timeoutMs":3000}` |
+| Serve named alternatives to different audiences | String variants with targeting rules | `control` or `new` by audience |
+| Deliver application settings with the same payload for every caller | JSON variant (remote config) | `{"source":"d1","timeoutMs":3000}` |
 
 All three support changes without redeployment when the application already
 interprets the served value. A global audience alone does not require remote config;
@@ -37,13 +50,12 @@ unavailable configuration preserves the established behavior. Test valid payload
 and those failure states through the narrowest public seam. Persistent configuration
 remains while its settings are used; remove it when its consumers are retired.
 
-Non-encrypted payloads are available to clients through the flags endpoint.
-Encrypted payloads require server-side access and a secure feature-flags API key;
-keep that key on the server. Encryption controls payload exposure, not application
-authorization.
+Evaluate on the server through the binding; it needs no API token. Use the
+`*Details` methods and treat any `errorCode` as unavailable, because the typed methods
+return the default silently for an unknown flag or a type mismatch.
 
-Provider behavior: [PostHog flag types](https://posthog.com/docs/feature-flags/creating-feature-flags#step-3-choose-a-feature-flag-type-required)
-and [remote config](https://posthog.com/docs/feature-flags/remote-config).
+Provider behavior: [Flagship concepts](https://developers.cloudflare.com/flagship/concepts/)
+and [evaluation reasons](https://developers.cloudflare.com/flagship/reference/evaluation-reasons/).
 
 ## Temporary rollout contract
 
@@ -66,6 +78,6 @@ and [remote config](https://posthog.com/docs/feature-flags/remote-config).
   full adoption, or the gated branch after abandonment. Do not reuse the key for
   another feature.
 
-PostHog owns runtime release state. The repository owns the key, safe default,
+The flag provider owns runtime release state. The repository owns the key, safe default,
 evaluation boundary and lifecycle evidence; neither source silently substitutes for
 the other.

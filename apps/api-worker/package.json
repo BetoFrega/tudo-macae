@@ -9,7 +9,7 @@
     "deploy": "node deploy.mjs"
   },
   "dependencies": {
-    "@trpc/server": "^11.22.1",
+    "@trpc/server": "^11.24.0",
     "@tudomacae/ads": "workspace:*",
     "@tudomacae/advertiser-identity": "workspace:*",
     "@tudomacae/authentication": "workspace:*",
@@ -26,15 +26,15 @@
     "@tudomacae/public-image-delivery": "workspace:*",
     "@tudomacae/text-normalization": "workspace:*",
     "@tudomacae/www-origin-routing": "workspace:*",
-    "better-auth": "1.7.14",
-    "jose": "^6.2.14",
-    "lucide-react": "^1.66.0",
+    "better-auth": "1.7.18",
+    "jose": "^6.2.15",
+    "lucide-react": "^1.70.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261101.1",
+    "@cloudflare/workers-types": "^5.20261106.1",
     "typescript": "^6",
-    "vitest": "^5.0.5",
-    "wrangler": "^4.153.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.156.1"
   }
 }

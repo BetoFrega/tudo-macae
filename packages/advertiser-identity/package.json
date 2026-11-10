@@ -24,19 +24,20 @@
     "./filterBusinessCatalogCategories": "./filterBusinessCatalogCategories.ts",
     "./phonePresentation": "./phonePresentation.ts",
     "./identityDeletion": "./identityDeletion.ts",
-    "./supplySnapshot": "./supplySnapshot.ts"
+    "./supplySnapshot": "./supplySnapshot.ts",
+    "./businessClaim": "./businessClaim.ts"
   },
   "dependencies": {
     "zod": "^4.6.7",
     "@tudomacae/react-primitives": "workspace:*",
-    "@hookform/resolvers": "^6.0.2",
+    "@hookform/resolvers": "^7.0.1",
     "react-hook-form": "^7.90.0",
     "@tudomacae/ads": "workspace:*",
     "@tudomacae/civil-time": "workspace:*",
     "@tudomacae/text-normalization": "workspace:*",
     "@tudomacae/public-image-delivery": "workspace:*",
     "@tudomacae/media": "workspace:*",
-    "lucide-react": "^1.66.0"
+    "lucide-react": "^1.70.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
@@ -44,7 +45,7 @@
   },
   "devDependencies": {
     "typescript": "^6",
-    "vitest": "^5.0.5",
+    "vitest": "^5.1.0",
     "@types/node": "^26",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

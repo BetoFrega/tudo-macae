@@ -16,6 +16,7 @@ vi.mock("next/navigation", async importOriginal => ({
     throw new Error(`NEXT_REDIRECT ${url}`);
   },
 }));
+vi.mock("@/integrations/advertiser-identity/businessClaimVisibility", () => ({ businessClaimVisible: async () => false }));
 vi.mock("@/packages/classifieds-api", () => ({
   getBusinessUseCase: async ({ id }: { id: string }) => ({ id, title: "Café com Arte" }),
   getCategoriesUseCase: async () => [],

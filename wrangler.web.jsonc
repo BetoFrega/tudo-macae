@@ -6,6 +6,9 @@
   "compatibility_date": "2026-09-27",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
+  // Source maps made the upload 25.6 MB (16.9 MB of maps), and Cloudflare rejects the
+  // deploy with "multipart: message too large" [code 10021]. Measure before re-enabling.
+  "upload_source_maps": false,
   "observability": {
     "enabled": true,
     "logs": { "enabled": true, "invocation_logs": false }

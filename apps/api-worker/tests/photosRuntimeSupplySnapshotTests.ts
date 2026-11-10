@@ -12,17 +12,19 @@ async function schedule(qualification: string, scheduledTime = now, fault = "") 
 const exports = () => runtime.getR2Bucket("PDM_EXPORTS");
 
 test("the production hourly run writes the day's supply snapshot without personal data, once per day", async () => {
+  // The seed owner holds the editor role, so its Identidade and Anúncio read as internal supply.
+  await (await runtime.getD1Database("AUTHENTICATION_DB")).prepare("INSERT INTO user (id,name,email,createdAt,updatedAt,claims) VALUES ('owner','','owner@example.com',0,0,'{\"editor\":true}')").run();
   expect(await schedule("production")).toMatchObject({ outcome: "ok" });
   const snapshot = await (await exports()).get(snapshotKey);
   const csv = await snapshot!.text();
   const [header, ...rows] = csv.trimEnd().split("\n");
   expect(header).toBe(supplySnapshotColumns.join(","));
   expect(rows).toEqual([
-    `2027-01-15,ad,ad,active,pending,false,,,,,,categoria,subcategoria,${now},${now}`,
-    `2027-01-15,identity,profile,,,false,,true,false,true,false,,,${now},${now}`,
+    `2027-01-15,ad,ad,active,pending,false,,,,,,categoria,subcategoria,${now},${now},true`,
+    `2027-01-15,identity,profile,,,false,,true,false,true,false,,,${now},${now},true`,
   ]);
   // The seed account id "owner" is also a substring of the has_owner header, so the exact rows above prove its absence.
-  for (const personal of ["Perfil", "Anúncio", "Descrição", "22999998888"]) expect(csv).not.toContain(personal);
+  for (const personal of ["Perfil", "Anúncio", "Descrição", "22999998888", "owner@example.com", "editor"]) expect(csv).not.toContain(personal);
 
   expect((await call({ action: "save", records: [{ kind: "ad", id: "later", body: { userId: "owner", status: "active", createdAt: now } }] })).error).toBeUndefined();
   expect(await schedule("production", now + 60 * 60_000)).toMatchObject({ outcome: "ok" });

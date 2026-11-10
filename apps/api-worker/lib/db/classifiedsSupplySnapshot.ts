@@ -14,11 +14,11 @@ const adSchema = z.object({
 });
 
 /** Each kind is read on its own pinned version; a write between kinds can make the snapshot straddle it. */
-export function createClassifiedsSupplySnapshotStore(persistence: ClassifiedsPersistence): SupplySnapshotStore {
+export function createClassifiedsSupplySnapshotStore(persistence: ClassifiedsPersistence, readInternalAccounts: () => Promise<ReadonlySet<string>>): SupplySnapshotStore {
   const every = (kind: RecordKind) => readBusinessCatalogSnapshot(() => allRecords(persistence, { kind })).then(result => result.items);
   return {
     async read() {
-      const [ads, profiles, catalogs] = await Promise.all([every("ad"), every("profile"), every("catalog")]);
+      const [ads, profiles, catalogs, internalAccounts] = await Promise.all([every("ad"), every("profile"), every("catalog"), readInternalAccounts()]);
       const areas = new Map<string, Promise<boolean>>();
       return {
         ads: ads.map((record): SupplySnapshotAd => {
@@ -32,6 +32,7 @@ export function createClassifiedsSupplySnapshotStore(persistence: ClassifiedsPer
           if (!areas.has(key)) areas.set(key, activityAreaActive(persistence, area));
           return areas.get(key)!;
         } },
+        internalAccounts,
       };
     },
   };

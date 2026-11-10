@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { connection } from "next/server";
 import { cache, Suspense } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { SheetClose } from "@tudomacae/react-primitives/sheet";
 import { getCategories } from "@/features/categories/actions/getCategories";
 import { SiteSearchForm } from "@/components/site-search/SiteSearchForm";

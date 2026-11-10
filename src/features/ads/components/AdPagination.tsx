@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 
 export function AdPagination({ path, nextCursor, currentCursor }: {
   path: string;

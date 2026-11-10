@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import posthog from "posthog-js";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 
 const reportedClientErrors = new WeakSet<Error>();
 

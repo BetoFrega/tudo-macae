@@ -2,7 +2,7 @@ import { Eye, LoaderCircle, Pencil, Plus, User, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { getUserAdvertiserProfiles } from "@/features/advertiser-profile/actions/getUserAdvertiserProfiles";
 import { assessBusinessesUseCase } from "@/packages/classifieds-api";

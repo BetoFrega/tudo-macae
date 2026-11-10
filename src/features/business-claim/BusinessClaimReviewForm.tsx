@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useId, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { reviewBusinessClaim } from "./actions";

@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Loading } from "@/components/ui/loading";
 import { JsonLd } from "@/components/JsonLd";
 import { resolveArticleSlug } from "@/features/news/articleSlugResolution";

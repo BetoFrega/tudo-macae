@@ -8,7 +8,7 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { PublicContentShare } from "@/components/public-content-sharing/PublicContentShare";
 import { Loading } from "@/components/ui/loading";
 import { getAd } from "@/features/ads/actions/getAd";

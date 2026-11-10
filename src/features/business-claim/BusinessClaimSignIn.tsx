@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { useLoginModal } from "@/features/authentication/LoginModalContext";
 
 /** After sign-in the claim page renders again with the account's claim form. */

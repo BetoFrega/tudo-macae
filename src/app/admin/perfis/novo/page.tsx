@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { connection } from "next/server";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import AdminAdvertiserProfileForm from "@/features/advertiser-profile/components/AdminAdvertiserProfileForm";
 import { getCategoriesLive } from "@/features/categories/actions/getCategories";
 

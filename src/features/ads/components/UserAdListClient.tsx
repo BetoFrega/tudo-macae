@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { PendingAdPublication } from "@tudomacae/ads/client";
 import { deletePendingPublication } from "../actions/publication";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { notifyAccountReminderChanged } from "@/features/authentication/accountReminderEvents";
 import type { AdImage, AdStatus } from "@tudomacae/ads/types";
 import { UserAdCard } from "./UserAdCard";

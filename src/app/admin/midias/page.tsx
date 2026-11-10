@@ -1,6 +1,6 @@
 import { getMediaOptions } from "@/features/media/actions/getMediaOptions";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   getMedia,

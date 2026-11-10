@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { getCategoriesLive } from "@/features/categories/actions/getCategories";
 import { SeedCategoriesButton } from "@tudomacae/categories/ui";
 

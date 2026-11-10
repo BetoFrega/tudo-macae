@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "../AuthContext";
 import { ACCOUNT_REMINDER_CHANGED_EVENT } from "../accountReminderEvents";
 import { readAccountReminderFromBrowser, type AccountReminderValue } from "../readAccountStatus";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 
 export function AccountReminder() {
   const { user, verificationError } = useAuth();

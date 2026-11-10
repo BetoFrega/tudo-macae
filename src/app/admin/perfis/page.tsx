@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { getAllAdvertiserProfiles } from "@/features/advertiser-profile/actions/getAllAdvertiserProfiles";
 import { AdminAdvertiserProfileList } from "@/features/advertiser-profile/components/AdminAdvertiserProfileList";
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import type { AdStatus } from "@tudomacae/ads/types";
 
 export function UserAdStatusBadge({ status }: { status: AdStatus }) {

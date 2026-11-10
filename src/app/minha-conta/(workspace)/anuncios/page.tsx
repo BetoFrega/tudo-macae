@@ -1,7 +1,7 @@
 import { Loader2, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import UserAdList from "@/features/ads/components/UserAdList";
 
 export default async function MyAdsPage() {

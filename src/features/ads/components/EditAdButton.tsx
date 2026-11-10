@@ -2,7 +2,7 @@
 
 import { Pencil } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 
 interface EditAdButtonProps {
   adId: string;

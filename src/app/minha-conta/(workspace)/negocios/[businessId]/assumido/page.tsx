@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
-import { Button } from "@/components/ui/button";
+import { Button } from "@tudomacae/react-primitives/button";
 import { getAdvertiserProfile } from "@/features/advertiser-profile/actions/getAdvertiserProfile";
 import { businessCanonicalPath } from "@tudomacae/advertiser-identity/businessPresentation";
 

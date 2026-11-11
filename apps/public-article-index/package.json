@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@tudomacae/article-index-test-runtime": "workspace:*",
-    "@cloudflare/workers-types": "^5.20261106.1",
+    "@cloudflare/workers-types": "^5.20261108.1",
     "@types/node": "^26",
     "typescript": "^6",
     "vitest": "^5.1.0",

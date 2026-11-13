@@ -8,7 +8,7 @@ import type { RouteContext } from "./requests";
  * application sends. Lifetime is the application's `max-age`. Only
  * per-visitor-free reads belong here.
  */
-export const edgeCachedPaths: ReadonlySet<string> = new Set(["/sitemaps/anuncios.xml"]);
+const edgeCachedPaths: ReadonlySet<string> = new Set(["/sitemaps/anuncios.xml"]);
 
 export function isEdgeCached({ request, incoming }: RouteContext) {
   return request.method === "GET" && !incoming.search

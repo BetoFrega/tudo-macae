@@ -212,7 +212,7 @@ importers:
         version: 1.4.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tailwindcss/typography':
         specifier: ^0.5.20
-        version: 0.5.20(tailwindcss@4.3.3)
+        version: 0.5.20(tailwindcss@4.3.5)
       '@tudomacae/ads':
         specifier: workspace:*
         version: link:packages/ads
@@ -420,7 +420,7 @@ importers:
         version: 16.4.6(@typescript-eslint/parser@8.72.2(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-better-tailwindcss:
         specifier: ^4.11.0
-        version: 4.11.0(@eslint/css@2.0.1)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(tailwindcss@4.3.3)(typescript@6.0.3)
+        version: 4.11.0(@eslint/css@2.0.1)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(tailwindcss@4.3.5)(typescript@6.0.3)
       eslint-plugin-yml:
         specifier: ^3.10.0
         version: 3.10.0(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))
@@ -444,7 +444,7 @@ importers:
         version: 0.4.2(@eslint/css@2.0.1)
       tailwindcss:
         specifier: ^4
-        version: 4.3.3
+        version: 4.3.5
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -665,7 +665,7 @@ importers:
         version: 1.68.0(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261108.1)(@types/node@26.6.6))
       '@tailwindcss/typography':
         specifier: ^0.5.20
-        version: 0.5.20(tailwindcss@4.3.3)
+        version: 0.5.20(tailwindcss@4.3.5)
       '@vinext/cloudflare':
         specifier: 1.3.3
         version: 1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261108.1)(@types/node@26.6.6)))(vinext@1.4.4(5c1332e02adf03154a202431b5df340a))
@@ -677,7 +677,7 @@ importers:
         version: 19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(webpack@5.111.1(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.31)(sharp@0.35.5(@types/node@26.6.6)))
       tailwindcss:
         specifier: ^4
-        version: 4.3.3
+        version: 4.3.5
       vinext:
         specifier: 1.4.4
         version: 1.4.4(5c1332e02adf03154a202431b5df340a)
@@ -1027,10 +1027,10 @@ importers:
     dependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.20
-        version: 0.5.20(tailwindcss@4.3.3)
+        version: 0.5.20(tailwindcss@4.3.5)
       tailwindcss:
         specifier: ^4
-        version: 4.3.3
+        version: 4.3.5
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -6385,9 +6385,6 @@ packages:
   tailwind-merge@3.7.0:
     resolution: {integrity: sha512-XPPUyAc+cvspz3lHTcR/QgPfW2A0lv/xQNIjX3HGhLR+Nq2lHaLq5MtTesHn8GUr3W3DguT2KT5x3NVgRtYwmA==}
 
-  tailwindcss@4.3.3:
-    resolution: {integrity: sha512-gOhV3P7ufE62QDGg1zVaTgCR+EtPv92k2nIhVcVKcLmxT1sUBsQGhnZj175j+MqRt4zLF7ic+sCYjfhxMxj7YQ==}
-
   tailwindcss@4.3.5:
     resolution: {integrity: sha512-FcQk9BuffmEHJP2G0XmB2SplU1aLTI7j07Kunk+U74Ny+XiWOtzXz9aujFZ/avntw1e2cOv/3PkgzflQ7gX2vQ==}
 
@@ -8732,10 +8729,10 @@ snapshots:
       postcss: 8.5.31
       tailwindcss: 4.3.5
 
-  '@tailwindcss/typography@0.5.20(tailwindcss@4.3.3)':
+  '@tailwindcss/typography@0.5.20(tailwindcss@4.3.5)':
     dependencies:
       postcss-selector-parser: 7.1.7
-      tailwindcss: 4.3.3
+      tailwindcss: 4.3.5
 
   '@testing-library/dom@10.4.1':
     dependencies:
@@ -9924,7 +9921,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-better-tailwindcss@4.11.0(@eslint/css@2.0.1)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(tailwindcss@4.3.3)(typescript@6.0.3):
+  eslint-plugin-better-tailwindcss@4.11.0(@eslint/css@2.0.1)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(tailwindcss@4.3.5)(typescript@6.0.3):
     dependencies:
       '@eslint/css-tree': 4.1.2
       '@valibot/to-json-schema': 1.7.1(valibot@1.4.2(typescript@6.0.3))
@@ -9932,7 +9929,7 @@ snapshots:
       jiti: 2.7.0
       synckit: 0.12.3
       tailwind-csstree: 0.3.3(@eslint/css@2.0.1)
-      tailwindcss: 4.3.3
+      tailwindcss: 4.3.5
       tsconfig-paths-webpack-plugin: 4.2.0
       valibot: 1.4.2(typescript@6.0.3)
     optionalDependencies:
@@ -12002,8 +11999,6 @@ snapshots:
       '@eslint/css': 2.0.1
 
   tailwind-merge@3.7.0: {}
-
-  tailwindcss@4.3.3: {}
 
   tailwindcss@4.3.5: {}
 

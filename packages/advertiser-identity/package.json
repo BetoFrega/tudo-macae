@@ -31,7 +31,7 @@
     "zod": "^4.6.7",
     "@tudomacae/react-primitives": "workspace:*",
     "@hookform/resolvers": "^7.0.6",
-    "react-hook-form": "^7.90.0",
+    "react-hook-form": "^7.92.0",
     "@tudomacae/ads": "workspace:*",
     "@tudomacae/civil-time": "workspace:*",
     "@tudomacae/text-normalization": "workspace:*",

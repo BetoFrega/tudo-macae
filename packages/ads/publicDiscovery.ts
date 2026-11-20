@@ -22,11 +22,11 @@ const position = z.object({
 }).strict();
 
 export type AdPosition = z.infer<typeof position>;
-export type AdScope
-  = | { kind: "all" }
-    | { kind: "category"; categoryId: string }
-    | { kind: "subcategory"; categoryId: string; subcategoryId: string }
-    | { kind: "profile"; profileId: string };
+export type AdScope =
+  | { kind: "all" }
+  | { kind: "category"; categoryId: string }
+  | { kind: "subcategory"; categoryId: string; subcategoryId: string }
+  | { kind: "profile"; profileId: string };
 
 export interface PublicAdRecord {
   id: string;

@@ -121,11 +121,11 @@ function createDuplicateConfirmationToken(
   return digest(stableValue({ intent, candidates }));
 }
 
-type ProfilePreconditionFailure
-  = | { status: "notFound" }
-    | { status: "invalidProfileState" }
-    | { status: "stateMismatch" }
-    | { status: "revisionConflict"; currentRevision: number };
+type ProfilePreconditionFailure =
+  | { status: "notFound" }
+  | { status: "invalidProfileState" }
+  | { status: "stateMismatch" }
+  | { status: "revisionConflict"; currentRevision: number };
 
 function checkProfilePreconditions(
   profile: AdvertiserProfileData | null | undefined,

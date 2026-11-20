@@ -6,10 +6,10 @@ export interface MediaRevisionTransaction {
   archive(revision: MediaRevision): void;
   update(mediaId: string, patch: { metadata: MediaMetadata; revision: number; updatedAt: number }): void;
 }
-export type MediaRevisionResult
-  = | { status: "updated"; media: Media }
-    | { status: "not-found" }
-    | { status: "conflict"; currentRevision: number };
+export type MediaRevisionResult =
+  | { status: "updated"; media: Media }
+  | { status: "not-found" }
+  | { status: "conflict"; currentRevision: number };
 
 export interface MediaMetadataRevisionDependencies {
   now(): number;

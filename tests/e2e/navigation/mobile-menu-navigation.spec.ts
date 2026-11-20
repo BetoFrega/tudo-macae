@@ -205,18 +205,18 @@ test("mobile menu reaches a category", async ({ page, categoryFixture, loginPage
                   return rect.width > 0 && (rect.right > viewport + 0.5 || rect.left < -0.5);
                 })
                 .slice(0, 12).map((element) => {
-                  const rect = element.getBoundingClientRect();
-                  const style = getComputedStyle(element);
-                  return {
-                    zone: element.closest("header") ? "header" : element.closest("main") ? "main" : "other",
-                    tag: element.tagName,
-                    className: String(element.className).slice(0, 160),
-                    text: element.textContent?.trim().slice(0, 60),
-                    left: rect.left, right: rect.right, width: rect.width,
-                    minWidth: style.minWidth, display: style.display,
-                    flexWrap: style.flexWrap, whiteSpace: style.whiteSpace,
-                  };
-                }),
+                const rect = element.getBoundingClientRect();
+                const style = getComputedStyle(element);
+                return {
+                  zone: element.closest("header") ? "header" : element.closest("main") ? "main" : "other",
+                  tag: element.tagName,
+                  className: String(element.className).slice(0, 160),
+                  text: element.textContent?.trim().slice(0, 60),
+                  left: rect.left, right: rect.right, width: rect.width,
+                  minWidth: style.minWidth, display: style.display,
+                  flexWrap: style.flexWrap, whiteSpace: style.whiteSpace,
+                };
+              }),
             };
           });
           await testInfo.attach("header-overflow-geometry.json", {

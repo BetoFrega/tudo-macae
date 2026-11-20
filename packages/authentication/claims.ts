@@ -47,8 +47,8 @@ export function roleChangeError(
     return "Você não pode remover seu próprio status de admin";
   return undefined;
 }
-export type RoleAdministrationDependencies
-  = | {
+export type RoleAdministrationDependencies =
+  | {
     updateClaims(
       uid: string,
       apply: (claims: CustomClaims | undefined) => CustomClaims,

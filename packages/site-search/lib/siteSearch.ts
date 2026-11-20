@@ -6,15 +6,15 @@ export type SiteSearchFailure = "timeout" | "unavailable" | "provider-error" | "
 export type SiteSearchOutcome = "results" | "empty" | SiteSearchFailure;
 
 /** Glossary terms: Classifieds (business, ad, category, subcategory), Editorial (article, editorial-section, topic). */
-export type SiteSearchResultType
-  = | "business"
-    | "ad"
-    | "category"
-    | "subcategory"
-    | "article"
-    | "editorial-section"
-    | "topic"
-    | "page";
+export type SiteSearchResultType =
+  | "business"
+  | "ad"
+  | "category"
+  | "subcategory"
+  | "article"
+  | "editorial-section"
+  | "topic"
+  | "page";
 
 /** Visitor-facing groups of result types. */
 export const siteSearchFilters = {
@@ -54,10 +54,10 @@ export interface SiteSearchResult {
   snippet: string;
 }
 
-export type SiteSearchResponse
-  = | { outcome: "results"; results: SiteSearchResult[] }
-    | { outcome: "empty" }
-    | { outcome: SiteSearchFailure };
+export type SiteSearchResponse =
+  | { outcome: "results"; results: SiteSearchResult[] }
+  | { outcome: "empty" }
+  | { outcome: SiteSearchFailure };
 
 export interface SiteSearchChunk {
   /** Absolute URL of the crawled page. */
@@ -66,9 +66,9 @@ export interface SiteSearchChunk {
   text: string;
 }
 
-export type SiteSearchProviderReply
-  = | { status: "ok"; chunks: SiteSearchChunk[]; providerDurationMs?: number }
-    | { status: SiteSearchFailure };
+export type SiteSearchProviderReply =
+  | { status: "ok"; chunks: SiteSearchChunk[]; providerDurationMs?: number }
+  | { status: SiteSearchFailure };
 
 export interface SiteSearchProvider {
   /** `types` asks the index to keep only pages declaring those result types. */
@@ -122,9 +122,9 @@ function addDurations(first: number | undefined, second: number | undefined) {
   return second === undefined ? first : (first ?? 0) + second;
 }
 
-type SiteSearchAnswer
-  = | { status: "ok"; results: SiteSearchResult[]; providerDurationMs: number | undefined }
-    | { status: SiteSearchFailure };
+type SiteSearchAnswer =
+  | { status: "ok"; results: SiteSearchResult[]; providerDurationMs: number | undefined }
+  | { status: SiteSearchFailure };
 
 export function createSiteSearch(dependencies: {
   /** Origin the index crawls; pages elsewhere are never presented. */

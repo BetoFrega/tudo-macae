@@ -179,9 +179,9 @@ export function mediaFormFromMetadata(metadata: MediaMetadata): MediaFormInput {
   };
 }
 
-export type CreateMediaResult
-  = | { success: true; mediaId: string }
-    | { success: false; error: string; code?: string; details?: Record<string, unknown>; matches?: Array<{ id: string; alt: string }> };
+export type CreateMediaResult =
+  | { success: true; mediaId: string }
+  | { success: false; error: string; code?: string; details?: Record<string, unknown>; matches?: Array<{ id: string; alt: string }> };
 
 export const updateMediaFormSchema = z.strictObject({
   id: z.string().trim().min(1),
@@ -192,6 +192,6 @@ export const updateMediaFormSchema = z.strictObject({
 
 export type UpdateMediaFormInput = z.infer<typeof updateMediaFormSchema>;
 
-export type UpdateMediaResult
-  = | { success: true }
-    | { success: false; error: string };
+export type UpdateMediaResult =
+  | { success: true }
+  | { success: false; error: string };

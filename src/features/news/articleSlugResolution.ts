@@ -1,6 +1,6 @@
-export type ArticleSlugResolution
-  = | { type: "serve" }
-    | { type: "redirect"; canonicalSlug: string };
+export type ArticleSlugResolution =
+  | { type: "serve" }
+  | { type: "redirect"; canonicalSlug: string };
 
 /**
  * The id resolves the article; the slug is cosmetic. A request whose slug

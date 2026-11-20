@@ -28,10 +28,10 @@ export interface PublicArticle {
 export interface PublicArticleSource { id: string; name: string; url?: string; canonicalUrl?: string }
 
 /** One reader page: the published edition of a receipt, an article without one, or nothing public. */
-export type PublicBlogArticle
-  = | Extract<Awaited<ReturnType<ReturnType<typeof createPublishedSubmissionReader>["read"]>>, { kind: "published" }>
-    | { kind: "legacy"; article: Omit<PublicArticle, "publishedBy">; media: ArticleReaderMedia[]; story: { occurredAt: number } | null; sources: PublicArticleSource[]; editorName: string | null }
-    | { kind: "unavailable" };
+export type PublicBlogArticle =
+  | Extract<Awaited<ReturnType<ReturnType<typeof createPublishedSubmissionReader>["read"]>>, { kind: "published" }>
+  | { kind: "legacy"; article: Omit<PublicArticle, "publishedBy">; media: ArticleReaderMedia[]; story: { occurredAt: number } | null; sources: PublicArticleSource[]; editorName: string | null }
+  | { kind: "unavailable" };
 export interface PublicBlogPageItem {
   id: string;
   title: string;

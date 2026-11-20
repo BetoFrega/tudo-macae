@@ -44,8 +44,8 @@ export interface RevokeSourcePermissionInput {
   reason: string;
 }
 
-export type RevokeSourcePermissionResult
-  = | {
+export type RevokeSourcePermissionResult =
+  | {
     status: "revoked";
     permission: SourcePermission;
     correlationId: string;

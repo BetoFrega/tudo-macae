@@ -11,9 +11,9 @@ import { verifyAdvertiserProfileOwnershipUseCase } from "@/packages/classifieds-
 import { createAdUseCase } from "../../../integrations/ads/use-cases/createAdUseCase";
 import { getUserAdvertiserProfilesUseCase } from "@/packages/classifieds-api";
 
-type CreateAdResult
-  = | { success: true; adId: string; slug: string }
-    | { success: false; error: string };
+type CreateAdResult =
+  | { success: true; adId: string; slug: string }
+  | { success: false; error: string };
 
 type CreateAdFields = { categoryId: string; subcategoryId: string; title: string; text: string };
 

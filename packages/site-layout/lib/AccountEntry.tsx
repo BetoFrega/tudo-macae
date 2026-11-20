@@ -3,9 +3,9 @@
 import { Button } from "@tudomacae/react-primitives/button";
 import { useSiteNavigation } from "./navigationIntegration";
 
-type AccountEntryProps
-  = | { onLogin: () => void; disabled?: boolean; href?: never }
-    | { href: string; onLogin?: never; disabled?: never };
+type AccountEntryProps =
+  | { onLogin: () => void; disabled?: boolean; href?: never }
+  | { href: string; onLogin?: never; disabled?: never };
 
 export function AccountEntry(props: AccountEntryProps) {
   const className = `

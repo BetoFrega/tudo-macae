@@ -49,12 +49,12 @@ export interface MediaCorrectionDependencies {
   ): Promise<T>;
 }
 
-export type CorrectMediaMetadataResult
-  = | { status: "updated"; media: Media; correlationId: string }
-    | { status: "replayed"; media: Media; correlationId: string }
-    | { status: "not-found" }
-    | { status: "conflict"; code: "revision_conflict"; currentRevision: number }
-    | { status: "conflict"; code: "idempotency_conflict" };
+export type CorrectMediaMetadataResult =
+  | { status: "updated"; media: Media; correlationId: string }
+  | { status: "replayed"; media: Media; correlationId: string }
+  | { status: "not-found" }
+  | { status: "conflict"; code: "revision_conflict"; currentRevision: number }
+  | { status: "conflict"; code: "idempotency_conflict" };
 
 export function createMediaCorrection(dependencies: MediaCorrectionDependencies) {
   return {

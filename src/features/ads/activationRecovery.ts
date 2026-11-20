@@ -4,15 +4,15 @@ import {
   PublicationRequirementError,
 } from "@tudomacae/ads/publicationEligibility";
 
-export type AdActivationIssueDetails
-  = | { reason: "profile"; error: string; adId: string; advertiserProfileId?: string }
-    | { reason: "email" | "technical"; error: string; adId: string };
+export type AdActivationIssueDetails =
+  | { reason: "profile"; error: string; adId: string; advertiserProfileId?: string }
+  | { reason: "email" | "technical"; error: string; adId: string };
 
 export type AdActivationIssue = { success: false } & AdActivationIssueDetails;
 
-export type UpdateAdStatusResult
-  = | { success: true; status: AdStatus }
-    | AdActivationIssue;
+export type UpdateAdStatusResult =
+  | { success: true; status: AdStatus }
+  | AdActivationIssue;
 
 export function activationIssueFromError(
   error: unknown,

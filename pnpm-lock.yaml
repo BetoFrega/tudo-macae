@@ -399,7 +399,7 @@ importers:
         version: 8.73.0(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       '@vinext/cloudflare':
         specifier: ^1.3.3
-        version: 1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261104.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.5(0c244523d4d9fda09f0e39cda9bb0616))
+        version: 1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261104.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.6(0c244523d4d9fda09f0e39cda9bb0616))
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(babel-plugin-react-compiler@1.0.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
@@ -458,8 +458,8 @@ importers:
         specifier: ^6
         version: 6.0.3
       vinext:
-        specifier: ^1.4.5
-        version: 1.4.5(0c244523d4d9fda09f0e39cda9bb0616)
+        specifier: ^1.4.6
+        version: 1.4.6(0c244523d4d9fda09f0e39cda9bb0616)
       vite:
         specifier: ^8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
@@ -668,7 +668,7 @@ importers:
         version: 0.5.20(tailwindcss@4.3.5)
       '@vinext/cloudflare':
         specifier: 1.3.3
-        version: 1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.5(1b2344157de9c16d1cc506557b78e414))
+        version: 1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.6(1b2344157de9c16d1cc506557b78e414))
       '@vitejs/plugin-rsc':
         specifier: ^0.5.39
         version: 0.5.39(react-dom@19.3.1(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(webpack@5.111.1(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.31)(sharp@0.35.5(@types/node@26.6.6))))(react@19.3.1)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
@@ -679,8 +679,8 @@ importers:
         specifier: ^4
         version: 4.3.5
       vinext:
-        specifier: 1.4.5
-        version: 1.4.5(1b2344157de9c16d1cc506557b78e414)
+        specifier: 1.4.6
+        version: 1.4.6(1b2344157de9c16d1cc506557b78e414)
       vite:
         specifier: ^8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
@@ -6589,8 +6589,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vinext@1.4.5:
-    resolution: {integrity: sha512-UI0KPA8tEgJshULtt89xKl854sGyF4AUak6UkNNuzWstXgV/00klmsqtXk3YyCXGicvDaBI2/eJmTpCy0ol++Q==}
+  vinext@1.4.6:
+    resolution: {integrity: sha512-xMqg/35SeEP8rimU2e7i0k8XhRJRCTbimIeHYKDPIFfmycoxgEkN1z488yGV1D/JsdE2X6cdGqYyW/1gCTH9dA==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -9049,17 +9049,17 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@vinext/cloudflare@1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.5(1b2344157de9c16d1cc506557b78e414))':
+  '@vinext/cloudflare@1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.6(1b2344157de9c16d1cc506557b78e414))':
     dependencies:
       '@cloudflare/workers-response-store': 1.1.5
-      vinext: 1.4.5(1b2344157de9c16d1cc506557b78e414)
+      vinext: 1.4.6(1b2344157de9c16d1cc506557b78e414)
     optionalDependencies:
       '@cloudflare/vite-plugin': 1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261019.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6))
 
-  '@vinext/cloudflare@1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261104.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.5(0c244523d4d9fda09f0e39cda9bb0616))':
+  '@vinext/cloudflare@1.3.3(@cloudflare/vite-plugin@1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261104.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6)))(vinext@1.4.6(0c244523d4d9fda09f0e39cda9bb0616))':
     dependencies:
       '@cloudflare/workers-response-store': 1.1.5
-      vinext: 1.4.5(0c244523d4d9fda09f0e39cda9bb0616)
+      vinext: 1.4.6(0c244523d4d9fda09f0e39cda9bb0616)
     optionalDependencies:
       '@cloudflare/vite-plugin': 1.68.0(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(workerd@1.20261104.1)(wrangler@4.158.0(@cloudflare/workers-types@5.20261115.1)(@types/node@26.6.6))
 
@@ -12226,7 +12226,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vinext@1.4.5(0c244523d4d9fda09f0e39cda9bb0616):
+  vinext@1.4.6(0c244523d4d9fda09f0e39cda9bb0616):
     dependencies:
       '@unpic/react': 1.0.2(next@16.4.6(@babel/core@7.29.7(supports-color@10.2.2))(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@vercel/og': 1.0.3(@types/node@26.6.6)
@@ -12246,7 +12246,7 @@ snapshots:
       - '@types/node'
       - next
 
-  vinext@1.4.5(1b2344157de9c16d1cc506557b78e414):
+  vinext@1.4.6(1b2344157de9c16d1cc506557b78e414):
     dependencies:
       '@unpic/react': 1.0.2(next@16.4.6(@babel/core@8.0.9)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@vercel/og': 1.0.3(@types/node@26.6.6)

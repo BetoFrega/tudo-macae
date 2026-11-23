@@ -353,8 +353,8 @@ importers:
         specifier: ^8.0.3
         version: 8.0.3(supports-color@10.2.2)
       '@posthog/cli':
-        specifier: ^0.20.0
-        version: 0.20.0
+        specifier: ^0.20.1
+        version: 0.20.1
       '@stryker-mutator/api':
         specifier: ^10.0.0
         version: 10.1.1
@@ -2901,8 +2901,8 @@ packages:
   '@posthog/browser-common@0.11.0':
     resolution: {integrity: sha512-aNj0D10kN/Owa39iyfrwHKg3XGIQq2azbTVa34uzQHJvlcnHphqIYB24qD4qFZqYjDvn1fKhWPA06p79WHUDpw==}
 
-  '@posthog/cli@0.20.0':
-    resolution: {integrity: sha512-HX4o9ddrCdFnDDGrNlqmg2kDLs/04u4fAzFTmTFuLDY54rRbWjyHURNqPQsSjQ2gYGdcfr2clxOV5Lm7LdvAvw==}
+  '@posthog/cli@0.20.1':
+    resolution: {integrity: sha512-g6XrVqm9HFZq6v1mMSCjHnJRkLKYS9YXogGPO7fRjSRFLmpr+ECkfWHhTecS+PJIiNffhQ1fm1B9oP1U2QASkw==}
     engines: {node: '>=14.14', npm: '>=6'}
     hasBin: true
 
@@ -8041,7 +8041,7 @@ snapshots:
     transitivePeerDependencies:
       - preact-render-to-string
 
-  '@posthog/cli@0.20.0':
+  '@posthog/cli@0.20.1':
     dependencies:
       detect-libc: 2.1.2
 

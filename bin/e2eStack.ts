@@ -21,7 +21,7 @@ export const E2E_BUILD_LOG_PATH = `${repositoryRoot}/tests/e2e/test-results/e2e-
  * started with the same `E2E_RENDERER`, or renderer-specific assertions read
  * the wrong build.
  */
-export type E2eRenderer = "next" | "vinext";
+type E2eRenderer = "next" | "vinext";
 
 export function e2eRenderer(env: NodeJS.ProcessEnv = process.env): E2eRenderer {
   const renderer = env.E2E_RENDERER ?? "next";

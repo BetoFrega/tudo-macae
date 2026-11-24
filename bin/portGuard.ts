@@ -12,8 +12,8 @@ import { LOOPBACK } from "./appPorts.ts";
  * their own change.
  */
 
-export type PortOwner = { pid: number | null; cwd: string | null };
-export type PortConflict = { port: number; owner: PortOwner };
+type PortOwner = { pid: number | null; cwd: string | null };
+type PortConflict = { port: number; owner: PortOwner };
 
 const PROBE_TIMEOUT_MS = 500;
 

@@ -30,6 +30,8 @@ export interface BusinessInvitationStore {
   /** Whether the address asked to stop receiving invitations. */
   suppressed(email: string): Promise<boolean>;
   save(businessId: string, invitation: BusinessInvitation): Promise<void>;
+  /** Stores `next` only if the invitation is still the `pending` one read as `previous`; false means another run took it. */
+  claim(businessId: string, previous: BusinessInvitation, next: BusinessInvitation): Promise<boolean>;
   /** Suppresses the address the token was sent to; false for an unknown token. */
   unsubscribe(token: string, at: number): Promise<boolean>;
 }
@@ -43,6 +45,8 @@ export interface BusinessInvitationMessage {
 
 export interface BusinessInvitationRun {
   sent: number;
+  /** Provider failures that will be retried on a later run. */
+  retrying: number;
   failed: number;
   skipped: number;
 }
@@ -63,9 +67,9 @@ export function createBusinessInvitations(dependencies: {
   }
 
   /** The token and the `sending` state are stored before the provider call, so every link resolves and nothing is sent twice. */
-  async function deliver(businessId: string, invitation: BusinessInvitation, business: InvitedBusiness): Promise<"sent" | "failed" | "retrying"> {
+  async function deliver(businessId: string, invitation: BusinessInvitation, business: InvitedBusiness): Promise<"sent" | "failed" | "retrying" | "taken"> {
     const sending: BusinessInvitation = { ...invitation, status: "sending", token: invitation.token ?? dependencies.newToken(), attempts: invitation.attempts + 1 };
-    await store.save(businessId, sending);
+    if (!(await store.claim(businessId, invitation, sending))) return "taken";
     try {
       await dependencies.send({ to: sending.email, businessTitle: business.title, claimPath: business.claimPath, unsubscribeToken: sending.token! });
     }
@@ -81,7 +85,7 @@ export function createBusinessInvitations(dependencies: {
 
   return {
     async sendDue(limit: number): Promise<BusinessInvitationRun> {
-      const run: BusinessInvitationRun = { sent: 0, failed: 0, skipped: 0 };
+      const run: BusinessInvitationRun = { sent: 0, retrying: 0, failed: 0, skipped: 0 };
       for (const { businessId, invitation } of await store.pending(limit)) {
         const business = await store.business(businessId);
         if (!business?.claimable) {
@@ -95,7 +99,7 @@ export function createBusinessInvitations(dependencies: {
           continue;
         }
         const outcome = await deliver(businessId, invitation, business);
-        if (outcome !== "retrying") run[outcome]++;
+        if (outcome !== "taken") run[outcome]++;
       }
       return run;
     },

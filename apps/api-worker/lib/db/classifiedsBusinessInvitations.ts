@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { z } from "zod";
-import type { ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
+import { PersistenceConflict, type ClassifiedsPersistence } from "@tudomacae/classifieds-persistence";
 import { asBody } from "@tudomacae/classifieds-persistence/records";
 import { businessInvitationSchema, type BusinessInvitationStore } from "@tudomacae/advertiser-identity/businessInvitation";
 import { businessClaimPath } from "@tudomacae/advertiser-identity/businessPresentation";
@@ -50,6 +50,24 @@ export function createClassifiedsBusinessInvitationStore(persistence: Classified
         }
         return null;
       });
+    },
+    async claim(businessId, previous, next) {
+      try {
+        return await persistence.transact(null, async (tx) => {
+          const current = await tx.read("operation", businessId, businessInvitationNamespace);
+          const stored = current && parseStored(businessInvitationSchema, current.body);
+          if (stored?.status !== "pending" || stored.attempts !== previous.attempts) return false;
+          tx.put({ kind: "operation", namespace: businessInvitationNamespace, id: businessId, body: asBody(jsonValue(next)) });
+          await tx.read("operation", next.token!, tokenNamespace);
+          tx.put({ kind: "operation", namespace: tokenNamespace, id: next.token!, body: asBody({ businessId }) });
+          return true;
+        }).then(committed => committed.value === true);
+      }
+      catch (error) {
+        // A concurrent run changed the invitation between this run's read and commit.
+        if (error instanceof PersistenceConflict) return false;
+        throw error;
+      }
     },
     async unsubscribe(token, at) {
       const tokenRecord = await persistence.read("operation", token, tokenNamespace);

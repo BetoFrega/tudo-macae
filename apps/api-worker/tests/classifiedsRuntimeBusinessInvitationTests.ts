@@ -34,11 +34,15 @@ test("loaded invitations go out once, link the claim page, and an unsubscribe st
     newToken: () => `token-${sent.length + 1}`,
   });
 
-  expect(await invitations.sendDue(1)).toEqual({ sent: 1, failed: 0, skipped: 0 });
+  expect(await invitations.sendDue(1)).toEqual({ sent: 1, retrying: 0, failed: 0, skipped: 0 });
   expect(sent.map(message => [message.to, message.claimPath])).toEqual([["dono@cafe.test", "/negocio/bar/bar-do-ze/reivindicar"]]);
   const mail = businessInvitationMail(sent[0]!, "https://tudomacae.test");
   expect(mail.text).toContain("https://tudomacae.test/negocio/bar/bar-do-ze/reivindicar");
   expect(mail.text).toContain("https://tudomacae.test/convites/descadastrar/token-1");
+
+  // A run that read "bar" before it went out loses the claim instead of sending it again.
+  const stale = { email: "dono@cafe.test", status: "pending" as const, createdAt: now, attempts: 0 };
+  expect(await createClassifiedsBusinessInvitationStore(persistence).claim("bar", stale, { ...stale, status: "sending", attempts: 1, token: "late" })).toBe(false);
 
   // A reload never resets an invitation that already went out.
   await load("bar", "dono@cafe.test");
@@ -46,7 +50,7 @@ test("loaded invitations go out once, link the claim page, and an unsubscribe st
   expect(await anonymous.write("invitations.unsubscribe", { token: "unknown" })).toEqual({ unsubscribed: false });
   expect(await anonymous.write("invitations.unsubscribe", { token: "token-1" })).toEqual({ unsubscribed: true });
 
-  expect(await invitations.sendDue(10)).toEqual({ sent: 0, failed: 0, skipped: 2 });
+  expect(await invitations.sendDue(10)).toEqual({ sent: 0, retrying: 0, failed: 0, skipped: 2 });
   expect(sent).toHaveLength(1);
   const stored = await persistence.page({ kind: "operation", namespace: "business_invitations" });
   expect(Object.fromEntries(stored.items.map(item => [item.id, [item.body.status, item.body.skipReason]]))).toEqual({

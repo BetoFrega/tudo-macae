@@ -70,7 +70,7 @@ function sendBusinessInvitations(dependencies: WorkerDependencies, env: Env, ope
   return runTask(env, "classifieds.business_invitations.send", operationId, async () => {
     if (!(await businessInvitationsReleased(env.FLAGS))) return undefined;
     const result = await invitations(env).sendDue(businessInvitationsPerRun);
-    return result.sent || result.failed || result.skipped ? { ...result } : undefined;
+    return result.sent || result.retrying || result.failed || result.skipped ? { ...result } : undefined;
   });
 }
 

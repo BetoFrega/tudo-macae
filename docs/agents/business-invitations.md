@@ -19,8 +19,8 @@ both Flagship booleans (app `tudo-macae`) are on:
 - `business-invitation-email`: the sending itself. Create it off; turn it off to stop
   sending at once.
 
-Each run logs `classifieds.business_invitations.send` with `sent`, `failed` and
-`skipped` counts and no address.
+Each run logs `classifieds.business_invitations.send` with `sent`, `retrying`,
+`failed` and `skipped` counts and no address.
 
 ## Loading recipients
 
@@ -46,7 +46,7 @@ so a schema change that breaks it fails there.
 | Status | Meaning |
 | --- | --- |
 | `pending` | Waits for the next run; a provider failure returns it here until 3 attempts. |
-| `sending` | Written before the provider call. An interrupted run leaves it here and never resends. |
+| `sending` | Claimed atomically before the provider call: an overlapping run loses the claim, and an interrupted run leaves it here and never resends. |
 | `sent` | Delivered to the provider at `sentAt`. |
 | `failed` | Three provider failures; `failureCode` keeps the last error name. |
 | `skipped` | `not_claimable` (claimed or removed first) or `suppressed` (address unsubscribed). |

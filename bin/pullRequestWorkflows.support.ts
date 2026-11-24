@@ -13,7 +13,7 @@ export type PullRequestTrigger = {
   types: string[];
 };
 
-export type WorkflowStep = {
+type WorkflowStep = {
   id?: string;
   name?: string;
   uses?: string;
@@ -39,7 +39,7 @@ export type Workflow = {
   jobs: Record<string, WorkflowJob>;
 };
 
-export type CompositeAction = {
+type CompositeAction = {
   runs: {
     using: string;
     steps: WorkflowStep[];

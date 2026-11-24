@@ -1,4 +1,4 @@
-export type MutationTier = {
+type MutationTier = {
   name: string;
   mutate: readonly string[];
   tests: readonly string[];
@@ -112,13 +112,13 @@ export const unitMutationTierByName = {
   },
 } as const satisfies Record<string, MutationTier>;
 
-export type UnitMutationTierName = keyof typeof unitMutationTierByName;
+type UnitMutationTierName = keyof typeof unitMutationTierByName;
 
 export const unitMutationTiers: readonly MutationTier[] = Object.values(
   unitMutationTierByName,
 );
 
-export type MutationTierRun = {
+type MutationTierRun = {
   tierName: UnitMutationTierName;
   exitCode: number;
   output: string;

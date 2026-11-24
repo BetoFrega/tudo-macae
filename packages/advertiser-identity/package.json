@@ -25,7 +25,8 @@
     "./phonePresentation": "./phonePresentation.ts",
     "./identityDeletion": "./identityDeletion.ts",
     "./supplySnapshot": "./supplySnapshot.ts",
-    "./businessClaim": "./businessClaim.ts"
+    "./businessClaim": "./businessClaim.ts",
+    "./businessInvitation": "./businessInvitation.ts"
   },
   "dependencies": {
     "zod": "^4.6.7",

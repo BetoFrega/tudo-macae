@@ -14,7 +14,7 @@ export const classifiedsWriteOperations = [
   "categories.create", "categories.update", "categories.delete", "categories.seed",
   "subcategories.create", "subcategories.update", "subcategories.delete",
   "profiles.create", "profiles.update", "profiles.classify", "profiles.admin.create", "profiles.admin.update", "profiles.admin.delete",
-  "profiles.identity.delete", "offerings.save", "offerings.visibility", "offerings.enablement", "claims.submit", "claims.review",
+  "profiles.identity.delete", "offerings.save", "offerings.visibility", "offerings.enablement", "claims.submit", "claims.review", "invitations.unsubscribe",
   "ads.create", "ads.update", "ads.status", "ads.delete", "publications.save", "publications.profile", "publications.photos", "publications.publish", "publications.delete",
 ] as const;
 export type ClassifiedsReadOperation = typeof classifiedsReadOperations[number];

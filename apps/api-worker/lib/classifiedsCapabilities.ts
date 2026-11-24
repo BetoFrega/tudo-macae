@@ -4,6 +4,7 @@ import { isAdImagePath } from "@tudomacae/ads/imagePath";
 import { createClassifiedsIdentityDeletionStore } from "./db/classifiedsIdentityDeletion";
 import { createClassifiedsOfferings } from "./classifiedsOfferings";
 import { createClassifiedsBusinessClaims } from "./classifiedsBusinessClaims";
+import { createClassifiedsBusinessInvitationStore } from "./db/classifiedsBusinessInvitations";
 import { businessClaimMail, type BusinessClaimMail } from "./businessClaimMail";
 import type { CatalogFlagDecision } from "@tudomacae/advertiser-identity/offeringCatalog";
 import { createHash, randomUUID } from "node:crypto";
@@ -62,6 +63,7 @@ export function createClassifiedsCapabilities(dependencies: {
   claimsReleased?: () => Promise<boolean>;
 }) {
   const { actor, persistence } = dependencies;
+  const unsubscribeInput = z.strictObject({ token: z.string().min(1).max(100) });
   const now = dependencies.now ?? Date.now;
   const newId = dependencies.newId ?? randomUUID;
   const recordOfferEvent = actorOfferEvents(actor, dependencies.recordOfferEvent);
@@ -236,6 +238,9 @@ export function createClassifiedsCapabilities(dependencies: {
       return readHandlers[operation]?.(input);
     },
     async write(operation: ClassifiedsWriteOperation, input: unknown) {
+      // The unsubscribe token is the recipient's only credential; it can do nothing but stop invitations.
+      if (operation === "invitations.unsubscribe")
+        return { unsubscribed: await createClassifiedsBusinessInvitationStore(persistence).unsubscribe(unsubscribeInput.parse(input).token, now()) };
       authenticated();
       if (isAdOperation(operation)) return ads.write(operation, input);
       if (operation.startsWith("offerings.")) return offerings.write(operation, input, authenticated());

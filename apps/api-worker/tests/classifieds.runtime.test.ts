@@ -9,3 +9,4 @@ import "./classifiedsRuntimeDeletionTests";
 import "./classifiedsRuntimeIdentityTests";
 import "./classifiedsRuntimeIdentityTypeTests";
 import "./classifiedsRuntimeBusinessClaimTests";
+import "./classifiedsRuntimeBusinessInvitationTests";

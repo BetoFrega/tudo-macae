@@ -15,6 +15,9 @@ import { createSupplySnapshotExport } from "@tudomacae/advertiser-identity/suppl
 import { createClassifiedsSupplySnapshotStore } from "./lib/db/classifiedsSupplySnapshot";
 import { createR2SupplySnapshotDestination } from "./lib/storage/classifiedsSupplySnapshots";
 import { readInternalAccountIds } from "./lib/db/identityAccounts";
+import { createBusinessInvitations } from "@tudomacae/advertiser-identity/businessInvitation";
+import { createClassifiedsBusinessInvitationStore } from "./lib/db/classifiedsBusinessInvitations";
+import { businessInvitationMail } from "./lib/businessInvitationMail";
 
 /** Media over the editorial D1 and Hosted Images; absent until the deployment binds EDITORIAL_DB. */
 function createProductionEditorialMedia(env: Env, send: typeof fetch = fetch): EditorialMediaService | undefined {
@@ -48,6 +51,12 @@ export function createProductionClassifiedsDependencies(env: Env & { PUBLIC_IMAG
       const bucket = env.PDM_EXPORTS as R2Bucket | undefined;
       return bucket && createSupplySnapshotExport({ store: createClassifiedsSupplySnapshotStore(createClassifiedsPersistence({ database }), () => readInternalAccountIds(env.AUTHENTICATION_DB)), destination: createR2SupplySnapshotDestination(bucket) });
     },
+    classifiedsBusinessInvitations: () => createBusinessInvitations({
+      store: createClassifiedsBusinessInvitationStore(createClassifiedsPersistence({ database })),
+      send: message => env.EMAIL.send({ ...businessInvitationMail(message, env.PUBLIC_APP_ORIGIN), from: env.EMAIL_FROM }).then(() => undefined),
+      now: Date.now,
+      newToken: () => crypto.randomUUID(),
+    }),
     classifiedsPhotoUrl: path => `/api/classifieds/photos/public/${encodeURIComponent(path)}`,
     classifiedsPhotos: (_environment, context) => {
       const store = createD1PhotoStore(database, createClassifiedsPersistence({ database }));

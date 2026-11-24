@@ -49,6 +49,9 @@ test("loaded invitations go out once, link the claim page, and an unsubscribe st
   const anonymous = createClassifiedsCapabilities({ persistence, correlationId: "unsubscribe", now: () => now });
   expect(await anonymous.write("invitations.unsubscribe", { token: "unknown" })).toEqual({ unsubscribed: false });
   expect(await anonymous.write("invitations.unsubscribe", { token: "token-1" })).toEqual({ unsubscribed: true });
+  // A run that checked the address before the unsubscribe committed still loses the claim.
+  const cafe = { email: "dono@cafe.test", status: "pending" as const, createdAt: now, attempts: 0 };
+  expect(await createClassifiedsBusinessInvitationStore(persistence).claim("cafe", cafe, { ...cafe, status: "sending", attempts: 1, token: "raced" })).toBe(false);
 
   expect(await invitations.sendDue(10)).toEqual({ sent: 0, retrying: 0, failed: 0, skipped: 2 });
   expect(sent).toHaveLength(1);

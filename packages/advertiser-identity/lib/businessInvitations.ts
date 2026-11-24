@@ -30,7 +30,7 @@ export interface BusinessInvitationStore {
   /** Whether the address asked to stop receiving invitations. */
   suppressed(email: string): Promise<boolean>;
   save(businessId: string, invitation: BusinessInvitation): Promise<void>;
-  /** Stores `next` only if the invitation is still the `pending` one read as `previous`; false means another run took it. */
+  /** Stores `next` only if the invitation is still the `pending` one read as `previous` and its address is not suppressed; false sends nothing. */
   claim(businessId: string, previous: BusinessInvitation, next: BusinessInvitation): Promise<boolean>;
   /** Suppresses the address the token was sent to; false for an unknown token. */
   unsubscribe(token: string, at: number): Promise<boolean>;

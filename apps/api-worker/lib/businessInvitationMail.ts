@@ -1,9 +1,5 @@
 import type { BusinessInvitationMessage } from "@tudomacae/advertiser-identity/businessInvitation";
-import type { BusinessClaimMail } from "./businessClaimMail";
-
-function escapeHtml(value: string) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;");
-}
+import { escapeHtml, type BusinessClaimMail } from "./businessClaimMail";
 
 /** Site path of the confirmation page an unsubscribe link opens; the page asks before it suppresses the address. */
 export function businessInvitationUnsubscribePath(token: string) {

@@ -57,8 +57,10 @@ export function createClassifiedsBusinessInvitationStore(persistence: Classified
           const current = await tx.read("operation", businessId, businessInvitationNamespace);
           const stored = current && parseStored(businessInvitationSchema, current.body);
           if (stored?.status !== "pending" || stored.attempts !== previous.attempts) return false;
-          // The guarded read makes an unsubscribe that commits first win over this claim.
+          // Guarded reads make an unsubscribe or an ownership approval that commits first win over this claim.
           if (await tx.read("operation", suppressionId(stored.email), suppressionNamespace)) return false;
+          const profile = await tx.read("profile", businessId);
+          if (!profile || !isClaimableAdvertiserProfile(profileData(profile))) return false;
           tx.put({ kind: "operation", namespace: businessInvitationNamespace, id: businessId, body: asBody(jsonValue(next)) });
           await tx.read("operation", next.token!, tokenNamespace);
           tx.put({ kind: "operation", namespace: tokenNamespace, id: next.token!, body: asBody({ businessId }) });

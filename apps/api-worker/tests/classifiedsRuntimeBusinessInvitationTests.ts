@@ -43,6 +43,9 @@ test("loaded invitations go out once, link the claim page, and an unsubscribe st
   // A run that read "bar" before it went out loses the claim instead of sending it again.
   const stale = { email: "dono@cafe.test", status: "pending" as const, createdAt: now, attempts: 0 };
   expect(await createClassifiedsBusinessInvitationStore(persistence).claim("bar", stale, { ...stale, status: "sending", attempts: 1, token: "late" })).toBe(false);
+  // A run that read "owned" as claimable before its owner was approved loses the claim.
+  const owned = { ...stale, email: "dono@owned.test" };
+  expect(await createClassifiedsBusinessInvitationStore(persistence).claim("owned", owned, { ...owned, status: "sending", attempts: 1, token: "owned" })).toBe(false);
 
   // A reload never resets an invitation that already went out.
   await load("bar", "dono@cafe.test");

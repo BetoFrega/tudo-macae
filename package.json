@@ -79,7 +79,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.74.0",
     "next": "^16.4.6",
-    "posthog-js": "^1.449.2",
+    "posthog-js": "^1.453.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-hook-form": "^7.92.0",

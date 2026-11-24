@@ -11,9 +11,9 @@ import { InvalidPhotoBytes, PhotoUploadTooLarge } from "../../../integrations/ad
 import { prepareAdPhoto } from "../../../integrations/ads/use-cases/prepareAdPhoto";
 import { uploadAdImageUseCase } from "../../../integrations/ads/use-cases/uploadAdImageUseCase";
 
-type UploadAdImageResult
-  = | { success: true }
-    | { success: false; error: string; reason?: "authentication_required" | "rate_limit" | "invalid_photo" };
+type UploadAdImageResult =
+  | { success: true }
+  | { success: false; error: string; reason?: "authentication_required" | "rate_limit" | "invalid_photo" };
 
 type UploadRejection = Extract<UploadAdImageResult, { success: false }>;
 type UploadStage = "authentication" | "file_read" | "upload" | "cache_invalidation";

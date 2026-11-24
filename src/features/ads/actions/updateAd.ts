@@ -16,10 +16,10 @@ import {
 import { updateAdUseCase } from "../../../integrations/ads/use-cases/updateAdUseCase";
 import { verifyAdOwnershipUseCase } from "../../../integrations/ads/use-cases/verifyAdOwnershipUseCase";
 
-type UpdateAdResult
-  = | { success: true; slug: string }
-    | { success: false; error: string }
-    | AdActivationIssue;
+type UpdateAdResult =
+  | { success: true; slug: string }
+  | { success: false; error: string }
+  | AdActivationIssue;
 
 type OwnedAd = Awaited<ReturnType<typeof verifyAdOwnershipUseCase>>;
 

@@ -78,13 +78,13 @@ type SubcategoryCreation = Omit<SubcategoryRecord, "id" | "order"> & {
   idempotencyKey: string;
 };
 
-export type CategoryWriteResult<T>
-  = | { status: "created" | "replayed"; record: T }
-    | { status: "duplicate" | "idempotencyConflict" | "parentNotFound" | "parentDeleting" };
+export type CategoryWriteResult<T> =
+  | { status: "created" | "replayed"; record: T }
+  | { status: "duplicate" | "idempotencyConflict" | "parentNotFound" | "parentDeleting" };
 
-export type CategoryUpdateResult
-  = | { status: "updated"; record: CategoryRecord }
-    | { status: "duplicate" | "notFound" };
+export type CategoryUpdateResult =
+  | { status: "updated"; record: CategoryRecord }
+  | { status: "duplicate" | "notFound" };
 
 export class CategoryManagementError extends Error {
   constructor(

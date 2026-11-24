@@ -71,9 +71,9 @@ export function adminProfileFormData(values: FormValues, options: {
   return formData;
 }
 
-export type AdminProfileSaveResult
-  = | { saved: true; profileId: string; revision: number }
-    | { saved: false; duplicates: { id: string; title: string }[]; confirmationToken: string };
+export type AdminProfileSaveResult =
+  | { saved: true; profileId: string; revision: number }
+  | { saved: false; duplicates: { id: string; title: string }[]; confirmationToken: string };
 
 export async function saveAdminProfile(
   commands: Pick<AdminCommands, "adminCreateClaimableAdvertiserProfile" | "adminUpdateAdvertiserProfile">,

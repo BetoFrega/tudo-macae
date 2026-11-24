@@ -13,10 +13,10 @@ import type {
   AdvertiserProfileSummary,
 } from "./administrationProfiles";
 
-export type StoreFailure
-  = | { status: "notFound" | "stateMismatch" | "invalidProfileState" | "hasAds" | "idempotencyConflict" | "imageCleanupBlocked" }
-    | { status: "revisionConflict"; currentRevision: number }
-    | { status: "possibleDuplicate" | "duplicateConfirmationChanged"; candidates: AdvertiserProfileDuplicateSummary[]; confirmationToken: string };
+export type StoreFailure =
+  | { status: "notFound" | "stateMismatch" | "invalidProfileState" | "hasAds" | "idempotencyConflict" | "imageCleanupBlocked" }
+  | { status: "revisionConflict"; currentRevision: number }
+  | { status: "possibleDuplicate" | "duplicateConfirmationChanged"; candidates: AdvertiserProfileDuplicateSummary[]; confirmationToken: string };
 
 export type ReadFailure = { status: "notFound" };
 
@@ -74,10 +74,10 @@ export interface AdvertiserProfileAdministrationStore {
   ): Promise<AdvertiserProfileMutationResult | StoreFailure>;
 }
 
-export type AdvertiserProfileAdministrationErrorCode
-  = | "notFound" | "stateMismatch" | "invalidProfileState" | "hasAds"
-    | "revisionConflict" | "possibleDuplicate" | "duplicateConfirmationChanged"
-    | "idempotencyConflict" | "imageCleanupBlocked";
+export type AdvertiserProfileAdministrationErrorCode =
+  | "notFound" | "stateMismatch" | "invalidProfileState" | "hasAds"
+  | "revisionConflict" | "possibleDuplicate" | "duplicateConfirmationChanged"
+  | "idempotencyConflict" | "imageCleanupBlocked";
 
 export class AdvertiserProfileAdministrationError extends Error {
   constructor(

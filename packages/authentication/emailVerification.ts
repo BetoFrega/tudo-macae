@@ -2,10 +2,10 @@ import { buildEmailVerification } from "./lib/emailVerification";
 
 export type VerificationAccount = { uid: string; email: string; emailVerified: boolean };
 export type VerificationAttempt = { nextSendAt: number; error?: string; pendingEmail?: string };
-export type VerificationResult
-  = | { status: "verified" }
-    | { status: "sent"; nextSendAt: number; pendingEmail?: string }
-    | { status: "error"; error: string; nextSendAt?: number };
+export type VerificationResult =
+  | { status: "verified" }
+  | { status: "sent"; nextSendAt: number; pendingEmail?: string }
+  | { status: "error"; error: string; nextSendAt?: number };
 export interface EmailVerificationDependencies {
   now(): number;
   provider: {

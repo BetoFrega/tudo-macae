@@ -17,11 +17,11 @@ export const canonicalLookupMaxAge = 30;
 /** One lookup's deadline; past it the caller renders the page without a decision. */
 export const canonicalLookupTimeoutMs = 1000;
 
-export type CanonicalTarget
-  = | { kind: "ad"; id: string }
-    | { kind: "category"; categoryId: string }
-    | { kind: "subcategory"; categoryId: string; subcategoryId: string }
-    | { kind: "profile"; id: string };
+export type CanonicalTarget =
+  | { kind: "ad"; id: string }
+  | { kind: "category"; categoryId: string }
+  | { kind: "subcategory"; categoryId: string; subcategoryId: string }
+  | { kind: "profile"; id: string };
 
 const missing = z.strictObject({ exists: z.literal(false) });
 const slug = z.string().min(1).max(500);

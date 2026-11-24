@@ -54,9 +54,9 @@ export class StoreCategoriesPage extends BasePage {
   async clickHomepageSubcategory(name: string) {
     const category = this.getByRole("navigation", { name: "Categorias de negócios e anúncios" })
       .locator("details").filter({
-        // eslint-disable-next-line local/no-raw-playwright-page-selectors -- The closed disclosure exposes this link only through the accessibility tree.
-        has: this.page.getByRole("link", { name, exact: true, includeHidden: true }),
-      });
+      // eslint-disable-next-line local/no-raw-playwright-page-selectors -- The closed disclosure exposes this link only through the accessibility tree.
+      has: this.page.getByRole("link", { name, exact: true, includeHidden: true }),
+    });
     if (await category.getAttribute("open") === null) {
       await this.click(category.locator("summary"));
     }

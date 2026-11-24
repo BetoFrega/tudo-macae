@@ -80,6 +80,12 @@ const eslintConfig = defineConfig([
       jsx: true,
     }),
   },
+  {
+    // @stylistic 6 added list-style to the customize() preset; it would reflow
+    // about 2,500 existing lists. Turn it back on only with a repo-wide --fix.
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    rules: { "@stylistic/list-style": "off" },
+  },
   ...nextVitals,
   ...nextTs,
   {

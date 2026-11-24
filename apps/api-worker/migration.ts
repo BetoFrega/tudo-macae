@@ -3,7 +3,6 @@ import {
   createIdentityTransfer,
   type TransferIdentity,
 } from "@tudomacae/authentication/identity-transfer";
-export type ImportedAuthenticationAccount = TransferIdentity;
 function transfer(database: D1Database) {
   return createIdentityTransfer({
     async readAuthority() {
@@ -81,13 +80,13 @@ function transfer(database: D1Database) {
 }
 export function importAuthenticationAccounts(
   database: D1Database,
-  accounts: ImportedAuthenticationAccount[],
+  accounts: TransferIdentity[],
 ) {
   return transfer(database).prepare(accounts);
 }
 export function activateAuthenticationAuthority(
   database: D1Database,
-  accounts: ImportedAuthenticationAccount[],
+  accounts: TransferIdentity[],
 ) {
   return transfer(database).activate(accounts);
 }

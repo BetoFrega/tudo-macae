@@ -11,7 +11,7 @@ export class ClassifiedsPhotoDecodeUnavailable extends Error {
 }
 type DecoderImages = Pick<ImagesBinding, "info" | "input">;
 type OutputFormat = "image/jpeg" | "image/webp";
-export interface SanitizedClassifiedsPhoto {
+interface SanitizedClassifiedsPhoto {
   bytes: Uint8Array; mimeType: OutputFormat; sourceMimeType: string; width: number; height: number;
 }
 

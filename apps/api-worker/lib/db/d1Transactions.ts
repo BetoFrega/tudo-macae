@@ -13,7 +13,7 @@ type Command<K extends string, I> = { kind: "put"; record: I } | { kind: "remove
 type Replayed<T> = { value: T; replayed: boolean };
 
 /** Persistence-package contract the shared retry loop needs; every domain keeps its own SQL. */
-export interface D1TransactionDomain<K extends string, I extends RecordShape<K>, S extends I, Q, P extends { scope: string; version: number }> {
+interface D1TransactionDomain<K extends string, I extends RecordShape<K>, S extends I, Q, P extends { scope: string; version: number }> {
   Conflict: new () => Error;
   Limit: new () => Error;
   limits: { reads: number; guards: number; commands: number; pageBytes: number; attempts: number };

@@ -18,7 +18,7 @@
     "zod": "^4.6.7",
     "@tudomacae/advertiser-identity": "workspace:*",
     "@tudomacae/react-primitives": "workspace:*",
-    "@hookform/resolvers": "^7.0.6",
+    "@hookform/resolvers": "^7.0.8",
     "react-hook-form": "^7.92.0",
     "lucide-react": "^1.74.0"
   },

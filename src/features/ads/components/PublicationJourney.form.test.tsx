@@ -171,18 +171,28 @@ it("requires an identity type before creating the profile where types are suppor
 });
 
 it("leaves only the business choice after another session takes the personal profile", async () => {
-  const user = userEvent.setup();
-  mocks.saveProfile.mockResolvedValueOnce({ success: false, error: personalProfileExistsMessage });
-  render(<PublicationJourney identityTypes initial={{ id: "pending", userId: "user", title: "Bicicleta", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1 }} />);
-  await user.type(screen.getByRole("textbox", { name: "Nome do anunciante" }), "Ana");
-  await user.type(screen.getByRole("textbox", { name: "Telefone 1" }), "22999999999");
-  await user.click(screen.getByRole("radio", { name: "Meu perfil pessoal" }));
-  await user.click(screen.getByRole("button", { name: "Criar perfil" }));
+  // A frame that fires before React commits the alert reproduces slow CI runners.
+  const frame = vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback) => {
+    queueMicrotask(() => callback(0));
+    return 0;
+  });
+  try {
+    const user = userEvent.setup();
+    mocks.saveProfile.mockResolvedValueOnce({ success: false, error: personalProfileExistsMessage });
+    render(<PublicationJourney identityTypes initial={{ id: "pending", userId: "user", title: "Bicicleta", text: "Em bom estado", categoryId: "category", subcategoryId: "subcategory", createdAt: 1 }} />);
+    await user.type(screen.getByRole("textbox", { name: "Nome do anunciante" }), "Ana");
+    await user.type(screen.getByRole("textbox", { name: "Telefone 1" }), "22999999999");
+    await user.click(screen.getByRole("radio", { name: "Meu perfil pessoal" }));
+    await user.click(screen.getByRole("button", { name: "Criar perfil" }));
 
-  await waitFor(() => expect(screen.getByRole("radio", { name: "Meu perfil pessoal" })).toBeDisabled());
-  await waitFor(() => expect(screen.getByText(personalProfileExistsMessage)).toHaveFocus());
-  expect(screen.getByRole("radio", { name: "Um negócio" })).not.toBeChecked();
-  expect(screen.getByRole("textbox", { name: "Nome do anunciante" })).toHaveValue("Ana");
+    await waitFor(() => expect(screen.getByRole("radio", { name: "Meu perfil pessoal" })).toBeDisabled());
+    await waitFor(() => expect(screen.getByText(personalProfileExistsMessage)).toHaveFocus());
+    expect(screen.getByRole("radio", { name: "Um negócio" })).not.toBeChecked();
+    expect(screen.getByRole("textbox", { name: "Nome do anunciante" })).toHaveValue("Ana");
+  }
+  finally {
+    frame.mockRestore();
+  }
 });
 
 it("suggests the ad's subcategory as an Área de atuação and sends the owner's choice", async () => {

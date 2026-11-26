@@ -44,10 +44,15 @@ export function usePublicationJourney(initial?: PendingAdPublication) {
   const [error, setErrorState] = useState("");
   const [photoUnavailableError, setPhotoUnavailableError] = useState("");
   const photoUnavailable = error !== "" && error === photoUnavailableError;
+  const [errorFocusRequest, setErrorFocusRequest] = useState(0);
   const setError = (message: string) => {
     setErrorState(message);
-    if (message) focusJourneyTarget("publication-error");
+    if (message) setErrorFocusRequest(request => request + 1);
   };
+  // The alert exists only after the error state commits; focusing before that finds no element.
+  useEffect(() => {
+    if (errorFocusRequest) focusJourneyTarget("publication-error");
+  }, [errorFocusRequest]);
   const [saved, setSaved] = useState(start.saved);
   const [savedPhotoCount, setSavedPhotoCount] = useState(start.savedPhotos.length);
   const [published, setPublished] = useState<{ adId: string; slug: string }>();

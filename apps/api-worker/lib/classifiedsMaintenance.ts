@@ -1,5 +1,9 @@
 import { classifiedsFailureCause } from "../diagnostics";
 import type { WorkerDependencies } from "./workerDependencies";
+import { businessInvitationsReleased } from "./businessClaimRelease";
+
+/** Invitations per hourly run; a small batch keeps a new sender's volume gradual. */
+export const businessInvitationsPerRun = 10;
 
 function maintenanceEvent(env: Env, event: string, operationId: string) {
   return {
@@ -59,11 +63,22 @@ function exportSupplySnapshot(dependencies: WorkerDependencies, env: Env, operat
   });
 }
 
+/** Sends the next batch of Business invitations while both release flags are on. */
+function sendBusinessInvitations(dependencies: WorkerDependencies, env: Env, operationId: string) {
+  const invitations = dependencies.classifiedsBusinessInvitations;
+  if (!invitations) return;
+  return runTask(env, "classifieds.business_invitations.send", operationId, async () => {
+    if (!(await businessInvitationsReleased(env.FLAGS))) return undefined;
+    const result = await invitations(env).sendDue(businessInvitationsPerRun);
+    return result.sent || result.retrying || result.failed || result.skipped ? { ...result } : undefined;
+  });
+}
+
 /** One hourly trigger qualifies once and runs every task under one operation id; a failure in one never skips the others. */
 export async function runClassifiedsMaintenance(dependencies: WorkerDependencies, env: Env, now: number) {
   const operationId = crypto.randomUUID();
   if (!(await isQualified(dependencies))) return;
-  const failure = (await Promise.allSettled([sweepPhotos(dependencies, env, operationId), expireAudits(dependencies, env, operationId, now), exportSupplySnapshot(dependencies, env, operationId, now)]))
+  const failure = (await Promise.allSettled([sweepPhotos(dependencies, env, operationId), expireAudits(dependencies, env, operationId, now), exportSupplySnapshot(dependencies, env, operationId, now), sendBusinessInvitations(dependencies, env, operationId)]))
     .find(result => result.status === "rejected");
   if (failure) throw failure.reason;
 }

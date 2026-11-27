@@ -8,3 +8,10 @@ export async function businessClaimReleased(flags: FlagshipBinding | undefined):
   const details = await flags.getBooleanDetails("business-claim", false);
   return !details.errorCode && details.value === true;
 }
+
+/** Invitations link to the claim page, so they go out only while claims are released too. */
+export async function businessInvitationsReleased(flags: FlagshipBinding | undefined): Promise<boolean> {
+  if (!flags || !(await businessClaimReleased(flags))) return false;
+  const details = await flags.getBooleanDetails("business-invitation-email", false);
+  return !details.errorCode && details.value === true;
+}

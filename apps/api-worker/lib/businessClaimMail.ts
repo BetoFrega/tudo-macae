@@ -3,7 +3,8 @@ import type { AuthenticationMail } from "./workerDependencies";
 
 export type BusinessClaimMail = Omit<AuthenticationMail, "from">;
 
-function escapeHtml(value: string) {
+/** Escapes text for an HTML e-mail body or attribute. */
+export function escapeHtml(value: string) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;");
 }
 

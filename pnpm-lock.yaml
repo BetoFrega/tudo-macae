@@ -301,8 +301,8 @@ importers:
         specifier: ^16.4.6
         version: 16.4.6(@babel/core@7.29.7(supports-color@10.2.2))(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       posthog-js:
-        specifier: ^1.453.2
-        version: 1.453.2(@types/react@19.3.0)(react@19.3.1)
+        specifier: ^1.454.2
+        version: 1.454.2(@types/react@19.3.0)(react@19.3.1)
       react:
         specifier: ^19.3.0
         version: 19.3.1
@@ -2868,8 +2868,8 @@ packages:
   '@poppinss/exception@1.2.3':
     resolution: {integrity: sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==}
 
-  '@posthog/browser-common@0.12.2':
-    resolution: {integrity: sha512-ZfqE1ntvsFPaD5I1IRh/wRL6JPW6Zlo8NDTOc0s5OtK7JeER9jE/byLjSHQ1/cKZk3MD8JG7F1hANUhnos6dOg==}
+  '@posthog/browser-common@0.13.1':
+    resolution: {integrity: sha512-2e7AVKc8F1mDGnqvEE6Mu/5wcojDXeK4ddeq0B2o1X5iwDVJ7XSH+7Rf3qNHkqwUZLCT9aoUe2mkgfM9vIo5kA==}
 
   '@posthog/cli@0.20.1':
     resolution: {integrity: sha512-g6XrVqm9HFZq6v1mMSCjHnJRkLKYS9YXogGPO7fRjSRFLmpr+ECkfWHhTecS+PJIiNffhQ1fm1B9oP1U2QASkw==}
@@ -2879,8 +2879,8 @@ packages:
   '@posthog/core@1.69.2':
     resolution: {integrity: sha512-toMfPKklwLW+a4ZY3/EzM3GNMVXmk2ylGb8NPJXRH4igXMoI8wgNL2jqXOiglWAXqFBLZGYFN1oQx6LVmUTxTg==}
 
-  '@posthog/types@1.427.0':
-    resolution: {integrity: sha512-2RPVfuGIx0iys78mTOcfdzN7/w7AM1Ak3yu9++4/FonPf08mwGqDkJjThz2dA/34666ToNw5Q4fZoFdgvfNUHw==}
+  '@posthog/types@1.427.1':
+    resolution: {integrity: sha512-Kx9hWf6Au64CrBLafscANAeswkRFUMs4zlU9/gwB2Hf/9ggU9YNjbw/MQA5tt7cbzTCkh+4fNIPjQeJz7/j63w==}
 
   '@radix-ui/number@1.1.3':
     resolution: {integrity: sha512-Road2bidD0uu/1BGDOWNdPI06g0lIRy6IF9GZcIrDK2KGItfor8IQwQa+yM2ERgHM1MmHxaxpTzk0/Jp42lNfA==}
@@ -4524,8 +4524,8 @@ packages:
   dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
 
-  dompurify@3.4.17:
-    resolution: {integrity: sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==}
+  dompurify@3.5.0:
+    resolution: {integrity: sha512-LYC0ZkE8P1V42JsRYTwMdme/2ET8SpOc5AA2eOFjP/IadvRd2fwiT4TVz5vkfy0XUx12aS2UaRkTnfVPNOv9vw==}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -5886,8 +5886,8 @@ packages:
     resolution: {integrity: sha512-RVHEU9/Pp1Fnjr/MpAJsZoADukCKhfIi15OunEYiGktIkYLkPVvC1sioWolGDS7XByMTx9m/IGbro0Js13zhnQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.453.2:
-    resolution: {integrity: sha512-dwWSNoTwGPm/dUCcjT69Bnoq7hCx+qPbnX9kax9HR8yjTd7EbIiza1VPW7LZxu7l1JnaZGXFygw4IWQIiqXGeQ==}
+  posthog-js@1.454.2:
+    resolution: {integrity: sha512-zInBAdAqt0R9h2gydLHxrgBeyfvHbAz6tEOK4WCggJZeGk9YVccA9PMXAiO8c9j4RXNFr5914xNLN1xhBwCEqQ==}
     peerDependencies:
       '@types/react': '>=16.8.0'
       react: '>=16.8.0'
@@ -7993,11 +7993,11 @@ snapshots:
 
   '@poppinss/exception@1.2.3': {}
 
-  '@posthog/browser-common@0.12.2':
+  '@posthog/browser-common@0.13.1':
     dependencies:
       '@posthog/core': 1.69.2
-      '@posthog/types': 1.427.0
-      dompurify: 3.4.17
+      '@posthog/types': 1.427.1
+      dompurify: 3.5.0
       preact: 10.29.8
     transitivePeerDependencies:
       - preact-render-to-string
@@ -8008,9 +8008,9 @@ snapshots:
 
   '@posthog/core@1.69.2':
     dependencies:
-      '@posthog/types': 1.427.0
+      '@posthog/types': 1.427.1
 
-  '@posthog/types@1.427.0': {}
+  '@posthog/types@1.427.1': {}
 
   '@radix-ui/number@1.1.3': {}
 
@@ -9585,7 +9585,7 @@ snapshots:
 
   dom-accessibility-api@0.6.3: {}
 
-  dompurify@3.4.17:
+  dompurify@3.5.0:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -11340,13 +11340,13 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  posthog-js@1.453.2(@types/react@19.3.0)(react@19.3.1):
+  posthog-js@1.454.2(@types/react@19.3.0)(react@19.3.1):
     dependencies:
-      '@posthog/browser-common': 0.12.2
+      '@posthog/browser-common': 0.13.1
       '@posthog/core': 1.69.2
-      '@posthog/types': 1.427.0
+      '@posthog/types': 1.427.1
       core-js: 3.50.0
-      dompurify: 3.4.17
+      dompurify: 3.5.0
       fflate: 0.4.9
       preact: 10.29.8
       query-selector-shadow-dom: 1.0.1

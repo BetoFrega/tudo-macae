@@ -9,7 +9,7 @@
     "deploy": "node deploy.mjs"
   },
   "dependencies": {
-    "@trpc/server": "^11.29.7",
+    "@trpc/server": "^11.31.0",
     "@tudomacae/ads": "workspace:*",
     "@tudomacae/advertiser-identity": "workspace:*",
     "@tudomacae/authentication": "workspace:*",
